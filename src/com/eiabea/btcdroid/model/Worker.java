@@ -6,6 +6,7 @@ import android.os.Parcelable;
 public class Worker implements Parcelable {
 
 	// Attributes
+	private String name;
 	private long last_share;
 	private String score;
 	private boolean alive;
@@ -17,6 +18,7 @@ public class Worker implements Parcelable {
 
 	// Constructor used for Parcelable
 	public Worker(Parcel in) {
+		name = in.readString();
 		last_share = in.readLong();
 		score = in.readString();
 		alive = in.readByte() == 1;
@@ -31,6 +33,7 @@ public class Worker implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(name);
 		dest.writeLong(last_share);
 		dest.writeString(score);
 		dest.writeByte((byte) (alive ? 1 : 0));
@@ -89,5 +92,14 @@ public class Worker implements Parcelable {
 	public void setHashrate(int hashrate) {
 		this.hashrate = hashrate;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 
 }

@@ -1,9 +1,16 @@
 package com.eiabea.btcdroid.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.eiabea.btcdroid.util.App;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class Profile implements Parcelable {
 
@@ -19,7 +26,8 @@ public class Profile implements Parcelable {
 	private String unconfirmed_reward;
 	private String estimated_reward;
 	private String hashrate;
-	private ArrayList<Worker> workers;
+	private JsonObject workers;
+	private ArrayList<Worker> listWorkers;
 	
 	
 	// Standardconstructor
@@ -39,8 +47,12 @@ public class Profile implements Parcelable {
 		estimated_reward = in.readString();
 		hashrate = in.readString();
 		
-		workers = new ArrayList<Worker>();
-		in.readList(workers, Worker.class.getClassLoader());
+		workers = new JsonObject();
+		workers = App.getInstance().gson.fromJson(in.readString(), JsonObject.class);
+
+		
+//		workers = new ArrayList<Worker>();
+//		in.readList(workers, Worker.class.getClassLoader());
 	}
 	
 	@Override
@@ -62,7 +74,9 @@ public class Profile implements Parcelable {
 		dest.writeString(estimated_reward);
 		dest.writeString(hashrate);
 
-		dest.writeList(workers);
+		dest.writeString(workers.getAsString());
+		
+//		dest.writeList(workers);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -123,14 +137,6 @@ public class Profile implements Parcelable {
 		this.confirmed_reward = confirmed_reward;
 	}
 
-	public ArrayList<Worker> getWorkers() {
-		return workers;
-	}
-
-	public void setWorkers(ArrayList<Worker> workers) {
-		this.workers = workers;
-	}
-
 	public String getWallet() {
 		return wallet;
 	}
@@ -169,6 +175,32 @@ public class Profile implements Parcelable {
 
 	public void setHashrate(String hashrate) {
 		this.hashrate = hashrate;
+	}
+
+	public JsonObject getWorkers() {
+		return workers;
+	}
+
+	public void setWorkers(JsonObject workers) {
+		this.workers = workers;
+	}
+	
+	public ArrayList<Worker> getWorkersList(){
+		
+		listWorkers = new ArrayList<Worker>();
+		
+		Set<Entry<String, JsonElement>> set =  workers.entrySet();
+		
+	    for (Iterator<Entry<String, JsonElement>> it = set.iterator(); it.hasNext(); ) {
+	    	Entry<String, JsonElement> current = it.next();
+	   
+	    	Worker tmpWorker = App.getInstance().gson.fromJson(current.getValue(), Worker.class);
+	    	tmpWorker.setName(current.getKey());
+	    	
+	    	listWorkers.add(tmpWorker);
+	    }
+	    
+	    return listWorkers;
 	}
     
 }
