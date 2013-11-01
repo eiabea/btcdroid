@@ -18,6 +18,7 @@ import com.android.volley.Response.Listener;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
+import com.eiabea.btcdroid.views.WorkerView;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -49,6 +50,10 @@ public class MainActivity extends ActionBarActivity {
 				ArrayList<Worker> list = profile.getWorkersList();
 
 				for (Worker tmp : list) {
+					WorkerView workerView = new WorkerView(MainActivity.this);
+					workerView.setData(tmp);
+					llInfoHolder.addView(workerView);
+					
 					Log.d(getClass().getSimpleName(),
 							"Worker: " + tmp.getName() + "; " + tmp.getScore());
 
