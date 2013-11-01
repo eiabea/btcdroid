@@ -7,7 +7,12 @@ import com.android.volley.toolbox.Volley;
 
 public class HttpWorker {
 
-	public static final String BASEURL = "https://mining.bitcoin.cz/stats/json/";
+	public static final String BASEURL = "https://mining.bitcoin.cz/";
+	
+	public static final String DEBUG_API_KEY = "402189-0754bbdd5fa5ea39699830dd588986e5";
+	
+	public static final String GENERAL_URL = BASEURL + "/stats/json/" + DEBUG_API_KEY;
+	public static final String PROFILE_URL = BASEURL + "/accounts/profile/json/" + DEBUG_API_KEY;
 
 	public static final int POST = 0;
 	public static final int GET = 1;
@@ -28,29 +33,6 @@ public class HttpWorker {
 	
 	public static RequestQueue mQueue;
 
-	public static final String[] allCommands = {
-		"categories/",
-		"shops/",
-		"events/",
-		"offers/",
-		"banners/",
-		"contentForSiteID/",
-		"mapsForShopID/",
-		"imageForURL/",
-		"menuElements/"
-		};
-	
-	public static final int GET_CATEGORIES = 0;
-	
-	public static final int[] allContentForSite = {
-		421,
-		422,
-		423,
-		424,
-		425,
-		426
-	};
-	
 	public HttpWorker(Context context) {
 		this.context = context;
 		initVolley();
