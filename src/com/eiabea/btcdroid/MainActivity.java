@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.eiabea.btcdroid.model.Profile;
+import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.GsonRequest;
 import com.eiabea.btcdroid.util.HttpWorker;
@@ -56,6 +57,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.btn_main_get:
 			getProfile();
+			getStats();
 			break;
 
 		default:
@@ -75,7 +77,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			@Override
 			public void onResponse(Profile response) {
 				
-				Log.d(getClass().getSimpleName(), "get done");
+				Log.d(getClass().getSimpleName(), "get profile done");
 				
 				ArrayList<Worker> list = response.getWorkersList();
 				
@@ -83,6 +85,34 @@ public class MainActivity extends Activity implements OnClickListener {
 					Log.d(getClass().getSimpleName(), "Worker: " + tmp.getName() + "; " + tmp.getScore());
 					
 				}
+				
+			}
+		}, new ErrorListener() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.d(getClass().getSimpleName(), "Error while loading: " + error.getMessage());
+			}
+		}));
+		
+	}
+	
+	private void getStats() {
+		Log.d(getClass().getSimpleName(), "get Stats");
+		
+		String url = HttpWorker.STATS_URL;
+		
+		System.out.println(HttpWorker.mQueue.toString());
+		
+		HttpWorker.mQueue.add(new GsonRequest<Stats>(url, Stats.class, null, new Response.Listener<Stats>() {
+			@Override
+			public void onResponse(Stats response) {
+				
+				Log.d(getClass().getSimpleName(), "get stats done");
+				
+				Log.d(getClass().getSimpleName(), "round_duration: " + response.getRound_duration());
+				
+				
 				
 			}
 		}, new ErrorListener() {

@@ -11,7 +11,7 @@ public class HttpWorker {
 	
 	public static final String DEBUG_API_KEY = "402189-0754bbdd5fa5ea39699830dd588986e5";
 	
-	public static final String GENERAL_URL = BASEURL + "/stats/json/" + DEBUG_API_KEY;
+	public static final String STATS_URL = BASEURL + "/stats/json/" + DEBUG_API_KEY;
 	public static final String PROFILE_URL = BASEURL + "/accounts/profile/json/" + DEBUG_API_KEY;
 
 	public static final int POST = 0;
