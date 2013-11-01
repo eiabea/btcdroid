@@ -58,11 +58,6 @@ public class HttpWorker{
 		mQueue.start();
 	}
 	
-	public interface HttpWorkerInterface{
-		public void requestDone(Activity context, Profile response);
-		public void requestDone(Activity context, Stats response);
-	}
-	
 	public void setToken(String token){
 		this.token = token;
 	}
@@ -74,24 +69,14 @@ public class HttpWorker{
 		return false;
 	}
 	
-	public void getProfile(final Activity context) {
+	public void getProfile(Response.Listener<Profile> listener) {
 		Log.d(getClass().getSimpleName(), "get Profile");
 		
 		String url = HttpWorker.PROFILE_URL + token;
 		
 		System.out.println(HttpWorker.mQueue.toString());
 		
-		HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null, new Response.Listener<Profile>() {
-			@Override
-			public void onResponse(Profile response) {
-				
-				Log.d(getClass().getSimpleName(), "get profile done");
-				
-				MainActivity act = new MainActivity();
-				act.requestDone(context, response);
-				
-			}
-		}, new ErrorListener() {
+		HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null, listener, new ErrorListener() {
 			
 			@Override
 			public void onErrorResponse(VolleyError error) {

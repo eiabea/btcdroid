@@ -2,7 +2,6 @@ package com.eiabea.btcdroid;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -10,56 +9,74 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response.Listener;
 import com.eiabea.btcdroid.model.Profile;
-import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
-import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
 
-public class MainActivity extends ActionBarActivity implements OnClickListener, HttpWorkerInterface {
+public class MainActivity extends ActionBarActivity {
 
 	private static final int INTENT_ADD_POOL = 0;
-	
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-    	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        
-        initUi();
-        
-        setListeners();
-        
-        reloadData();
-        
-    }
 
+	private TextView txtNoPools;
+	private LinearLayout llInfoHolder;
 
-    private void getProfile() {
-    	showProgress(this, true);
-    	App.getInstance().httpWorker.getProfile(this);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+
+		initUi();
+
+		setListeners();
+
+		reloadData();
+
 	}
 
+	private void getProfile() {
+		showProgress(true);
+		App.getInstance().httpWorker.getProfile(new Listener<Profile>() {
+
+			@Override
+			public void onResponse(Profile profile) {
+				ArrayList<Worker> list = profile.getWorkersList();
+
+				for (Worker tmp : list) {
+					Log.d(getClass().getSimpleName(),
+							"Worker: " + tmp.getName() + "; " + tmp.getScore());
+
+				}
+				showProgress(false);
+				showInfos();
+
+			}
+
+		});
+	}
 
 	private void initUi() {
-	}
+		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
 
+		llInfoHolder = (LinearLayout) findViewById(R.id.ll_main_info_holder);
+	}
 
 	private void setListeners() {
 	}
 
-
 	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-	
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -73,27 +90,13 @@ public class MainActivity extends ActionBarActivity implements OnClickListener, 
 		return super.onOptionsItemSelected(item);
 	}
 
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-
-
-		default:
-			break;
-		}
-	}
-	
-	
-
-
 	@Override
 	protected void onActivityResult(int reqCode, int resCode, Intent intent) {
 		switch (reqCode) {
 		case INTENT_ADD_POOL:
-			if(resCode == RESULT_OK){
+			if (resCode == RESULT_OK) {
 				App.getInstance().httpWorker.setToken(intent.getExtras().getString("token"));
-				
+
 				reloadData();
 			}
 			break;
@@ -101,42 +104,40 @@ public class MainActivity extends ActionBarActivity implements OnClickListener, 
 		default:
 			break;
 		}
-		
+
 		super.onActivityResult(reqCode, resCode, intent);
 	}
 
-
 	private void reloadData() {
-		if(App.getInstance().httpWorker.isTokenSet()){
+		if (App.getInstance().httpWorker.isTokenSet()) {
 			getProfile();
-		}else{
+		} else {
+			hideInfos();
 			Toast.makeText(this, "No Token set", Toast.LENGTH_SHORT).show();
 		}
-		
+
 	}
 
-
-	@Override
-	public void requestDone(Activity context, Profile profile) {
-		ArrayList<Worker> list = profile.getWorkersList();
-		
-		for(Worker tmp : list){
-			Log.d(getClass().getSimpleName(), "Worker: " + tmp.getName() + "; " + tmp.getScore());
-			
+	private void showInfos() {
+		if (txtNoPools.getVisibility() == View.VISIBLE) {
+			txtNoPools.setVisibility(View.GONE);
 		}
-		showProgress(context, false);
+		if (llInfoHolder.getVisibility() == View.GONE) {
+			llInfoHolder.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	private void hideInfos() {
+		if (txtNoPools.getVisibility() == View.GONE) {
+			txtNoPools.setVisibility(View.VISIBLE);
+		}
+		if (llInfoHolder.getVisibility() == View.VISIBLE) {
+			llInfoHolder.setVisibility(View.GONE);
+		}
 	}
 
-	@Override
-	public void requestDone(Activity context, Stats response) {
-		// TODO Auto-generated method stub
-		
+	private void showProgress(boolean show) {
+		setSupportProgressBarIndeterminateVisibility(show);
 	}
 
-	private void showProgress(Activity context, boolean show){
-		((MainActivity)context).setSupportProgressBarIndeterminateVisibility(show);
-	}
-
-
-    
 }
