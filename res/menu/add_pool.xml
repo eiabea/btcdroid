@@ -2,9 +2,9 @@
     xmlns:btcdroid="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/action_add_pool"
+        android:id="@+id/action_confim_pool"
         btcdroid:showAsAction="always"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/ic_checkmark_holo_light"
         android:title="@string/action_add_pool"/>
     
     <!-- 

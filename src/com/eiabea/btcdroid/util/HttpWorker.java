@@ -1,5 +1,6 @@
 package com.eiabea.btcdroid.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -19,7 +20,7 @@ public class HttpWorker{
 	public static final String DEBUG_API_KEY = "402189-0754bbdd5fa5ea39699830dd588986e5";
 	
 	public static final String STATS_URL = BASEURL + "/stats/json/" + DEBUG_API_KEY;
-	public static final String PROFILE_URL = BASEURL + "/accounts/profile/json/" + DEBUG_API_KEY;
+	public static final String PROFILE_URL = BASEURL + "/accounts/profile/json/";
 
 	public static final int POST = 0;
 	public static final int GET = 1;
@@ -41,6 +42,8 @@ public class HttpWorker{
 
 	private Context context;
 	
+	private String token = "";
+	
 	public static RequestQueue mQueue;
 	
 	public HttpWorker() {}
@@ -56,13 +59,25 @@ public class HttpWorker{
 	}
 	
 	public interface HttpWorkerInterface{
-		public void requestDone(int reqId, Object response);
+		public void requestDone(Activity context, Profile response);
+		public void requestDone(Activity context, Stats response);
 	}
 	
-	public void getProfile() {
+	public void setToken(String token){
+		this.token = token;
+	}
+	
+	public boolean isTokenSet(){
+		if(token != null && token.length() > 0){
+			return true;
+		}
+		return false;
+	}
+	
+	public void getProfile(final Activity context) {
 		Log.d(getClass().getSimpleName(), "get Profile");
 		
-		String url = HttpWorker.PROFILE_URL;
+		String url = HttpWorker.PROFILE_URL + token;
 		
 		System.out.println(HttpWorker.mQueue.toString());
 		
@@ -73,7 +88,7 @@ public class HttpWorker{
 				Log.d(getClass().getSimpleName(), "get profile done");
 				
 				MainActivity act = new MainActivity();
-				act.requestDone(GET_PROFILE, response);
+				act.requestDone(context, response);
 				
 			}
 		}, new ErrorListener() {
@@ -86,7 +101,7 @@ public class HttpWorker{
 		
 	}
 	
-	public void getStats() {
+	public void getStats(final Activity context) {
 		Log.d(getClass().getSimpleName(), "get Stats");
 		
 		String url = HttpWorker.STATS_URL;
