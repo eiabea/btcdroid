@@ -3,6 +3,8 @@
 
     <string name="app_name">BTCDroid</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+
+    <!-- MainActivity -->
+    <string name="txt_no_pools">No Pools, please add one</string>
 
 </resources>
