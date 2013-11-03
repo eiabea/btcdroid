@@ -10,25 +10,39 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/txt_no_pools" />
-    
-    <LinearLayout 
+
+    <LinearLayout
         android:id="@+id/ll_main_info_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Basic Info"/>
-        
-        <LinearLayout 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/ll_main_worker_holder"/>
-        
-    </LinearLayout>
+        android:orientation="vertical" >
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Total Hashrate" />
+
+            <TextView
+                android:id="@+id/txt_main_info_total_hashrate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="Basic Info" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_main_worker_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </LinearLayout>
 
 </RelativeLayout>

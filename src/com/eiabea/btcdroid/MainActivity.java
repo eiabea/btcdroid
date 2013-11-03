@@ -27,8 +27,10 @@ public class MainActivity extends ActionBarActivity {
 
 	private static final int INTENT_ADD_POOL = 0;
 
-	private TextView txtNoPools;
-	private LinearLayout llInfoHolder;
+	private MenuItem itemRefresh;
+	
+	private TextView txtNoPools, txtTotalHashrate;
+	private LinearLayout llInfoHolder, llWorkerHolder;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,29 +80,44 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onResponse(Profile profile) {
+				
+				clearWorkerViews();
+				
 				ArrayList<Worker> list = profile.getWorkersList();
+
+				int totalHashrate = 0;
 
 				for (Worker tmp : list) {
 					WorkerView workerView = new WorkerView(MainActivity.this);
 					workerView.setData(tmp);
-					llInfoHolder.addView(workerView);
+					llWorkerHolder.addView(workerView);
 					
-					Log.d(getClass().getSimpleName(),
-							"Worker: " + tmp.getName() + "; " + tmp.getScore());
+					totalHashrate += tmp.getHashrate();
 
 				}
 				showProgress(false);
+				
+				txtTotalHashrate.setText(String.valueOf(totalHashrate) + " MH/s");
+				
 				showInfos();
 
 			}
 
 		});
 	}
+	
+	private void clearWorkerViews(){
+		if(llWorkerHolder.getChildCount() > 0){
+			llWorkerHolder.removeAllViews();
+		}
+	}
 
 	private void initUi() {
 		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
+		txtTotalHashrate = (TextView) findViewById(R.id.txt_main_info_total_hashrate);
 
 		llInfoHolder = (LinearLayout) findViewById(R.id.ll_main_info_holder);
+		llWorkerHolder = (LinearLayout) findViewById(R.id.ll_main_worker_holder);
 	}
 
 	private void setListeners() {
@@ -110,6 +127,9 @@ public class MainActivity extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		
+		itemRefresh = menu.findItem(R.id.action_refresh);
+		
 		return true;
 	}
 
@@ -118,6 +138,10 @@ public class MainActivity extends ActionBarActivity {
 		switch (item.getItemId()) {
 		case R.id.action_add_pool:
 			startActivityForResult(new Intent(this, AddPoolActivity.class), INTENT_ADD_POOL);
+			break;
+			
+		case R.id.action_refresh:
+			reloadData();
 			break;
 
 		default:
@@ -173,6 +197,11 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void showProgress(boolean show) {
+		
+		if(itemRefresh != null){
+			itemRefresh.setVisible(!show);
+		}
+		
 		setSupportProgressBarIndeterminateVisibility(show);
 	}
 

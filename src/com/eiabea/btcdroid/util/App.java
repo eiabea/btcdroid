@@ -1,7 +1,9 @@
 package com.eiabea.btcdroid.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -14,10 +16,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class App extends Application {
+	
+	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss", Locale.getDefault());
+	
 	public HttpWorker httpWorker;
 
 	public Gson gson;
-
+	
 	/**
 	 * Object of own Class
 	 */

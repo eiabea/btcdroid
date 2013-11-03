@@ -10,7 +10,7 @@ public class Worker implements Parcelable {
 	private long last_share;
 	private String score;
 	private boolean alive;
-	private int send_threshold;
+	private int shares;
 	private int hashrate;
 
 	// Standardconstructor
@@ -22,7 +22,7 @@ public class Worker implements Parcelable {
 		last_share = in.readLong();
 		score = in.readString();
 		alive = in.readByte() == 1;
-		send_threshold = in.readInt();
+		shares = in.readInt();
 		hashrate = in.readInt();
 	}
 
@@ -37,7 +37,7 @@ public class Worker implements Parcelable {
 		dest.writeLong(last_share);
 		dest.writeString(score);
 		dest.writeByte((byte) (alive ? 1 : 0));
-		dest.writeInt(send_threshold);
+		dest.writeInt(shares);
 		dest.writeInt(hashrate);
 
 	}
@@ -77,12 +77,12 @@ public class Worker implements Parcelable {
 		this.alive = alive;
 	}
 
-	public int getSend_threshold() {
-		return send_threshold;
+	public int getShares() {
+		return shares;
 	}
 
-	public void setSend_threshold(int send_threshold) {
-		this.send_threshold = send_threshold;
+	public void setShares(int shares) {
+		this.shares = shares;
 	}
 
 	public int getHashrate() {
