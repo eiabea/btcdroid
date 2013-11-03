@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.content.Intent;
-import android.net.ParseException;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -30,12 +29,13 @@ public class MainActivity extends ActionBarActivity {
 	private static final int INTENT_ADD_POOL = 0;
 
 	private MenuItem itemRefresh;
-	
+
 	private boolean statsLoaded = false;
 	private boolean profileLoaded = false;
 	private boolean pricesLoaded = true;
-	
-	private TextView txtNoPools, txtTotalHashrate, txtRoundStarted, txtRoundDuration, txtLuck24h, txtLuck7d, txtLuck30d;
+
+	private TextView txtNoPools, txtTotalHashrate, txtRoundStarted,
+			txtRoundDuration, txtLuck24h, txtLuck7d, txtLuck30d;
 	private LinearLayout llInfoHolder, llWorkerHolder;
 
 	@Override
@@ -49,14 +49,14 @@ public class MainActivity extends ActionBarActivity {
 		setListeners();
 
 		reloadData();
-		
+
 		App.getInstance().httpWorker.getPrices(new Listener<JsonObject>() {
 
 			@Override
 			public void onResponse(JsonObject json) {
 				Prices prices = App.parsePrices(json);
-				
-				for(Price price : prices.getPrices()){
+
+				for (Price price : prices.getPrices()) {
 					System.out.println(price.getCurrency() + price.getT7d());
 				}
 
@@ -71,9 +71,9 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onResponse(Profile profile) {
-				
+
 				clearWorkerViews();
-				
+
 				ArrayList<Worker> list = profile.getWorkersList();
 
 				int totalHashrate = 0;
@@ -82,66 +82,65 @@ public class MainActivity extends ActionBarActivity {
 					WorkerView workerView = new WorkerView(MainActivity.this);
 					workerView.setData(tmp);
 					llWorkerHolder.addView(workerView);
-					
+
 					totalHashrate += tmp.getHashrate();
 
 				}
-				
+
 				txtTotalHashrate.setText(String.valueOf(totalHashrate) + " MH/s");
-				
+
 				profileLoaded = true;
-				
+
 				// TODO real call
 				pricesLoaded = true;
-				
+
 				readyLoading();
-				
 
 			}
 
 		});
 	}
-	
+
 	private void getStats() {
 		App.getInstance().httpWorker.getStats(new Listener<Stats>() {
-			
+
 			@Override
 			public void onResponse(Stats stats) {
 
-				try {  
-				    Date date = App.dateStatsFormat.parse(stats.getRound_started());  
-				    txtRoundStarted.setText(App.dateFormat.format(date));
+				try {
+					Date date = App.dateStatsFormat.parse(stats.getRound_started());
+					txtRoundStarted.setText(App.dateFormat.format(date));
 				} catch (java.text.ParseException e) {
 					e.printStackTrace();
 				}
-				
+
 				txtRoundDuration.setText(stats.getRound_duration());
 				txtLuck24h.setText(formatProcent(stats.getLuck_1()));
 				txtLuck7d.setText(formatProcent(stats.getLuck_7()));
 				txtLuck30d.setText(formatProcent(stats.getLuck_30()));
-				
+
 				statsLoaded = true;
-				
+
 				readyLoading();
-				
+
 			}
-			
+
 		});
 	}
-	
-	private String formatProcent(String raw){
+
+	private String formatProcent(String raw) {
 		float fl = Float.parseFloat(raw);
 		return String.valueOf(fl * 100) + " %";
 	}
-	
-	private void clearWorkerViews(){
-		if(llWorkerHolder.getChildCount() > 0){
+
+	private void clearWorkerViews() {
+		if (llWorkerHolder.getChildCount() > 0) {
 			llWorkerHolder.removeAllViews();
 		}
 	}
-	
-	private void readyLoading(){
-		if(profileLoaded == true && statsLoaded == true && pricesLoaded == true){
+
+	private void readyLoading() {
+		if (profileLoaded == true && statsLoaded == true && pricesLoaded == true) {
 			showInfos();
 			showProgress(false);
 		}
@@ -149,7 +148,7 @@ public class MainActivity extends ActionBarActivity {
 
 	private void initUi() {
 		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
-		
+
 		txtTotalHashrate = (TextView) findViewById(R.id.txt_main_info_total_hashrate);
 		txtRoundStarted = (TextView) findViewById(R.id.txt_main_info_round_started);
 		txtRoundDuration = (TextView) findViewById(R.id.txt_main_info_round_duration);
@@ -168,9 +167,9 @@ public class MainActivity extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		
+
 		itemRefresh = menu.findItem(R.id.action_refresh);
-		
+
 		return true;
 	}
 
@@ -180,7 +179,7 @@ public class MainActivity extends ActionBarActivity {
 		case R.id.action_add_pool:
 			startActivityForResult(new Intent(this, AddPoolActivity.class), INTENT_ADD_POOL);
 			break;
-			
+
 		case R.id.action_refresh:
 			reloadData();
 			break;
@@ -212,14 +211,14 @@ public class MainActivity extends ActionBarActivity {
 	private void reloadData() {
 		if (App.getInstance().httpWorker.isTokenSet()) {
 			showProgress(true);
-			
+
 			profileLoaded = pricesLoaded = statsLoaded = false;
-			
+
 			getProfile();
 			getStats();
 		} else {
 			hideInfos();
-			Toast.makeText(this, "No Token set", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(this, "No Token set", Toast.LENGTH_SHORT).show();
 		}
 
 	}
@@ -232,7 +231,7 @@ public class MainActivity extends ActionBarActivity {
 			llInfoHolder.setVisibility(View.VISIBLE);
 		}
 	}
-	
+
 	private void hideInfos() {
 		if (txtNoPools.getVisibility() == View.GONE) {
 			txtNoPools.setVisibility(View.VISIBLE);
@@ -243,11 +242,11 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void showProgress(boolean show) {
-		
-		if(itemRefresh != null){
+
+		if (itemRefresh != null) {
 			itemRefresh.setVisible(!show);
 		}
-		
+
 		setSupportProgressBarIndeterminateVisibility(show);
 	}
 
