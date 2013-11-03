@@ -1,6 +1,5 @@
 package com.eiabea.btcdroid.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -9,13 +8,14 @@ import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
+import com.google.gson.JsonObject;
 
 public class HttpWorker{
 
 	public static final String BASEURL = "https://mining.bitcoin.cz/";
+	public static final String PRICES_URL = "http://api.bitcoincharts.com/v1/weighted_prices.json";
 	
 	public static final String DEBUG_API_KEY = "402189-0754bbdd5fa5ea39699830dd588986e5";
 	
@@ -86,25 +86,31 @@ public class HttpWorker{
 		
 	}
 	
-	public void getStats(final Activity context) {
+	public void getStats(Response.Listener<Stats> listener) {
 		Log.d(getClass().getSimpleName(), "get Stats");
 		
 		String url = HttpWorker.STATS_URL;
 		
 		System.out.println(HttpWorker.mQueue.toString());
 		
-		HttpWorker.mQueue.add(new GsonRequest<Stats>(url, Stats.class, null, new Response.Listener<Stats>() {
+		HttpWorker.mQueue.add(new GsonRequest<Stats>(url, Stats.class, null, listener, new ErrorListener() {
+			
 			@Override
-			public void onResponse(Stats response) {
-				
-				Log.d(getClass().getSimpleName(), "get stats done");
-				
-				Log.d(getClass().getSimpleName(), "round_duration: " + response.getRound_duration());
-				
-				
-				
+			public void onErrorResponse(VolleyError error) {
+				Log.d(getClass().getSimpleName(), "Error while loading: " + error.getMessage());
 			}
-		}, new ErrorListener() {
+		}));
+		
+	}
+	
+	public void getPrices(Response.Listener<JsonObject> listener) {
+		Log.d(getClass().getSimpleName(), "get Stats");
+		
+		String url = HttpWorker.PRICES_URL;
+		
+		System.out.println(HttpWorker.mQueue.toString());
+		
+		HttpWorker.mQueue.add(new GsonRequest<JsonObject>(url, JsonObject.class, null, listener, new ErrorListener() {
 			
 			@Override
 			public void onErrorResponse(VolleyError error) {

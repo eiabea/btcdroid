@@ -15,10 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response.Listener;
+import com.eiabea.btcdroid.model.Price;
+import com.eiabea.btcdroid.model.Prices;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.views.WorkerView;
+import com.google.gson.JsonObject;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -38,6 +41,34 @@ public class MainActivity extends ActionBarActivity {
 		setListeners();
 
 		reloadData();
+		
+		App.getInstance().httpWorker.getPrices(new Listener<JsonObject>() {
+
+			@Override
+			public void onResponse(JsonObject json) {
+				Prices prices = App.parsePrices(json);
+				
+				for(Price price : prices.getPrices()){
+					System.out.println(price.getCurrency() + price.getT7d());
+				}
+				
+//				ArrayList<Worker> list = profile.getWorkersList();
+//
+//				for (Worker tmp : list) {
+//					WorkerView workerView = new WorkerView(MainActivity.this);
+//					workerView.setData(tmp);
+//					llInfoHolder.addView(workerView);
+//					
+//					Log.d(getClass().getSimpleName(),
+//							"Worker: " + tmp.getName() + "; " + tmp.getScore());
+//
+//				}
+//				showProgress(false);
+//				showInfos();
+
+			}
+
+		});
 
 	}
 
