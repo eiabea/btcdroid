@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +17,7 @@ import com.android.volley.Response.Listener;
 import com.eiabea.btcdroid.model.Price;
 import com.eiabea.btcdroid.model.Prices;
 import com.eiabea.btcdroid.model.Profile;
+import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.views.WorkerView;
@@ -29,7 +29,7 @@ public class MainActivity extends ActionBarActivity {
 
 	private MenuItem itemRefresh;
 	
-	private TextView txtNoPools, txtTotalHashrate;
+	private TextView txtNoPools, txtTotalHashrate, txtRoundStarted, txtRoundDuration, txtLuck24h, txtLuck7d, txtLuck30d;
 	private LinearLayout llInfoHolder, llWorkerHolder;
 
 	@Override
@@ -53,20 +53,6 @@ public class MainActivity extends ActionBarActivity {
 				for(Price price : prices.getPrices()){
 					System.out.println(price.getCurrency() + price.getT7d());
 				}
-				
-//				ArrayList<Worker> list = profile.getWorkersList();
-//
-//				for (Worker tmp : list) {
-//					WorkerView workerView = new WorkerView(MainActivity.this);
-//					workerView.setData(tmp);
-//					llInfoHolder.addView(workerView);
-//					
-//					Log.d(getClass().getSimpleName(),
-//							"Worker: " + tmp.getName() + "; " + tmp.getScore());
-//
-//				}
-//				showProgress(false);
-//				showInfos();
 
 			}
 
@@ -106,6 +92,26 @@ public class MainActivity extends ActionBarActivity {
 		});
 	}
 	
+	private void getStats() {
+		showProgress(true);
+		App.getInstance().httpWorker.getStats(new Listener<Stats>() {
+			
+			@Override
+			public void onResponse(Stats stats) {
+
+				txtRoundStarted.setText(stats.getRound_started());
+				txtRoundDuration.setText(stats.getRound_duration());
+				txtLuck24h.setText(stats.getLuck_1());
+				txtLuck7d.setText(stats.getLuck_7());
+				txtLuck30d.setText(stats.getLuck_30());
+				
+				showInfos();
+				
+			}
+			
+		});
+	}
+	
 	private void clearWorkerViews(){
 		if(llWorkerHolder.getChildCount() > 0){
 			llWorkerHolder.removeAllViews();
@@ -115,6 +121,11 @@ public class MainActivity extends ActionBarActivity {
 	private void initUi() {
 		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
 		txtTotalHashrate = (TextView) findViewById(R.id.txt_main_info_total_hashrate);
+		txtRoundStarted = (TextView) findViewById(R.id.txt_main_info_round_started);
+		txtRoundDuration = (TextView) findViewById(R.id.txt_main_info_round_duration);
+		txtLuck24h = (TextView) findViewById(R.id.txt_main_info_luck_24h);
+		txtLuck7d = (TextView) findViewById(R.id.txt_main_info_luck_7d);
+		txtLuck30d = (TextView) findViewById(R.id.txt_main_info_luck_30d);
 
 		llInfoHolder = (LinearLayout) findViewById(R.id.ll_main_info_holder);
 		llWorkerHolder = (LinearLayout) findViewById(R.id.ll_main_worker_holder);
@@ -171,6 +182,7 @@ public class MainActivity extends ActionBarActivity {
 	private void reloadData() {
 		if (App.getInstance().httpWorker.isTokenSet()) {
 			getProfile();
+			getStats();
 		} else {
 			hideInfos();
 			Toast.makeText(this, "No Token set", Toast.LENGTH_SHORT).show();
