@@ -1,8 +1,10 @@
 package com.eiabea.btcdroid;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.content.Intent;
+import android.net.ParseException;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -28,6 +30,10 @@ public class MainActivity extends ActionBarActivity {
 	private static final int INTENT_ADD_POOL = 0;
 
 	private MenuItem itemRefresh;
+	
+	private boolean statsLoaded = false;
+	private boolean profileLoaded = false;
+	private boolean pricesLoaded = true;
 	
 	private TextView txtNoPools, txtTotalHashrate, txtRoundStarted, txtRoundDuration, txtLuck24h, txtLuck7d, txtLuck30d;
 	private LinearLayout llInfoHolder, llWorkerHolder;
@@ -61,7 +67,6 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void getProfile() {
-		showProgress(true);
 		App.getInstance().httpWorker.getProfile(new Listener<Profile>() {
 
 			@Override
@@ -81,11 +86,16 @@ public class MainActivity extends ActionBarActivity {
 					totalHashrate += tmp.getHashrate();
 
 				}
-				showProgress(false);
 				
 				txtTotalHashrate.setText(String.valueOf(totalHashrate) + " MH/s");
 				
-				showInfos();
+				profileLoaded = true;
+				
+				// TODO real call
+				pricesLoaded = true;
+				
+				readyLoading();
+				
 
 			}
 
@@ -93,23 +103,35 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	private void getStats() {
-		showProgress(true);
 		App.getInstance().httpWorker.getStats(new Listener<Stats>() {
 			
 			@Override
 			public void onResponse(Stats stats) {
 
-				txtRoundStarted.setText(stats.getRound_started());
-				txtRoundDuration.setText(stats.getRound_duration());
-				txtLuck24h.setText(stats.getLuck_1());
-				txtLuck7d.setText(stats.getLuck_7());
-				txtLuck30d.setText(stats.getLuck_30());
+				try {  
+				    Date date = App.dateStatsFormat.parse(stats.getRound_started());  
+				    txtRoundStarted.setText(App.dateFormat.format(date));
+				} catch (java.text.ParseException e) {
+					e.printStackTrace();
+				}
 				
-				showInfos();
+				txtRoundDuration.setText(stats.getRound_duration());
+				txtLuck24h.setText(formatProcent(stats.getLuck_1()));
+				txtLuck7d.setText(formatProcent(stats.getLuck_7()));
+				txtLuck30d.setText(formatProcent(stats.getLuck_30()));
+				
+				statsLoaded = true;
+				
+				readyLoading();
 				
 			}
 			
 		});
+	}
+	
+	private String formatProcent(String raw){
+		float fl = Float.parseFloat(raw);
+		return String.valueOf(fl * 100) + " %";
 	}
 	
 	private void clearWorkerViews(){
@@ -117,9 +139,17 @@ public class MainActivity extends ActionBarActivity {
 			llWorkerHolder.removeAllViews();
 		}
 	}
+	
+	private void readyLoading(){
+		if(profileLoaded == true && statsLoaded == true && pricesLoaded == true){
+			showInfos();
+			showProgress(false);
+		}
+	}
 
 	private void initUi() {
 		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
+		
 		txtTotalHashrate = (TextView) findViewById(R.id.txt_main_info_total_hashrate);
 		txtRoundStarted = (TextView) findViewById(R.id.txt_main_info_round_started);
 		txtRoundDuration = (TextView) findViewById(R.id.txt_main_info_round_duration);
@@ -181,6 +211,10 @@ public class MainActivity extends ActionBarActivity {
 
 	private void reloadData() {
 		if (App.getInstance().httpWorker.isTokenSet()) {
+			showProgress(true);
+			
+			profileLoaded = pricesLoaded = statsLoaded = false;
+			
 			getProfile();
 			getStats();
 		} else {
