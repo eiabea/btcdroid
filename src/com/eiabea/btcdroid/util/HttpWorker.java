@@ -12,7 +12,6 @@ import com.android.volley.toolbox.Volley;
 import com.eiabea.btcdroid.model.Prices;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
-import com.google.gson.JsonObject;
 
 public class HttpWorker {
 

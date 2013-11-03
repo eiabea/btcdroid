@@ -32,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
 	private boolean profileLoaded = false;
 	private boolean pricesLoaded = true;
 
-	private TextView txtNoPools, txtCurrentValue, txtTotalHashrate, txtRoundStarted,
+	private TextView txtNoPools, txtCurrentValue, txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
 			txtRoundDuration, txtLuck24h, txtLuck7d, txtLuck30d;
 	private LinearLayout llInfoHolder, llWorkerHolder;
 
@@ -87,6 +87,7 @@ public class MainActivity extends ActionBarActivity {
 				}
 
 				txtTotalHashrate.setText(String.valueOf(totalHashrate) + " MH/s");
+				txtAverageHashrate.setText(profile.getHashrate() + " MH/s");
 
 				profileLoaded = true;
 
@@ -186,6 +187,7 @@ public class MainActivity extends ActionBarActivity {
 
 		txtCurrentValue = (TextView) findViewById(R.id.txt_main_info_current_value);
 		txtTotalHashrate = (TextView) findViewById(R.id.txt_main_info_total_hashrate);
+		txtAverageHashrate = (TextView) findViewById(R.id.txt_main_info_average_hashrate);
 		txtRoundStarted = (TextView) findViewById(R.id.txt_main_info_round_started);
 		txtRoundDuration = (TextView) findViewById(R.id.txt_main_info_round_duration);
 		txtLuck24h = (TextView) findViewById(R.id.txt_main_info_luck_24h);
