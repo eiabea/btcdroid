@@ -1,13 +1,13 @@
 package com.eiabea.btcdroid.util;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import com.eiabea.btcdroid.model.Price;
 import com.eiabea.btcdroid.model.Prices;
@@ -16,14 +16,18 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class App extends Application {
-	
+
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss", Locale.getDefault());
-	public static final SimpleDateFormat dateStatsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()); 
-	
+	public static final SimpleDateFormat dateStatsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+
 	public HttpWorker httpWorker;
 
 	public Gson gson;
-	
+
+	private SharedPreferences pref;
+
+	private Price lastPrice;
+
 	/**
 	 * Object of own Class
 	 */
@@ -35,9 +39,12 @@ public class App extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		gson = new Gson();
+
+		pref = getSharedPreferences("appData", MODE_PRIVATE);
+		this.lastPrice = gson.fromJson(pref.getString("lastPrice", ""), Price.class);
 
 		me = this;
-		gson = new Gson();
 		httpWorker = new HttpWorker(this.getApplicationContext());
 
 	}
@@ -49,50 +56,40 @@ public class App extends Application {
 		return me;
 	}
 
+	public void setLastPrice(Price lastPrice) {
+		this.lastPrice = lastPrice;
+		pref.edit().putString("lastPrice", gson.toJson(lastPrice)).commit();
+	}
+	
+	public Price getLastPrice(){
+		return this.lastPrice;
+	}
+
 	public static Prices parsePrices(JsonObject json) {
 		Prices prices = new Prices();
-
-		ArrayList<Price> listPrices = new ArrayList<Price>();
-
-		prices.setTimestamp(json.get("timestamp").getAsLong());
 
 		Set<Entry<String, JsonElement>> set = json.entrySet();
 
 		for (Iterator<Entry<String, JsonElement>> it = set.iterator(); it.hasNext();) {
 			Entry<String, JsonElement> current = it.next();
 
-			if (!current.getKey().equals("timestamp")) {
+			if (current.getKey().equals("last")) {
+
+				JsonObject data = current.getValue().getAsJsonObject();
 
 				Price tmpPrice = new Price();
 
-				tmpPrice.setCurrency(current.getKey());
+				tmpPrice.setValue(data.get("value").getAsString());
+				tmpPrice.setValue_int(data.get("value_int").getAsString());
+				tmpPrice.setDisplay(data.get("display").getAsString());
+				tmpPrice.setDisplay_short(data.get("display_short").getAsString());
+				tmpPrice.setCurrency(data.get("currency").getAsString());
 
-				JsonElement jsonPrice = current.getValue();
-
-				JsonElement value7d = jsonPrice.getAsJsonObject().get("7d");
-
-				if (value7d != null) {
-					tmpPrice.setT7d(value7d.getAsString());
-				}
-
-				JsonElement value30d = jsonPrice.getAsJsonObject().get("30d");
-
-				if (value30d != null) {
-					tmpPrice.setT30d(value30d.getAsString());
-				}
-
-				JsonElement value24h = jsonPrice.getAsJsonObject().get("24h");
-
-				if (value24h != null) {
-					tmpPrice.setT24h(value24h.getAsString());
-				}
-
-				listPrices.add(tmpPrice);
-
+				prices.setLastPrice(tmpPrice);
 			}
+
 		}
 
-		prices.setPrices(listPrices);
 		return prices;
 	}
 }

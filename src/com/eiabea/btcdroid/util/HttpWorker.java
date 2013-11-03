@@ -9,6 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.eiabea.btcdroid.model.Prices;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.google.gson.JsonObject;
@@ -16,7 +17,7 @@ import com.google.gson.JsonObject;
 public class HttpWorker {
 
 	public static final String BASEURL = "https://mining.bitcoin.cz/";
-	public static final String PRICES_URL = "http://api.bitcoincharts.com/v1/weighted_prices.json";
+	public static final String PRICES_URL = "http://data.mtgox.com/api/2/BTCUSD/money/ticker_fast";
 
 	public static final String DEBUG_API_KEY = "402189-0754bbdd5fa5ea39699830dd588986e5";
 
@@ -114,14 +115,14 @@ public class HttpWorker {
 
 	}
 
-	public void getPrices(Response.Listener<JsonObject> listener) {
-		Log.d(getClass().getSimpleName(), "get Stats");
+	public void getPrices(Response.Listener<Prices> listener) {
+		Log.d(getClass().getSimpleName(), "get Prices");
 
 		String url = HttpWorker.PRICES_URL;
 
 		System.out.println(HttpWorker.mQueue.toString());
 
-		HttpWorker.mQueue.add(new GsonRequest<JsonObject>(url, JsonObject.class, null, listener, new ErrorListener() {
+		HttpWorker.mQueue.add(new GsonRequest<Prices>(url, Prices.class, null, listener, new ErrorListener() {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {

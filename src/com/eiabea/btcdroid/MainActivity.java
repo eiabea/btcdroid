@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response.Listener;
 import com.eiabea.btcdroid.model.Price;
@@ -22,7 +21,6 @@ import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.views.WorkerView;
-import com.google.gson.JsonObject;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -34,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
 	private boolean profileLoaded = false;
 	private boolean pricesLoaded = true;
 
-	private TextView txtNoPools, txtTotalHashrate, txtRoundStarted,
+	private TextView txtNoPools, txtCurrentValue, txtTotalHashrate, txtRoundStarted,
 			txtRoundDuration, txtLuck24h, txtLuck7d, txtLuck30d;
 	private LinearLayout llInfoHolder, llWorkerHolder;
 
@@ -49,20 +47,21 @@ public class MainActivity extends ActionBarActivity {
 		setListeners();
 
 		reloadData();
-
-		App.getInstance().httpWorker.getPrices(new Listener<JsonObject>() {
-
-			@Override
-			public void onResponse(JsonObject json) {
-				Prices prices = App.parsePrices(json);
-
-				for (Price price : prices.getPrices()) {
-					System.out.println(price.getCurrency() + price.getT7d());
-				}
-
-			}
-
-		});
+//
+//		App.getInstance().httpWorker.getPrices(new Listener<JsonObject>() {
+//
+//			@Override
+//			public void onResponse(JsonObject json) {
+//				Prices prices = App.parsePrices(json);
+//
+//					System.out.println(prices.getLastPrice().getValue());
+////				for (Price price : prices.getPrices()) {
+////					System.out.println(price.getCurrency() + price.getT7d());
+////				}
+//
+//			}
+//
+//		});
 
 	}
 
@@ -90,9 +89,6 @@ public class MainActivity extends ActionBarActivity {
 				txtTotalHashrate.setText(String.valueOf(totalHashrate) + " MH/s");
 
 				profileLoaded = true;
-
-				// TODO real call
-				pricesLoaded = true;
 
 				readyLoading();
 
@@ -127,6 +123,45 @@ public class MainActivity extends ActionBarActivity {
 
 		});
 	}
+	
+	private void getPrices() {
+		App.getInstance().httpWorker.getPrices(new Listener<Prices>() {
+			
+			@Override
+			public void onResponse(Prices prices) {
+				
+				Price lastPrice = App.getInstance().getLastPrice();
+				Price currentPrice = App.parsePrices(prices.getData()).getLastPrice();
+				
+				if(lastPrice != null && currentPrice != null){
+					float lastPriceFloat = Float.parseFloat(lastPrice.getValue());
+					float currentPriceFloat = Float.parseFloat(currentPrice.getValue());
+					
+					if(lastPriceFloat > currentPriceFloat){
+						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
+					}else if (lastPriceFloat < currentPriceFloat){
+						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
+					}else{
+						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
+						
+					}
+					
+					txtCurrentValue.setText(currentPrice.getDisplay_short());
+				}else if(currentPrice != null){
+					txtCurrentValue.setText(currentPrice.getDisplay_short());
+					
+				}
+				App.getInstance().setLastPrice(currentPrice);
+				
+				
+				pricesLoaded = true;
+				
+				readyLoading();
+				
+			}
+			
+		});
+	}
 
 	private String formatProcent(String raw) {
 		float fl = Float.parseFloat(raw);
@@ -149,6 +184,7 @@ public class MainActivity extends ActionBarActivity {
 	private void initUi() {
 		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
 
+		txtCurrentValue = (TextView) findViewById(R.id.txt_main_info_current_value);
 		txtTotalHashrate = (TextView) findViewById(R.id.txt_main_info_total_hashrate);
 		txtRoundStarted = (TextView) findViewById(R.id.txt_main_info_round_started);
 		txtRoundDuration = (TextView) findViewById(R.id.txt_main_info_round_duration);
@@ -216,6 +252,7 @@ public class MainActivity extends ActionBarActivity {
 
 			getProfile();
 			getStats();
+			getPrices();
 		} else {
 			hideInfos();
 			//Toast.makeText(this, "No Token set", Toast.LENGTH_SHORT).show();

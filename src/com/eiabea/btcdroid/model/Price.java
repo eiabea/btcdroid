@@ -6,10 +6,11 @@ import android.os.Parcelable;
 public class Price implements Parcelable {
 
 	// Attributes
+	private String value;
+	private String value_int;
+	private String display;
+	private String display_short;
 	private String currency;
-	private String t7d;
-	private String t30d;
-	private String t24h;
 	
 	
 	// Standardconstructor
@@ -17,10 +18,11 @@ public class Price implements Parcelable {
 
 	// Constructor used for Parcelable
 	public Price(Parcel in) {
+		value = in.readString();
+		value_int = in.readString();
+		display = in.readString();
+		display_short = in.readString();
 		currency = in.readString();
-		t7d = in.readString();
-		t30d = in.readString();
-		t24h = in.readString();
 	}
 	
 	@Override
@@ -30,10 +32,11 @@ public class Price implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(value);
+		dest.writeString(value_int);
+		dest.writeString(display);
+		dest.writeString(display_short);
 		dest.writeString(currency);
-		dest.writeString(t7d);
-		dest.writeString(t30d);
-		dest.writeString(t24h);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -46,28 +49,36 @@ public class Price implements Parcelable {
     	}
     };
 
-	public String getT7d() {
-		return t7d;
+	public String getValue() {
+		return value;
 	}
 
-	public void setT7d(String t7d) {
-		this.t7d = t7d;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
-	public String getT30d() {
-		return t30d;
+	public String getValue_int() {
+		return value_int;
 	}
 
-	public void setT30d(String t30d) {
-		this.t30d = t30d;
+	public void setValue_int(String value_int) {
+		this.value_int = value_int;
 	}
 
-	public String getT24h() {
-		return t24h;
+	public String getDisplay() {
+		return display;
 	}
 
-	public void setT24h(String t24h) {
-		this.t24h = t24h;
+	public void setDisplay(String display) {
+		this.display = display;
+	}
+
+	public String getDisplay_short() {
+		return display_short;
+	}
+
+	public void setDisplay_short(String display_short) {
+		this.display_short = display_short;
 	}
 
 	public String getCurrency() {

@@ -1,7 +1,5 @@
 package com.eiabea.btcdroid.model;
 
-import java.util.ArrayList;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,9 +9,9 @@ import com.google.gson.JsonObject;
 public class Prices implements Parcelable {
 
 	// Attributes
-	private long timestamp;
-	private JsonObject allPrices;
-	private ArrayList<Price> prices;
+	private String result;
+	private JsonObject data;
+	private Price lastPrice;
 	
 	
 	// Standardconstructor
@@ -21,10 +19,9 @@ public class Prices implements Parcelable {
 
 	// Constructor used for Parcelable
 	public Prices(Parcel in) {
-		timestamp = in.readLong();
 		
-		allPrices = new JsonObject();
-		allPrices = App.getInstance().gson.fromJson(in.readString(), JsonObject.class);
+		data = new JsonObject();
+		data = App.getInstance().gson.fromJson(in.readString(), JsonObject.class);
 	}
 	
 	@Override
@@ -34,9 +31,8 @@ public class Prices implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeLong(timestamp);
 
-		dest.writeString(allPrices.getAsString());
+		dest.writeString(data.getAsString());
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -49,49 +45,29 @@ public class Prices implements Parcelable {
     	}
     };
 
-
-	public long getTimestamp() {
-		return timestamp;
+	public String getResult() {
+		return result;
 	}
 
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
+	public void setResult(String result) {
+		this.result = result;
 	}
 
-	public JsonObject getAllPrices() {
-		return allPrices;
+	public JsonObject getData() {
+		return data;
 	}
 
-	public void setAllPrices(JsonObject allPrices) {
-		this.allPrices = allPrices;
+	public void setData(JsonObject data) {
+		this.data = data;
 	}
 
-	public ArrayList<Price> getPrices() {
-		return prices;
+	public Price getLastPrice() {
+		return lastPrice;
 	}
 
-	public void setPrices(ArrayList<Price> prices) {
-		this.prices = prices;
+	public void setLastPrice(Price lastPrice) {
+		this.lastPrice = lastPrice;
 	}
 
-
-	
-//	public ArrayList<Worker> getWorkersList(){
-//		
-//		listWorkers = new ArrayList<Worker>();
-//		
-//		Set<Entry<String, JsonElement>> set =  workers.entrySet();
-//		
-//	    for (Iterator<Entry<String, JsonElement>> it = set.iterator(); it.hasNext(); ) {
-//	    	Entry<String, JsonElement> current = it.next();
-//	   
-//	    	Worker tmpWorker = App.getInstance().gson.fromJson(current.getValue(), Worker.class);
-//	    	tmpWorker.setName(current.getKey());
-//	    	
-//	    	listWorkers.add(tmpWorker);
-//	    }
-//	    
-//	    return listWorkers;
-//	}
     
 }
