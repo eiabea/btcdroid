@@ -1,6 +1,7 @@
 package com.eiabea.btcdroid;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 import android.content.Intent;
@@ -32,7 +33,7 @@ public class MainActivity extends ActionBarActivity {
 	private boolean profileLoaded = false;
 	private boolean pricesLoaded = true;
 
-	private TextView txtNoPools, txtCurrentValue, txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
+	private TextView txtNoPools, txtConfirmedReward, txtCurrentValue, txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
 			txtRoundDuration, txtLuck24h, txtLuck7d, txtLuck30d;
 	private LinearLayout llInfoHolder, llWorkerHolder;
 
@@ -47,21 +48,6 @@ public class MainActivity extends ActionBarActivity {
 		setListeners();
 
 		reloadData();
-//
-//		App.getInstance().httpWorker.getPrices(new Listener<JsonObject>() {
-//
-//			@Override
-//			public void onResponse(JsonObject json) {
-//				Prices prices = App.parsePrices(json);
-//
-//					System.out.println(prices.getLastPrice().getValue());
-////				for (Price price : prices.getPrices()) {
-////					System.out.println(price.getCurrency() + price.getT7d());
-////				}
-//
-//			}
-//
-//		});
 
 	}
 
@@ -74,6 +60,8 @@ public class MainActivity extends ActionBarActivity {
 				clearWorkerViews();
 
 				ArrayList<Worker> list = profile.getWorkersList();
+				
+				Collections.sort(list, new App.sortWorkers());
 
 				int totalHashrate = 0;
 
@@ -86,6 +74,7 @@ public class MainActivity extends ActionBarActivity {
 
 				}
 
+				txtConfirmedReward.setText(profile.getConfirmed_reward() + " BTC");
 				txtTotalHashrate.setText(String.valueOf(totalHashrate) + " MH/s");
 				txtAverageHashrate.setText(profile.getHashrate() + " MH/s");
 
@@ -142,10 +131,11 @@ public class MainActivity extends ActionBarActivity {
 						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
 					}else if (lastPriceFloat < currentPriceFloat){
 						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
-					}else{
-						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
-						
 					}
+//					else{
+//						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
+//						
+//					}
 					
 					txtCurrentValue.setText(currentPrice.getDisplay_short());
 				}else if(currentPrice != null){
@@ -185,6 +175,7 @@ public class MainActivity extends ActionBarActivity {
 	private void initUi() {
 		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
 
+		txtConfirmedReward = (TextView) findViewById(R.id.txt_main_info_confirmed_reward);
 		txtCurrentValue = (TextView) findViewById(R.id.txt_main_info_current_value);
 		txtTotalHashrate = (TextView) findViewById(R.id.txt_main_info_total_hashrate);
 		txtAverageHashrate = (TextView) findViewById(R.id.txt_main_info_average_hashrate);

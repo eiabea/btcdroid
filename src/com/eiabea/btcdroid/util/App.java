@@ -1,6 +1,7 @@
 package com.eiabea.btcdroid.util;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map.Entry;
@@ -11,6 +12,7 @@ import android.content.SharedPreferences;
 
 import com.eiabea.btcdroid.model.Price;
 import com.eiabea.btcdroid.model.Prices;
+import com.eiabea.btcdroid.model.Worker;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -91,5 +93,14 @@ public class App extends Application {
 		}
 
 		return prices;
+	}
+	
+	public static class sortWorkers implements Comparator<Worker> {
+
+		@Override
+		public int compare(Worker lhs, Worker rhs) {
+			return lhs.getName().compareTo(rhs.getName());
+		}
+		
 	}
 }

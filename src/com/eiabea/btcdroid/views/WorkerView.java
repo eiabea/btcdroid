@@ -38,7 +38,17 @@ public class WorkerView extends LinearLayout {
 		this.setWorker(worker);
 		
 		if(worker != null){
-			txtName.setText(worker.getName());
+			
+			if(worker.isAlive()){
+				txtName.setText(worker.getName());
+				txtName.setTextColor(getResources().getColor(R.color.bd_black));
+				
+			}else{
+				txtName.setText(worker.getName() + " - inactive");
+				txtName.setTextColor(getResources().getColor(R.color.bd_red));
+				
+			}
+			
 			txtScore.setText(worker.getScore());
 			txtLastShare.setText(App.dateFormat.format(new Date(worker.getLast_share() * 1000)));
 			txtHashrate.setText(String.valueOf(worker.getHashrate()) + " MH/s");

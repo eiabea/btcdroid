@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class AddPoolActivity extends ActionBarActivity {
 
+	private EditText edtToken;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,6 +26,8 @@ public class AddPoolActivity extends ActionBarActivity {
 	private void initUi() {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
+		
+		edtToken = (EditText) findViewById(R.id.edt_add_pool_token);
 	}
 
 	private void setListeners() {
@@ -44,7 +50,7 @@ public class AddPoolActivity extends ActionBarActivity {
 			break;
 		case R.id.action_confim_pool:
 			Intent resultIntent = new Intent();
-			resultIntent.putExtra("token", "402189-0754bbdd5fa5ea39699830dd588986e5");
+			resultIntent.putExtra("token", edtToken.getText().toString());
 			setResult(RESULT_OK, resultIntent);
 			
 			finish();
