@@ -14,6 +14,7 @@
         android:padding="5dp" />
 
     <LinearLayout
+        android:padding="5dp"
         android:id="@+id/ll_main_info_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
