@@ -1,0 +1,17 @@
+Simple application which shows all relevant informations about your miners working for Slush's Pool
+
+General information:
+
+.) Current price of 1 BTC (MtGox)
+.) Your confirmed reward
+.) Current hashrate of all your miners
+.) Average hashrate of last 10 rounds
+.) Roundinformation
+.) Roundranking
+.) Luck
+
+Worker information:
+.) Score
+.) Last share
+.) Hashrate
+.) Number of shares
