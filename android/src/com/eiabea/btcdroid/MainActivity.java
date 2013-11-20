@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -36,11 +35,15 @@ public class MainActivity extends ActionBarActivity {
 
 	private static final int INTENT_ADD_POOL = 0;
 
+	private static final String STATE_PROFILE = "state_profile";
+	private static final String STATE_STATS = "state_stats";
+	private static final String STATE_PRICES = "state_prices";
+
 	private MenuItem itemRefresh, itemAdd;
 
 	private boolean statsLoaded = false;
 	private boolean profileLoaded = false;
-	private boolean pricesLoaded = true;
+	private boolean pricesLoaded = false;
 
 	private TextView txtNoPools, txtConfirmedReward, txtCurrentValue,
 			txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
@@ -49,6 +52,10 @@ public class MainActivity extends ActionBarActivity {
 	private LinearLayout llInfoHolder, llWorkerHolder;
 	private RatingBar ratRating;
 	private boolean isProgessShowing = false;
+
+	private Profile profile = null;
+	private Stats stats = null;
+	private Prices prices = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +67,14 @@ public class MainActivity extends ActionBarActivity {
 
 		setListeners();
 
-		reloadData();
+		if (savedInstanceState != null) {
+			// Restore value of members from saved state
+			this.profile = savedInstanceState.getParcelable(STATE_PROFILE);
+			this.stats = savedInstanceState.getParcelable(STATE_STATS);
+			this.prices = savedInstanceState.getParcelable(STATE_PRICES);
+		}
+
+		reloadData(false);
 
 	}
 
@@ -70,36 +84,27 @@ public class MainActivity extends ActionBarActivity {
 		super.onResume();
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		// Save the user's current game state
+		savedInstanceState.putParcelable(STATE_PROFILE, this.profile);
+		savedInstanceState.putParcelable(STATE_STATS, this.stats);
+		savedInstanceState.putParcelable(STATE_PRICES, this.prices);
+
+		// Always call the superclass so it can save the view hierarchy state
+		super.onSaveInstanceState(savedInstanceState);
+	}
+
 	private void getProfile() {
+
+		profileLoaded = false;
+
 		App.getInstance().httpWorker.getProfile(new Listener<Profile>() {
 
 			@Override
 			public void onResponse(Profile profile) {
 
-				clearWorkerViews();
-
-				ArrayList<Worker> list = profile.getWorkersList();
-
-				Collections.sort(list, new App.sortWorkers());
-
-				int totalHashrate = 0;
-
-				for (Worker tmp : list) {
-					WorkerView workerView = new WorkerView(MainActivity.this);
-					workerView.setData(tmp);
-					llWorkerHolder.addView(workerView);
-
-					totalHashrate += tmp.getHashrate();
-
-				}
-
-				txtConfirmedReward.setText(profile.getConfirmed_reward() + " BTC");
-				txtTotalHashrate.setText(App.formatHashRate(totalHashrate));
-				txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
-
-				profileLoaded = true;
-
-				readyLoading();
+				fillUpProfile(profile);
 
 			}
 
@@ -110,46 +115,26 @@ public class MainActivity extends ActionBarActivity {
 				txtConfirmedReward.setText("- BTC");
 				txtTotalHashrate.setText("- MH/s");
 				txtAverageHashrate.setText("- MH/s");
-				
+
 				profileLoaded = true;
 
 				Toast.makeText(MainActivity.this, "Error loading Profile", Toast.LENGTH_SHORT).show();
-				
+
 				readyLoading();
 			}
 		});
 	}
 
 	private void getStats() {
+
+		statsLoaded = false;
+
 		App.getInstance().httpWorker.getStats(new Listener<Stats>() {
 
 			@Override
 			public void onResponse(Stats stats) {
-				try {
-					Date date = App.dateStatsFormat.parse(stats.getRound_started());
-					txtRoundStarted.setText(App.dateFormat.format(date));
 
-					Date average = getAverageRoundTime(App.parseBlocks(stats.getBlocks()));
-					txtAverageDuration.setText(App.dateDurationFormat.format(average));
-
-					Date duration = App.dateDurationFormat.parse(stats.getRound_duration());
-					txtRoundDuration.setText(App.dateDurationFormat.format(duration));
-
-					double rating = calculateRoundRating(average, duration);
-
-					setRatingBar(rating);
-
-				} catch (java.text.ParseException e) {
-					e.printStackTrace();
-				}
-
-				txtLuck24h.setText(formatProcent(stats.getLuck_1()));
-				txtLuck7d.setText(formatProcent(stats.getLuck_7()));
-				txtLuck30d.setText(formatProcent(stats.getLuck_30()));
-
-				statsLoaded = true;
-
-				readyLoading();
+				fillUpStats(stats);
 
 			}
 
@@ -163,49 +148,26 @@ public class MainActivity extends ActionBarActivity {
 				txtLuck24h.setText("-");
 				txtLuck7d.setText("-");
 				txtLuck30d.setText("-");
-				
+
 				statsLoaded = true;
 
 				Toast.makeText(MainActivity.this, "Error loading Stats", Toast.LENGTH_SHORT).show();
-				
+
 				readyLoading();
 			}
 		});
 	}
 
 	private void getPrices() {
+
+		pricesLoaded = false;
+
 		App.getInstance().httpWorker.getPrices(new Listener<Prices>() {
 
 			@Override
 			public void onResponse(Prices prices) {
 
-				Price lastPrice = App.getInstance().getLastPrice();
-				Price currentPrice = App.parsePrices(prices.getData()).getLastPrice();
-
-				if (lastPrice != null && currentPrice != null) {
-					float lastPriceFloat = Float.parseFloat(lastPrice.getValue());
-					float currentPriceFloat = Float.parseFloat(currentPrice.getValue());
-
-					if (lastPriceFloat > currentPriceFloat) {
-						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
-					} else if (lastPriceFloat < currentPriceFloat) {
-						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
-					}
-					// else{
-					// txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
-					//
-					// }
-
-					txtCurrentValue.setText(currentPrice.getDisplay_short());
-				} else if (currentPrice != null) {
-					txtCurrentValue.setText(currentPrice.getDisplay_short());
-
-				}
-				App.getInstance().setLastPrice(currentPrice);
-
-				pricesLoaded = true;
-
-				readyLoading();
+				fillUpPrices(prices);
 
 			}
 
@@ -219,12 +181,12 @@ public class MainActivity extends ActionBarActivity {
 				pricesLoaded = true;
 
 				Toast.makeText(MainActivity.this, "Error loading Price", Toast.LENGTH_SHORT).show();
-				
+
 				readyLoading();
 			}
 		});
 	}
-	
+
 	private void setRatingBar(double rating) {
 		double stars = ratRating.getNumStars();
 
@@ -235,7 +197,7 @@ public class MainActivity extends ActionBarActivity {
 		if (rating > stars) {
 			rating = stars;
 		}
-		
+
 		ratRating.setRating((float) (stars - rating));
 		Log.d(getClass().getSimpleName(), "Rating set: " + ratRating.getRating());
 
@@ -295,9 +257,9 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void initUi() {
-		
+
 		getSupportActionBar().setSubtitle("for Slush's Pool");
-		
+
 		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
 
 		txtConfirmedReward = (TextView) findViewById(R.id.txt_main_info_confirmed_reward);
@@ -326,17 +288,17 @@ public class MainActivity extends ActionBarActivity {
 
 		itemRefresh = menu.findItem(R.id.action_refresh);
 		itemAdd = menu.findItem(R.id.action_add_pool);
-		
-		if(App.getInstance().httpWorker.isTokenSet()){
+
+		if (App.getInstance().httpWorker.isTokenSet()) {
 			itemAdd.setVisible(false);
-		}else{
+		} else {
 			itemAdd.setVisible(true);
 		}
-		
-		if(!isProgessShowing){
+
+		if (!isProgessShowing) {
 			itemRefresh.setVisible(true);
 		}
-		
+
 		return true;
 	}
 
@@ -348,7 +310,7 @@ public class MainActivity extends ActionBarActivity {
 			break;
 
 		case R.id.action_refresh:
-			reloadData();
+			reloadData(true);
 			break;
 
 		default:
@@ -364,7 +326,7 @@ public class MainActivity extends ActionBarActivity {
 			if (resCode == RESULT_OK) {
 				App.getInstance().httpWorker.setToken(intent.getExtras().getString("token"));
 
-				reloadData();
+				reloadData(true);
 			}
 			break;
 
@@ -375,18 +337,131 @@ public class MainActivity extends ActionBarActivity {
 		super.onActivityResult(reqCode, resCode, intent);
 	}
 
-	private void reloadData() {
+	private void reloadData(boolean force) {
 		if (App.getInstance().httpWorker.isTokenSet()) {
-			showProgress(true);
 
-			profileLoaded = pricesLoaded = statsLoaded = false;
+			if (this.profile == null || force) {
+				showProgress(true);
 
-			getProfile();
-			getStats();
-			getPrices();
+				getProfile();
+			} else {
+				fillUpProfile(this.profile);
+			}
+
+			if (this.stats == null || force) {
+				showProgress(true);
+
+				getStats();
+			} else {
+				fillUpStats(this.stats);
+			}
+
+			if (this.prices == null || force) {
+				showProgress(true);
+
+				getPrices();
+			} else {
+				fillUpPrices(this.prices);
+			}
 		} else {
 			hideInfos();
 		}
+
+	}
+
+	private void fillUpPrices(Prices prices) {
+		
+		this.prices = prices;
+		
+		Price lastPrice = App.getInstance().getLastPrice();
+		Price currentPrice = App.parsePrices(prices.getData()).getLastPrice();
+
+		if (lastPrice != null && currentPrice != null) {
+			float lastPriceFloat = Float.parseFloat(lastPrice.getValue());
+			float currentPriceFloat = Float.parseFloat(currentPrice.getValue());
+
+			if (lastPriceFloat > currentPriceFloat) {
+				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
+			} else if (lastPriceFloat < currentPriceFloat) {
+				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
+			}
+			// else{
+			// txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
+			//
+			// }
+
+			txtCurrentValue.setText(currentPrice.getDisplay_short());
+		} else if (currentPrice != null) {
+			txtCurrentValue.setText(currentPrice.getDisplay_short());
+
+		}
+		App.getInstance().setLastPrice(currentPrice);
+
+		pricesLoaded = true;
+
+		readyLoading();
+	}
+
+	private void fillUpStats(Stats stats) {
+		
+		this.stats = stats;
+		
+		try {
+			Date date = App.dateStatsFormat.parse(stats.getRound_started());
+			txtRoundStarted.setText(App.dateFormat.format(date));
+
+			Date average = getAverageRoundTime(App.parseBlocks(stats.getBlocks()));
+			txtAverageDuration.setText(App.dateDurationFormat.format(average));
+
+			Date duration = App.dateDurationFormat.parse(stats.getRound_duration());
+			txtRoundDuration.setText(App.dateDurationFormat.format(duration));
+
+			double rating = calculateRoundRating(average, duration);
+
+			setRatingBar(rating);
+
+		} catch (java.text.ParseException e) {
+			e.printStackTrace();
+		}
+
+		txtLuck24h.setText(formatProcent(stats.getLuck_1()));
+		txtLuck7d.setText(formatProcent(stats.getLuck_7()));
+		txtLuck30d.setText(formatProcent(stats.getLuck_30()));
+
+		statsLoaded = true;
+
+		readyLoading();
+
+	}
+
+	private void fillUpProfile(Profile profile) {
+
+		this.profile = profile;
+
+		clearWorkerViews();
+
+		ArrayList<Worker> list = profile.getWorkersList();
+
+		Collections.sort(list, new App.sortWorkers());
+
+		int totalHashrate = 0;
+
+		for (Worker tmp : list) {
+			WorkerView workerView = new WorkerView(MainActivity.this);
+			workerView.setData(tmp);
+			llWorkerHolder.addView(workerView);
+
+			totalHashrate += tmp.getHashrate();
+
+		}
+
+		txtConfirmedReward.setText(profile.getConfirmed_reward() + " BTC");
+		txtTotalHashrate.setText(App.formatHashRate(totalHashrate));
+		txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
+
+		profileLoaded = true;
+
+		readyLoading();
 
 	}
 
@@ -409,7 +484,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void showProgress(boolean show) {
-		
+
 		this.isProgessShowing = show;
 
 		if (itemRefresh != null) {
