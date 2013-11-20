@@ -9,6 +9,7 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,6 +61,16 @@ public class MainActivity extends ActionBarActivity {
 		reloadData();
 
 	}
+
+	
+	
+	@Override
+	protected void onResume() {
+		supportInvalidateOptionsMenu();
+		super.onResume();
+	}
+
+
 
 	private void getProfile() {
 		App.getInstance().httpWorker.getProfile(new Listener<Profile>() {
@@ -226,8 +237,9 @@ public class MainActivity extends ActionBarActivity {
 		if (rating > stars) {
 			rating = stars;
 		}
-
+		
 		ratRating.setRating((float) (stars - rating));
+		Log.d(getClass().getSimpleName(), "Rating set: " + ratRating.getRating());
 
 	}
 
@@ -261,9 +273,9 @@ public class MainActivity extends ActionBarActivity {
 
 		double rating = dur / avg;
 
-		System.out.println("Luck: " + rating);
+		System.out.println("Raw Rating: " + rating);
 
-		return 0d;
+		return rating;
 	}
 
 	private String formatProcent(String raw) {
