@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -47,6 +48,7 @@ public class MainActivity extends ActionBarActivity {
 			txtLuck30d;
 	private LinearLayout llInfoHolder, llWorkerHolder;
 	private RatingBar ratRating;
+	private boolean isProgessShowing = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,15 +64,11 @@ public class MainActivity extends ActionBarActivity {
 
 	}
 
-	
-	
 	@Override
 	protected void onResume() {
 		supportInvalidateOptionsMenu();
 		super.onResume();
 	}
-
-
 
 	private void getProfile() {
 		App.getInstance().httpWorker.getProfile(new Listener<Profile>() {
@@ -334,7 +332,11 @@ public class MainActivity extends ActionBarActivity {
 		}else{
 			itemAdd.setVisible(true);
 		}
-
+		
+		if(!isProgessShowing){
+			itemRefresh.setVisible(true);
+		}
+		
 		return true;
 	}
 
@@ -407,6 +409,8 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void showProgress(boolean show) {
+		
+		this.isProgessShowing = show;
 
 		if (itemRefresh != null) {
 			itemRefresh.setVisible(!show);
