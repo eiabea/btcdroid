@@ -1,8 +1,10 @@
 package com.eiabea.btcdroid;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Price;
 import com.eiabea.btcdroid.model.Prices;
 import com.eiabea.btcdroid.model.Profile;
@@ -27,15 +34,18 @@ public class MainActivity extends ActionBarActivity {
 
 	private static final int INTENT_ADD_POOL = 0;
 
-	private MenuItem itemRefresh;
+	private MenuItem itemRefresh, itemAdd;
 
 	private boolean statsLoaded = false;
 	private boolean profileLoaded = false;
 	private boolean pricesLoaded = true;
 
-	private TextView txtNoPools, txtConfirmedReward, txtCurrentValue, txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
-			txtRoundDuration, txtLuck24h, txtLuck7d, txtLuck30d;
+	private TextView txtNoPools, txtConfirmedReward, txtCurrentValue,
+			txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
+			txtRoundDuration, txtAverageDuration, txtLuck24h, txtLuck7d,
+			txtLuck30d;
 	private LinearLayout llInfoHolder, llWorkerHolder;
+	private RatingBar ratRating;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +70,7 @@ public class MainActivity extends ActionBarActivity {
 				clearWorkerViews();
 
 				ArrayList<Worker> list = profile.getWorkersList();
-				
+
 				Collections.sort(list, new App.sortWorkers());
 
 				int totalHashrate = 0;
@@ -84,6 +94,20 @@ public class MainActivity extends ActionBarActivity {
 
 			}
 
+		}, new ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				txtConfirmedReward.setText("- BTC");
+				txtTotalHashrate.setText("- MH/s");
+				txtAverageHashrate.setText("- MH/s");
+				
+				profileLoaded = true;
+
+				Toast.makeText(MainActivity.this, "Error loading Profile", Toast.LENGTH_SHORT).show();
+				
+				readyLoading();
+			}
 		});
 	}
 
@@ -92,15 +116,24 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onResponse(Stats stats) {
-
 				try {
 					Date date = App.dateStatsFormat.parse(stats.getRound_started());
 					txtRoundStarted.setText(App.dateFormat.format(date));
+
+					Date average = getAverageRoundTime(App.parseBlocks(stats.getBlocks()));
+					txtAverageDuration.setText(App.dateDurationFormat.format(average));
+
+					Date duration = App.dateDurationFormat.parse(stats.getRound_duration());
+					txtRoundDuration.setText(App.dateDurationFormat.format(duration));
+
+					double rating = calculateRoundRating(average, duration);
+
+					setRatingBar(rating);
+
 				} catch (java.text.ParseException e) {
 					e.printStackTrace();
 				}
 
-				txtRoundDuration.setText(stats.getRound_duration());
 				txtLuck24h.setText(formatProcent(stats.getLuck_1()));
 				txtLuck7d.setText(formatProcent(stats.getLuck_7()));
 				txtLuck30d.setText(formatProcent(stats.getLuck_30()));
@@ -111,52 +144,131 @@ public class MainActivity extends ActionBarActivity {
 
 			}
 
+		}, new ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				txtRoundStarted.setText("-");
+				txtAverageDuration.setText("-");
+				txtRoundDuration.setText("-");
+				txtLuck24h.setText("-");
+				txtLuck7d.setText("-");
+				txtLuck30d.setText("-");
+				
+				statsLoaded = true;
+
+				Toast.makeText(MainActivity.this, "Error loading Stats", Toast.LENGTH_SHORT).show();
+				
+				readyLoading();
+			}
+		});
+	}
+
+	private void getPrices() {
+		App.getInstance().httpWorker.getPrices(new Listener<Prices>() {
+
+			@Override
+			public void onResponse(Prices prices) {
+
+				Price lastPrice = App.getInstance().getLastPrice();
+				Price currentPrice = App.parsePrices(prices.getData()).getLastPrice();
+
+				if (lastPrice != null && currentPrice != null) {
+					float lastPriceFloat = Float.parseFloat(lastPrice.getValue());
+					float currentPriceFloat = Float.parseFloat(currentPrice.getValue());
+
+					if (lastPriceFloat > currentPriceFloat) {
+						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
+					} else if (lastPriceFloat < currentPriceFloat) {
+						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
+					}
+					// else{
+					// txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
+					//
+					// }
+
+					txtCurrentValue.setText(currentPrice.getDisplay_short());
+				} else if (currentPrice != null) {
+					txtCurrentValue.setText(currentPrice.getDisplay_short());
+
+				}
+				App.getInstance().setLastPrice(currentPrice);
+
+				pricesLoaded = true;
+
+				readyLoading();
+
+			}
+
+		}, new ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				txtCurrentValue.setText("-");
+				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
+
+				pricesLoaded = true;
+
+				Toast.makeText(MainActivity.this, "Error loading Price", Toast.LENGTH_SHORT).show();
+				
+				readyLoading();
+			}
 		});
 	}
 	
-	private void getPrices() {
-		App.getInstance().httpWorker.getPrices(new Listener<Prices>() {
-			
-			@Override
-			public void onResponse(Prices prices) {
-				
-				Price lastPrice = App.getInstance().getLastPrice();
-				Price currentPrice = App.parsePrices(prices.getData()).getLastPrice();
-				
-				if(lastPrice != null && currentPrice != null){
-					float lastPriceFloat = Float.parseFloat(lastPrice.getValue());
-					float currentPriceFloat = Float.parseFloat(currentPrice.getValue());
-					
-					if(lastPriceFloat > currentPriceFloat){
-						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
-					}else if (lastPriceFloat < currentPriceFloat){
-						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
-					}
-//					else{
-//						txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
-//						
-//					}
-					
-					txtCurrentValue.setText(currentPrice.getDisplay_short());
-				}else if(currentPrice != null){
-					txtCurrentValue.setText(currentPrice.getDisplay_short());
-					
-				}
-				App.getInstance().setLastPrice(currentPrice);
-				
-				
-				pricesLoaded = true;
-				
-				readyLoading();
-				
+	private void setRatingBar(double rating) {
+		double stars = ratRating.getNumStars();
+
+		if (rating < 0) {
+			rating = 0;
+		}
+
+		if (rating > stars) {
+			rating = stars;
+		}
+
+		ratRating.setRating((float) (stars - rating));
+
+	}
+
+	private Date getAverageRoundTime(List<Block> blocks) {
+
+		long total = 0;
+
+		for (Block tmpBlock : blocks) {
+
+			Date duration;
+			try {
+				duration = App.dateDurationFormat.parse(tmpBlock.getMining_duration());
+				total += duration.getTime();
+			} catch (ParseException e) {
+				e.printStackTrace();
 			}
-			
-		});
+
+		}
+
+		long average = total / blocks.size();
+
+		System.out.println("Total: " + total + "; " + "Avg.: " + average);
+
+		return new Date(average);
+	}
+
+	private double calculateRoundRating(Date average, Date duration) {
+
+		double avg = average.getTime();
+		double dur = duration.getTime();
+
+		double rating = dur / avg;
+
+		System.out.println("Luck: " + rating);
+
+		return 0d;
 	}
 
 	private String formatProcent(String raw) {
 		float fl = Float.parseFloat(raw);
-		return String.valueOf(fl * 100) + " %";
+		return String.format("%.1f", fl * 100) + " %";
 	}
 
 	private void clearWorkerViews() {
@@ -181,6 +293,8 @@ public class MainActivity extends ActionBarActivity {
 		txtAverageHashrate = (TextView) findViewById(R.id.txt_main_info_average_hashrate);
 		txtRoundStarted = (TextView) findViewById(R.id.txt_main_info_round_started);
 		txtRoundDuration = (TextView) findViewById(R.id.txt_main_info_round_duration);
+		txtAverageDuration = (TextView) findViewById(R.id.txt_main_info_average_duration);
+		ratRating = (RatingBar) findViewById(R.id.rat_main_info_rating);
 		txtLuck24h = (TextView) findViewById(R.id.txt_main_info_luck_24h);
 		txtLuck7d = (TextView) findViewById(R.id.txt_main_info_luck_7d);
 		txtLuck30d = (TextView) findViewById(R.id.txt_main_info_luck_30d);
@@ -198,6 +312,13 @@ public class MainActivity extends ActionBarActivity {
 		getMenuInflater().inflate(R.menu.main, menu);
 
 		itemRefresh = menu.findItem(R.id.action_refresh);
+		itemAdd = menu.findItem(R.id.action_add_pool);
+		
+		if(App.getInstance().httpWorker.isTokenSet()){
+			itemAdd.setVisible(false);
+		}else{
+			itemAdd.setVisible(true);
+		}
 
 		return true;
 	}
@@ -248,7 +369,6 @@ public class MainActivity extends ActionBarActivity {
 			getPrices();
 		} else {
 			hideInfos();
-			//Toast.makeText(this, "No Token set", Toast.LENGTH_SHORT).show();
 		}
 
 	}

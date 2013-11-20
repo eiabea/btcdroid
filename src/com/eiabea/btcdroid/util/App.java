@@ -1,8 +1,10 @@
 package com.eiabea.btcdroid.util;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -10,6 +12,7 @@ import java.util.Set;
 import android.app.Application;
 import android.content.SharedPreferences;
 
+import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Price;
 import com.eiabea.btcdroid.model.Prices;
 import com.eiabea.btcdroid.model.Worker;
@@ -21,6 +24,7 @@ public class App extends Application {
 
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss", Locale.getDefault());
 	public static final SimpleDateFormat dateStatsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+	public static final SimpleDateFormat dateDurationFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 
 	public HttpWorker httpWorker;
 
@@ -62,8 +66,8 @@ public class App extends Application {
 		this.lastPrice = lastPrice;
 		pref.edit().putString("lastPrice", gson.toJson(lastPrice)).commit();
 	}
-	
-	public Price getLastPrice(){
+
+	public Price getLastPrice() {
 		return this.lastPrice;
 	}
 
@@ -94,13 +98,27 @@ public class App extends Application {
 
 		return prices;
 	}
-	
+
+	public static List<Block> parseBlocks(JsonObject json) {
+		List<Block> blocks = new ArrayList<Block>();
+
+		Set<Entry<String, JsonElement>> set = json.entrySet();
+
+		for (Iterator<Entry<String, JsonElement>> it = set.iterator(); it.hasNext();) {
+			Entry<String, JsonElement> current = it.next();
+
+			blocks.add(App.getInstance().gson.fromJson(current.getValue(), Block.class));
+
+		}
+		return blocks;
+	}
+
 	public static class sortWorkers implements Comparator<Worker> {
 
 		@Override
 		public int compare(Worker lhs, Worker rhs) {
 			return lhs.getName().compareTo(rhs.getName());
 		}
-		
+
 	}
 }

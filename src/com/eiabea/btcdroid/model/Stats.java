@@ -1,5 +1,8 @@
 package com.eiabea.btcdroid.model;
 
+import com.eiabea.btcdroid.util.App;
+import com.google.gson.JsonObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -13,6 +16,7 @@ public class Stats implements Parcelable {
 	private String luck_7;
 	private String luck_30;
 	private int shares;
+	private JsonObject blocks;
 	
 	// Standardconstructor
 	public Stats(){}
@@ -26,6 +30,9 @@ public class Stats implements Parcelable {
 		luck_7 = in.readString();
 		luck_30 = in.readString();
 		shares = in.readInt();
+		
+		blocks = new JsonObject();
+		blocks = App.getInstance().gson.fromJson(in.readString(), JsonObject.class);
 	}
 	
 	@Override
@@ -42,6 +49,15 @@ public class Stats implements Parcelable {
 		dest.writeString(luck_7);
 		dest.writeString(luck_30);
 		dest.writeInt(shares);
+		dest.writeString(blocks.getAsString());
+	}
+
+	public JsonObject getBlocks() {
+		return blocks;
+	}
+
+	public void setBlocks(JsonObject blocks) {
+		this.blocks = blocks;
 	}
 
 	@SuppressWarnings("rawtypes")

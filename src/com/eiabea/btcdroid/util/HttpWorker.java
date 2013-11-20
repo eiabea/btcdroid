@@ -6,8 +6,6 @@ import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.eiabea.btcdroid.model.Prices;
 import com.eiabea.btcdroid.model.Profile;
@@ -22,24 +20,6 @@ public class HttpWorker {
 
 	public static final String STATS_URL = BASEURL + "/stats/json/" + DEBUG_API_KEY;
 	public static final String PROFILE_URL = BASEURL + "/accounts/profile/json/";
-
-	public static final int POST = 0;
-	public static final int GET = 1;
-
-	public static final int GET_PROFILE = 10;
-	public static final int GET_STATS = 20;
-
-	public static final int TIMEOUT_CONNECTION = 12000;
-	public static final int TIMEOUT_SOCKET = 15000;
-
-	public static final int FINE = 0;
-
-	// Errorcodes
-	public static final int ERR_NO_CONNECTION = -2;
-	public static final int ERR_CONNECTION_TIMEOUT = -3;
-	public static final int ERR_SOCKET_TIMEOUT = -4;
-	public static final int ERR_EMPTY_RESPONSE = -5;
-	public static final int ERR_JSON_PARSER = -6;
 
 	private Context context;
 
@@ -80,54 +60,36 @@ public class HttpWorker {
 		return false;
 	}
 
-	public void getProfile(Response.Listener<Profile> listener) {
+	public void getProfile(Response.Listener<Profile> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Profile");
 
-		String url = HttpWorker.PROFILE_URL + token;
+		String url = HttpWorker.PROFILE_URL + token ;
 
 		System.out.println(HttpWorker.mQueue.toString());
 
-		HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null, listener, new ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				Log.d(getClass().getSimpleName(), "Error while loading: " + error.getMessage());
-			}
-		}));
+		HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null, success, error));
 
 	}
 
-	public void getStats(Response.Listener<Stats> listener) {
+	public void getStats(Response.Listener<Stats> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Stats");
 
 		String url = HttpWorker.STATS_URL;
 
 		System.out.println(HttpWorker.mQueue.toString());
 
-		HttpWorker.mQueue.add(new GsonRequest<Stats>(url, Stats.class, null, listener, new ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				Log.d(getClass().getSimpleName(), "Error while loading: " + error.getMessage());
-			}
-		}));
+		HttpWorker.mQueue.add(new GsonRequest<Stats>(url, Stats.class, null, success, error));
 
 	}
 
-	public void getPrices(Response.Listener<Prices> listener) {
+	public void getPrices(Response.Listener<Prices> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Prices");
 
 		String url = HttpWorker.PRICES_URL;
 
 		System.out.println(HttpWorker.mQueue.toString());
 
-		HttpWorker.mQueue.add(new GsonRequest<Prices>(url, Prices.class, null, listener, new ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				Log.d(getClass().getSimpleName(), "Error while loading: " + error.getMessage());
-			}
-		}));
+		HttpWorker.mQueue.add(new GsonRequest<Prices>(url, Prices.class, null, success, error));
 
 	}
 }
