@@ -285,6 +285,9 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void initUi() {
+		
+		getSupportActionBar().setSubtitle("for Slush's Pool");
+		
 		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
 
 		txtConfirmedReward = (TextView) findViewById(R.id.txt_main_info_confirmed_reward);
