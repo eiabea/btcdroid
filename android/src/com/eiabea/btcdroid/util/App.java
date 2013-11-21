@@ -26,6 +26,12 @@ public class App extends Application {
 	public static final SimpleDateFormat dateStatsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 	public static final SimpleDateFormat dateDurationFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 
+	public static final String PREF_NAME = "app_data";
+	public static final String PREF_LAST_PRICE = "last_price";
+	public static final String PREF_LAST_LUCK24 = "last_luck_24";
+	public static final String PREF_LAST_LUCK7D = "last_luck_7d";
+	public static final String PREF_LAST_LUCK30D = "last_luck_30d";
+	
 	public HttpWorker httpWorker;
 
 	public Gson gson;
@@ -33,6 +39,8 @@ public class App extends Application {
 	private SharedPreferences pref;
 
 	private Price lastPrice;
+	private float luck24, luck7d, luck30d;
+	
 
 	/**
 	 * Object of own Class
@@ -47,8 +55,12 @@ public class App extends Application {
 		super.onCreate();
 		gson = new Gson();
 
-		pref = getSharedPreferences("appData", MODE_PRIVATE);
-		this.lastPrice = gson.fromJson(pref.getString("lastPrice", ""), Price.class);
+		pref = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+		this.lastPrice = gson.fromJson(pref.getString(PREF_LAST_PRICE, ""), Price.class);
+		
+		this.luck24 = pref.getFloat(PREF_LAST_LUCK24, 0.0f);
+		this.luck7d = pref.getFloat(PREF_LAST_LUCK7D, 0.0f);
+		this.luck30d = pref.getFloat(PREF_LAST_LUCK30D, 0.0f);
 
 		me = this;
 		httpWorker = new HttpWorker(this.getApplicationContext());
@@ -64,11 +76,38 @@ public class App extends Application {
 
 	public void setLastPrice(Price lastPrice) {
 		this.lastPrice = lastPrice;
-		pref.edit().putString("lastPrice", gson.toJson(lastPrice)).commit();
+		pref.edit().putString(PREF_LAST_PRICE, gson.toJson(lastPrice)).commit();
 	}
 
 	public Price getLastPrice() {
 		return this.lastPrice;
+	}
+	
+	public float getLuck24() {
+		return luck24;
+	}
+
+	public void setLuck24(float luck24) {
+		this.luck24 = luck24;
+		pref.edit().putFloat(PREF_LAST_LUCK24, luck24).commit();
+	}
+
+	public float getLuck7d() {
+		return luck7d;
+	}
+
+	public void setLuck7d(float luck7d) {
+		this.luck7d = luck7d;
+		pref.edit().putFloat(PREF_LAST_LUCK7D, luck7d).commit();
+	}
+
+	public float getLuck30d() {
+		return luck30d;
+	}
+
+	public void setLuck30d(float luck30d) {
+		this.luck30d = luck30d;
+		pref.edit().putFloat(PREF_LAST_LUCK30D, luck30d).commit();
 	}
 
 	public static Prices parsePrices(JsonObject json) {

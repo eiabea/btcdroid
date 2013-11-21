@@ -16,10 +16,10 @@ public class HttpWorker {
 	public static final String BASEURL = "https://mining.bitcoin.cz/";
 	public static final String PRICES_URL = "http://data.mtgox.com/api/2/BTCUSD/money/ticker_fast";
 
-	public static final String DEBUG_API_KEY = "402189-0754bbdd5fa5ea39699830dd588986e5";
+//	public static final String DEBUG_API_KEY = "402189-0754bbdd5fa5ea39699830dd588986e5";
 
-	public static final String STATS_URL = BASEURL + "/stats/json/" + DEBUG_API_KEY;
-	public static final String PROFILE_URL = BASEURL + "/accounts/profile/json/";
+	public static final String STATS_URL = BASEURL + "stats/json/";
+	public static final String PROFILE_URL = BASEURL + "accounts/profile/json/";
 
 	private Context context;
 
@@ -74,7 +74,7 @@ public class HttpWorker {
 	public void getStats(Response.Listener<Stats> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Stats");
 
-		String url = HttpWorker.STATS_URL;
+		String url = HttpWorker.STATS_URL + token;
 
 		System.out.println(HttpWorker.mQueue.toString());
 
