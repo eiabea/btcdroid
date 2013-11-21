@@ -49,10 +49,6 @@ public class Profile implements Parcelable {
 		
 		workers = new JsonObject();
 		workers = App.getInstance().gson.fromJson(in.readString(), JsonObject.class);
-
-		
-//		workers = new ArrayList<Worker>();
-//		in.readList(workers, Worker.class.getClassLoader());
 	}
 	
 	@Override
@@ -73,10 +69,9 @@ public class Profile implements Parcelable {
 		dest.writeString(unconfirmed_reward);
 		dest.writeString(estimated_reward);
 		dest.writeString(hashrate);
-
-		dest.writeString(workers.getAsString());
 		
-//		dest.writeList(workers);
+		dest.writeString(workers.toString());
+		
 	}
 
 	@SuppressWarnings("rawtypes")

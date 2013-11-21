@@ -49,7 +49,7 @@ public class Stats implements Parcelable {
 		dest.writeString(luck_7);
 		dest.writeString(luck_30);
 		dest.writeInt(shares);
-		dest.writeString(blocks.getAsString());
+		dest.writeString(blocks.toString());
 	}
 
 	public JsonObject getBlocks() {

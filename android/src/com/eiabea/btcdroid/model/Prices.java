@@ -32,7 +32,7 @@ public class Prices implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 
-		dest.writeString(data.getAsString());
+		dest.writeString(data.toString());
 	}
 
 	@SuppressWarnings("rawtypes")
