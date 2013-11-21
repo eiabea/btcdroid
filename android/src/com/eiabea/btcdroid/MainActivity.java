@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import android.app.ExpandableListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.eiabea.adapter.MainViewAdapter;
 import com.eiabea.adapter.WorkerListAdapter;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Price;
@@ -32,17 +33,22 @@ import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
-import com.eiabea.btcdroid.views.WorkerView;
 
 public class MainActivity extends ActionBarActivity {
 
 	private static final int INTENT_ADD_POOL = 0;
+	
+	public static final int FRAGMENT_POOL = 0;
+	public static final int FRAGMENT_WORKER = 1;
 
 	private static final String STATE_PROFILE = "state_profile";
 	private static final String STATE_STATS = "state_stats";
 	private static final String STATE_PRICES = "state_prices";
 
 	private MenuItem itemRefresh, itemAdd;
+	
+	private ViewPager viewPager;
+	private MainViewAdapter adapter;
 
 	private boolean statsLoaded = false;
 	private boolean profileLoaded = false;
@@ -78,7 +84,8 @@ public class MainActivity extends ActionBarActivity {
 			this.prices = savedInstanceState.getParcelable(STATE_PRICES);
 		}
 
-		reloadData(false);
+		// TODO reenable
+//		reloadData(false);
 
 	}
 
@@ -262,6 +269,10 @@ public class MainActivity extends ActionBarActivity {
 	private void initUi() {
 
 		getSupportActionBar().setSubtitle("for Slush's Pool");
+		
+		viewPager = (ViewPager) findViewById(R.id.vp_main);
+		adapter = new MainViewAdapter(this, getSupportFragmentManager());
+		viewPager.setAdapter(adapter);
 
 		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
 
