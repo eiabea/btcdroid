@@ -244,7 +244,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	private String formatProcent(float raw) {
-		return String.format("%.1f", raw * 100) + " %";
+		return String.format("%.0f", raw * 100) + " %";
 	}
 
 	private void clearWorkerViews() {
@@ -424,21 +424,21 @@ public class MainActivity extends ActionBarActivity {
 			e.printStackTrace();
 		}
 		
-//		float lastLuck24 = App.getInstance().getLuck24();
-//		float lastLuck7d = App.getInstance().getLuck7d();
-//		float lastLuck30d = App.getInstance().getLuck30d();
-//		
-//		float currentLuck24 = Float.parseFloat(stats.getLuck_1());
-//		float currentLuck7d = Float.parseFloat(stats.getLuck_7());
-//		float currentLuck30d = Float.parseFloat(stats.getLuck_30());
-//		
-//		setLuck(txtLuck24h, lastLuck24, currentLuck24);
-//		setLuck(txtLuck7d, lastLuck7d, currentLuck7d);
-//		setLuck(txtLuck30d, lastLuck30d, currentLuck30d);
-//
-//		App.getInstance().setLuck24(currentLuck24);
-//		App.getInstance().setLuck7d(currentLuck7d);
-//		App.getInstance().setLuck30d(currentLuck30d);
+		float lastLuck24 = App.getInstance().getLuck24();
+		float lastLuck7d = App.getInstance().getLuck7d();
+		float lastLuck30d = App.getInstance().getLuck30d();
+		
+		float currentLuck24 = Float.parseFloat(stats.getLuck_1());
+		float currentLuck7d = Float.parseFloat(stats.getLuck_7());
+		float currentLuck30d = Float.parseFloat(stats.getLuck_30());
+		
+		setLuck(txtLuck24h, lastLuck24, currentLuck24);
+		setLuck(txtLuck7d, lastLuck7d, currentLuck7d);
+		setLuck(txtLuck30d, lastLuck30d, currentLuck30d);
+
+		App.getInstance().setLuck24(currentLuck24);
+		App.getInstance().setLuck7d(currentLuck7d);
+		App.getInstance().setLuck30d(currentLuck30d);
 
 //		txtLuck24h.setText(formatProcent(stats.getLuck_1()));
 //		txtLuck7d.setText(formatProcent(stats.getLuck_7()));
