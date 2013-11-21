@@ -15,6 +15,7 @@ public class Stats implements Parcelable {
 	private String luck_1;
 	private String luck_7;
 	private String luck_30;
+	private String shares_cdf;
 	private int shares;
 	private JsonObject blocks;
 	
@@ -29,6 +30,8 @@ public class Stats implements Parcelable {
 		luck_1 = in.readString();
 		luck_7 = in.readString();
 		luck_30 = in.readString();
+		shares_cdf = in.readString();
+		
 		shares = in.readInt();
 		
 		blocks = new JsonObject();
@@ -48,8 +51,19 @@ public class Stats implements Parcelable {
 		dest.writeString(luck_1);
 		dest.writeString(luck_7);
 		dest.writeString(luck_30);
+		dest.writeString(shares_cdf);
+		
 		dest.writeInt(shares);
+		
 		dest.writeString(blocks.toString());
+	}
+
+	public String getShares_cdf() {
+		return shares_cdf;
+	}
+
+	public void setShares_cdf(String shares_cdf) {
+		this.shares_cdf = shares_cdf;
 	}
 
 	public JsonObject getBlocks() {

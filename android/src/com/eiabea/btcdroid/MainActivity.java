@@ -47,7 +47,7 @@ public class MainActivity extends ActionBarActivity {
 
 	private TextView txtNoPools, txtConfirmedReward, txtCurrentValue,
 			txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
-			txtRoundDuration, txtAverageDuration, txtLuck24h, txtLuck7d,
+			txtRoundDuration, txtEstimatedDuration, txtAverageDuration, txtLuck24h, txtLuck7d,
 			txtLuck30d;
 	private LinearLayout llInfoHolder, llWorkerHolder;
 	private RatingBar ratRating;
@@ -238,11 +238,6 @@ public class MainActivity extends ActionBarActivity {
 		return rating;
 	}
 
-	private String formatProcent(String raw) {
-		float fl = Float.parseFloat(raw);
-		return String.format("%.1f", fl * 100) + " %";
-	}
-	
 	private String formatProcent(float raw) {
 		return String.format("%.0f", raw * 100) + " %";
 	}
@@ -272,6 +267,7 @@ public class MainActivity extends ActionBarActivity {
 		txtAverageHashrate = (TextView) findViewById(R.id.txt_main_info_average_hashrate);
 		txtRoundStarted = (TextView) findViewById(R.id.txt_main_info_round_started);
 		txtRoundDuration = (TextView) findViewById(R.id.txt_main_info_round_duration);
+		txtEstimatedDuration = (TextView) findViewById(R.id.txt_main_info_estimated_duration);
 		txtAverageDuration = (TextView) findViewById(R.id.txt_main_info_average_duration);
 		ratRating = (RatingBar) findViewById(R.id.rat_main_info_rating);
 		txtLuck24h = (TextView) findViewById(R.id.txt_main_info_luck_24h);
@@ -379,22 +375,9 @@ public class MainActivity extends ActionBarActivity {
 		
 		Price lastPrice = App.getInstance().getLastPrice();
 		Price currentPrice = App.parsePrices(prices.getData()).getLastPrice();
-
-		if (lastPrice != null && currentPrice != null) {
-			float lastPriceFloat = Float.parseFloat(lastPrice.getValue());
-			float currentPriceFloat = Float.parseFloat(currentPrice.getValue());
-
-			if (lastPriceFloat > currentPriceFloat) {
-				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
-			} else if (lastPriceFloat < currentPriceFloat) {
-				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
-			}
-
-			txtCurrentValue.setText(currentPrice.getDisplay_short());
-		} else if (currentPrice != null) {
-			txtCurrentValue.setText(currentPrice.getDisplay_short());
-		}
 		
+		setPrice(txtCurrentValue, lastPrice, currentPrice);
+
 		App.getInstance().setLastPrice(currentPrice);
 
 		pricesLoaded = true;
@@ -407,8 +390,8 @@ public class MainActivity extends ActionBarActivity {
 		this.stats = stats;
 		
 		try {
-			Date date = App.dateStatsFormat.parse(stats.getRound_started());
-			txtRoundStarted.setText(App.dateFormat.format(date));
+			Date started = App.dateStatsFormat.parse(stats.getRound_started());
+			txtRoundStarted.setText(App.dateFormat.format(started));
 
 			Date average = getAverageRoundTime(App.parseBlocks(stats.getBlocks()));
 			txtAverageDuration.setText(App.dateDurationFormat.format(average));
@@ -420,9 +403,16 @@ public class MainActivity extends ActionBarActivity {
 
 			setRatingBar(rating);
 
+			float cdf = Float.valueOf(stats.getShares_cdf());
+			System.out.println(cdf);
+			float estimated = (duration.getTime() / (cdf / 100));
+			
+			txtEstimatedDuration.setText(App.dateDurationFormat.format(new Date((long) estimated)));
+			
 		} catch (java.text.ParseException e) {
 			e.printStackTrace();
 		}
+		
 		
 		float lastLuck24 = App.getInstance().getLuck24();
 		float lastLuck7d = App.getInstance().getLuck7d();
@@ -439,10 +429,6 @@ public class MainActivity extends ActionBarActivity {
 		App.getInstance().setLuck24(currentLuck24);
 		App.getInstance().setLuck7d(currentLuck7d);
 		App.getInstance().setLuck30d(currentLuck30d);
-
-//		txtLuck24h.setText(formatProcent(stats.getLuck_1()));
-//		txtLuck7d.setText(formatProcent(stats.getLuck_7()));
-//		txtLuck30d.setText(formatProcent(stats.getLuck_30()));
 
 		statsLoaded = true;
 
@@ -462,6 +448,23 @@ public class MainActivity extends ActionBarActivity {
 			txt.setText(formatProcent(current));
 		} else  {
 			txt.setText(formatProcent(current));
+		}
+	}
+	
+	private void setPrice(TextView txt, Price last, Price current) {
+		if (last != null && current != null) {
+			float lastPriceFloat = Float.parseFloat(last.getValue());
+			float currentPriceFloat = Float.parseFloat(current.getValue());
+
+			if (lastPriceFloat > currentPriceFloat) {
+				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
+			} else if (lastPriceFloat < currentPriceFloat) {
+				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
+			}
+
+			txtCurrentValue.setText(current.getDisplay_short());
+		} else if (current != null) {
+			txtCurrentValue.setText(current.getDisplay_short());
 		}
 	}
 
