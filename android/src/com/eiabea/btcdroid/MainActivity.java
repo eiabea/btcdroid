@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import android.app.ExpandableListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.eiabea.adapter.WorkerListAdapter;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Price;
 import com.eiabea.btcdroid.model.Prices;
@@ -49,7 +52,8 @@ public class MainActivity extends ActionBarActivity {
 			txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
 			txtRoundDuration, txtEstimatedDuration, txtAverageDuration, txtLuck24h, txtLuck7d,
 			txtLuck30d;
-	private LinearLayout llInfoHolder, llWorkerHolder;
+	private LinearLayout llInfoHolder; //, llWorkerHolder;
+	private ExpandableListView exlvWOrkerHolder;
 	private RatingBar ratRating;
 	private boolean isProgessShowing = false;
 
@@ -242,11 +246,11 @@ public class MainActivity extends ActionBarActivity {
 		return String.format("%.0f", raw * 100) + " %";
 	}
 
-	private void clearWorkerViews() {
-		if (llWorkerHolder.getChildCount() > 0) {
-			llWorkerHolder.removeAllViews();
-		}
-	}
+//	private void clearWorkerViews() {
+//		if (llWorkerHolder.getChildCount() > 0) {
+//			llWorkerHolder.removeAllViews();
+//		}
+//	}
 
 	private void readyLoading() {
 		if (profileLoaded == true && statsLoaded == true && pricesLoaded == true) {
@@ -275,7 +279,8 @@ public class MainActivity extends ActionBarActivity {
 		txtLuck30d = (TextView) findViewById(R.id.txt_main_info_luck_30d);
 
 		llInfoHolder = (LinearLayout) findViewById(R.id.ll_main_info_holder);
-		llWorkerHolder = (LinearLayout) findViewById(R.id.ll_main_worker_holder);
+//		llWorkerHolder = (LinearLayout) findViewById(R.id.ll_main_worker_holder);
+		exlvWOrkerHolder = (ExpandableListView) findViewById(R.id.exlv_main_worker_holder);
 	}
 
 	private void setListeners() {
@@ -472,22 +477,28 @@ public class MainActivity extends ActionBarActivity {
 
 		this.profile = profile;
 
-		clearWorkerViews();
+//		clearWorkerViews();
 
 		ArrayList<Worker> list = profile.getWorkersList();
 
 		Collections.sort(list, new App.sortWorkers());
 
 		int totalHashrate = 0;
+		
+		WorkerListAdapter adapter = new WorkerListAdapter(this);
+		
+		adapter.setData(list);
 
 		for (Worker tmp : list) {
-			WorkerView workerView = new WorkerView(MainActivity.this);
-			workerView.setData(tmp);
-			llWorkerHolder.addView(workerView);
+//			WorkerView workerView = new WorkerView(MainActivity.this);
+//			workerView.setData(tmp);
+//			llWorkerHolder.addView(workerView);
 
 			totalHashrate += tmp.getHashrate();
 
 		}
+		
+		exlvWOrkerHolder.setAdapter(adapter);
 
 		txtConfirmedReward.setText(profile.getConfirmed_reward() + " BTC");
 		txtTotalHashrate.setText(App.formatHashRate(totalHashrate));
