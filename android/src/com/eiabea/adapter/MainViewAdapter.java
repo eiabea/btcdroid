@@ -1,5 +1,7 @@
 package com.eiabea.adapter;
 
+import java.util.List;
+
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,8 +9,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
 import com.eiabea.btcdroid.MainActivity;
-import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.fragments.PoolFragment;
+import com.eiabea.btcdroid.fragments.WorkerFragment;
 
 public class MainViewAdapter extends FragmentPagerAdapter {
 
@@ -18,7 +20,7 @@ public class MainViewAdapter extends FragmentPagerAdapter {
 
 	public MainViewAdapter(Context context, FragmentManager fm) {
 		super(fm);
-
+		
 		this.mContext = context;
 	}
 
@@ -31,8 +33,8 @@ public class MainViewAdapter extends FragmentPagerAdapter {
 			PoolFragment poolFragment = PoolFragment.create(MainActivity.FRAGMENT_POOL);
 			return poolFragment;
 		case MainActivity.FRAGMENT_WORKER:
-			PoolFragment poolFragment2 = PoolFragment.create(MainActivity.FRAGMENT_WORKER);
-			return poolFragment2;
+			WorkerFragment workerFragment = WorkerFragment.create(MainActivity.FRAGMENT_WORKER);
+			return workerFragment;
 		}
 
 		return null;

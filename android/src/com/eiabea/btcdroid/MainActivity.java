@@ -1,23 +1,17 @@
 package com.eiabea.btcdroid;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,16 +19,14 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.eiabea.adapter.MainViewAdapter;
-import com.eiabea.adapter.WorkerListAdapter;
-import com.eiabea.btcdroid.model.Block;
-import com.eiabea.btcdroid.model.Price;
+import com.eiabea.btcdroid.fragments.PoolFragment;
+import com.eiabea.btcdroid.fragments.WorkerFragment;
 import com.eiabea.btcdroid.model.Prices;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
-import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity{
 
 	private static final int INTENT_ADD_POOL = 0;
 	
@@ -53,20 +45,15 @@ public class MainActivity extends ActionBarActivity {
 	private boolean statsLoaded = false;
 	private boolean profileLoaded = false;
 	private boolean pricesLoaded = false;
+	
+	private TextView txtNoPools;
 
-	private TextView txtNoPools, txtConfirmedReward, txtCurrentValue,
-			txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
-			txtRoundDuration, txtEstimatedDuration, txtAverageDuration, txtLuck24h, txtLuck7d,
-			txtLuck30d;
-	private LinearLayout llInfoHolder; //, llWorkerHolder;
-	private ExpandableListView exlvWOrkerHolder;
-	private RatingBar ratRating;
 	private boolean isProgessShowing = false;
 
 	private Profile profile = null;
 	private Stats stats = null;
 	private Prices prices = null;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -84,8 +71,7 @@ public class MainActivity extends ActionBarActivity {
 			this.prices = savedInstanceState.getParcelable(STATE_PRICES);
 		}
 
-		// TODO reenable
-//		reloadData(false);
+		reloadData(false);
 
 	}
 
@@ -114,18 +100,21 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onResponse(Profile profile) {
+				
+				setProfile(profile);
 
-				fillUpProfile(profile);
-
+				profileLoaded = true;
+				
+				readyLoading();
 			}
 
 		}, new ErrorListener() {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				txtConfirmedReward.setText("- BTC");
-				txtTotalHashrate.setText("- MH/s");
-				txtAverageHashrate.setText("- MH/s");
+//				txtConfirmedReward.setText("- BTC");
+//				txtTotalHashrate.setText("- MH/s");
+//				txtAverageHashrate.setText("- MH/s");
 
 				profileLoaded = true;
 
@@ -145,20 +134,23 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onResponse(Stats stats) {
 
-				fillUpStats(stats);
+				setStats(stats);
 
+				statsLoaded = true;
+				
+				readyLoading();
 			}
 
 		}, new ErrorListener() {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				txtRoundStarted.setText("-");
-				txtAverageDuration.setText("-");
-				txtRoundDuration.setText("-");
-				txtLuck24h.setText("-");
-				txtLuck7d.setText("-");
-				txtLuck30d.setText("-");
+//				txtRoundStarted.setText("-");
+//				txtAverageDuration.setText("-");
+//				txtRoundDuration.setText("-");
+//				txtLuck24h.setText("-");
+//				txtLuck7d.setText("-");
+//				txtLuck30d.setText("-");
 
 				statsLoaded = true;
 
@@ -178,16 +170,19 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onResponse(Prices prices) {
 
-				fillUpPrices(prices);
+				setPrices(prices);
 
+				pricesLoaded = true;
+				
+				readyLoading();
 			}
 
 		}, new ErrorListener() {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				txtCurrentValue.setText("-");
-				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
+//				txtCurrentValue.setText("-");
+//				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
 
 				pricesLoaded = true;
 
@@ -196,61 +191,6 @@ public class MainActivity extends ActionBarActivity {
 				readyLoading();
 			}
 		});
-	}
-
-	private void setRatingBar(double rating) {
-		double stars = ratRating.getNumStars();
-
-		if (rating < 0) {
-			rating = 0;
-		}
-
-		if (rating > stars) {
-			rating = stars;
-		}
-
-		ratRating.setRating((float) (stars - rating));
-		Log.d(getClass().getSimpleName(), "Rating set: " + ratRating.getRating());
-
-	}
-
-	private Date getAverageRoundTime(List<Block> blocks) {
-
-		long total = 0;
-
-		for (Block tmpBlock : blocks) {
-
-			Date duration;
-			try {
-				duration = App.dateDurationFormat.parse(tmpBlock.getMining_duration());
-				total += duration.getTime();
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-
-		}
-
-		long average = total / blocks.size();
-
-		System.out.println("Total: " + total + "; " + "Avg.: " + average);
-
-		return new Date(average);
-	}
-
-	private double calculateRoundRating(Date average, Date duration) {
-
-		double avg = average.getTime();
-		double dur = duration.getTime();
-
-		double rating = dur / avg;
-
-		System.out.println("Raw Rating: " + rating);
-
-		return rating;
-	}
-
-	private String formatProcent(float raw) {
-		return String.format("%.0f", raw * 100) + " %";
 	}
 
 //	private void clearWorkerViews() {
@@ -271,27 +211,12 @@ public class MainActivity extends ActionBarActivity {
 		getSupportActionBar().setSubtitle("for Slush's Pool");
 		
 		viewPager = (ViewPager) findViewById(R.id.vp_main);
+		
 		adapter = new MainViewAdapter(this, getSupportFragmentManager());
 		viewPager.setAdapter(adapter);
 
 		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
 
-		txtConfirmedReward = (TextView) findViewById(R.id.txt_main_info_confirmed_reward);
-		txtCurrentValue = (TextView) findViewById(R.id.txt_main_info_current_value);
-		txtTotalHashrate = (TextView) findViewById(R.id.txt_main_info_total_hashrate);
-		txtAverageHashrate = (TextView) findViewById(R.id.txt_main_info_average_hashrate);
-		txtRoundStarted = (TextView) findViewById(R.id.txt_main_info_round_started);
-		txtRoundDuration = (TextView) findViewById(R.id.txt_main_info_round_duration);
-		txtEstimatedDuration = (TextView) findViewById(R.id.txt_main_info_estimated_duration);
-		txtAverageDuration = (TextView) findViewById(R.id.txt_main_info_average_duration);
-		ratRating = (RatingBar) findViewById(R.id.rat_main_info_rating);
-		txtLuck24h = (TextView) findViewById(R.id.txt_main_info_luck_24h);
-		txtLuck7d = (TextView) findViewById(R.id.txt_main_info_luck_7d);
-		txtLuck30d = (TextView) findViewById(R.id.txt_main_info_luck_30d);
-
-		llInfoHolder = (LinearLayout) findViewById(R.id.ll_main_info_holder);
-//		llWorkerHolder = (LinearLayout) findViewById(R.id.ll_main_worker_holder);
-		exlvWOrkerHolder = (ExpandableListView) findViewById(R.id.exlv_main_worker_holder);
 	}
 
 	private void setListeners() {
@@ -361,7 +286,7 @@ public class MainActivity extends ActionBarActivity {
 
 				getProfile();
 			} else {
-				fillUpProfile(this.profile);
+				setProfile(profile);
 			}
 
 			if (this.stats == null || force) {
@@ -369,7 +294,7 @@ public class MainActivity extends ActionBarActivity {
 
 				getStats();
 			} else {
-				fillUpStats(this.stats);
+				setStats(stats);
 			}
 
 			if (this.prices == null || force) {
@@ -377,167 +302,33 @@ public class MainActivity extends ActionBarActivity {
 
 				getPrices();
 			} else {
-				fillUpPrices(this.prices);
+				setPrices(prices);
 			}
 		} else {
-			hideInfos();
+//			hideInfos();
 		}
 
 	}
+//
 
-	private void fillUpPrices(Prices prices) {
-		
-		this.prices = prices;
-		
-		Price lastPrice = App.getInstance().getLastPrice();
-		Price currentPrice = App.parsePrices(prices.getData()).getLastPrice();
-		
-		setPrice(txtCurrentValue, lastPrice, currentPrice);
-
-		App.getInstance().setLastPrice(currentPrice);
-
-		pricesLoaded = true;
-
-		readyLoading();
-	}
-
-	private void fillUpStats(Stats stats) {
-		
-		this.stats = stats;
-		
-		try {
-			Date started = App.dateStatsFormat.parse(stats.getRound_started());
-			txtRoundStarted.setText(App.dateFormat.format(started));
-
-			Date average = getAverageRoundTime(App.parseBlocks(stats.getBlocks()));
-			txtAverageDuration.setText(App.dateDurationFormat.format(average));
-
-			Date duration = App.dateDurationFormat.parse(stats.getRound_duration());
-			txtRoundDuration.setText(App.dateDurationFormat.format(duration));
-
-			double rating = calculateRoundRating(average, duration);
-
-			setRatingBar(rating);
-
-			float cdf = Float.valueOf(stats.getShares_cdf());
-			System.out.println(cdf);
-			float estimated = (duration.getTime() / (cdf / 100));
-			
-			txtEstimatedDuration.setText(App.dateDurationFormat.format(new Date((long) estimated)));
-			
-		} catch (java.text.ParseException e) {
-			e.printStackTrace();
-		}
-		
-		
-		float lastLuck24 = App.getInstance().getLuck24();
-		float lastLuck7d = App.getInstance().getLuck7d();
-		float lastLuck30d = App.getInstance().getLuck30d();
-		
-		float currentLuck24 = Float.parseFloat(stats.getLuck_1());
-		float currentLuck7d = Float.parseFloat(stats.getLuck_7());
-		float currentLuck30d = Float.parseFloat(stats.getLuck_30());
-		
-		setLuck(txtLuck24h, lastLuck24, currentLuck24);
-		setLuck(txtLuck7d, lastLuck7d, currentLuck7d);
-		setLuck(txtLuck30d, lastLuck30d, currentLuck30d);
-
-		App.getInstance().setLuck24(currentLuck24);
-		App.getInstance().setLuck7d(currentLuck7d);
-		App.getInstance().setLuck30d(currentLuck30d);
-
-		statsLoaded = true;
-
-		readyLoading();
-
-	}
-
-	private void setLuck(TextView txt, float last, float current) {
-		if (last > 0 && current > 0) {
-
-			if (last > current) {
-				txt.setTextColor(getResources().getColor(R.color.bd_red));
-			} else if (last < current) {
-				txt.setTextColor(getResources().getColor(R.color.bd_green));
-			}
-
-			txt.setText(formatProcent(current));
-		} else  {
-			txt.setText(formatProcent(current));
-		}
-	}
-	
-	private void setPrice(TextView txt, Price last, Price current) {
-		if (last != null && current != null) {
-			float lastPriceFloat = Float.parseFloat(last.getValue());
-			float currentPriceFloat = Float.parseFloat(current.getValue());
-
-			if (lastPriceFloat > currentPriceFloat) {
-				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
-			} else if (lastPriceFloat < currentPriceFloat) {
-				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
-			}
-
-			txtCurrentValue.setText(current.getDisplay_short());
-		} else if (current != null) {
-			txtCurrentValue.setText(current.getDisplay_short());
-		}
-	}
-
-	private void fillUpProfile(Profile profile) {
-
-		this.profile = profile;
-
-//		clearWorkerViews();
-
-		ArrayList<Worker> list = profile.getWorkersList();
-
-		Collections.sort(list, new App.sortWorkers());
-
-		int totalHashrate = 0;
-		
-		WorkerListAdapter adapter = new WorkerListAdapter(this);
-		
-		adapter.setData(list);
-
-		for (Worker tmp : list) {
-//			WorkerView workerView = new WorkerView(MainActivity.this);
-//			workerView.setData(tmp);
-//			llWorkerHolder.addView(workerView);
-
-			totalHashrate += tmp.getHashrate();
-
-		}
-		
-		exlvWOrkerHolder.setAdapter(adapter);
-
-		txtConfirmedReward.setText(profile.getConfirmed_reward() + " BTC");
-		txtTotalHashrate.setText(App.formatHashRate(totalHashrate));
-		txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
-
-		profileLoaded = true;
-
-		readyLoading();
-
-	}
-
+//
 	private void showInfos() {
 		if (txtNoPools.getVisibility() == View.VISIBLE) {
 			txtNoPools.setVisibility(View.GONE);
 		}
-		if (llInfoHolder.getVisibility() == View.GONE) {
-			llInfoHolder.setVisibility(View.VISIBLE);
+		if (viewPager.getVisibility() == View.GONE) {
+			viewPager.setVisibility(View.VISIBLE);
 		}
 	}
 
-	private void hideInfos() {
-		if (txtNoPools.getVisibility() == View.GONE) {
-			txtNoPools.setVisibility(View.VISIBLE);
-		}
-		if (llInfoHolder.getVisibility() == View.VISIBLE) {
-			llInfoHolder.setVisibility(View.GONE);
-		}
-	}
+//	private void hideInfos() {
+//		if (txtNoPools.getVisibility() == View.GONE) {
+//			txtNoPools.setVisibility(View.VISIBLE);
+//		}
+//		if (viewPager.getVisibility() == View.VISIBLE) {
+//			viewPager.setVisibility(View.GONE);
+//		}
+//	}
 
 	private void showProgress(boolean show) {
 
@@ -548,6 +339,32 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 		setSupportProgressBarIndeterminateVisibility(show);
+	}
+	
+	public void updateCurrentTotalHashrate(int hashrate){
+		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.vp_main+":" + FRAGMENT_POOL));
+		((PoolFragment)pool).updateCurrentTotalHashrate(hashrate);
+	}
+	
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.vp_main+":" + FRAGMENT_POOL));
+		((PoolFragment)pool).setProfile(profile);
+		Fragment worker = (getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.vp_main+":" + FRAGMENT_WORKER));
+		((WorkerFragment)worker).setProfile(profile);
+	}
+
+	public void setStats(Stats stats) {
+		this.stats = stats;
+		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.vp_main+":" + FRAGMENT_POOL));
+		((PoolFragment)frag).setStats(stats);
+	}
+
+	public void setPrices(Prices prices) {
+		this.prices = prices;
+		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.vp_main+":" + FRAGMENT_POOL));
+		((PoolFragment)frag).setPrices(prices);
+		
 	}
 
 }
