@@ -260,9 +260,12 @@ public class MainActivity extends ActionBarActivity{
 		switch (reqCode) {
 		case INTENT_PREF:
 			if (resCode == RESULT_OK) {
-				App.getInstance().resetToken();
+				// Only reset token and reload data if user changed token
+				if(intent.getStringExtra("key").equals("token")){
+					App.getInstance().resetToken();
+					reloadData(true);
+				}
 				
-				reloadData(true);
 			}
 			break;
 

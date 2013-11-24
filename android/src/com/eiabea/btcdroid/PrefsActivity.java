@@ -1,5 +1,6 @@
 package com.eiabea.btcdroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
@@ -15,7 +16,6 @@ public class PrefsActivity extends ActionBarActivity {
 		
 		initUi();
 		
-		setResult(RESULT_OK, null);
 	}
 
 	private void initUi() {
@@ -35,6 +35,10 @@ public class PrefsActivity extends ActionBarActivity {
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void setResultIntent(Intent intent){
+		setResult(RESULT_OK, intent);
 	}
 	
 	
