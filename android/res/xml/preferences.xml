@@ -6,9 +6,19 @@
         android:key="token"
         android:summary="Set the Slush&apos;s Pool Token"
         android:title="API Token" />
+
     <EditTextPreference
         android:defaultValue="15"
-        android:dialogTitle="Luck Threshold"
+        android:dialogTitle="Price Threshold (minutes)"
+        android:enabled="true"
+        android:key="price_threshold"
+        android:numeric="integer"
+        android:summary="Set the Threshold for reloading price"
+        android:title="Price Threshold" />
+    
+    <EditTextPreference
+        android:defaultValue="15"
+        android:dialogTitle="Luck Threshold (minutes)"
         android:enabled="true"
         android:key="threshold"
         android:numeric="integer"

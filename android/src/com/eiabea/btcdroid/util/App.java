@@ -29,22 +29,16 @@ public class App extends Application {
 
 	public static final String PREF_NAME = "app_data";
 	public static final String PREF_TOKEN = "token";
-	public static final String PREF_LAST_PRICE = "last_price";
-	public static final String PREF_LAST_LUCK24 = "last_luck_24";
-	public static final String PREF_LAST_LUCK7D = "last_luck_7d";
-	public static final String PREF_LAST_LUCK30D = "last_luck_30d";
 
 	private String token = "";
 	private int threshold = 15;
+	private int priceThreshold = 15;
 
 	public HttpWorker httpWorker;
 
 	public Gson gson;
 
 	private SharedPreferences pref;
-
-	private Price lastPrice;
-	private float luck24, luck7d, luck30d;
 
 	/**
 	 * Object of own Class
@@ -58,20 +52,21 @@ public class App extends Application {
 	public void onCreate() {
 		super.onCreate();
 		gson = new Gson();
-
-		pref = PreferenceManager.getDefaultSharedPreferences(this);
-		this.lastPrice = gson.fromJson(pref.getString(PREF_LAST_PRICE, ""), Price.class);
-
-		this.luck24 = pref.getFloat(PREF_LAST_LUCK24, 0.0f);
-		this.luck7d = pref.getFloat(PREF_LAST_LUCK7D, 0.0f);
-		this.luck30d = pref.getFloat(PREF_LAST_LUCK30D, 0.0f);
-
-		token = pref.getString(PREF_TOKEN, "");
-		threshold = Integer.valueOf(pref.getString("threshold", "15"));
+		
+		initPrefs();
 
 		me = this;
 		httpWorker = new HttpWorker(this.getApplicationContext(), token);
 
+	}
+
+	private void initPrefs() {
+		pref = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		token = pref.getString(PREF_TOKEN, "");
+		threshold = Integer.valueOf(pref.getString("threshold", "15"));
+		priceThreshold = Integer.valueOf(pref.getString("price_threshold", "15"));
+		
 	}
 
 	/**
@@ -96,13 +91,19 @@ public class App extends Application {
 		return this.threshold;
 	}
 
+	public void resetPriceThreshold() {
+		this.priceThreshold = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("price_threshold", "15"));
+	}
+	
+	public int getPriceThreshold(){
+		return this.priceThreshold;
+	}
+
 	public void setToken(String token) {
 		this.token = token;
 
 		httpWorker = new HttpWorker(this.getApplicationContext(), token);
 		
-//		pref.edit().putString(PREF_TOKEN, token).commit();
-
 	}
 
 	public String getToken() {
@@ -114,42 +115,6 @@ public class App extends Application {
 			return true;
 		}
 		return false;
-	}
-
-	public void setLastPrice(Price lastPrice) {
-		this.lastPrice = lastPrice;
-		pref.edit().putString(PREF_LAST_PRICE, gson.toJson(lastPrice)).commit();
-	}
-
-	public Price getLastPrice() {
-		return this.lastPrice;
-	}
-
-	public float getLuck24() {
-		return luck24;
-	}
-
-	public void setLuck24(float luck24) {
-		this.luck24 = luck24;
-		pref.edit().putFloat(PREF_LAST_LUCK24, luck24).commit();
-	}
-
-	public float getLuck7d() {
-		return luck7d;
-	}
-
-	public void setLuck7d(float luck7d) {
-		this.luck7d = luck7d;
-		pref.edit().putFloat(PREF_LAST_LUCK7D, luck7d).commit();
-	}
-
-	public float getLuck30d() {
-		return luck30d;
-	}
-
-	public void setLuck30d(float luck30d) {
-		this.luck30d = luck30d;
-		pref.edit().putFloat(PREF_LAST_LUCK30D, luck30d).commit();
 	}
 
 	public static Prices parsePrices(JsonObject json) {

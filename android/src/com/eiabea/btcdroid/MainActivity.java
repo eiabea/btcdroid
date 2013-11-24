@@ -23,10 +23,10 @@ import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.util.App;
 
-public class MainActivity extends ActionBarActivity{
+public class MainActivity extends ActionBarActivity {
 
 	private static final int INTENT_PREF = 0;
-	
+
 	public static final int FRAGMENT_POOL = 0;
 	public static final int FRAGMENT_WORKER = 1;
 
@@ -34,15 +34,15 @@ public class MainActivity extends ActionBarActivity{
 	private static final String STATE_STATS = "state_stats";
 	private static final String STATE_PRICES = "state_prices";
 
-	private MenuItem itemRefresh, itemAdd;
-	
+	private MenuItem itemRefresh;
+
 	private ViewPager viewPager;
 	private MainViewAdapter adapter;
 
 	private boolean statsLoaded = false;
 	private boolean profileLoaded = false;
 	private boolean pricesLoaded = false;
-	
+
 	private TextView txtNoPools;
 
 	private boolean isProgessShowing = false;
@@ -50,7 +50,7 @@ public class MainActivity extends ActionBarActivity{
 	private Profile profile = null;
 	private Stats stats = null;
 	private Prices prices = null;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -97,11 +97,11 @@ public class MainActivity extends ActionBarActivity{
 
 			@Override
 			public void onResponse(Profile profile) {
-				
+
 				setProfile(profile);
 
 				profileLoaded = true;
-				
+
 				readyLoading();
 			}
 
@@ -109,9 +109,6 @@ public class MainActivity extends ActionBarActivity{
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-//				txtConfirmedReward.setText("- BTC");
-//				txtTotalHashrate.setText("- MH/s");
-//				txtAverageHashrate.setText("- MH/s");
 
 				profileLoaded = true;
 
@@ -134,7 +131,7 @@ public class MainActivity extends ActionBarActivity{
 				setStats(stats);
 
 				statsLoaded = true;
-				
+
 				readyLoading();
 			}
 
@@ -142,12 +139,6 @@ public class MainActivity extends ActionBarActivity{
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-//				txtRoundStarted.setText("-");
-//				txtAverageDuration.setText("-");
-//				txtRoundDuration.setText("-");
-//				txtLuck24h.setText("-");
-//				txtLuck7d.setText("-");
-//				txtLuck30d.setText("-");
 
 				statsLoaded = true;
 
@@ -170,7 +161,7 @@ public class MainActivity extends ActionBarActivity{
 				setPrices(prices);
 
 				pricesLoaded = true;
-				
+
 				readyLoading();
 			}
 
@@ -178,8 +169,6 @@ public class MainActivity extends ActionBarActivity{
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-//				txtCurrentValue.setText("-");
-//				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
 
 				pricesLoaded = true;
 
@@ -200,9 +189,9 @@ public class MainActivity extends ActionBarActivity{
 	private void initUi() {
 
 		getSupportActionBar().setSubtitle("for Slush's Pool");
-		
+
 		viewPager = (ViewPager) findViewById(R.id.vp_main);
-		
+
 		adapter = new MainViewAdapter(this, getSupportFragmentManager());
 		viewPager.setAdapter(adapter);
 
@@ -219,13 +208,13 @@ public class MainActivity extends ActionBarActivity{
 		getMenuInflater().inflate(R.menu.main, menu);
 
 		itemRefresh = menu.findItem(R.id.action_refresh);
-		itemAdd = menu.findItem(R.id.action_add_pool);
+//		itemAdd = menu.findItem(R.id.action_add_pool);
 
-		if (App.getInstance().isTokenSet()) {
-			itemAdd.setVisible(false);
-		} else {
-			itemAdd.setVisible(true);
-		}
+//		if (App.getInstance().isTokenSet()) {
+//			itemAdd.setVisible(false);
+//		} else {
+//			itemAdd.setVisible(true);
+//		}
 
 		if (!isProgessShowing && App.getInstance().isTokenSet()) {
 			itemRefresh.setVisible(true);
@@ -237,14 +226,14 @@ public class MainActivity extends ActionBarActivity{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_add_pool:
-			startActivityForResult(new Intent(this, PrefsActivity.class), INTENT_PREF);
-			break;
+//		case R.id.action_add_pool:
+//			startActivityForResult(new Intent(this, PrefsActivity.class), INTENT_PREF);
+//			break;
 
 		case R.id.action_refresh:
 			reloadData(true);
 			break;
-			
+
 		case R.id.action_settings:
 			startActivityForResult(new Intent(this, PrefsActivity.class), INTENT_PREF);
 			break;
@@ -260,17 +249,11 @@ public class MainActivity extends ActionBarActivity{
 		switch (reqCode) {
 		case INTENT_PREF:
 			if (resCode == RESULT_OK) {
-				// Only reset token and reload data if user changed token
-				if(intent.getStringExtra("key").equals("token")){
-					App.getInstance().resetToken();
-					reloadData(true);
-				}
-				
-				if(intent.getStringExtra("key").equals("threshold")){
-					App.getInstance().resetThreshold();
-					reloadData(true);
-				}
-				
+				App.getInstance().resetToken();
+				App.getInstance().resetThreshold();
+				App.getInstance().resetPriceThreshold();
+				reloadData(true);
+
 			}
 			break;
 
@@ -283,6 +266,8 @@ public class MainActivity extends ActionBarActivity{
 
 	private void reloadData(boolean force) {
 		if (App.getInstance().isTokenSet()) {
+			
+			txtNoPools.setVisibility(View.INVISIBLE);
 
 			if (this.profile == null || force) {
 				showProgress(true);
@@ -341,31 +326,31 @@ public class MainActivity extends ActionBarActivity{
 
 		setSupportProgressBarIndeterminateVisibility(show);
 	}
-	
-	public void updateCurrentTotalHashrate(int hashrate){
-		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.vp_main+":" + FRAGMENT_POOL));
-		((PoolFragment)pool).updateCurrentTotalHashrate(hashrate);
+
+	public void updateCurrentTotalHashrate(int hashrate) {
+		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
+		((PoolFragment) pool).updateCurrentTotalHashrate(hashrate);
 	}
-	
+
 	public void setProfile(Profile profile) {
 		this.profile = profile;
-		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.vp_main+":" + FRAGMENT_POOL));
-		((PoolFragment)pool).setProfile(profile);
-		Fragment worker = (getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.vp_main+":" + FRAGMENT_WORKER));
-		((WorkerFragment)worker).setProfile(profile);
+		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
+		((PoolFragment) pool).setProfile(profile);
+		Fragment worker = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_WORKER));
+		((WorkerFragment) worker).setProfile(profile);
 	}
 
 	public void setStats(Stats stats) {
 		this.stats = stats;
-		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.vp_main+":" + FRAGMENT_POOL));
-		((PoolFragment)frag).setStats(stats);
+		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
+		((PoolFragment) frag).setStats(stats);
 	}
 
 	public void setPrices(Prices prices) {
 		this.prices = prices;
-		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.vp_main+":" + FRAGMENT_POOL));
-		((PoolFragment)frag).setPrices(prices);
-		
+		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
+		((PoolFragment) frag).setPrices(prices);
+
 	}
 
 }

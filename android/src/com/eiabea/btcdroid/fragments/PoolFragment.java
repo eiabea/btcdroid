@@ -26,7 +26,7 @@ import com.eiabea.btcdroid.util.App;
 public class PoolFragment extends Fragment {
 
 	private ViewGroup rootView;
-	
+
 	private Profile profile;
 	private Stats stats;
 	private Prices prices;
@@ -50,16 +50,16 @@ public class PoolFragment extends Fragment {
 		rootView = (ViewGroup) inflater.inflate(R.layout.fragment_pool, null);
 
 		initUi(inflater, rootView);
-		
-		if(profile != null){
+
+		if (profile != null) {
 			setProfile(profile);
 		}
-		
-		if(stats != null){
+
+		if (stats != null) {
 			setStats(stats);
 		}
-		
-		if(prices != null){
+
+		if (prices != null) {
 			setPrices(prices);
 		}
 
@@ -82,31 +82,37 @@ public class PoolFragment extends Fragment {
 
 	}
 
-	private void setLuck(TextView txt, float last, float current) {
-		if (last > 0 && current > 0) {
-			
+	private void setLuck(TextView txt, float current) {
+		if (current > 0) {
+
+			float last = PreferenceManager.getDefaultSharedPreferences(getActivity()).getFloat("txt_" + txt.getId() + "_value", 0f);
+
 			int minuteThreshold = App.getInstance().getThreshold();
 			long threshold = minuteThreshold * 60 * 1000;
-			
+
 			long lastUpdated = PreferenceManager.getDefaultSharedPreferences(getActivity()).getLong("txt_" + txt.getId(), 0);
-			
+
 			long now = Calendar.getInstance().getTimeInMillis();
-			
+
 			Log.d(getClass().getSimpleName(), "threshold min: " + minuteThreshold);
 			Log.d(getClass().getSimpleName(), "threshold: " + threshold);
 			Log.d(getClass().getSimpleName(), "last Updated: " + lastUpdated);
 			Log.d(getClass().getSimpleName(), "now: " + now);
 			Log.d(getClass().getSimpleName(), "time until update: " + (((lastUpdated + threshold) - now) / 1000) + " sec");
-			
-			if((lastUpdated + threshold) < now){
-				
+
+			if ((lastUpdated + threshold) < now) {
+
 				Log.d(getClass().getSimpleName(), "threshold expired --> set colors for " + "txt_" + txt.getId());
 				if (last > current) {
 					txt.setTextColor(getResources().getColor(R.color.bd_red));
 				} else if (last < current) {
 					txt.setTextColor(getResources().getColor(R.color.bd_green));
+				} else {
+					txt.setTextColor(getResources().getColor(R.color.bd_black));
 				}
+				PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putFloat("txt_" + txt.getId() + "_value", current).commit();
 				PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).commit();
+				Log.d(getClass().getSimpleName(), "set last luck to: " + current);
 			}
 
 			txt.setText(formatProcent(current));
@@ -115,19 +121,39 @@ public class PoolFragment extends Fragment {
 		}
 	}
 
-	private void setPrice(TextView txt, Price last, Price current) {
-		if (last != null && current != null) {
-			float lastPriceFloat = Float.parseFloat(last.getValue());
+	private void setPrice(TextView txt, Price current) {
+		if (current != null) {
+			float lastPriceFloat = PreferenceManager.getDefaultSharedPreferences(getActivity()).getFloat("txt_" + txt.getId() + "_value", 0f);
 			float currentPriceFloat = Float.parseFloat(current.getValue());
 
-			if (lastPriceFloat > currentPriceFloat) {
-				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
-			} else if (lastPriceFloat < currentPriceFloat) {
-				txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
+			int minuteThreshold = App.getInstance().getPriceThreshold();
+			long threshold = minuteThreshold * 60 * 1000;
+
+			long lastUpdated = PreferenceManager.getDefaultSharedPreferences(getActivity()).getLong("txt_" + txt.getId(), 0);
+
+			long now = Calendar.getInstance().getTimeInMillis();
+
+			Log.d(getClass().getSimpleName(), "Pricethreshold min: " + minuteThreshold);
+			Log.d(getClass().getSimpleName(), "Pricethreshold: " + threshold);
+			Log.d(getClass().getSimpleName(), "Price last Updated: " + lastUpdated);
+			Log.d(getClass().getSimpleName(), "Price now: " + now);
+			Log.d(getClass().getSimpleName(), "time until priceupdate: " + (((lastUpdated + threshold) - now) / 1000) + " sec");
+
+			if ((lastUpdated + threshold) < now) {
+
+				Log.d(getClass().getSimpleName(), "threshold expired --> set colors for " + "txt_" + txt.getId());
+				if (lastPriceFloat > currentPriceFloat) {
+					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
+				} else if (lastPriceFloat < currentPriceFloat) {
+					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
+				} else {
+					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
+				}
+				PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putFloat("txt_" + txt.getId() + "_value", currentPriceFloat).commit();
+				PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).commit();
+				Log.d(getClass().getSimpleName(), "set last price to: " + currentPriceFloat);
 			}
 
-			txtCurrentValue.setText(current.getDisplay_short());
-		} else if (current != null) {
 			txtCurrentValue.setText(current.getDisplay_short());
 		}
 	}
@@ -186,41 +212,38 @@ public class PoolFragment extends Fragment {
 	private String formatProcent(float raw) {
 		return String.format("%.0f", raw * 100) + " %";
 	}
-	
+
 	public void setProfile(Profile profile) {
-		
+
 		this.profile = profile;
-		if(txtTotalHashrate != null && this.profile != null){
+		if (txtTotalHashrate != null && this.profile != null) {
 			fillUpProfile();
 		}
-		
-		
+
 	}
 
 	public void setStats(Stats stats) {
-		
+
 		this.stats = stats;
-		if(txtRoundDuration != null && this.stats != null){
+		if (txtRoundDuration != null && this.stats != null) {
 			fillUpStats();
 		}
-		
 
 	}
-	
+
 	public void setPrices(Prices prices) {
 		System.out.println("prices");
 		this.prices = prices;
-		if(txtCurrentValue != null && this.prices != null){
+		if (txtCurrentValue != null && this.prices != null) {
 			fillUpPrices();
 		}
-		
-		
+
 	}
-	
+
 	private void fillUpProfile() {
 
 		int totalHashrate = 0;
-		
+
 		txtConfirmedReward.setText(profile.getConfirmed_reward() + " BTC");
 		txtTotalHashrate.setText(App.formatHashRate(totalHashrate));
 		txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
@@ -253,31 +276,27 @@ public class PoolFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		float lastLuck24 = App.getInstance().getLuck24();
-		float lastLuck7d = App.getInstance().getLuck7d();
-		float lastLuck30d = App.getInstance().getLuck30d();
-
 		float currentLuck24 = Float.parseFloat(stats.getLuck_1());
 		float currentLuck7d = Float.parseFloat(stats.getLuck_7());
 		float currentLuck30d = Float.parseFloat(stats.getLuck_30());
 
-		setLuck(txtLuck24h, lastLuck24, currentLuck24);
-		setLuck(txtLuck7d, lastLuck7d, currentLuck7d);
-		setLuck(txtLuck30d, lastLuck30d, currentLuck30d);
-		
-		App.getInstance().setLuck24(currentLuck24);
-		App.getInstance().setLuck7d(currentLuck7d);
-		App.getInstance().setLuck30d(currentLuck30d);
+		setLuck(txtLuck24h, currentLuck24);
+		setLuck(txtLuck7d, currentLuck7d);
+		setLuck(txtLuck30d, currentLuck30d);
+
+		// App.getInstance().setLuck24(currentLuck24);
+		// App.getInstance().setLuck7d(currentLuck7d);
+		// App.getInstance().setLuck30d(currentLuck30d);
 	}
-	
+
 	private void fillUpPrices() {
 
-		Price lastPrice = App.getInstance().getLastPrice();
+		// Price lastPrice = App.getInstance().getLastPrice();
 		Price currentPrice = App.parsePrices(prices.getData()).getLastPrice();
 
-		setPrice(txtCurrentValue, lastPrice, currentPrice);
+		setPrice(txtCurrentValue, currentPrice);
 
-		App.getInstance().setLastPrice(currentPrice);
+		// App.getInstance().setLastPrice(currentPrice);
 	}
 
 	public void updateCurrentTotalHashrate(int hashrate) {
