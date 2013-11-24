@@ -39,6 +39,7 @@
         </activity>
         <activity android:name="PrefsActivity" >
         </activity>
+        <service android:name=".widget.UpdateService"></service> 
     </application>
 
 </manifest>

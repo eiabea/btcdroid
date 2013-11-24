@@ -71,4 +71,5 @@ public class HttpWorker {
 		HttpWorker.mQueue.add(new GsonRequest<Prices>(url, Prices.class, null, success, error));
 
 	}
+
 }
