@@ -1,10 +1,12 @@
 package com.eiabea.btcdroid.fragments;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -82,11 +84,29 @@ public class PoolFragment extends Fragment {
 
 	private void setLuck(TextView txt, float last, float current) {
 		if (last > 0 && current > 0) {
-
-			if (last > current) {
-				txt.setTextColor(getResources().getColor(R.color.bd_red));
-			} else if (last < current) {
-				txt.setTextColor(getResources().getColor(R.color.bd_green));
+			
+			int minuteThreshold = App.getInstance().getThreshold();
+			long threshold = minuteThreshold * 60 * 1000;
+			
+			long lastUpdated = PreferenceManager.getDefaultSharedPreferences(getActivity()).getLong("txt_" + txt.getId(), 0);
+			
+			long now = Calendar.getInstance().getTimeInMillis();
+			
+			Log.d(getClass().getSimpleName(), "threshold min: " + minuteThreshold);
+			Log.d(getClass().getSimpleName(), "threshold: " + threshold);
+			Log.d(getClass().getSimpleName(), "last Updated: " + lastUpdated);
+			Log.d(getClass().getSimpleName(), "now: " + now);
+			Log.d(getClass().getSimpleName(), "time until update: " + (((lastUpdated + threshold) - now) / 1000) + " sec");
+			
+			if((lastUpdated + threshold) < now){
+				
+				Log.d(getClass().getSimpleName(), "threshold expired --> set colors for " + "txt_" + txt.getId());
+				if (last > current) {
+					txt.setTextColor(getResources().getColor(R.color.bd_red));
+				} else if (last < current) {
+					txt.setTextColor(getResources().getColor(R.color.bd_green));
+				}
+				PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).commit();
 			}
 
 			txt.setText(formatProcent(current));
@@ -244,7 +264,7 @@ public class PoolFragment extends Fragment {
 		setLuck(txtLuck24h, lastLuck24, currentLuck24);
 		setLuck(txtLuck7d, lastLuck7d, currentLuck7d);
 		setLuck(txtLuck30d, lastLuck30d, currentLuck30d);
-
+		
 		App.getInstance().setLuck24(currentLuck24);
 		App.getInstance().setLuck7d(currentLuck7d);
 		App.getInstance().setLuck30d(currentLuck30d);

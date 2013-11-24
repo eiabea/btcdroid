@@ -4,7 +4,15 @@
     <EditTextPreference
         android:dialogTitle="API Token"
         android:key="token"
-        android:summary="Set the Slush's Pool Token"
+        android:summary="Set the Slush&apos;s Pool Token"
         android:title="API Token" />
+    <EditTextPreference
+        android:defaultValue="15"
+        android:dialogTitle="Luck Threshold"
+        android:enabled="true"
+        android:key="threshold"
+        android:numeric="integer"
+        android:summary="Set the Threshold for reloading lucks"
+        android:title="Luck Threshold" />
 
 </PreferenceScreen>

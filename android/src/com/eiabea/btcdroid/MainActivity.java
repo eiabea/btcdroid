@@ -266,6 +266,11 @@ public class MainActivity extends ActionBarActivity{
 					reloadData(true);
 				}
 				
+				if(intent.getStringExtra("key").equals("threshold")){
+					App.getInstance().resetThreshold();
+					reloadData(true);
+				}
+				
 			}
 			break;
 

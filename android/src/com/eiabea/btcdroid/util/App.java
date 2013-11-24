@@ -35,6 +35,7 @@ public class App extends Application {
 	public static final String PREF_LAST_LUCK30D = "last_luck_30d";
 
 	private String token = "";
+	private int threshold = 15;
 
 	public HttpWorker httpWorker;
 
@@ -66,6 +67,7 @@ public class App extends Application {
 		this.luck30d = pref.getFloat(PREF_LAST_LUCK30D, 0.0f);
 
 		token = pref.getString(PREF_TOKEN, "");
+		threshold = Integer.valueOf(pref.getString("threshold", "15"));
 
 		me = this;
 		httpWorker = new HttpWorker(this.getApplicationContext(), token);
@@ -84,13 +86,22 @@ public class App extends Application {
 		
 		setToken(this.token);
 	}
+	
+
+	public void resetThreshold() {
+		this.threshold = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("threshold", "15"));
+	}
+	
+	public int getThreshold(){
+		return this.threshold;
+	}
 
 	public void setToken(String token) {
 		this.token = token;
 
 		httpWorker = new HttpWorker(this.getApplicationContext(), token);
 		
-		pref.edit().putString(PREF_TOKEN, token).commit();
+//		pref.edit().putString(PREF_TOKEN, token).commit();
 
 	}
 
