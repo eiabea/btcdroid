@@ -15,7 +15,7 @@ public class WorkerView extends LinearLayout {
 	
 	private Worker worker;
 	
-	private TextView txtName, txtScore, txtLastShare, txtHashrate, txtShares;
+	private TextView txtScore, txtLastShare, txtHashrate, txtShares;
 
 	public WorkerView(Context context) {
 		super(context);
@@ -26,8 +26,6 @@ public class WorkerView extends LinearLayout {
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.view_worker, this, true);
 
-		txtName = (TextView) findViewById(R.id.txt_worker_name);
-		
 		txtScore = (TextView) findViewById(R.id.txt_worker_score);
 		txtLastShare = (TextView) findViewById(R.id.txt_worker_last_share);
 		txtHashrate = (TextView) findViewById(R.id.txt_worker_hashrate);
@@ -38,17 +36,6 @@ public class WorkerView extends LinearLayout {
 		this.setWorker(worker);
 		
 		if(worker != null){
-			
-			if(worker.isAlive()){
-				txtName.setText(worker.getName());
-				txtName.setTextColor(getResources().getColor(R.color.bd_black));
-				
-			}else{
-				txtName.setText(worker.getName() + " - inactive");
-				txtName.setTextColor(getResources().getColor(R.color.bd_red));
-				
-			}
-			
 			txtScore.setText(worker.getScore());
 			txtLastShare.setText(App.dateFormat.format(new Date(worker.getLast_share() * 1000)));
 			txtHashrate.setText(App.formatHashRate(worker.getHashrate()));

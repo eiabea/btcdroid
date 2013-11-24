@@ -171,7 +171,7 @@ public class App extends Application {
 
 		@Override
 		public int compare(Worker lhs, Worker rhs) {
-			return lhs.getName().compareTo(rhs.getName());
+			return (lhs.isAlive() ^ rhs.isAlive()) ? ((lhs.isAlive() ^ true) ? 1 : -1) : 0;
 		}
 
 	}

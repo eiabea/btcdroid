@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 import com.eiabea.adapter.WorkerListAdapter;
+import com.eiabea.adapter.WorkerListAdapter.Holder;
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Profile;
@@ -25,6 +26,8 @@ public class WorkerFragment extends Fragment {
 	private Profile profile;
 
 	private ExpandableListView exlvWOrkerHolder;
+	
+	private WorkerListAdapter adapter;
 
 	public static WorkerFragment create(int pageNumber) {
 		WorkerFragment fragment = new WorkerFragment();
@@ -67,9 +70,10 @@ public class WorkerFragment extends Fragment {
 
 		int totalHashrate = 0;
 
-		WorkerListAdapter adapter = new WorkerListAdapter(getActivity());
+		adapter = new WorkerListAdapter(getActivity());
 
 		adapter.setData(list);
+		
 
 		for (Worker tmp : list) {
 			// WorkerView workerView = new WorkerView(MainActivity.this);
@@ -84,6 +88,17 @@ public class WorkerFragment extends Fragment {
 
 		exlvWOrkerHolder.setAdapter(adapter);
 
+		expandAllActiveWorker();
+	}
+	
+	private void expandAllActiveWorker(){
+		for(int i = 0; i < adapter.getGroupCount(); i++){
+			Holder holder = (Holder) adapter.getGroup(i);
+			if(holder.getWorker().isAlive()){
+				exlvWOrkerHolder.expandGroup(i);
+			}
+
+		}
 	}
 
 }

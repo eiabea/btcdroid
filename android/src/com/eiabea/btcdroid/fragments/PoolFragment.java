@@ -4,14 +4,12 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -31,13 +29,10 @@ public class PoolFragment extends Fragment {
 	private Stats stats;
 	private Prices prices;
 
-	private Context context;
-
 	private TextView txtConfirmedReward, txtCurrentValue, txtTotalHashrate,
 			txtAverageHashrate, txtRoundStarted, txtRoundDuration,
 			txtEstimatedDuration, txtAverageDuration, txtLuck24h, txtLuck7d,
 			txtLuck30d;
-	private LinearLayout llInfoHolder; // , llWorkerHolder;
 	private RatingBar ratRating;
 
 	public static PoolFragment create(int pageNumber) {
@@ -83,7 +78,6 @@ public class PoolFragment extends Fragment {
 		txtLuck7d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_7d);
 		txtLuck30d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_30d);
 
-		llInfoHolder = (LinearLayout) rootView.findViewById(R.id.ll_main_info_holder);
 	}
 
 	private void setLuck(TextView txt, float last, float current) {

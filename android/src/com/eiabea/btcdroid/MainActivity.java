@@ -1,7 +1,5 @@
 package com.eiabea.btcdroid;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -193,12 +190,6 @@ public class MainActivity extends ActionBarActivity{
 		});
 	}
 
-//	private void clearWorkerViews() {
-//		if (llWorkerHolder.getChildCount() > 0) {
-//			llWorkerHolder.removeAllViews();
-//		}
-//	}
-
 	private void readyLoading() {
 		if (profileLoaded == true && statsLoaded == true && pricesLoaded == true) {
 			showInfos();
@@ -305,7 +296,7 @@ public class MainActivity extends ActionBarActivity{
 				setPrices(prices);
 			}
 		} else {
-//			hideInfos();
+			hideInfos();
 		}
 
 	}
@@ -316,19 +307,19 @@ public class MainActivity extends ActionBarActivity{
 		if (txtNoPools.getVisibility() == View.VISIBLE) {
 			txtNoPools.setVisibility(View.GONE);
 		}
-		if (viewPager.getVisibility() == View.GONE) {
+		if (viewPager.getVisibility() == View.INVISIBLE) {
 			viewPager.setVisibility(View.VISIBLE);
 		}
 	}
 
-//	private void hideInfos() {
-//		if (txtNoPools.getVisibility() == View.GONE) {
-//			txtNoPools.setVisibility(View.VISIBLE);
-//		}
-//		if (viewPager.getVisibility() == View.VISIBLE) {
-//			viewPager.setVisibility(View.GONE);
-//		}
-//	}
+	private void hideInfos() {
+		if (txtNoPools.getVisibility() == View.GONE) {
+			txtNoPools.setVisibility(View.VISIBLE);
+		}
+		if (viewPager.getVisibility() == View.VISIBLE) {
+			viewPager.setVisibility(View.INVISIBLE);
+		}
+	}
 
 	private void showProgress(boolean show) {
 

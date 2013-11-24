@@ -7,10 +7,10 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.TextView;
 
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.views.WorkerView;
+import com.eiabea.btcdroid.views.WorkerViewHeader;
 
 public class WorkerListAdapter extends BaseExpandableListAdapter {
 
@@ -80,13 +80,13 @@ public class WorkerListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-		TextView view = (TextView) convertView;
+		WorkerViewHeader view = (WorkerViewHeader) convertView;
 
 		if (view == null) {
-			view = new TextView(context);
+			view = new WorkerViewHeader(context);
 		}
 
-		view.setText(holders.get(groupPosition).getTitle());
+		view.setData(holders.get(groupPosition).getWorker());
 
 		return view;
 	}
@@ -101,7 +101,7 @@ public class WorkerListAdapter extends BaseExpandableListAdapter {
 		return true;
 	}
 	
-	class Holder{
+	public class Holder{
 		private String title;
 		private Worker worker;
 		

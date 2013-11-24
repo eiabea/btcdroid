@@ -8,5 +8,7 @@
 
     <!-- MainActivity -->
     <string name="txt_no_pools">No Pools, please add one</string>
+    <string name="txt_viewpager_pool_fragment">Pool Data</string>
+    <string name="txt_viewpager_worker_fragment">Worker</string>
 
 </resources>
