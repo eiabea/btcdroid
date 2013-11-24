@@ -3,21 +3,19 @@
 
     <item
         android:id="@+id/action_refresh"
-        android:visible="false"
-        btcdroid:showAsAction="always"
         android:icon="@android:drawable/ic_menu_rotate"
-        android:title="@string/action_refresh"/>
-
+        android:title="@string/action_refresh"
+        android:visible="false"
+        btcdroid:showAsAction="always"/>
     <item
         android:id="@+id/action_add_pool"
-        btcdroid:showAsAction="always"
         android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/action_add_pool"/>
-    <!-- 
+        android:title="@string/action_add_pool"
+        btcdroid:showAsAction="always"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_settings"/>
-	-->
+
 </menu>

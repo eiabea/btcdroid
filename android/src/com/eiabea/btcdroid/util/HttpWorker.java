@@ -1,7 +1,6 @@
 package com.eiabea.btcdroid.util;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
@@ -16,27 +15,21 @@ public class HttpWorker {
 	public static final String BASEURL = "https://mining.bitcoin.cz/";
 	public static final String PRICES_URL = "http://data.mtgox.com/api/2/BTCUSD/money/ticker_fast";
 
-//	public static final String DEBUG_API_KEY = "402189-0754bbdd5fa5ea39699830dd588986e5";
-
 	public static final String STATS_URL = BASEURL + "stats/json/";
 	public static final String PROFILE_URL = BASEURL + "accounts/profile/json/";
 
 	private Context context;
-
-	private String token = "";
 	
-	private SharedPreferences pref;
+	private String token;
 
 	public static RequestQueue mQueue;
 
 	public HttpWorker() {}
 
-	public HttpWorker(Context context) {
+	public HttpWorker(Context context, String token) {
 		this.context = context;
 		
-		pref = context.getSharedPreferences("appData", Context.MODE_PRIVATE);
-		
-		token = pref.getString("slushKey", "");
+		this.token = token;
 		
 		initVolley();
 	}
@@ -44,20 +37,6 @@ public class HttpWorker {
 	private void initVolley() {
 		mQueue = Volley.newRequestQueue(context);
 		mQueue.start();
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-		
-		pref.edit().putString("slushKey", token).commit();
-		
-	}
-
-	public boolean isTokenSet() {
-		if (token != null && token.length() > 0) {
-			return true;
-		}
-		return false;
 	}
 
 	public void getProfile(Response.Listener<Profile> success, Response.ErrorListener error) {

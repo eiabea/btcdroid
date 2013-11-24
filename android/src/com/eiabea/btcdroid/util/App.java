@@ -11,6 +11,7 @@ import java.util.Set;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Price;
@@ -27,11 +28,14 @@ public class App extends Application {
 	public static final SimpleDateFormat dateDurationFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 
 	public static final String PREF_NAME = "app_data";
+	public static final String PREF_TOKEN = "token";
 	public static final String PREF_LAST_PRICE = "last_price";
 	public static final String PREF_LAST_LUCK24 = "last_luck_24";
 	public static final String PREF_LAST_LUCK7D = "last_luck_7d";
 	public static final String PREF_LAST_LUCK30D = "last_luck_30d";
-	
+
+	private String token = "";
+
 	public HttpWorker httpWorker;
 
 	public Gson gson;
@@ -40,7 +44,6 @@ public class App extends Application {
 
 	private Price lastPrice;
 	private float luck24, luck7d, luck30d;
-	
 
 	/**
 	 * Object of own Class
@@ -55,15 +58,17 @@ public class App extends Application {
 		super.onCreate();
 		gson = new Gson();
 
-		pref = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		this.lastPrice = gson.fromJson(pref.getString(PREF_LAST_PRICE, ""), Price.class);
-		
+
 		this.luck24 = pref.getFloat(PREF_LAST_LUCK24, 0.0f);
 		this.luck7d = pref.getFloat(PREF_LAST_LUCK7D, 0.0f);
 		this.luck30d = pref.getFloat(PREF_LAST_LUCK30D, 0.0f);
 
+		token = pref.getString(PREF_TOKEN, "");
+
 		me = this;
-		httpWorker = new HttpWorker(this.getApplicationContext());
+		httpWorker = new HttpWorker(this.getApplicationContext(), token);
 
 	}
 
@@ -72,6 +77,32 @@ public class App extends Application {
 	 */
 	public static App getInstance() {
 		return me;
+	}
+	
+	public void resetToken(){
+		this.token = PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
+		
+		setToken(this.token);
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+
+		httpWorker = new HttpWorker(this.getApplicationContext(), token);
+		
+		pref.edit().putString(PREF_TOKEN, token).commit();
+
+	}
+
+	public String getToken() {
+		return this.token;
+	}
+
+	public boolean isTokenSet() {
+		if (token != null && token.length() > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	public void setLastPrice(Price lastPrice) {
@@ -82,7 +113,7 @@ public class App extends Application {
 	public Price getLastPrice() {
 		return this.lastPrice;
 	}
-	
+
 	public float getLuck24() {
 		return luck24;
 	}
@@ -151,17 +182,17 @@ public class App extends Application {
 		}
 		return blocks;
 	}
-	
+
 	public static String formatHashRate(String hash) {
 		double doubleHash = Double.valueOf(hash);
-		if(doubleHash > 1000){
+		if (doubleHash > 1000) {
 			return String.format("%.2f", doubleHash / 1000d) + " GH/s";
 		}
 		return doubleHash + " MH/s";
 	}
 
 	public static String formatHashRate(int hash) {
-		if(hash > 1000){
+		if (hash > 1000) {
 			return String.format("%.2f", ((float) hash) / 1000f) + " GH/s";
 		}
 		return String.valueOf(hash) + " MH/s";

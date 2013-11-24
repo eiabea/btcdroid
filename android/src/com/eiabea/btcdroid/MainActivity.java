@@ -25,7 +25,7 @@ import com.eiabea.btcdroid.util.App;
 
 public class MainActivity extends ActionBarActivity{
 
-	private static final int INTENT_ADD_POOL = 0;
+	private static final int INTENT_PREF = 0;
 	
 	public static final int FRAGMENT_POOL = 0;
 	public static final int FRAGMENT_WORKER = 1;
@@ -221,13 +221,13 @@ public class MainActivity extends ActionBarActivity{
 		itemRefresh = menu.findItem(R.id.action_refresh);
 		itemAdd = menu.findItem(R.id.action_add_pool);
 
-		if (App.getInstance().httpWorker.isTokenSet()) {
+		if (App.getInstance().isTokenSet()) {
 			itemAdd.setVisible(false);
 		} else {
 			itemAdd.setVisible(true);
 		}
 
-		if (!isProgessShowing) {
+		if (!isProgessShowing && App.getInstance().isTokenSet()) {
 			itemRefresh.setVisible(true);
 		}
 
@@ -238,11 +238,15 @@ public class MainActivity extends ActionBarActivity{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_add_pool:
-			startActivityForResult(new Intent(this, AddPoolActivity.class), INTENT_ADD_POOL);
+			startActivityForResult(new Intent(this, PrefsActivity.class), INTENT_PREF);
 			break;
 
 		case R.id.action_refresh:
 			reloadData(true);
+			break;
+			
+		case R.id.action_settings:
+			startActivityForResult(new Intent(this, PrefsActivity.class), INTENT_PREF);
 			break;
 
 		default:
@@ -254,10 +258,10 @@ public class MainActivity extends ActionBarActivity{
 	@Override
 	protected void onActivityResult(int reqCode, int resCode, Intent intent) {
 		switch (reqCode) {
-		case INTENT_ADD_POOL:
+		case INTENT_PREF:
 			if (resCode == RESULT_OK) {
-				App.getInstance().httpWorker.setToken(intent.getExtras().getString("token"));
-
+				App.getInstance().resetToken();
+				
 				reloadData(true);
 			}
 			break;
@@ -270,7 +274,7 @@ public class MainActivity extends ActionBarActivity{
 	}
 
 	private void reloadData(boolean force) {
-		if (App.getInstance().httpWorker.isTokenSet()) {
+		if (App.getInstance().isTokenSet()) {
 
 			if (this.profile == null || force) {
 				showProgress(true);
@@ -300,9 +304,7 @@ public class MainActivity extends ActionBarActivity{
 		}
 
 	}
-//
 
-//
 	private void showInfos() {
 		if (txtNoPools.getVisibility() == View.VISIBLE) {
 			txtNoPools.setVisibility(View.GONE);
