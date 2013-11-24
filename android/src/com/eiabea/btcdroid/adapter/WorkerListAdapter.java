@@ -1,4 +1,4 @@
-package com.eiabea.adapter;
+package com.eiabea.btcdroid.adapter;
 
 import java.util.ArrayList;
 import java.util.List;

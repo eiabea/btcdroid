@@ -11,10 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
-import com.eiabea.adapter.WorkerListAdapter;
-import com.eiabea.adapter.WorkerListAdapter.Holder;
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
+import com.eiabea.btcdroid.adapter.WorkerListAdapter;
+import com.eiabea.btcdroid.adapter.WorkerListAdapter.Holder;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
