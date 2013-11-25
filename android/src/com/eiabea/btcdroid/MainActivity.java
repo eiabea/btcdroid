@@ -32,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
 
 	private static final String STATE_PROFILE = "state_profile";
 	private static final String STATE_STATS = "state_stats";
-	private static final String STATE_PRICES = "state_prices";
+//	private static final String STATE_PRICES = "state_prices";
 
 	private MenuItem itemRefresh;
 
@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity {
 
 	private boolean statsLoaded = false;
 	private boolean profileLoaded = false;
-	private boolean pricesLoaded = false;
+//	private boolean pricesLoaded = false;
 
 	private TextView txtNoPools;
 
@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
 
 	private Profile profile = null;
 	private Stats stats = null;
-	private Prices prices = null;
+//	private Prices prices = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
 			// Restore value of members from saved state
 			this.profile = savedInstanceState.getParcelable(STATE_PROFILE);
 			this.stats = savedInstanceState.getParcelable(STATE_STATS);
-			this.prices = savedInstanceState.getParcelable(STATE_PRICES);
+//			this.prices = savedInstanceState.getParcelable(STATE_PRICES);
 		}
 
 		reloadData(false);
@@ -83,7 +83,7 @@ public class MainActivity extends ActionBarActivity {
 		// Save the user's current game state
 		savedInstanceState.putParcelable(STATE_PROFILE, this.profile);
 		savedInstanceState.putParcelable(STATE_STATS, this.stats);
-		savedInstanceState.putParcelable(STATE_PRICES, this.prices);
+//		savedInstanceState.putParcelable(STATE_PRICES, this.prices);
 
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);
@@ -149,38 +149,38 @@ public class MainActivity extends ActionBarActivity {
 		});
 	}
 
-	private void getPrices() {
-
-		pricesLoaded = false;
-
-		App.getInstance().httpWorker.getPrices(new Listener<Prices>() {
-
-			@Override
-			public void onResponse(Prices prices) {
-
-				setPrices(prices);
-
-				pricesLoaded = true;
-
-				readyLoading();
-			}
-
-		}, new ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-
-				pricesLoaded = true;
-
-				Toast.makeText(MainActivity.this, "Error loading Price", Toast.LENGTH_SHORT).show();
-
-				readyLoading();
-			}
-		});
-	}
+//	private void getPrices() {
+//
+//		pricesLoaded = false;
+//
+//		App.getInstance().httpWorker.getPrices(new Listener<Prices>() {
+//
+//			@Override
+//			public void onResponse(Prices prices) {
+//
+//				setPrices(prices);
+//
+//				pricesLoaded = true;
+//
+//				readyLoading();
+//			}
+//
+//		}, new ErrorListener() {
+//
+//			@Override
+//			public void onErrorResponse(VolleyError error) {
+//
+//				pricesLoaded = true;
+//
+//				Toast.makeText(MainActivity.this, "Error loading Price", Toast.LENGTH_SHORT).show();
+//
+//				readyLoading();
+//			}
+//		});
+//	}
 
 	private void readyLoading() {
-		if (profileLoaded == true && statsLoaded == true && pricesLoaded == true) {
+		if (profileLoaded == true && statsLoaded == true /* && pricesLoaded == true */) {
 			showInfos();
 			showProgress(false);
 		}
@@ -285,13 +285,13 @@ public class MainActivity extends ActionBarActivity {
 				setStats(stats);
 			}
 
-			if (this.prices == null || force) {
-				showProgress(true);
-
-				getPrices();
-			} else {
-				setPrices(prices);
-			}
+//			if (this.prices == null || force) {
+//				showProgress(true);
+//
+//				getPrices();
+//			} else {
+//				setPrices(prices);
+//			}
 		} else {
 			hideInfos();
 		}
@@ -346,11 +346,11 @@ public class MainActivity extends ActionBarActivity {
 		((PoolFragment) frag).setStats(stats);
 	}
 
-	public void setPrices(Prices prices) {
-		this.prices = prices;
-		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
-		((PoolFragment) frag).setPrices(prices);
-
-	}
+//	public void setPrices(Prices prices) {
+//		this.prices = prices;
+//		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
+//		((PoolFragment) frag).setPrices(prices);
+//
+//	}
 
 }
