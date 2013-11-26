@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.util.Log;
 
 public class WidgetProvider extends AppWidgetProvider {
-	private static final String ACTION_CLICK = "ACTION_CLICK";
+//	private static final String ACTION_CLICK = "ACTION_CLICK";
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {

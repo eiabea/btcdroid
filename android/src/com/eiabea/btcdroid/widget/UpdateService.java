@@ -1,7 +1,6 @@
 package com.eiabea.btcdroid.widget;
 
 import java.util.Calendar;
-import java.util.Random;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -12,10 +11,8 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
 import com.android.volley.Response.Listener;
-import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Price;
 import com.eiabea.btcdroid.model.Prices;
@@ -24,8 +21,6 @@ import com.eiabea.btcdroid.util.App;
 public class UpdateService extends Service implements Listener<Prices>{
 	private static final String LOG = "de.vogella.android.widget.example";
 
-	private Intent intent;
-	
 	private AppWidgetManager appWidgetManager;
 	
 	private int[] allWidgetIds;
@@ -35,8 +30,6 @@ public class UpdateService extends Service implements Listener<Prices>{
 		Log.i(LOG, "Called");
 		// create some random data
 		
-		this.intent = intent;
-
 		appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
 
 		allWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);

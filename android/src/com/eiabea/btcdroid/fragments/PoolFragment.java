@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import android.graphics.LinearGradient;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
