@@ -16,7 +16,7 @@ public class Stats implements Parcelable {
 	private String luck_7;
 	private String luck_30;
 	private String shares_cdf;
-	private int shares;
+	private long shares;
 	private JsonObject blocks;
 	
 	// Standardconstructor
@@ -32,7 +32,7 @@ public class Stats implements Parcelable {
 		luck_30 = in.readString();
 		shares_cdf = in.readString();
 		
-		shares = in.readInt();
+		shares = in.readLong();
 		
 		blocks = new JsonObject();
 		blocks = App.getInstance().gson.fromJson(in.readString(), JsonObject.class);
@@ -53,7 +53,7 @@ public class Stats implements Parcelable {
 		dest.writeString(luck_30);
 		dest.writeString(shares_cdf);
 		
-		dest.writeInt(shares);
+		dest.writeLong(shares);
 		
 		dest.writeString(blocks.toString());
 	}
@@ -132,13 +132,12 @@ public class Stats implements Parcelable {
 		this.luck_30 = luck_30;
 	}
 
-	public int getShares() {
+	public long getShares() {
 		return shares;
 	}
 
-	public void setShares(int shares) {
+	public void setShares(long shares) {
 		this.shares = shares;
 	}
 
-    
 }

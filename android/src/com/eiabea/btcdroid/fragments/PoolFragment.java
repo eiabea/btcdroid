@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import android.graphics.LinearGradient;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -12,11 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
+import com.eiabea.btcdroid.model.Price;
+import com.eiabea.btcdroid.model.Prices;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.util.App;
@@ -27,9 +31,11 @@ public class PoolFragment extends Fragment {
 
 	private Profile profile;
 	private Stats stats;
-//	private Prices prices;
+	private Prices prices;
+	
+	private LinearLayout llPriceHolder;
 
-	private TextView txtEstimatedReward, txtConfirmedReward, txtTotalReward, /* txtCurrentValue,*/ txtTotalHashrate,
+	private TextView txtEstimatedReward, txtConfirmedReward, txtTotalReward, txtCurrentValue, txtTotalHashrate,
 			txtAverageHashrate, txtRoundStarted, txtRoundDuration,
 			txtEstimatedDuration, txtAverageDuration, txtLuck24h, txtLuck7d,
 			txtLuck30d;
@@ -57,18 +63,19 @@ public class PoolFragment extends Fragment {
 			setStats(stats);
 		}
 
-//		if (prices != null) {
-//			setPrices(prices);
-//		}
+		if (prices != null) {
+			setPrices(prices);
+		}
 
 		return rootView;
 	}
 
 	private void initUi(LayoutInflater inflater, ViewGroup rootView) {
+		llPriceHolder = (LinearLayout) rootView.findViewById(R.id.ll_main_info_price_holder);
+		txtCurrentValue = (TextView) rootView.findViewById(R.id.txt_main_info_current_value);
 		txtEstimatedReward = (TextView) rootView.findViewById(R.id.txt_main_info_estimated_reward);
 		txtConfirmedReward = (TextView) rootView.findViewById(R.id.txt_main_info_confirmed_reward);
 		txtTotalReward = (TextView) rootView.findViewById(R.id.txt_main_info_total_reward);
-//		txtCurrentValue = (TextView) rootView.findViewById(R.id.txt_main_info_current_value);
 		txtTotalHashrate = (TextView) rootView.findViewById(R.id.txt_main_info_total_hashrate);
 		txtAverageHashrate = (TextView) rootView.findViewById(R.id.txt_main_info_average_hashrate);
 		txtRoundStarted = (TextView) rootView.findViewById(R.id.txt_main_info_round_started);
@@ -121,42 +128,42 @@ public class PoolFragment extends Fragment {
 		}
 	}
 
-//	private void setPrice(TextView txt, Price current) {
-//		if (current != null) {
-//			float lastPriceFloat = PreferenceManager.getDefaultSharedPreferences(getActivity()).getFloat("txt_" + txt.getId() + "_value", 0f);
-//			float currentPriceFloat = Float.parseFloat(current.getValue());
-//
-//			int minuteThreshold = App.getInstance().getPriceThreshold();
-//			long threshold = minuteThreshold * 60 * 1000;
-//
-//			long lastUpdated = PreferenceManager.getDefaultSharedPreferences(getActivity()).getLong("txt_" + txt.getId(), 0);
-//
-//			long now = Calendar.getInstance().getTimeInMillis();
-//
-//			Log.d(getClass().getSimpleName(), "Pricethreshold min: " + minuteThreshold);
-//			Log.d(getClass().getSimpleName(), "Pricethreshold: " + threshold);
-//			Log.d(getClass().getSimpleName(), "Price last Updated: " + lastUpdated);
-//			Log.d(getClass().getSimpleName(), "Price now: " + now);
-//			Log.d(getClass().getSimpleName(), "time until priceupdate: " + (((lastUpdated + threshold) - now) / 1000) + " sec");
-//
-//			if ((lastUpdated + threshold) < now) {
-//
-//				Log.d(getClass().getSimpleName(), "threshold expired --> set colors for " + "txt_" + txt.getId());
-//				if (lastPriceFloat > currentPriceFloat) {
-//					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
-//				} else if (lastPriceFloat < currentPriceFloat) {
-//					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
-//				} else {
-//					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
-//				}
-//				PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putFloat("txt_" + txt.getId() + "_value", currentPriceFloat).commit();
-//				PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).commit();
-//				Log.d(getClass().getSimpleName(), "set last price to: " + currentPriceFloat);
-//			}
-//
-//			txtCurrentValue.setText(current.getDisplay_short());
-//		}
-//	}
+	private void setPrice(TextView txt, Price current) {
+		if (current != null) {
+			float lastPriceFloat = PreferenceManager.getDefaultSharedPreferences(getActivity()).getFloat("txt_" + txt.getId() + "_value", 0f);
+			float currentPriceFloat = Float.parseFloat(current.getValue());
+
+			int minuteThreshold = App.getInstance().getPriceThreshold();
+			long threshold = minuteThreshold * 60 * 1000;
+
+			long lastUpdated = PreferenceManager.getDefaultSharedPreferences(getActivity()).getLong("txt_" + txt.getId(), 0);
+
+			long now = Calendar.getInstance().getTimeInMillis();
+
+			Log.d(getClass().getSimpleName(), "Pricethreshold min: " + minuteThreshold);
+			Log.d(getClass().getSimpleName(), "Pricethreshold: " + threshold);
+			Log.d(getClass().getSimpleName(), "Price last Updated: " + lastUpdated);
+			Log.d(getClass().getSimpleName(), "Price now: " + now);
+			Log.d(getClass().getSimpleName(), "time until priceupdate: " + (((lastUpdated + threshold) - now) / 1000) + " sec");
+
+			if ((lastUpdated + threshold) < now) {
+
+				Log.d(getClass().getSimpleName(), "threshold expired --> set colors for " + "txt_" + txt.getId());
+				if (lastPriceFloat > currentPriceFloat) {
+					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
+				} else if (lastPriceFloat < currentPriceFloat) {
+					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
+				} else {
+					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
+				}
+				PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putFloat("txt_" + txt.getId() + "_value", currentPriceFloat).commit();
+				PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).commit();
+				Log.d(getClass().getSimpleName(), "set last price to: " + currentPriceFloat);
+			}
+
+			txtCurrentValue.setText(current.getDisplay_short());
+		}
+	}
 
 	private void setRatingBar(double rating) {
 		double stars = ratRating.getNumStars();
@@ -231,14 +238,22 @@ public class PoolFragment extends Fragment {
 
 	}
 
-//	public void setPrices(Prices prices) {
-//		System.out.println("prices");
-//		this.prices = prices;
-//		if (txtCurrentValue != null && this.prices != null) {
-//			fillUpPrices();
-//		}
-//
-//	}
+	public void setPrices(Prices prices) {
+		System.out.println("prices");
+		this.prices = prices;
+		if (txtCurrentValue != null && this.prices != null) {
+			fillUpPrices();
+		}
+		
+		if(App.isPriceEnabled){
+			llPriceHolder.setVisibility(View.VISIBLE);
+			
+		}else{
+			llPriceHolder.setVisibility(View.GONE);
+			
+		}
+
+	}
 
 	private void fillUpProfile() {
 
@@ -297,15 +312,15 @@ public class PoolFragment extends Fragment {
 		// App.getInstance().setLuck30d(currentLuck30d);
 	}
 
-//	private void fillUpPrices() {
-//
-//		// Price lastPrice = App.getInstance().getLastPrice();
-//		Price currentPrice = App.parsePrices(prices.getData()).getLastPrice();
-//
-//		setPrice(txtCurrentValue, currentPrice);
-//
-//		// App.getInstance().setLastPrice(currentPrice);
-//	}
+	private void fillUpPrices() {
+
+		// Price lastPrice = App.getInstance().getLastPrice();
+		Price currentPrice = App.parsePrices(prices.getData()).getLastPrice();
+
+		setPrice(txtCurrentValue, currentPrice);
+
+		// App.getInstance().setLastPrice(currentPrice);
+	}
 
 	public void updateCurrentTotalHashrate(int hashrate) {
 		txtTotalHashrate.setText(App.formatHashRate(hashrate));

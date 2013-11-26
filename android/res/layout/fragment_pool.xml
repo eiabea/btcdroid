@@ -10,10 +10,13 @@
         android:orientation="vertical"
          >
 		
-        <!-- 
+        
         <LinearLayout
+            android:id="@+id/ll_main_info_price_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:visibility="gone"
             android:orientation="horizontal" >
 
             <TextView
@@ -30,7 +33,7 @@
                 android:layout_weight="1"
                 android:gravity="right" />
         </LinearLayout>
-        -->
+        
             <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

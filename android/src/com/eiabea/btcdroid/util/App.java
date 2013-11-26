@@ -30,6 +30,8 @@ public class App extends Application {
 	public static final String PREF_NAME = "app_data";
 	public static final String PREF_TOKEN = "token";
 
+	public static boolean isPriceEnabled = true;
+	
 	private String token = "";
 	private int threshold = 15;
 	private int priceThreshold = 15;
@@ -66,6 +68,7 @@ public class App extends Application {
 		token = pref.getString(PREF_TOKEN, "");
 		threshold = Integer.valueOf(pref.getString("threshold", "15"));
 		priceThreshold = Integer.valueOf(pref.getString("price_threshold", "15"));
+		isPriceEnabled = pref.getBoolean("price_enabled", false);
 		
 	}
 
@@ -93,6 +96,10 @@ public class App extends Application {
 
 	public void resetPriceThreshold() {
 		this.priceThreshold = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("price_threshold", "15"));
+	}
+
+	public void resetPriceEnabled() {
+		App.isPriceEnabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("price_enabled", false);
 	}
 	
 	public int getPriceThreshold(){
