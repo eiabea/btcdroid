@@ -244,12 +244,14 @@ public class PoolFragment extends Fragment {
 			fillUpPrices();
 		}
 		
-		if(App.isPriceEnabled){
-			llPriceHolder.setVisibility(View.VISIBLE);
-			
-		}else{
-			llPriceHolder.setVisibility(View.GONE);
-			
+		if(llPriceHolder != null){
+			if(App.isPriceEnabled){
+				llPriceHolder.setVisibility(View.VISIBLE);
+				
+			}else{
+				llPriceHolder.setVisibility(View.GONE);
+				
+			}
 		}
 
 	}
@@ -322,7 +324,9 @@ public class PoolFragment extends Fragment {
 	}
 
 	public void updateCurrentTotalHashrate(int hashrate) {
-		txtTotalHashrate.setText(App.formatHashRate(hashrate));
+		if(txtTotalHashrate != null){
+			txtTotalHashrate.setText(App.formatHashRate(hashrate));
+		}
 	}
 
 }

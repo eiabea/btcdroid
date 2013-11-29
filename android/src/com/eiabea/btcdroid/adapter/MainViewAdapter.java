@@ -9,11 +9,12 @@ import android.util.Log;
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.fragments.PoolFragment;
+import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
 
 public class MainViewAdapter extends FragmentPagerAdapter {
 
-	private static final int PAGES = 2;
+	private static final int PAGES = 3;
 	
 	private Context mContext;
 
@@ -34,6 +35,9 @@ public class MainViewAdapter extends FragmentPagerAdapter {
 		case MainActivity.FRAGMENT_WORKER:
 			WorkerFragment workerFragment = WorkerFragment.create(MainActivity.FRAGMENT_WORKER);
 			return workerFragment;
+		case MainActivity.FRAGMENT_ROUNDS:
+			RoundsFragment roundsFragment = RoundsFragment.create(MainActivity.FRAGMENT_ROUNDS);
+			return roundsFragment;
 		}
 
 		return null;
@@ -53,6 +57,8 @@ public class MainViewAdapter extends FragmentPagerAdapter {
 			return mContext.getResources().getString(R.string.txt_viewpager_pool_fragment);
 		case MainActivity.FRAGMENT_WORKER:
 			return mContext.getResources().getString(R.string.txt_viewpager_worker_fragment);
+		case MainActivity.FRAGMENT_ROUNDS:
+			return mContext.getResources().getString(R.string.txt_viewpager_round_fragment);
 		}
 		return null;
 	}

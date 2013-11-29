@@ -18,6 +18,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.eiabea.btcdroid.adapter.MainViewAdapter;
 import com.eiabea.btcdroid.fragments.PoolFragment;
+import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
 import com.eiabea.btcdroid.model.Prices;
 import com.eiabea.btcdroid.model.Profile;
@@ -30,6 +31,7 @@ public class MainActivity extends ActionBarActivity {
 
 	public static final int FRAGMENT_POOL = 0;
 	public static final int FRAGMENT_WORKER = 1;
+	public static final int FRAGMENT_ROUNDS = 2;
 
 	private static final String STATE_PROFILE = "state_profile";
 	private static final String STATE_STATS = "state_stats";
@@ -344,27 +346,44 @@ public class MainActivity extends ActionBarActivity {
 
 	public void updateCurrentTotalHashrate(int hashrate) {
 		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
-		((PoolFragment) pool).updateCurrentTotalHashrate(hashrate);
+		if (pool != null) {
+			((PoolFragment) pool).updateCurrentTotalHashrate(hashrate);
+		}
 	}
 
 	public void setProfile(Profile profile) {
 		this.profile = profile;
 		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
-		((PoolFragment) pool).setProfile(profile);
+		if (pool != null) {
+			((PoolFragment) pool).setProfile(profile);
+		}
 		Fragment worker = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_WORKER));
-		((WorkerFragment) worker).setProfile(profile);
+		if (worker != null) {
+			((WorkerFragment) worker).setProfile(profile);
+
+		}
 	}
 
 	public void setStats(Stats stats) {
 		this.stats = stats;
 		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
-		((PoolFragment) frag).setStats(stats);
+		if (frag != null) {
+			((PoolFragment) frag).setStats(stats);
+
+		}
+		Fragment rounds = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_ROUNDS));
+		if (rounds != null) {
+			((RoundsFragment) rounds).setStats(stats);
+
+		}
 	}
 
 	public void setPrices(Prices prices) {
 		this.prices = prices;
 		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
-		((PoolFragment) frag).setPrices(prices);
+		if(frag != null){
+			((PoolFragment) frag).setPrices(prices);
+		}
 
 	}
 

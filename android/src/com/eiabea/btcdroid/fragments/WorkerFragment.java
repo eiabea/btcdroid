@@ -66,7 +66,7 @@ public class WorkerFragment extends Fragment {
 	private void fillUpProfile() {
 		ArrayList<Worker> list = profile.getWorkersList();
 
-		Collections.sort(list, new App.sortWorkers());
+		Collections.sort(list, new App.WorkerSorter());
 
 		int totalHashrate = 0;
 
@@ -74,7 +74,6 @@ public class WorkerFragment extends Fragment {
 
 		adapter.setData(list);
 		
-
 		for (Worker tmp : list) {
 			// WorkerView workerView = new WorkerView(MainActivity.this);
 			// workerView.setData(tmp);

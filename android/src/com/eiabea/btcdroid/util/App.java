@@ -1,5 +1,6 @@
 package com.eiabea.btcdroid.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -181,12 +182,32 @@ public class App extends Application {
 		return String.valueOf(hash) + " MH/s";
 	}
 
-	public static class sortWorkers implements Comparator<Worker> {
+	public static class WorkerSorter implements Comparator<Worker> {
 
 		@Override
 		public int compare(Worker lhs, Worker rhs) {
 			return (lhs.isAlive() ^ rhs.isAlive()) ? ((lhs.isAlive() ^ true) ? 1 : -1) : 0;
 		}
 
+	}
+	
+	public static class BlockSorter implements Comparator<Block> {
+		
+		@Override
+		public int compare(Block lhs, Block rhs) {
+			
+			try {
+				long timestampLhs = dateStatsFormat.parse(lhs.getDate_found()).getTime();
+				long timestampRhs = dateStatsFormat.parse(rhs.getDate_found()).getTime();
+				if(timestampLhs < timestampRhs) return 1;
+				if(timestampLhs > timestampRhs) return -1;
+				return 0;
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			return 0;
+		}
+		
 	}
 }
