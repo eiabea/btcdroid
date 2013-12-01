@@ -256,6 +256,16 @@ public class MainActivity extends ActionBarActivity {
 		case R.id.action_settings:
 			startActivityForResult(new Intent(this, PrefsActivity.class), INTENT_PREF);
 			break;
+			
+		case R.id.action_email:
+			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+
+			emailIntent.setType("plain/text");
+			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{App.getResString(R.string.mail_address, MainActivity.this)});
+			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, App.getResString(R.string.mail_subject, MainActivity.this));
+
+			startActivity(Intent.createChooser(emailIntent, App.getResString(R.string.mail_intent_title, MainActivity.this)));
+			break;
 
 		default:
 			break;

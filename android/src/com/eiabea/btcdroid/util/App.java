@@ -170,7 +170,6 @@ public class App extends Application {
 	}
 
 	public static String formatHashRate(String hash) {
-		// TODO Wording
 		double doubleHash = Double.valueOf(hash);
 		if (doubleHash > 1000) {
 			return String.format("%.2f", doubleHash / 1000d) + " " + getResString(R.string.gh_per_second, getInstance());
@@ -179,7 +178,6 @@ public class App extends Application {
 	}
 
 	public static String formatHashRate(int hash) {
-		// TODO Wording
 		if (hash > 1000) {
 			return String.format("%.2f", ((float) hash) / 1000f) + " " + getResString(R.string.gh_per_second, getInstance());
 		}
@@ -187,12 +185,10 @@ public class App extends Application {
 	}
 	
 	public static String formatProcent(float raw) {
-		// TODO Wording
 		return String.format("%.0f", raw * 100) + " " + getResString(R.string.percent_sign, getInstance());
 	}
 
 	public static String formatReward(float reward) {
-		// TODO Wording
 		int style = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getInstance()).getString("btc_style_preference", "0"));
 
 		switch (style) {

@@ -275,29 +275,36 @@ public class PoolFragment extends Fragment {
 	}
 
 	private void fillUpStats() {
+
+		Date started, average, duration = null;
+
+		average = getAverageRoundTime(App.parseBlocks(stats.getBlocks()));
+		txtAverageDuration.setText(App.dateDurationFormat.format(average));
 		try {
-			// TODO exeception handling
-			Date started = App.dateStatsFormat.parse(stats.getRound_started());
+			started = App.dateStatsFormat.parse(stats.getRound_started());
 			txtRoundStarted.setText(App.dateFormat.format(started));
-
-			Date average = getAverageRoundTime(App.parseBlocks(stats.getBlocks()));
-			txtAverageDuration.setText(App.dateDurationFormat.format(average));
-
-			Date duration = App.dateDurationFormat.parse(stats.getRound_duration());
+		} catch (java.text.ParseException e) {
+			e.printStackTrace();
+		}
+		try {
+			duration = App.dateDurationFormat.parse(stats.getRound_duration());
 			txtRoundDuration.setText(App.dateDurationFormat.format(duration));
+		} catch (java.text.ParseException e) {
+			e.printStackTrace();
+		}
 
+		if(average != null && duration != null){
 			double rating = calculateRoundRating(average, duration);
-
+			
 			setRatingBar(rating);
-
+		}
+		
+		if(duration != null){
 			float cdf = Float.valueOf(stats.getShares_cdf());
 			System.out.println(cdf);
 			float estimated = (duration.getTime() / (cdf / 100));
-
+			
 			txtEstimatedDuration.setText(App.dateDurationFormat.format(new Date((long) estimated)));
-
-		} catch (java.text.ParseException e) {
-			e.printStackTrace();
 		}
 
 		float currentLuck24 = Float.parseFloat(stats.getLuck_1());

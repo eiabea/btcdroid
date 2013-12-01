@@ -22,7 +22,6 @@ public class PrefsActivity extends ActionBarActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		
-		// TODO wording
 		getSupportActionBar().setTitle(R.string.txt_settings);
 		
 	}

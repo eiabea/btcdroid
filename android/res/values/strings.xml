@@ -6,6 +6,7 @@
     <string name="action_refresh">Refresh</string>
     <string name="action_add_pool">Add Pool</string>
     <string name="action_settings">Settings</string>
+    <string name="action_email">Email me</string>
     <string name="gh_per_second">GH/s</string>
     <string name="mh_per_second">MH/s</string>
     <string name="btc">BTC</string>
@@ -21,6 +22,9 @@
     <string name="txt_error_loading_profile">Error loading Profile</string>
     <string name="txt_error_loading_stats">Error loading Stats</string>
     <string name="txt_error_loading_price">Error loading Price</string>
+    <string name="mail_address">eiabea1989@gmail.com</string>
+    <string name="mail_subject">BTCDroid</string>
+    <string name="mail_intent_title">Send Email&#8230;</string>
 
 	<!-- PoolFragment | Headers -->
     <string name="txt_rewards">Rewards</string>
