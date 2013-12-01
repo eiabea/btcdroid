@@ -6,7 +6,6 @@
         android:key="token"
         android:summary="Set the Slush&apos;s Pool Token"
         android:title="API Token" />
-
     <EditTextPreference
         android:defaultValue="15"
         android:dialogTitle="Price Threshold (minutes)"
@@ -15,7 +14,6 @@
         android:numeric="integer"
         android:summary="Set the Threshold for reloading price"
         android:title="Price Threshold" />
-    
     <EditTextPreference
         android:defaultValue="15"
         android:dialogTitle="Luck Threshold (minutes)"
@@ -30,5 +28,13 @@
         android:key="price_enabled"
         android:summary="Show the Price of 1 BTC (MtGox)"
         android:title="Show Price" />
+
+    <ListPreference
+        android:entries="@array/btc_style"
+        android:entryValues="@array/btc_style_values"
+        android:key="btc_style_preference"
+        android:defaultValue="0"
+        android:summary="Switch the style the values are formated"
+        android:title="BTC Style" />
 
 </PreferenceScreen>

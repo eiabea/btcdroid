@@ -12,4 +12,17 @@
     <string name="txt_viewpager_worker_fragment">Worker</string>
     <string name="txt_viewpager_round_fragment">Rounds</string>
 
+    <!-- PreferencesFragment -->
+    <string-array name="btc_style">
+        <item>BTC</item>
+        <item>mBTC</item>
+        <item>µBTC</item>
+    </string-array>
+
+    <string-array name="btc_style_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 </resources>
