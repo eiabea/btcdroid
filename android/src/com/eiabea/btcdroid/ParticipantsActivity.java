@@ -13,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +26,7 @@ public class ParticipantsActivity extends ActionBarActivity {
 
 	private ImageView imgQr;
 
-	private LinearLayout llParticipantsHolder;
+//	private LinearLayout llParticipantsHolder;
 	private RelativeLayout rlQrCodeHolder;
 
 	private ClipboardManager clipboard;
@@ -54,7 +53,7 @@ public class ParticipantsActivity extends ActionBarActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-		llParticipantsHolder = (LinearLayout) findViewById(R.id.ll_participants_holder);
+//		llParticipantsHolder = (LinearLayout) findViewById(R.id.ll_participants_holder);
 		rlQrCodeHolder = (RelativeLayout) findViewById(R.id.rl_qr_code_holder);
 
 		txtZanglAddress = (TextView) findViewById(R.id.txt_zangl_address);

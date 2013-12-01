@@ -244,11 +244,6 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		// case R.id.action_add_pool:
-		// startActivityForResult(new Intent(this, PrefsActivity.class),
-		// INTENT_PREF);
-		// break;
-
 		case R.id.action_refresh:
 			reloadData(true);
 			break;
@@ -257,9 +252,9 @@ public class MainActivity extends ActionBarActivity {
 			startActivityForResult(new Intent(this, PrefsActivity.class), INTENT_PREF);
 			break;
 
-//		case R.id.action_participants:
-//			startActivityForResult(new Intent(this, ParticipantsActivity.class), INTENT_PREF);
-//			break;
+		case R.id.action_participants:
+			startActivityForResult(new Intent(this, ParticipantsActivity.class), INTENT_PREF);
+			break;
 			
 		case R.id.action_email:
 			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
