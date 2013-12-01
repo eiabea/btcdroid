@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="1 BTC are:" />
+                android:text="@string/txt_one_btc_are" />
 
             <TextView
                 android:id="@+id/txt_main_info_current_value"
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:background="#33000000"
         android:gravity="center_horizontal"
-        android:text="Rewards"
+        android:text="@string/txt_rewards"
         android:padding="5dp" />
 
         <LinearLayout
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Estimated Reward:" />
+                android:text="@string/txt_estimated_reward" />
 
             <TextView
                 android:id="@+id/txt_main_info_estimated_reward"
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Confirmed Reward:" />
+                android:text="@string/txt_confirmed_reward" />
 
             <TextView
                 android:id="@+id/txt_main_info_confirmed_reward"
@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Total Reward:" />
+                android:text="@string/txt_total_reward" />
 
             <TextView
                 android:id="@+id/txt_main_info_total_reward"
@@ -110,7 +110,7 @@
         android:layout_height="wrap_content"
         android:background="#33000000"
         android:gravity="center_horizontal"
-        android:text="Hashrates"
+        android:text="@string/txt_hashrates"
         android:padding="5dp" />
         
         <LinearLayout
@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Current Total Hashrate:" />
+                android:text="@string/txt_current_total_hashrate" />
 
             <TextView
                 android:id="@+id/txt_main_info_total_hashrate"
@@ -145,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Average Total Hashrate:" />
+                android:text="@string/txt_average_total_hashrate" />
 
             <TextView
                 android:id="@+id/txt_main_info_average_hashrate"
@@ -161,7 +161,7 @@
         android:layout_height="wrap_content"
         android:background="#33000000"
         android:gravity="center_horizontal"
-        android:text="Round"
+        android:text="@string/txt_round"
         android:padding="5dp" />
 
         <LinearLayout
@@ -175,7 +175,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Round started:" />
+                android:text="@string/txt_round_started" />
 
             <TextView
                 android:id="@+id/txt_main_info_round_started"
@@ -196,7 +196,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Round duration:" />
+                android:text="@string/txt_round_duration" />
 
             <TextView
                 android:id="@+id/txt_main_info_round_duration"
@@ -217,7 +217,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Estimated duration:" />
+                android:text="@string/txt_round_estimated" />
 
             <TextView
                 android:id="@+id/txt_main_info_estimated_duration"
@@ -238,7 +238,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Average duration:" />
+                android:text="@string/txt_round_average" />
 
             <TextView
                 android:id="@+id/txt_main_info_average_duration"
@@ -258,7 +258,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="Rating:" />
+                android:text="@string/txt_rating" />
 
             <RatingBar
                 android:id="@+id/rat_main_info_rating"
@@ -271,12 +271,11 @@
         </RelativeLayout>
         
                     <TextView
-        android:id="@+id/txt_worker_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#33000000"
         android:gravity="center_horizontal"
-        android:text="Luck"
+        android:text="@string/txt_luck"
         android:padding="5dp" />
 
         <LinearLayout
@@ -290,7 +289,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Luck 24h:" />
+                android:text="@string/txt_luck_24h" />
 
             <TextView
                 android:id="@+id/txt_main_info_luck_24h"
@@ -311,7 +310,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Luck 7d:" />
+                android:text="@string/txt_luck_7d" />
 
             <TextView
                 android:id="@+id/txt_main_info_luck_7d"
@@ -332,7 +331,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Luck 30d:" />
+                android:text="@string/txt_luck_30d" />
 
             <TextView
                 android:id="@+id/txt_main_info_luck_30d"

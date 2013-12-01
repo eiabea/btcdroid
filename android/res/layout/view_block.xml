@@ -6,10 +6,10 @@
     tools:context=".MainActivity" >
 
     <LinearLayout
-        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:padding="5dp" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,15 +21,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Confirmations left" />
+                android:text="@string/txt_confirmations_left" />
 
             <TextView
                 android:id="@+id/txt_block_confirmations"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
-                android:text="Basic Info" />
+                android:gravity="right" />
         </LinearLayout>
 
         <LinearLayout
@@ -42,15 +41,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Block found" />
+                android:text="@string/txt_block_found" />
 
             <TextView
                 android:id="@+id/txt_block_found"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
-                android:text="Basic Info" />
+                android:gravity="right" />
         </LinearLayout>
 
         <LinearLayout
@@ -63,17 +61,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Block started" />
+                android:text="@string/txt_block_started" />
 
             <TextView
                 android:id="@+id/txt_block_started"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
-                android:text="Basic Info" />
+                android:gravity="right" />
         </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>

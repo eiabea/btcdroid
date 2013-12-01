@@ -6,11 +6,11 @@
     tools:context=".MainActivity" >
 
     <LinearLayout
-        android:padding="5dp"
         android:id="@+id/ll_main_info_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:padding="5dp" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,15 +22,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Score" />
+                android:text="@string/txt_score" />
 
             <TextView
                 android:id="@+id/txt_worker_score"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
-                android:text="Basic Info" />
+                android:gravity="right" />
         </LinearLayout>
 
         <LinearLayout
@@ -43,15 +42,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Last Share" />
+                android:text="@string/txt_last_share" />
 
             <TextView
                 android:id="@+id/txt_worker_last_share"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
-                android:text="Basic Info" />
+                android:gravity="right" />
         </LinearLayout>
 
         <LinearLayout
@@ -64,15 +62,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Hashrate" />
+                android:text="@string/txt_hashrate" />
 
             <TextView
                 android:id="@+id/txt_worker_hashrate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
-                android:text="Basic Info" />
+                android:gravity="right" />
         </LinearLayout>
 
         <LinearLayout
@@ -85,15 +82,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Shares" />
+                android:text="@string/txt_shares" />
 
             <TextView
                 android:id="@+id/txt_worker_shares"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
-                android:text="Basic Info" />
+                android:gravity="right" />
         </LinearLayout>
     </LinearLayout>
 
