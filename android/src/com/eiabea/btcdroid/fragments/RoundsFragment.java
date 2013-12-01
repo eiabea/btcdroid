@@ -1,7 +1,9 @@
 package com.eiabea.btcdroid.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,9 @@ public class RoundsFragment extends Fragment {
 	private ExpandableListView exlvRoundsHolder;
 
 	private RoundsListAdapter adapter;
+
+	DisplayMetrics metrics;
+	int width;
 
 	public static RoundsFragment create(int pageNumber) {
 		RoundsFragment fragment = new RoundsFragment();
@@ -44,8 +49,27 @@ public class RoundsFragment extends Fragment {
 		return rootView;
 	}
 
+	@SuppressLint("NewApi")
 	private void initUi(LayoutInflater inflater, ViewGroup rootView) {
+
+		metrics = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		width = metrics.widthPixels;
+
 		exlvRoundsHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_rounds_holder);
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+			exlvRoundsHolder.setIndicatorBounds(width - GetDipsFromPixel(50), width - GetDipsFromPixel(0));
+		} else {
+			exlvRoundsHolder.setIndicatorBoundsRelative(width - GetDipsFromPixel(50), width - GetDipsFromPixel(0));
+		}
+		
+	}
+
+	public int GetDipsFromPixel(float pixels) {
+		// Get the screen's density scale
+		final float scale = getResources().getDisplayMetrics().density;
+		// Convert the dps to pixels, based on density scale
+		return (int) (pixels * scale + 0.5f);
 	}
 
 	public void setStats(Stats stats) {
