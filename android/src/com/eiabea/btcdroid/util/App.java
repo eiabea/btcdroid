@@ -11,9 +11,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Price;
 import com.eiabea.btcdroid.model.Prices;
@@ -171,40 +173,44 @@ public class App extends Application {
 		// TODO Wording
 		double doubleHash = Double.valueOf(hash);
 		if (doubleHash > 1000) {
-			return String.format("%.2f", doubleHash / 1000d) + " GH/s";
+			return String.format("%.2f", doubleHash / 1000d) + " " + getResString(R.string.gh_per_second, getInstance());
 		}
-		return doubleHash + " MH/s";
+		return doubleHash + " " + getResString(R.string.mh_per_second, getInstance());
 	}
 
 	public static String formatHashRate(int hash) {
 		// TODO Wording
 		if (hash > 1000) {
-			return String.format("%.2f", ((float) hash) / 1000f) + " GH/s";
+			return String.format("%.2f", ((float) hash) / 1000f) + " " + getResString(R.string.gh_per_second, getInstance());
 		}
-		return String.valueOf(hash) + " MH/s";
+		return String.valueOf(hash) + " " + getResString(R.string.mh_per_second, getInstance());
 	}
 	
 	public static String formatProcent(float raw) {
 		// TODO Wording
-		return String.format("%.0f", raw * 100) + " %";
+		return String.format("%.0f", raw * 100) + " " + getResString(R.string.percent_sign, getInstance());
 	}
 
-	public static  String formatReward(float reward) {
+	public static String formatReward(float reward) {
 		// TODO Wording
 		int style = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getInstance()).getString("btc_style_preference", "0"));
 
 		switch (style) {
 		case 0:
-			return String.format("%.6f", reward) + " BTC";
+			return String.format("%.6f", reward) + " " + getResString(R.string.btc, getInstance());
 		case 1:
-			return String.format("%.2f", reward * 1000) + " mBTC";
+			return String.format("%.2f", reward * 1000) + " " + getResString(R.string.mbtc, getInstance());
 		case 2:
-			return String.format("%.2f", reward * 1000 * 1000) + " µBTC";
+			return String.format("%.2f", reward * 1000 * 1000) + " " + getResString(R.string.ubtc, getInstance());
 
 		default:
-			return String.format("%.6f", reward) + " BTC";
+			return String.format("%.6f", reward) + " " + getResString(R.string.btc, getInstance());
 		}
 
+	}
+	
+	public static String getResString(int id, Context ctx){
+		return ctx.getResources().getString(id);
 	}
 
 	public static class WorkerSorter implements Comparator<Worker> {

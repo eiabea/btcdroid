@@ -86,8 +86,7 @@ public class RoundsListAdapter extends BaseExpandableListAdapter {
 		int confirmationsLeft = 100 - currentBlock.getConfirmations();
 		
 		if(confirmationsLeft < 0){
-			// TODO Wording
-			txt.setText("Confirmed");
+			txt.setText(R.string.txt_confirmed);
 		}else{
 			txt.setText(String.valueOf(confirmationsLeft));
 		}

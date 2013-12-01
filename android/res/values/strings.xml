@@ -2,21 +2,37 @@
 <resources>
 
     <string name="app_name">BTCDroid</string>
+    <string name="app_name_subtitle">for Slush\'s Pool</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_add_pool">Add Pool</string>
     <string name="action_settings">Settings</string>
+    <string name="gh_per_second">GH/s</string>
+    <string name="mh_per_second">MH/s</string>
+    <string name="btc">BTC</string>
+    <string name="mbtc">mBTC</string>
+    <string name="ubtc">µBTC</string>
+    <string name="percent_sign">%</string>
 
     <!-- MainActivity -->
     <string name="txt_no_token">No Token found, please set one</string>
     <string name="txt_viewpager_pool_fragment">Pool Data</string>
     <string name="txt_viewpager_worker_fragment">Worker</string>
     <string name="txt_viewpager_round_fragment">Rounds</string>
+    <string name="txt_error_loading_profile">Error loading Profile</string>
+    <string name="txt_error_loading_stats">Error loading Stats</string>
+    <string name="txt_error_loading_price">Error loading Price</string>
+
+    <!-- PrefsActivity -->
+    <string name="txt_settings">Settings</string>
+
+    <!-- RoundsListAdapter -->
+    <string name="txt_confirmed">Confirmed</string>
 
     <!-- PreferencesFragment -->
     <string-array name="btc_style">
-        <item>BTC</item>
-        <item>mBTC</item>
-        <item>µBTC</item>
+        <item>@string/btc</item>
+        <item>@string/mbtc</item>
+        <item>@string/ubtc</item>
     </string-array>
 
     <string-array name="btc_style_values">

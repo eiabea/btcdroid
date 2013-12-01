@@ -115,7 +115,7 @@ public class MainActivity extends ActionBarActivity {
 
 				profileLoaded = true;
 
-				Toast.makeText(MainActivity.this, "Error loading Profile", Toast.LENGTH_SHORT).show();
+				Toast.makeText(MainActivity.this, App.getResString(R.string.txt_error_loading_profile, MainActivity.this), Toast.LENGTH_SHORT).show();
 
 				readyLoading();
 			}
@@ -145,7 +145,7 @@ public class MainActivity extends ActionBarActivity {
 
 				statsLoaded = true;
 
-				Toast.makeText(MainActivity.this, "Error loading Stats", Toast.LENGTH_SHORT).show();
+				Toast.makeText(MainActivity.this, App.getResString(R.string.txt_error_loading_stats, MainActivity.this), Toast.LENGTH_SHORT).show();
 
 				Log.e(getClass().getSimpleName(), error.getMessage() + error.getCause());
 
@@ -177,7 +177,7 @@ public class MainActivity extends ActionBarActivity {
 
 				pricesLoaded = true;
 
-				Toast.makeText(MainActivity.this, "Error loading Price", Toast.LENGTH_SHORT).show();
+				Toast.makeText(MainActivity.this, App.getResString(R.string.txt_error_loading_price, MainActivity.this), Toast.LENGTH_SHORT).show();
 
 				readyLoading();
 			}
@@ -202,7 +202,7 @@ public class MainActivity extends ActionBarActivity {
 
 	private void initUi() {
 
-		getSupportActionBar().setSubtitle("for Slush's Pool");
+		getSupportActionBar().setSubtitle(R.string.app_name_subtitle);
 
 		viewPager = (ViewPager) findViewById(R.id.vp_main);
 		// TODO improve!

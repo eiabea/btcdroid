@@ -203,7 +203,7 @@ public class PoolFragment extends Fragment {
 
 		long average = total / blocks.size();
 
-		System.out.println("Total: " + total + "; " + "Avg.: " + average);
+		Log.d(getClass().getSimpleName(), "Total: " + total + "; " + "Avg.: " + average);
 
 		return new Date(average);
 	}
@@ -215,7 +215,7 @@ public class PoolFragment extends Fragment {
 
 		double rating = dur / avg;
 
-		System.out.println("Raw Rating: " + rating);
+		Log.d(getClass().getSimpleName(), "Raw Rating: " + rating);
 
 		return rating;
 	}
@@ -239,7 +239,6 @@ public class PoolFragment extends Fragment {
 	}
 
 	public void setPrices(Prices prices) {
-		System.out.println("prices");
 		this.prices = prices;
 		if (txtCurrentValue != null && this.prices != null) {
 			fillUpPrices();

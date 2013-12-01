@@ -23,7 +23,7 @@ public class PrefsActivity extends ActionBarActivity {
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		
 		// TODO wording
-		getSupportActionBar().setTitle("Settings");
+		getSupportActionBar().setTitle(R.string.txt_settings);
 		
 	}
 
