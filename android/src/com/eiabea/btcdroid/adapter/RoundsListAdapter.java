@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,8 +143,13 @@ public class RoundsListAdapter extends BaseExpandableListAdapter {
 		
 		txtDuration.setText(currentBlock.getMining_duration());
 		
-		float reward = Float.valueOf(currentBlock.getReward());
-		txtReward.setText(App.formatReward(reward));
+		//Log.d(getClass().getSimpleName(), "current block reward: " + currentBlock.getReward());
+		
+		if(currentBlock.getReward() != null){
+			float reward = Float.valueOf(currentBlock.getReward());
+			txtReward.setText(App.formatReward(reward));
+		}
+		
 
 		return header;
 	}

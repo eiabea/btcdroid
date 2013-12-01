@@ -1,17 +1,54 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".Main" >
 
-    <TextView
-        android:id="@+id/txt_main_no_pools"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="@string/txt_no_token" />
+    <LinearLayout
+        android:id="@+id/ll_participants_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Manuel Zangl" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="App Developer" />
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Donation Address:" />
+
+        <TextView
+            android:id="@+id/txt_zangl_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="14peFjdetz7LKaAwe63E6g4XDKguszV4LA" />
+
+        <Button
+            android:id="@+id/btn_zangl_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show QR-Code" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_qr_code_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#33000000" >
+
+        <ImageView
+            android:id="@+id/img_qr_code"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+</FrameLayout>
