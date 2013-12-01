@@ -142,7 +142,9 @@ public class RoundsListAdapter extends BaseExpandableListAdapter {
 		}
 		
 		txtDuration.setText(currentBlock.getMining_duration());
-		txtReward.setText(currentBlock.getReward());
+		
+		float reward = Float.valueOf(currentBlock.getReward());
+		txtReward.setText(App.formatReward(reward));
 
 		return header;
 	}

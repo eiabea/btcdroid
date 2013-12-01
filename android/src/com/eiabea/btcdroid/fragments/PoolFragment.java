@@ -126,9 +126,9 @@ public class PoolFragment extends Fragment {
 				Log.d(getClass().getSimpleName(), "set last luck to: " + current);
 			}
 
-			txt.setText(formatProcent(current));
+			txt.setText(App.formatProcent(current));
 		} else {
-			txt.setText(formatProcent(current));
+			txt.setText(App.formatProcent(current));
 		}
 	}
 
@@ -266,9 +266,9 @@ public class PoolFragment extends Fragment {
 		float confirmed = Float.valueOf(profile.getConfirmed_reward());
 		float total = confirmed + unconfirmed;
 
-		txtEstimatedReward.setText(formatReward(estimated));
-		txtConfirmedReward.setText(formatReward(confirmed));
-		txtTotalReward.setText(formatReward(total));
+		txtEstimatedReward.setText(App.formatReward(estimated));
+		txtConfirmedReward.setText(App.formatReward(confirmed));
+		txtTotalReward.setText(App.formatReward(total));
 
 		txtTotalHashrate.setText(App.formatHashRate(totalHashrate));
 		txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
@@ -308,27 +308,6 @@ public class PoolFragment extends Fragment {
 		setLuck(txtLuck24h, currentLuck24);
 		setLuck(txtLuck7d, currentLuck7d);
 		setLuck(txtLuck30d, currentLuck30d);
-
-	}
-
-	private String formatProcent(float raw) {
-		return String.format("%.0f", raw * 100) + " %";
-	}
-
-	private String formatReward(float reward) {
-		int style = Integer.valueOf(pref.getString("btc_style_preference", "0"));
-
-		switch (style) {
-		case 0:
-			return String.format("%.6f", reward) + " BTC";
-		case 1:
-			return String.format("%.2f", reward * 1000) + " mBTC";
-		case 2:
-			return String.format("%.2f", reward * 1000 * 1000) + " µBTC";
-
-		default:
-			return String.format("%.6f", reward) + " BTC";
-		}
 
 	}
 

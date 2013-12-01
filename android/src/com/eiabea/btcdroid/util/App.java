@@ -168,6 +168,7 @@ public class App extends Application {
 	}
 
 	public static String formatHashRate(String hash) {
+		// TODO Wording
 		double doubleHash = Double.valueOf(hash);
 		if (doubleHash > 1000) {
 			return String.format("%.2f", doubleHash / 1000d) + " GH/s";
@@ -176,10 +177,34 @@ public class App extends Application {
 	}
 
 	public static String formatHashRate(int hash) {
+		// TODO Wording
 		if (hash > 1000) {
 			return String.format("%.2f", ((float) hash) / 1000f) + " GH/s";
 		}
 		return String.valueOf(hash) + " MH/s";
+	}
+	
+	public static String formatProcent(float raw) {
+		// TODO Wording
+		return String.format("%.0f", raw * 100) + " %";
+	}
+
+	public static  String formatReward(float reward) {
+		// TODO Wording
+		int style = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getInstance()).getString("btc_style_preference", "0"));
+
+		switch (style) {
+		case 0:
+			return String.format("%.6f", reward) + " BTC";
+		case 1:
+			return String.format("%.2f", reward * 1000) + " mBTC";
+		case 2:
+			return String.format("%.2f", reward * 1000 * 1000) + " µBTC";
+
+		default:
+			return String.format("%.6f", reward) + " BTC";
+		}
+
 	}
 
 	public static class WorkerSorter implements Comparator<Worker> {

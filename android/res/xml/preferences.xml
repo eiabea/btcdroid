@@ -1,40 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <EditTextPreference
-        android:dialogTitle="API Token"
-        android:key="token"
-        android:summary="Set the Slush&apos;s Pool Token"
-        android:title="API Token" />
-    <EditTextPreference
-        android:defaultValue="15"
-        android:dialogTitle="Price Threshold (minutes)"
-        android:enabled="true"
-        android:key="price_threshold"
-        android:numeric="integer"
-        android:summary="Set the Threshold for reloading price"
-        android:title="Price Threshold" />
-    <EditTextPreference
-        android:defaultValue="15"
-        android:dialogTitle="Luck Threshold (minutes)"
-        android:enabled="true"
-        android:key="threshold"
-        android:numeric="integer"
-        android:summary="Set the Threshold for reloading lucks"
-        android:title="Luck Threshold" />
+    <PreferenceCategory android:title="API" >
+        <EditTextPreference
+            android:dialogTitle="API Token"
+            android:key="token"
+            android:summary="Set the Slush&apos;s Pool Token"
+            android:title="API Token" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Thresholds" >
+        <EditTextPreference
+            android:defaultValue="15"
+            android:dialogTitle="Price Threshold (minutes)"
+            android:enabled="true"
+            android:key="price_threshold"
+            android:numeric="integer"
+            android:summary="Set the Threshold for reloading price"
+            android:title="Price Threshold" />
+        <EditTextPreference
+            android:defaultValue="15"
+            android:dialogTitle="Luck Threshold (minutes)"
+            android:enabled="true"
+            android:key="threshold"
+            android:numeric="integer"
+            android:summary="Set the Threshold for reloading lucks"
+            android:title="Luck Threshold" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Misc" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="price_enabled"
+            android:summary="Show the Price of 1 BTC (MtGox)"
+            android:title="Show Price" />
 
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="price_enabled"
-        android:summary="Show the Price of 1 BTC (MtGox)"
-        android:title="Show Price" />
-
-    <ListPreference
-        android:entries="@array/btc_style"
-        android:entryValues="@array/btc_style_values"
-        android:key="btc_style_preference"
-        android:defaultValue="0"
-        android:summary="Switch the style the values are formated"
-        android:title="BTC Style" />
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/btc_style"
+            android:entryValues="@array/btc_style_values"
+            android:key="btc_style_preference"
+            android:summary="Switch the style the values are formated"
+            android:title="BTC Style" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
