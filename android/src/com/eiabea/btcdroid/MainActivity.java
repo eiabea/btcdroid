@@ -256,6 +256,10 @@ public class MainActivity extends ActionBarActivity {
 		case R.id.action_settings:
 			startActivityForResult(new Intent(this, PrefsActivity.class), INTENT_PREF);
 			break;
+
+		case R.id.action_participants:
+			startActivityForResult(new Intent(this, ParticipantsActivity.class), INTENT_PREF);
+			break;
 			
 		case R.id.action_email:
 			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);

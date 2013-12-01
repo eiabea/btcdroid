@@ -37,7 +37,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="AddPoolActivity" >
+        <activity android:name="ParticipantsActivity" >
         </activity>
         <activity android:name="PrefsActivity" >
         </activity>
