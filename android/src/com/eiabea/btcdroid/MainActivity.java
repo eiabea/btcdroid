@@ -205,6 +205,10 @@ public class MainActivity extends ActionBarActivity {
 		getSupportActionBar().setSubtitle("for Slush's Pool");
 
 		viewPager = (ViewPager) findViewById(R.id.vp_main);
+		// TODO improve!
+		// Current: Main --> Data --> Fragment
+		// Future: Fragment --> Data from Main
+		viewPager.setOffscreenPageLimit(3);
 
 		adapter = new MainViewAdapter(this, getSupportFragmentManager());
 		viewPager.setAdapter(adapter);
