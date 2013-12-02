@@ -34,7 +34,7 @@ public class RoundsListAdapter extends BaseExpandableListAdapter {
 
 		notifyDataSetChanged();
 	}
-
+	
 	@Override
 	public Object getChild(int groupPosition, int childPosition) {
 		return data.get(groupPosition);

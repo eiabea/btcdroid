@@ -127,6 +127,13 @@ public class App extends Application {
 		return false;
 	}
 
+	public static int getDipsFromPixel(float pixels, Context ctx) {
+		// Get the screen's density scale
+		final float scale = ctx.getResources().getDisplayMetrics().density;
+		// Convert the dps to pixels, based on density scale
+		return (int) (pixels * scale + 0.5f);
+	}
+	
 	public static Prices parsePrices(JsonObject json) {
 		Prices prices = new Prices();
 

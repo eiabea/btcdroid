@@ -93,4 +93,16 @@
         </LinearLayout>
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/bd_background" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bd_card_bottom_line" >
+        </FrameLayout>
+    </FrameLayout>
+
 </LinearLayout>
