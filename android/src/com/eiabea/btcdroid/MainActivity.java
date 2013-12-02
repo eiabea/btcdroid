@@ -3,6 +3,7 @@ package com.eiabea.btcdroid;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -40,6 +41,7 @@ public class MainActivity extends ActionBarActivity {
 	private MenuItem itemRefresh;
 
 	private ViewPager viewPager;
+	private PagerTitleStrip viewPagerTitle;
 	private MainViewAdapter adapter;
 
 	private boolean statsLoaded = false;
@@ -204,6 +206,9 @@ public class MainActivity extends ActionBarActivity {
 
 		getSupportActionBar().setSubtitle(R.string.app_name_subtitle);
 
+		viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
+		viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
+		
 		viewPager = (ViewPager) findViewById(R.id.vp_main);
 		// TODO improve!
 		// Current: Main --> Data --> Fragment
