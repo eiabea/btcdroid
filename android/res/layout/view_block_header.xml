@@ -2,31 +2,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#33000000"
-    android:paddingLeft="25dp"
-    android:orientation="horizontal"
+    android:background="@color/bd_white"
+    android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <TextView
-        android:id="@+id/txt_block_header_duration"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:padding="5dp" />
+        android:layout_height="10dp"
+        android:background="@color/bd_background" >
+    </FrameLayout>
 
-    <TextView
-        android:id="@+id/txt_block_header_reward"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:gravity="right"
-        android:padding="5dp" />
-    
-    <ImageView 
-        android:id="@+id/img_block_header_confirmed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_checkmark_holo_light"/>
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal"
+        android:padding="10dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/txt_block_header_duration"
+                style="@style/style_worker_header_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Worker" />
+
+            <TextView
+                android:id="@+id/txt_block_header_reward"
+                style="@style/style_worker_header_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="24 GH/s" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_block_bottom_spacer_white"
+        android:layout_width="match_parent"
+        android:layout_height="9dp"
+        android:background="@color/bd_white" >
+
+        <FrameLayout
+            android:id="@+id/fl_block_divider"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="1dp"
+            android:background="@color/bd_background" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_block_bottom_spacer_grey"
+        android:layout_width="match_parent"
+        android:layout_height="9dp"
+        android:background="@color/bd_background" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/bd_card_bottom_line" >
+        </FrameLayout>
+    </FrameLayout>
 
 </LinearLayout>

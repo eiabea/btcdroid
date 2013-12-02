@@ -25,8 +25,8 @@ public class RoundsFragment extends Fragment {
 
 	private RoundsListAdapter adapter;
 
-	DisplayMetrics metrics;
-	int width;
+	private DisplayMetrics metrics;
+	private int width;
 
 	public static RoundsFragment create(int pageNumber) {
 		RoundsFragment fragment = new RoundsFragment();
@@ -52,16 +52,17 @@ public class RoundsFragment extends Fragment {
 	@SuppressLint("NewApi")
 	private void initUi(LayoutInflater inflater, ViewGroup rootView) {
 
-//		metrics = new DisplayMetrics();
-//		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//		width = metrics.widthPixels;
+		metrics = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		width = metrics.widthPixels;
 
 		exlvRoundsHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_rounds_holder);
-//		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-//			exlvRoundsHolder.setIndicatorBounds(width - GetDipsFromPixel(50), width - GetDipsFromPixel(0));
-//		} else {
-//			exlvRoundsHolder.setIndicatorBoundsRelative(width - GetDipsFromPixel(50), width - GetDipsFromPixel(0));
-//		}
+
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+			exlvRoundsHolder.setIndicatorBounds(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
+		} else {
+			exlvRoundsHolder.setIndicatorBoundsRelative(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
+		}
 		
 	}
 
