@@ -6,12 +6,18 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/bd_background" >
+    </FrameLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:layout_marginRight="25dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:padding="10dp" >
 
         <ImageView
             android:layout_width="15dp"
@@ -44,10 +50,33 @@
                 android:text="24 GH/s" />
         </LinearLayout>
     </LinearLayout>
-    
-    <LinearLayout 
+
+    <FrameLayout
+        android:id="@+id/fl_worker_bottom_spacer_white"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/bd_background"></LinearLayout>
+        android:layout_height="9dp"
+        android:background="@color/bd_white" >
+
+        <FrameLayout
+            android:id="@+id/fl_worker_divider"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="1dp"
+            android:background="@color/bd_background" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_worker_bottom_spacer_grey"
+        android:layout_width="match_parent"
+        android:layout_height="9dp"
+        android:background="@color/bd_background" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bd_card_bottom_line" >
+        </FrameLayout>
+    </FrameLayout>
 
 </LinearLayout>

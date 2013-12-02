@@ -86,7 +86,9 @@ public class WorkerListAdapter extends BaseExpandableListAdapter {
 			view = new WorkerViewHeader(context);
 		}
 
-		view.setData(holders.get(groupPosition).getWorker());
+		view.setData(holders.get(groupPosition).getWorker(), isExpanded);
+		
+//		view.invalidate();
 
 		return view;
 	}
@@ -101,6 +103,21 @@ public class WorkerListAdapter extends BaseExpandableListAdapter {
 		return true;
 	}
 	
+	
+	
+	@Override
+	public void onGroupCollapsed(int groupPosition) {
+		super.onGroupCollapsed(groupPosition);
+	}
+
+	@Override
+	public void onGroupExpanded(int groupPosition) {
+		// TODO Auto-generated method stub
+		super.onGroupExpanded(groupPosition);
+	}
+
+
+
 	public class Holder{
 		private String title;
 		private Worker worker;
