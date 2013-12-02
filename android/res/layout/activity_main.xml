@@ -18,16 +18,15 @@
         android:id="@+id/vp_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-
-
+        
         <android.support.v4.view.PagerTitleStrip
             android:id="@+id/vp_title_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:background="@drawable/viewpager_title_bg"
-            android:paddingBottom="7dp"
-            android:paddingTop="7dp" />
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp" />
     </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

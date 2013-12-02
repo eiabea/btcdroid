@@ -1,25 +1,34 @@
 package com.eiabea.btcdroid.views;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Worker;
+import com.eiabea.btcdroid.util.App;
 
 public class WorkerViewHeader extends LinearLayout {
 
+	private Context context;
+	
 	private Worker worker;
 
-	private TextView txtName;
+	private TextView txtName, txtStatus;
+	
+	private ImageView imgCircle;
 	
 	private FrameLayout flBottomSpacerWhite, flBottomSpacerGrey, flDivider;
 
 	public WorkerViewHeader(Context context) {
 		super(context);
+		
+		this.context = context;
 
 		initUi();
 	}
@@ -28,7 +37,10 @@ public class WorkerViewHeader extends LinearLayout {
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.view_worker_header, this, true);
 
+		imgCircle = (ImageView) findViewById(R.id.img_worker_header_cirlce);
+		
 		txtName = (TextView) findViewById(R.id.txt_worker_name);
+		txtStatus = (TextView) findViewById(R.id.txt_worker_status);
 
 		flBottomSpacerWhite = (FrameLayout) findViewById(R.id.fl_worker_bottom_spacer_white);
 		flBottomSpacerGrey = (FrameLayout) findViewById(R.id.fl_worker_bottom_spacer_grey);
@@ -42,15 +54,19 @@ public class WorkerViewHeader extends LinearLayout {
 
 		if (worker != null) {
 
+			txtName.setText(worker.getName());
 			if (worker.isAlive()) {
-				txtName.setText(worker.getName());
-				txtName.setTextColor(getResources().getColor(R.color.bd_black));
-
+				imgCircle.setImageResource(R.drawable.shape_circle_green);
+				txtStatus.setText(App.formatHashRate(worker.getHashrate()));
+				txtStatus.setTypeface(null, Typeface.NORMAL);
+				txtStatus.setTextColor(context.getResources().getColor(R.color.bd_circle_green_solid));
 			} else {
-				txtName.setText(worker.getName() + " - inactive");
-				txtName.setTextColor(getResources().getColor(R.color.bd_red));
-
+				imgCircle.setImageResource(R.drawable.shape_circle_red);
+				txtStatus.setText("inactive");
+				txtStatus.setTypeface(null, Typeface.ITALIC);
+				txtStatus.setTextColor(context.getResources().getColor(R.color.bd_circle_red_solid));
 			}
+			
 		}
 	}
 

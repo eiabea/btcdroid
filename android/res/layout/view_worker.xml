@@ -10,42 +10,48 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="5dp" >
+        android:paddingBottom="5dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="5dp" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/style_worker_holder"
             android:orientation="horizontal" >
 
             <TextView
+                style="@style/style_worker_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
+                android:layout_weight="2"
                 android:text="@string/txt_score" />
 
             <TextView
                 android:id="@+id/txt_worker_score"
+                style="@style/style_worker_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right" />
+                android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/style_worker_holder"
             android:orientation="horizontal" >
 
             <TextView
+                style="@style/style_worker_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
+                android:layout_weight="2"
                 android:text="@string/txt_last_share" />
 
             <TextView
                 android:id="@+id/txt_worker_last_share"
+                style="@style/style_worker_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -55,17 +61,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/style_worker_holder"
             android:orientation="horizontal" >
 
             <TextView
+                style="@style/style_worker_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
+                android:layout_weight="2"
                 android:text="@string/txt_hashrate" />
 
             <TextView
                 android:id="@+id/txt_worker_hashrate"
+                style="@style/style_worker_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -75,17 +83,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/style_worker_holder"
             android:orientation="horizontal" >
 
             <TextView
+                style="@style/style_worker_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
+                android:layout_weight="2"
                 android:text="@string/txt_shares" />
 
             <TextView
                 android:id="@+id/txt_worker_shares"
+                style="@style/style_worker_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -95,7 +105,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="1px"
         android:background="@color/bd_card_bottom_line" >
     </FrameLayout>
 

@@ -69,9 +69,9 @@ public class WorkerFragment extends Fragment {
 		exlvWOrkerHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_worker_holder);
 
 		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-			exlvWOrkerHolder.setIndicatorBounds(width - App.getDipsFromPixel(95, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
+			exlvWOrkerHolder.setIndicatorBounds(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
 		} else {
-			exlvWOrkerHolder.setIndicatorBoundsRelative(width - App.getDipsFromPixel(95, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
+			exlvWOrkerHolder.setIndicatorBoundsRelative(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
 		}
 
 	}

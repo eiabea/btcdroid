@@ -15,11 +15,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="25dp"
+        android:layout_marginRight="20dp"
         android:orientation="horizontal"
         android:padding="10dp" >
 
         <ImageView
+            android:id="@+id/img_worker_header_cirlce"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_gravity="center_vertical"
@@ -30,6 +31,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:orientation="horizontal" >
 
             <TextView
@@ -41,8 +43,8 @@
                 android:text="Worker" />
 
             <TextView
-                android:id="@+id/txt_worker_hashrate"
-                style="@style/style_worker_header_name"
+                android:id="@+id/txt_worker_status"
+                style="@style/style_worker_header_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -74,7 +76,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:background="@color/bd_card_bottom_line" >
         </FrameLayout>
     </FrameLayout>
