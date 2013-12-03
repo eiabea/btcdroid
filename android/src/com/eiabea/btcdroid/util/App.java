@@ -26,7 +26,6 @@ import com.google.gson.JsonObject;
 
 public class App extends Application {
 
-	
 	// TODO Worker design --> RL
 	
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss", Locale.getDefault());

@@ -52,12 +52,30 @@ public class BlockViewHeader extends LinearLayout {
 
 			txtDuration.setText(block.getMining_duration());
 			
-			if(block.getReward() != null){
-				float reward = Float.valueOf(block.getReward());
-				txtReward.setText(App.formatReward(reward));
-			}
+			setReward(txtReward, block);
 			
 		}
+	}
+	
+	private void setReward(TextView txt, Block currentBlock) {
+		
+		if(block.getReward() != null){
+			float reward = Float.valueOf(block.getReward());
+			int confirmationsLeft = 100 - currentBlock.getConfirmations();
+
+			txt.setText(App.formatReward(reward));
+			
+			if(confirmationsLeft <= 0){
+				txt.setTextColor(context.getResources().getColor(R.color.bd_circle_green_solid));
+//				txt.setTypeface(null, Typeface.NORMAL);
+			}else{
+				txt.setTextColor(context.getResources().getColor(R.color.bd_actionbar_background));
+//				txt.setTypeface(null, Typeface.ITALIC);
+			}
+		}
+		
+		
+		
 	}
 	
 	private void handleExpand(boolean expanded){

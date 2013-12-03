@@ -15,12 +15,16 @@ import com.eiabea.btcdroid.util.App;
 
 public class BlockView extends LinearLayout {
 	
+	private Context context;
+	
 	private Block block;
 	
 	private TextView txtConfirmations, txtFound, txtStarted;
 
 	public BlockView(Context context) {
 		super(context);
+		
+		this.context = context;
 		
 		initUi();
 	}
@@ -74,10 +78,12 @@ public class BlockView extends LinearLayout {
 		
 		int confirmationsLeft = 100 - currentBlock.getConfirmations();
 		
-		if(confirmationsLeft < 0){
+		if(confirmationsLeft <= 0){
 			txt.setText(R.string.txt_confirmed);
+			txt.setTextColor(context.getResources().getColor(R.color.bd_circle_green_solid));
 		}else{
 			txt.setText(String.valueOf(confirmationsLeft));
+			txt.setTextColor(context.getResources().getColor(R.color.bd_actionbar_background));
 		}
 		
 		

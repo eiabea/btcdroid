@@ -64,7 +64,7 @@
     <string name="txt_settings">Settings</string>
 
     <!-- RoundsListAdapter -->
-    <string name="txt_confirmed">Confirmed</string>
+    <string name="txt_confirmed">none</string>
 
     <!-- PreferencesFragment -->
     <string-array name="btc_style">

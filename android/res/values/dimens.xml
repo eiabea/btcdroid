@@ -7,7 +7,7 @@
     <dimen name="card_spacing_half">3dp</dimen>
     <dimen name="card_content_padding_bottom">5dp</dimen>
     <dimen name="card_content_padding_top">5dp</dimen>
-    <dimen name="card_content_padding_left">12dp</dimen>
-    <dimen name="card_content_padding_right">12dp</dimen>
+    <dimen name="card_content_padding_left">10dp</dimen>
+    <dimen name="card_content_padding_right">10dp</dimen>
 
 </resources>
