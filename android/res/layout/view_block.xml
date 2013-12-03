@@ -77,8 +77,14 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/bd_card_bottom_line" >
+        android:layout_height="@dimen/card_spacing_half"
+        android:background="@color/bd_background" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/bd_card_bottom_line" >
+        </FrameLayout>
     </FrameLayout>
 
 </LinearLayout>

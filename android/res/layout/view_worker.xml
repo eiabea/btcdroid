@@ -16,9 +16,9 @@
         android:paddingTop="5dp" >
 
         <LinearLayout
+            style="@style/style_worker_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/style_worker_holder"
             android:orientation="horizontal" >
 
             <TextView
@@ -37,9 +37,9 @@
         </LinearLayout>
 
         <LinearLayout
+            style="@style/style_worker_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/style_worker_holder"
             android:orientation="horizontal" >
 
             <TextView
@@ -59,9 +59,9 @@
         </LinearLayout>
 
         <LinearLayout
+            style="@style/style_worker_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/style_worker_holder"
             android:orientation="horizontal" >
 
             <TextView
@@ -81,9 +81,9 @@
         </LinearLayout>
 
         <LinearLayout
+            style="@style/style_worker_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/style_worker_holder"
             android:orientation="horizontal" >
 
             <TextView
@@ -105,8 +105,14 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/bd_card_bottom_line" >
+        android:layout_height="@dimen/card_spacing_half"
+        android:background="@color/bd_background" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/bd_card_bottom_line" >
+        </FrameLayout>
     </FrameLayout>
 
 </LinearLayout>
