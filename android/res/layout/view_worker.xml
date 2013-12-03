@@ -10,10 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="5dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingTop="5dp" >
+        android:paddingBottom="@dimen/card_content_padding_bottom"
+        android:paddingLeft="@dimen/card_content_padding_left"
+        android:paddingRight="@dimen/card_content_padding_right"
+        android:paddingTop="@dimen/card_content_padding_top" >
 
         <LinearLayout
             style="@style/style_worker_holder"
