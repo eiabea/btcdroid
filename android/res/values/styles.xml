@@ -32,6 +32,7 @@
         <item name="background">@color/bd_actionbar_background</item>
     </style>
 
+    <!-- Actionbar -->
     <style name="style_actionbar_title">
         <item name="android:textStyle">bold</item>
         <item name="android:ellipsize">end</item>
@@ -44,8 +45,37 @@
         <item name="android:maxLines">1</item>
         <item name="android:textColor">@color/bd_white</item>
     </style>
+	
+    <!-- SmallCard -->
+    <style name="style_small_card_headline">
+        <item name="android:ellipsize">end</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/bd_dark_text</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:maxLines">1</item>
+    </style>
 
-    <style name="style_worker_header_name">
+    <style name="style_small_card_value">
+        <item name="android:ellipsize">end</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="style_small_card_desc">
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/bd_dark_text</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <!-- Card -->
+    <style name="style_card_header_name">
         <item name="android:ellipsize">end</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/bd_dark_text</item>
@@ -53,17 +83,17 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="style_worker_header_status">
+    <style name="style_card_header_status">
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="style_worker_holder">
+    <style name="style_card_holder">
         <item name="android:padding">3dp</item>
     </style>
 
-    <style name="style_worker_desc">
+    <style name="style_card_desc">
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">left</item>
         <item name="android:maxLines">1</item>
@@ -71,7 +101,7 @@
         <item name="android:textColor">@color/bd_grey_text</item>
     </style>
 
-    <style name="style_worker_value">
+    <style name="style_card_value">
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">right</item>
         <item name="android:ellipsize">end</item>

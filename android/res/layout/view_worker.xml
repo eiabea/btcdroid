@@ -16,13 +16,13 @@
         android:paddingTop="@dimen/card_content_padding_top" >
 
         <LinearLayout
-            style="@style/style_worker_holder"
+            style="@style/style_card_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
             <TextView
-                style="@style/style_worker_desc"
+                style="@style/style_card_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
@@ -30,20 +30,20 @@
 
             <TextView
                 android:id="@+id/txt_worker_score"
-                style="@style/style_worker_value"
+                style="@style/style_card_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
-            style="@style/style_worker_holder"
+            style="@style/style_card_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
             <TextView
-                style="@style/style_worker_desc"
+                style="@style/style_card_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
@@ -51,7 +51,7 @@
 
             <TextView
                 android:id="@+id/txt_worker_last_share"
-                style="@style/style_worker_value"
+                style="@style/style_card_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -59,13 +59,13 @@
         </LinearLayout>
 
         <LinearLayout
-            style="@style/style_worker_holder"
+            style="@style/style_card_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
             <TextView
-                style="@style/style_worker_desc"
+                style="@style/style_card_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
@@ -73,7 +73,7 @@
 
             <TextView
                 android:id="@+id/txt_worker_hashrate"
-                style="@style/style_worker_value"
+                style="@style/style_card_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -81,13 +81,13 @@
         </LinearLayout>
 
         <LinearLayout
-            style="@style/style_worker_holder"
+            style="@style/style_card_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
             <TextView
-                style="@style/style_worker_desc"
+                style="@style/style_card_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
@@ -95,7 +95,7 @@
 
             <TextView
                 android:id="@+id/txt_worker_shares"
-                style="@style/style_worker_value"
+                style="@style/style_card_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

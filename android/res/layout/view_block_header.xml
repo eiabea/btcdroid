@@ -27,7 +27,7 @@
 
             <TextView
                 android:id="@+id/txt_block_header_duration"
-                style="@style/style_worker_header_name"
+                style="@style/style_card_header_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -35,7 +35,7 @@
 
             <TextView
                 android:id="@+id/txt_block_header_reward"
-                style="@style/style_worker_header_status"
+                style="@style/style_card_header_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

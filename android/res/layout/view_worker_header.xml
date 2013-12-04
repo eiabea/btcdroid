@@ -36,20 +36,18 @@
 
             <TextView
                 android:id="@+id/txt_worker_name"
-                style="@style/style_worker_header_name"
+                style="@style/style_card_header_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Worker" />
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/txt_worker_status"
-                style="@style/style_worker_header_status"
+                style="@style/style_card_header_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
-                android:text="24 GH/s" />
+                android:gravity="right" />
         </LinearLayout>
     </LinearLayout>
 

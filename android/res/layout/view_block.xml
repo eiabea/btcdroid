@@ -15,12 +15,12 @@
         android:paddingTop="@dimen/card_content_padding_top" >
 
         <RelativeLayout
-            style="@style/style_worker_holder"
+            style="@style/style_card_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
             <TextView
-                style="@style/style_worker_desc"
+                style="@style/style_card_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -30,19 +30,19 @@
 
             <TextView
                 android:id="@+id/txt_block_confirmations"
-                style="@style/style_worker_value"
+                style="@style/style_card_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true" />
         </RelativeLayout>
 
         <RelativeLayout
-            style="@style/style_worker_holder"
+            style="@style/style_card_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
             <TextView
-                style="@style/style_worker_desc"
+                style="@style/style_card_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -52,19 +52,19 @@
 
             <TextView
                 android:id="@+id/txt_block_found"
-                style="@style/style_worker_value"
+                style="@style/style_card_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true" />
         </RelativeLayout>
 
         <RelativeLayout
-            style="@style/style_worker_holder"
+            style="@style/style_card_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
             <TextView
-                style="@style/style_worker_desc"
+                style="@style/style_card_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -74,7 +74,7 @@
 
             <TextView
                 android:id="@+id/txt_block_started"
-                style="@style/style_worker_value"
+                style="@style/style_card_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true" />

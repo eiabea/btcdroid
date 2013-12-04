@@ -10,4 +10,8 @@
     <dimen name="card_content_padding_left">10dp</dimen>
     <dimen name="card_content_padding_right">10dp</dimen>
 
+    <dimen name="small_card_content_padding_top">10dp</dimen>
+    <dimen name="small_card_content_padding_bottom">10dp</dimen>
+    <dimen name="small_card_bottom_line_height">1px</dimen>
+
 </resources>

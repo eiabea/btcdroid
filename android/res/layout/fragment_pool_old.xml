@@ -4,19 +4,20 @@
     android:layout_height="match_parent" >
 
     <LinearLayout
+        android:paddingTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bd_background"
         android:orientation="vertical"
-        android:paddingTop="10dp" >
-
+         >
+		
+        
         <LinearLayout
             android:id="@+id/ll_main_info_price_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:padding="5dp"
-            android:visibility="gone" >
+            android:visibility="gone"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="match_parent"
@@ -32,150 +33,91 @@
                 android:layout_weight="1"
                 android:gravity="right" />
         </LinearLayout>
+        
+            <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#33000000"
+        android:gravity="center_horizontal"
+        android:text="@string/txt_rewards"
+        android:padding="5dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="vertical" >
+            android:padding="5dp"
+            android:orientation="horizontal" >
 
             <TextView
-                style="@style/style_small_card_headline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:text="@string/txt_rewards" />
-
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:orientation="horizontal" >
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/txt_estimated_reward" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="3dp"
-                    android:layout_weight="1"
-                    android:background="@color/bd_white"
-                    android:orientation="vertical" >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/small_card_content_padding_bottom"
-                        android:paddingTop="@dimen/small_card_content_padding_top" >
-
-                        <TextView
-                            android:id="@+id/txt_main_info_estimated_reward"
-                            style="@style/style_small_card_value"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/bd_actionbar_background" />
-
-                        <TextView
-                            style="@style/style_small_card_desc"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/txt_estimated_reward" />
-                    </LinearLayout>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/small_card_bottom_line_height"
-                        android:background="@color/bd_card_bottom_line" >
-                    </FrameLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="3dp"
-                    android:layout_weight="1"
-                    android:background="@color/bd_white"
-                    android:orientation="vertical" >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/small_card_content_padding_bottom"
-                        android:paddingTop="@dimen/small_card_content_padding_top" >
-
-                        <TextView
-                            android:id="@+id/txt_main_info_confirmed_reward"
-                            style="@style/style_small_card_value"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/bd_green" />
-
-                        <TextView
-                            style="@style/style_small_card_desc"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/txt_confirmed_reward" />
-                    </LinearLayout>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/small_card_bottom_line_height"
-                        android:background="@color/bd_card_bottom_line" >
-                    </FrameLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_weight="1"
-                    android:background="@color/bd_white"
-                    android:orientation="vertical" >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/small_card_content_padding_bottom"
-                        android:paddingTop="@dimen/small_card_content_padding_top" >
-
-                        <TextView
-                            android:id="@+id/txt_main_info_total_reward"
-                            style="@style/style_small_card_value"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/bd_dark_grey_text" />
-
-                        <TextView
-                            style="@style/style_small_card_desc"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/txt_total_reward" />
-                    </LinearLayout>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/small_card_bottom_line_height"
-                        android:background="@color/bd_card_bottom_line" >
-                    </FrameLayout>
-                </LinearLayout>
-            </LinearLayout>
+            <TextView
+                android:id="@+id/txt_main_info_estimated_reward"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right" />
         </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#33000000"
-            android:gravity="center_horizontal"
-            android:padding="5dp"
-            android:text="@string/txt_hashrates" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+            android:padding="5dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/txt_confirmed_reward" />
+
+            <TextView
+                android:id="@+id/txt_main_info_confirmed_reward"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/txt_total_reward" />
+
+            <TextView
+                android:id="@+id/txt_main_info_total_reward"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right" />
+        </LinearLayout>
+
+                    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#33000000"
+        android:gravity="center_horizontal"
+        android:text="@string/txt_hashrates"
+        android:padding="5dp" />
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="match_parent"
@@ -195,8 +137,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+            android:padding="5dp"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="match_parent"
@@ -212,21 +154,21 @@
                 android:layout_weight="1"
                 android:gravity="right" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/txt_worker_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#33000000"
-            android:gravity="center_horizontal"
-            android:padding="5dp"
-            android:text="@string/txt_round" />
+        
+                    <TextView
+        android:id="@+id/txt_worker_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#33000000"
+        android:gravity="center_horizontal"
+        android:text="@string/txt_round"
+        android:padding="5dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+            android:padding="5dp"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="match_parent"
@@ -246,8 +188,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+            android:padding="5dp"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="match_parent"
@@ -267,8 +209,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+            android:padding="5dp"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="match_parent"
@@ -288,8 +230,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+            android:padding="5dp"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="match_parent"
@@ -309,8 +251,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+            android:padding="5dp"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -327,20 +269,20 @@
                 android:isIndicator="true"
                 android:numStars="6" />
         </RelativeLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#33000000"
-            android:gravity="center_horizontal"
-            android:padding="5dp"
-            android:text="@string/txt_luck" />
+        
+                    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#33000000"
+        android:gravity="center_horizontal"
+        android:text="@string/txt_luck"
+        android:padding="5dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+            android:padding="5dp"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="match_parent"
@@ -360,8 +302,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+            android:padding="5dp"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="match_parent"
@@ -381,8 +323,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+            android:padding="5dp"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="match_parent"

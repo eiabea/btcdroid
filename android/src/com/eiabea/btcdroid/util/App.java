@@ -202,14 +202,14 @@ public class App extends Application {
 
 		switch (style) {
 		case 0:
-			return String.format("%.6f", reward) + " " + getResString(R.string.btc, getInstance());
+			return String.format("%.6f", reward)+ getResString(R.string.btc_short, getInstance());
 		case 1:
-			return String.format("%.2f", reward * 1000) + " " + getResString(R.string.mbtc, getInstance());
+			return String.format("%.2f", reward * 1000) + getResString(R.string.mbtc_short, getInstance());
 		case 2:
-			return String.format("%.2f", reward * 1000 * 1000) + " " + getResString(R.string.ubtc, getInstance());
+			return String.format("%.2f", reward * 1000 * 1000) + getResString(R.string.ubtc_short, getInstance());
 
 		default:
-			return String.format("%.6f", reward) + " " + getResString(R.string.btc, getInstance());
+			return String.format("%.6f", reward) + getResString(R.string.btc_short, getInstance());
 		}
 
 	}

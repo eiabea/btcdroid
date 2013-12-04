@@ -13,6 +13,9 @@
     <string name="btc">BTC</string>
     <string name="mbtc">mBTC</string>
     <string name="ubtc">µBTC</string>
+    <string name="btc_short"></string>
+    <string name="mbtc_short">m</string>
+    <string name="ubtc_short">µ</string>
     <string name="percent_sign">%</string>
 
     <!-- MainActivity -->
@@ -34,10 +37,10 @@
     <string name="txt_luck">Luck</string>
     
     <!-- PoolFragment | left -->
-    <string name="txt_one_btc_are">1 BTC are:</string>
-    <string name="txt_estimated_reward">Estimated Reward:</string>
-    <string name="txt_confirmed_reward">Confirmed Reward:</string>
-    <string name="txt_total_reward">Total Reward:</string>
+    <string name="txt_one_btc_is">1 BTC is:</string>
+    <string name="txt_estimated_reward">estimated</string>
+    <string name="txt_confirmed_reward">confirmed</string>
+    <string name="txt_total_reward">total</string>
     <string name="txt_current_total_hashrate">Current Total Hashrate:</string>
     <string name="txt_average_total_hashrate">Average Total Hashrate:</string>
     <string name="txt_round_started">Round started:</string>
