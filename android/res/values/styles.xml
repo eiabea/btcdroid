@@ -51,7 +51,7 @@
         <item name="android:ellipsize">end</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/bd_dark_text</item>
-        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingTop">25dp</item>
         <item name="android:paddingBottom">15dp</item>
         <item name="android:textSize">18sp</item>
         <item name="android:maxLines">1</item>

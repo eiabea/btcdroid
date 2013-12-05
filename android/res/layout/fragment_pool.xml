@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/bd_background" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bd_background"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -54,6 +54,7 @@
 
             <TextView
                 style="@style/style_small_card_headline"
+				android:paddingTop="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/txt_rewards"
@@ -290,7 +291,7 @@
                     android:gravity="left"
                     android:orientation="horizontal"
                     android:paddingBottom="15dp"
-                    android:paddingTop="15dp" >
+                    android:paddingTop="25dp" >
 
                     <TextView
                         style="@style/style_small_card_headline"
@@ -302,11 +303,11 @@
 
                     <RatingBar
                         android:id="@+id/rat_main_info_rating"
-                        android:layout_marginLeft="5dp"
                         style="?android:attr/ratingBarStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
                         android:isIndicator="true"
                         android:numStars="5" />
                 </LinearLayout>
@@ -315,21 +316,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
+                    android:layout_alignParentBottom="true"
+                    android:paddingBottom="15dp"
                     android:gravity="right"
                     android:orientation="vertical" >
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="started"
+                        android:text="@string/txt_round_started"
                         android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/txt_main_info_round_started"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="asdf" />
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -450,75 +451,136 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#33000000"
-            android:gravity="center_horizontal"
-            android:padding="5dp"
-            android:text="@string/txt_luck" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:paddingBottom="20dp"
+            android:orientation="vertical" >
 
             <TextView
+                style="@style/style_small_card_headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_luck"
+                android:textAllCaps="true" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:text="@string/txt_luck_24h" />
+                android:baselineAligned="false"
+                android:orientation="horizontal" >
 
-            <TextView
-                android:id="@+id/txt_main_info_luck_24h"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="1"
+                    android:background="@color/bd_white"
+                    android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/small_card_content_padding_bottom"
+                        android:paddingTop="@dimen/small_card_content_padding_top" >
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:text="@string/txt_luck_7d" />
+                        <TextView
+                            android:id="@+id/txt_main_info_luck_24h"
+                            style="@style/style_small_card_value"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/bd_dark_grey_text" />
 
-            <TextView
-                android:id="@+id/txt_main_info_luck_7d"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right" />
-        </LinearLayout>
+                        <TextView
+                            style="@style/style_small_card_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/txt_luck_24h" />
+                    </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/small_card_bottom_line_height"
+                        android:background="@color/bd_card_bottom_line" >
+                    </FrameLayout>
+                </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:text="@string/txt_luck_30d" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="1"
+                    android:background="@color/bd_white"
+                    android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/txt_main_info_luck_30d"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/small_card_content_padding_bottom"
+                        android:paddingTop="@dimen/small_card_content_padding_top" >
+
+                        <TextView
+                            android:id="@+id/txt_main_info_luck_7d"
+                            style="@style/style_small_card_value"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/bd_dark_grey_text" />
+
+                        <TextView
+                            style="@style/style_small_card_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/txt_luck_7d" />
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/small_card_bottom_line_height"
+                        android:background="@color/bd_card_bottom_line" >
+                    </FrameLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:layout_weight="1"
+                    android:background="@color/bd_white"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/small_card_content_padding_bottom"
+                        android:paddingTop="@dimen/small_card_content_padding_top" >
+
+                        <TextView
+                            android:id="@+id/txt_main_info_luck_30d"
+                            style="@style/style_small_card_value"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/bd_dark_grey_text" />
+
+                        <TextView
+                            style="@style/style_small_card_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/txt_luck_30d" />
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/small_card_bottom_line_height"
+                        android:background="@color/bd_card_bottom_line" >
+                    </FrameLayout>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

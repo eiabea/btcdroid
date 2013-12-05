@@ -43,14 +43,13 @@
     <string name="txt_total_reward">total</string>
     <string name="txt_current_total_hashrate">current total</string>
     <string name="txt_average_total_hashrate">average total</string>
-    <string name="txt_round_started">Round started:</string>
+    <string name="txt_round_started">started</string>
     <string name="txt_round_duration">current</string>
     <string name="txt_round_estimated">estimated</string>
     <string name="txt_round_average">average</string>
-    <string name="txt_rating">Rating:</string>
-    <string name="txt_luck_24h">Luck 24h:</string>
-    <string name="txt_luck_7d">Luck 7d:</string>
-    <string name="txt_luck_30d">Luck 30d:</string>
+    <string name="txt_luck_24h">24h</string>
+    <string name="txt_luck_7d">7d</string>
+    <string name="txt_luck_30d">30d</string>
     
     <!-- RoundFragment | BlockView -->
     <string name="txt_confirmations_left">Confirmations left:</string>

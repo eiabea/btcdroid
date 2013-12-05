@@ -119,7 +119,7 @@ public class PoolFragment extends Fragment {
 				} else if (last < current) {
 					txt.setTextColor(getResources().getColor(R.color.bd_green));
 				} else {
-					txt.setTextColor(getResources().getColor(R.color.bd_black));
+					txt.setTextColor(getResources().getColor(R.color.bd_dark_grey_text));
 				}
 				pref.edit().putFloat("txt_" + txt.getId() + "_value", current).commit();
 				pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).commit();
