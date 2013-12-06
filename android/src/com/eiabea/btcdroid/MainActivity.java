@@ -73,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
 			this.prices = savedInstanceState.getParcelable(STATE_PRICES);
 		}
 
-		reloadData(false);
+//		reloadData(false);
 
 	}
 

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -61,6 +62,9 @@ public class App extends Application {
 		gson = new Gson();
 		
 		initPrefs();
+		
+		Intent i = new Intent(this, UpdateService.class);
+		startService(i);
 
 		me = this;
 		httpWorker = new HttpWorker(this.getApplicationContext(), token);

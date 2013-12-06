@@ -1,5 +1,7 @@
 package com.eiabea.btcdroid.widget;
 
+import com.eiabea.btcdroid.util.UpdateService;
+
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
