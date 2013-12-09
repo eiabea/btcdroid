@@ -13,11 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.adapter.WorkerListAdapter;
 import com.eiabea.btcdroid.adapter.WorkerListAdapter.Holder;
@@ -90,22 +86,9 @@ public class WorkerFragment extends Fragment {
 
 		Collections.sort(list, new App.WorkerSorter());
 
-		int totalHashrate = 0;
-
 		adapter = new WorkerListAdapter(getActivity());
 
 		adapter.setData(list);
-
-		for (Worker tmp : list) {
-			// WorkerView workerView = new WorkerView(MainActivity.this);
-			// workerView.setData(tmp);
-			// llWorkerHolder.addView(workerView);
-
-			totalHashrate += tmp.getHashrate();
-
-		}
-
-		((MainActivity) getActivity()).updateCurrentTotalHashrate(totalHashrate);
 
 		exlvWOrkerHolder.setAdapter(adapter);
 

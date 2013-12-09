@@ -7,6 +7,14 @@
             android:key="token"
             android:summary="Set the Slush&apos;s Pool Token"
             android:title="API Token" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/update_interval"
+            android:entryValues="@array/update_interval_values"
+            android:key="update_interval_preference"
+            android:summary="Controls how often data gets loaded"
+            android:title="Updateinterval" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Thresholds" >
         <EditTextPreference

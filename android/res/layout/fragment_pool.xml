@@ -54,9 +54,9 @@
 
             <TextView
                 style="@style/style_small_card_headline"
-				android:paddingTop="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="15dp"
                 android:text="@string/txt_rewards"
                 android:textAllCaps="true" />
 
@@ -75,6 +75,7 @@
                     android:orientation="vertical" >
 
                     <LinearLayout
+                        android:id="@+id/ll_reference_width"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -192,16 +193,17 @@
                 android:textAllCaps="true" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:baselineAligned="false"
                 android:orientation="horizontal" >
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                        android:id="@+id/ll_pool_hash_holder_left"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="3dp"
-                    android:layout_weight="1"
                     android:background="@color/bd_white"
                     android:orientation="vertical" >
 
@@ -234,10 +236,10 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/ll_pool_hash_holder_right"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
-                    android:layout_weight="1"
                     android:background="@color/bd_white"
                     android:orientation="vertical" >
 
@@ -315,11 +317,11 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_alignParentBottom="true"
-                    android:paddingBottom="15dp"
+                    android:layout_alignParentRight="true"
                     android:gravity="right"
-                    android:orientation="vertical" >
+                    android:orientation="vertical"
+                    android:paddingBottom="15dp" >
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -456,8 +458,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:paddingBottom="20dp"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingBottom="20dp" >
 
             <TextView
                 style="@style/style_small_card_headline"

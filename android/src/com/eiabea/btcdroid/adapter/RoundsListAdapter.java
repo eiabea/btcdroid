@@ -1,19 +1,13 @@
 package com.eiabea.btcdroid.adapter;
 
-import java.text.ParseException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.views.BlockView;
@@ -25,7 +19,7 @@ public class RoundsListAdapter extends BaseExpandableListAdapter {
 	
 	private List<Block> data;
 	
-	private LayoutInflater inflater;
+//	private LayoutInflater inflater;
 
 	public RoundsListAdapter(Context context, List<Block> data) {
 		this.context = context;
@@ -33,7 +27,7 @@ public class RoundsListAdapter extends BaseExpandableListAdapter {
 		
 		Collections.sort(this.data, new App.BlockSorter());
 		
-		inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+//		inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 
 		notifyDataSetChanged();
 	}

@@ -1,7 +1,18 @@
 package com.eiabea.btcdroid;
 
+import java.lang.ref.WeakReference;
+
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
@@ -14,9 +25,6 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.eiabea.btcdroid.adapter.MainViewAdapter;
 import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
@@ -25,10 +33,14 @@ import com.eiabea.btcdroid.model.Prices;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.util.App;
+import com.eiabea.btcdroid.util.UpdateService;
 
 public class MainActivity extends ActionBarActivity {
 
 	private static final int INTENT_PREF = 0;
+
+	public static final String BROADCAST_PRICE = "broadcast_price";
+	public static final String BROADCAST_PRICE_PARAM = "prices";
 
 	public static final int FRAGMENT_POOL = 0;
 	public static final int FRAGMENT_WORKER = 1;
@@ -56,25 +68,119 @@ public class MainActivity extends ActionBarActivity {
 	private Stats stats = null;
 	private Prices prices = null;
 
+	Messenger mService = null;
+	boolean mIsBound;
+	final Messenger mMessenger = new Messenger(new IncomingHandler(this));
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		initUi();
-
-		setListeners();
-
 		if (savedInstanceState != null) {
 			// Restore value of members from saved state
 			this.profile = savedInstanceState.getParcelable(STATE_PROFILE);
 			this.stats = savedInstanceState.getParcelable(STATE_STATS);
 			this.prices = savedInstanceState.getParcelable(STATE_PRICES);
+		} else {
+			String pricesJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_prices", "");
+			if (pricesJson != null && pricesJson.length() > 0) {
+				this.prices = App.getInstance().gson.fromJson(pricesJson, Prices.class);
+			}
+			String statsJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_stats", "");
+			if (statsJson != null && statsJson.length() > 0) {
+				this.stats = App.getInstance().gson.fromJson(statsJson, Stats.class);
+			}
+			String profileJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_profile", "");
+			if (profileJson != null && profileJson.length() > 0) {
+				this.profile = App.getInstance().gson.fromJson(profileJson, Profile.class);
+			}
+
 		}
 
-//		reloadData(false);
+		initUi();
 
+		setListeners();
+
+		setSavedValues();
+
+		CheckIfServiceIsRunning();
+
+		initService();
+		
+		if(App.getInstance().isTokenSet()){
+			showInfos();
+		}else{
+			hideInfos();
+		}
+
+	}
+
+	private void CheckIfServiceIsRunning() {
+		// If the service is running when the activity starts, we want to
+		// automatically bind to it.
+		if (UpdateService.isRunning()) {
+			doBindService();
+		}
+	}
+
+	private void setSavedValues() {
+		if (this.prices != null) {
+			setPrices(this.prices);
+		}
+		if (this.profile != null) {
+			setProfile(this.profile);
+		}
+		if (this.stats != null) {
+			setStats(this.stats);
+		}
+	}
+
+	private void initService() {
+
+		Intent i = new Intent(this, UpdateService.class);
+
+		startService(i);
+
+		doBindService();
+
+	}
+
+	@Override
+	protected void onDestroy() {
+		try {
+			doUnbindService();
+		} catch (Throwable t) {
+			Log.e("MainActivity", "Failed to unbind from the service", t);
+		}
+
+		super.onDestroy();
+	}
+
+	void doBindService() {
+		bindService(new Intent(this, UpdateService.class), mConnection, Context.BIND_AUTO_CREATE);
+		mIsBound = true;
+	}
+
+	void doUnbindService() {
+		if (mIsBound) {
+			// If we have received the service, and hence registered with it,
+			// then now is the time to unregister.
+			if (mService != null) {
+				try {
+					Message msg = Message.obtain(null, UpdateService.MSG_UNREGISTER_CLIENT);
+					msg.replyTo = mMessenger;
+					mService.send(msg);
+				} catch (RemoteException e) {
+					// There is nothing special we need to do if the service has
+					// crashed.
+				}
+			}
+			// Detach our existing connection.
+			unbindService(mConnection);
+			mIsBound = false;
+		}
 	}
 
 	@Override
@@ -94,128 +200,17 @@ public class MainActivity extends ActionBarActivity {
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
-	private void getProfile() {
-
-		profileLoaded = false;
-
-		App.getInstance().httpWorker.getProfile(new Listener<Profile>() {
-
-			@Override
-			public void onResponse(Profile profile) {
-
-				setProfile(profile);
-
-				profileLoaded = true;
-
-				readyLoading();
-			}
-
-		}, new ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-
-				profileLoaded = true;
-
-				Toast.makeText(MainActivity.this, App.getResString(R.string.txt_error_loading_profile, MainActivity.this), Toast.LENGTH_SHORT).show();
-
-				readyLoading();
-			}
-		});
-	}
-
-	private void getStats() {
-
-		statsLoaded = false;
-
-		App.getInstance().httpWorker.getStats(new Listener<Stats>() {
-
-			@Override
-			public void onResponse(Stats stats) {
-
-				setStats(stats);
-
-				statsLoaded = true;
-
-				readyLoading();
-			}
-
-		}, new ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-
-				statsLoaded = true;
-
-				Toast.makeText(MainActivity.this, App.getResString(R.string.txt_error_loading_stats, MainActivity.this), Toast.LENGTH_SHORT).show();
-
-				Log.e(getClass().getSimpleName(), error.getMessage() + error.getCause());
-
-				readyLoading();
-			}
-		});
-	}
-
-	private void getPrices() {
-
-		pricesLoaded = false;
-
-		App.getInstance().httpWorker.getPrices(new Listener<Prices>() {
-
-			@Override
-			public void onResponse(Prices prices) {
-
-				setPrices(prices);
-
-				pricesLoaded = true;
-
-				readyLoading();
-			}
-
-		}, new ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-
-				pricesLoaded = true;
-
-				Toast.makeText(MainActivity.this, App.getResString(R.string.txt_error_loading_price, MainActivity.this), Toast.LENGTH_SHORT).show();
-
-				readyLoading();
-			}
-		});
-	}
-
-	private void readyLoading() {
-		if (App.isPriceEnabled) {
-
-			if (profileLoaded == true && statsLoaded == true && pricesLoaded == true) {
-				showInfos();
-				showProgress(false);
-			}
-		} else {
-			if (profileLoaded == true && statsLoaded == true) {
-				showInfos();
-				showProgress(false);
-			}
-
-		}
-	}
-
 	private void initUi() {
 
 		getSupportActionBar().setSubtitle(R.string.app_name_subtitle);
 
 		viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
 		viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
-		
+
 		viewPager = (ViewPager) findViewById(R.id.vp_main);
-		// TODO improve!
-		// Current: Main --> Data --> Fragment
-		// Future: Fragment --> Data from Main
 		viewPager.setOffscreenPageLimit(3);
 
-		adapter = new MainViewAdapter(this, getSupportFragmentManager());
+		adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.prices);
 		viewPager.setAdapter(adapter);
 
 		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
@@ -250,22 +245,23 @@ public class MainActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
-			reloadData(true);
+			reloadData();
 			break;
 
 		case R.id.action_settings:
 			startActivityForResult(new Intent(this, PrefsActivity.class), INTENT_PREF);
 			break;
 
-//		case R.id.action_participants:
-//			startActivityForResult(new Intent(this, ParticipantsActivity.class), INTENT_PREF);
-//			break;
-			
+		// case R.id.action_participants:
+		// startActivityForResult(new Intent(this, ParticipantsActivity.class),
+		// INTENT_PREF);
+		// break;
+
 		case R.id.action_email:
 			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 
 			emailIntent.setType("plain/text");
-			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{App.getResString(R.string.mail_address, MainActivity.this)});
+			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] { App.getResString(R.string.mail_address, MainActivity.this) });
 			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, App.getResString(R.string.mail_subject, MainActivity.this));
 
 			startActivity(Intent.createChooser(emailIntent, App.getResString(R.string.mail_intent_title, MainActivity.this)));
@@ -287,7 +283,14 @@ public class MainActivity extends ActionBarActivity {
 				App.getInstance().resetPriceThreshold();
 				App.getInstance().resetPriceEnabled();
 
-				reloadData(true);
+				doUnbindService();
+
+				Intent i = new Intent(this, UpdateService.class);
+				stopService(i);
+
+				initService();
+
+				// reloadData(true);
 
 			}
 			break;
@@ -299,36 +302,25 @@ public class MainActivity extends ActionBarActivity {
 		super.onActivityResult(reqCode, resCode, intent);
 	}
 
-	private void reloadData(boolean force) {
+	private void reloadData() {
+
+		showProgress(true);
+
 		if (App.getInstance().isTokenSet()) {
-
 			txtNoPools.setVisibility(View.INVISIBLE);
+		}
 
-			if (this.profile == null || force) {
-				showProgress(true);
-
-				getProfile();
-			} else {
-				setProfile(profile);
+		Message msg = new Message();
+		msg.what = 1337;
+		if (mIsBound) {
+			if (mService != null) {
+				try {
+					mService.send(msg);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-
-			if (this.stats == null || force) {
-				showProgress(true);
-
-				getStats();
-			} else {
-				setStats(stats);
-			}
-
-			if (this.prices == null || force && App.isPriceEnabled) {
-				showProgress(true);
-
-				getPrices();
-			} else {
-				setPrices(prices);
-			}
-		} else {
-			hideInfos();
 		}
 
 	}
@@ -362,14 +354,8 @@ public class MainActivity extends ActionBarActivity {
 		setSupportProgressBarIndeterminateVisibility(show);
 	}
 
-	public void updateCurrentTotalHashrate(int hashrate) {
-		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
-		if (pool != null) {
-			((PoolFragment) pool).updateCurrentTotalHashrate(hashrate);
-		}
-	}
-
 	public void setProfile(Profile profile) {
+		Toast.makeText(MainActivity.this, "setProfile", Toast.LENGTH_SHORT).show();
 		this.profile = profile;
 		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
 		if (pool != null) {
@@ -380,9 +366,11 @@ public class MainActivity extends ActionBarActivity {
 			((WorkerFragment) worker).setProfile(profile);
 
 		}
+
 	}
 
 	public void setStats(Stats stats) {
+		Toast.makeText(MainActivity.this, "setStats", Toast.LENGTH_SHORT).show();
 		this.stats = stats;
 		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
 		if (frag != null) {
@@ -397,12 +385,64 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void setPrices(Prices prices) {
+		Toast.makeText(MainActivity.this, "setPrice", Toast.LENGTH_SHORT).show();
+		showProgress(false);
 		this.prices = prices;
+
 		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
-		if(frag != null){
+		if (frag != null) {
 			((PoolFragment) frag).setPrices(prices);
 		}
-
 	}
+
+	static class IncomingHandler extends Handler {
+		private final WeakReference<MainActivity> mLink;
+
+		IncomingHandler(MainActivity service) {
+			mLink = new WeakReference<MainActivity>(service);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			MainActivity activity = mLink.get();
+			if (activity != null) {
+				switch (msg.what) {
+				case UpdateService.MSG_PRICES:
+					activity.setPrices((Prices) msg.getData().getParcelable(UpdateService.MSG_PRICES_PARAM));
+					break;
+				case UpdateService.MSG_STATS:
+					activity.setStats((Stats) msg.getData().getParcelable(UpdateService.MSG_STATS_PARAM));
+					break;
+				case UpdateService.MSG_PROFILE:
+					activity.setProfile((Profile) msg.getData().getParcelable(UpdateService.MSG_PROFILE_PARAM));
+					break;
+				default:
+					super.handleMessage(msg);
+				}
+			}
+		}
+	}
+
+	private ServiceConnection mConnection = new ServiceConnection() {
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			mService = new Messenger(service);
+			Log.d("SERVICE", "onAttach");
+			try {
+				Message msg = Message.obtain(null, UpdateService.MSG_REGISTER_CLIENT);
+				msg.replyTo = mMessenger;
+				mService.send(msg);
+			} catch (RemoteException e) {
+				// In this case the service has crashed before we could even do
+				// anything with it
+			}
+		}
+
+		public void onServiceDisconnected(ComponentName className) {
+			// This is called when the connection with the service has been
+			// unexpectedly disconnected - process crashed.
+			mService = null;
+			Log.d("SERVICE", "disconnected");
+		}
+	};
 
 }

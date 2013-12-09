@@ -6,7 +6,7 @@
         android:icon="@android:drawable/ic_menu_rotate"
         android:title="@string/action_refresh"
         android:visible="false"
-        btcdroid:showAsAction="always"/>
+        btcdroid:showAsAction="never"/>
     <!-- 
     <item
         android:id="@+id/action_add_pool"

@@ -12,7 +12,6 @@ import java.util.Set;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -27,8 +26,6 @@ import com.google.gson.JsonObject;
 
 public class App extends Application {
 
-	// TODO Worker design --> RL
-	
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss", Locale.getDefault());
 	public static final SimpleDateFormat dateStatsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 	public static final SimpleDateFormat dateDurationFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
@@ -63,9 +60,6 @@ public class App extends Application {
 		
 		initPrefs();
 		
-		Intent i = new Intent(this, UpdateService.class);
-		startService(i);
-
 		me = this;
 		httpWorker = new HttpWorker(this.getApplicationContext(), token);
 
@@ -191,8 +185,13 @@ public class App extends Application {
 	}
 
 	public static String formatHashRate(int hash) {
-		if (hash > 1000) {
+		if (hash > 1000000) {
+			return String.format("%.2f", ((float) hash) / 1000000f) + " " + getResString(R.string.th_per_second, getInstance());
+		} else if (hash > 10000){
+			return String.format("%.1f", ((float) hash) / 1000f) + " " + getResString(R.string.gh_per_second, getInstance());
+		} else if(hash > 1000){
 			return String.format("%.2f", ((float) hash) / 1000f) + " " + getResString(R.string.gh_per_second, getInstance());
+			
 		}
 		return String.valueOf(hash) + " " + getResString(R.string.mh_per_second, getInstance());
 	}

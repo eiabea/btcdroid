@@ -1,11 +1,14 @@
 package com.eiabea.btcdroid.fragments;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -13,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -23,6 +28,7 @@ import com.eiabea.btcdroid.model.Price;
 import com.eiabea.btcdroid.model.Prices;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
+import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 
 public class PoolFragment extends Fragment {
@@ -35,7 +41,8 @@ public class PoolFragment extends Fragment {
 
 	private SharedPreferences pref;
 
-	private LinearLayout llPriceHolder;
+	private LinearLayout llPriceHolder, llReferenceWidth, llHashrateLeft,
+			llHashrateRight;
 
 	private TextView txtEstimatedReward, txtConfirmedReward, txtTotalReward,
 			txtCurrentValue, txtTotalHashrate, txtAverageHashrate,
@@ -43,8 +50,13 @@ public class PoolFragment extends Fragment {
 			txtAverageDuration, txtLuck24h, txtLuck7d, txtLuck30d;
 	private RatingBar ratRating;
 
-	public static PoolFragment create(int pageNumber) {
+	public static PoolFragment create(int pageNumber, Profile profile, Stats stats, Prices prices) {
 		PoolFragment fragment = new PoolFragment();
+		Bundle b = new Bundle();
+		b.putParcelable("profile", profile);
+		b.putParcelable("stats", stats);
+		b.putParcelable("prices", prices);
+		fragment.setArguments(b);
 		return fragment;
 	}
 
@@ -58,6 +70,10 @@ public class PoolFragment extends Fragment {
 		pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 		initUi(inflater, rootView);
+
+		this.profile = getArguments().getParcelable("profile");
+		this.stats = getArguments().getParcelable("stats");
+		this.prices = getArguments().getParcelable("prices");
 
 		if (profile != null) {
 			setProfile(profile);
@@ -74,7 +90,11 @@ public class PoolFragment extends Fragment {
 		return rootView;
 	}
 
+	@SuppressLint("NewApi")
 	private void initUi(LayoutInflater inflater, ViewGroup rootView) {
+		llReferenceWidth = (LinearLayout) rootView.findViewById(R.id.ll_reference_width);
+		llHashrateLeft = (LinearLayout) rootView.findViewById(R.id.ll_pool_hash_holder_left);
+		llHashrateRight = (LinearLayout) rootView.findViewById(R.id.ll_pool_hash_holder_right);
 		llPriceHolder = (LinearLayout) rootView.findViewById(R.id.ll_main_info_price_holder);
 		txtCurrentValue = (TextView) rootView.findViewById(R.id.txt_main_info_current_value);
 		txtEstimatedReward = (TextView) rootView.findViewById(R.id.txt_main_info_estimated_reward);
@@ -90,6 +110,31 @@ public class PoolFragment extends Fragment {
 		txtLuck24h = (TextView) rootView.findViewById(R.id.txt_main_info_luck_24h);
 		txtLuck7d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_7d);
 		txtLuck30d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_30d);
+
+		final ViewTreeObserver observer = llReferenceWidth.getViewTreeObserver();
+		observer.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+
+			@Override
+			public void onGlobalLayout() {
+				int referenceWidth = llReferenceWidth.getWidth();
+
+				LinearLayout.LayoutParams leftParams = new LinearLayout.LayoutParams(referenceWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
+				leftParams.setMargins(0, 0, App.getDipsFromPixel(3, getActivity()), 0);
+
+				LinearLayout.LayoutParams rightParams = new LinearLayout.LayoutParams(referenceWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
+				rightParams.setMargins(App.getDipsFromPixel(3, getActivity()), 0, 0, 0);
+
+				llHashrateLeft.setLayoutParams(leftParams);
+				llHashrateRight.setLayoutParams(rightParams);
+
+				llReferenceWidth.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+				if (Build.VERSION.SDK_INT >= 16) {
+					llReferenceWidth.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+				}
+
+			}
+
+		});
 
 	}
 
@@ -155,11 +200,10 @@ public class PoolFragment extends Fragment {
 				Log.d(getClass().getSimpleName(), "threshold expired --> set colors for " + "txt_" + txt.getId());
 				if (lastPriceFloat > currentPriceFloat) {
 					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
-				} else if (lastPriceFloat < currentPriceFloat) {
-					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
 				} else {
-					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_black));
+					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
 				}
+
 				pref.edit().putFloat("txt_" + txt.getId() + "_value", currentPriceFloat).commit();
 				pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).commit();
 				Log.d(getClass().getSimpleName(), "set last price to: " + currentPriceFloat);
@@ -258,7 +302,13 @@ public class PoolFragment extends Fragment {
 
 	private void fillUpProfile() {
 
+		ArrayList<Worker> list = profile.getWorkersList();
+
 		int totalHashrate = 0;
+
+		for (Worker tmp : list) {
+			totalHashrate += tmp.getHashrate();
+		}
 
 		float estimated = Float.valueOf(profile.getEstimated_reward());
 		float unconfirmed = Float.valueOf(profile.getUnconfirmed_reward());
@@ -293,17 +343,17 @@ public class PoolFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		if(average != null && duration != null){
+		if (average != null && duration != null) {
 			double rating = calculateRoundRating(average, duration);
-			
+
 			setRatingBar(rating);
 		}
-		
-		if(duration != null){
+
+		if (duration != null) {
 			float cdf = Float.valueOf(stats.getShares_cdf());
 			System.out.println(cdf);
 			float estimated = (duration.getTime() / (cdf / 100));
-			
+
 			txtEstimatedDuration.setText(App.dateDurationFormat.format(new Date((long) estimated)));
 		}
 
@@ -325,10 +375,10 @@ public class PoolFragment extends Fragment {
 
 	}
 
-	public void updateCurrentTotalHashrate(int hashrate) {
-		if (txtTotalHashrate != null) {
-			txtTotalHashrate.setText(App.formatHashRate(hashrate));
-		}
-	}
+	// public void updateCurrentTotalHashrate(int hashrate) {
+	// if (txtTotalHashrate != null) {
+	// txtTotalHashrate.setText(App.formatHashRate(hashrate));
+	// }
+	// }
 
 }

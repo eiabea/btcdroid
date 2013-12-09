@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
-import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 
 public class BlockView extends LinearLayout {

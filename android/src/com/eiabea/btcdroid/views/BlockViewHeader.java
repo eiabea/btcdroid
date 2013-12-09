@@ -1,7 +1,6 @@
 package com.eiabea.btcdroid.views;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
-import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 
 public class BlockViewHeader extends LinearLayout {
