@@ -11,7 +11,7 @@ import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
-import com.eiabea.btcdroid.model.Prices;
+import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 
@@ -23,9 +23,9 @@ public class MainViewAdapter extends FragmentPagerAdapter {
 	
 	private Profile profile;
 	private Stats stats;
-	private Prices prices;
+	private PricesMtGox prices;
 
-	public MainViewAdapter(Context context, FragmentManager fm, Profile profile, Stats stats, Prices prices) {
+	public MainViewAdapter(Context context, FragmentManager fm, Profile profile, Stats stats, PricesMtGox prices) {
 		super(fm);
 		
 		this.profile = profile;

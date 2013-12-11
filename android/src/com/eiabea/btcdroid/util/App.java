@@ -18,7 +18,7 @@ import android.preference.PreferenceManager;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Price;
-import com.eiabea.btcdroid.model.Prices;
+import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Worker;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -134,8 +134,8 @@ public class App extends Application {
 		return (int) (pixels * scale + 0.5f);
 	}
 	
-	public static Prices parsePrices(JsonObject json) {
-		Prices prices = new Prices();
+	public static PricesMtGox parsePrices(JsonObject json) {
+		PricesMtGox prices = new PricesMtGox();
 
 		Set<Entry<String, JsonElement>> set = json.entrySet();
 

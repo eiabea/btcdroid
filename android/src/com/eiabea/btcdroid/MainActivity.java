@@ -23,13 +23,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.eiabea.btcdroid.adapter.MainViewAdapter;
 import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
-import com.eiabea.btcdroid.model.Prices;
+import com.eiabea.btcdroid.model.PricesBitstamp;
+import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.util.App;
@@ -49,6 +49,7 @@ public class MainActivity extends ActionBarActivity {
 	private static final String STATE_PROFILE = "state_profile";
 	private static final String STATE_STATS = "state_stats";
 	private static final String STATE_PRICES = "state_prices";
+	private static final String STATE_PRICES_BITSTAMP = "state_prices_bitstamp";
 
 	private MenuItem itemRefresh;
 
@@ -66,7 +67,8 @@ public class MainActivity extends ActionBarActivity {
 
 	private Profile profile = null;
 	private Stats stats = null;
-	private Prices prices = null;
+	private PricesMtGox prices = null;
+	private PricesBitstamp pricesBitstamp = null;
 
 	Messenger mService = null;
 	boolean mIsBound;
@@ -83,10 +85,15 @@ public class MainActivity extends ActionBarActivity {
 			this.profile = savedInstanceState.getParcelable(STATE_PROFILE);
 			this.stats = savedInstanceState.getParcelable(STATE_STATS);
 			this.prices = savedInstanceState.getParcelable(STATE_PRICES);
+			this.pricesBitstamp = savedInstanceState.getParcelable(STATE_PRICES_BITSTAMP);
 		} else {
 			String pricesJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_prices", "");
 			if (pricesJson != null && pricesJson.length() > 0) {
-				this.prices = App.getInstance().gson.fromJson(pricesJson, Prices.class);
+				this.prices = App.getInstance().gson.fromJson(pricesJson, PricesMtGox.class);
+			}
+			String pricesBitstampJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_prices_bitstamp", "");
+			if (pricesBitstampJson != null && pricesBitstampJson.length() > 0) {
+				this.pricesBitstamp = App.getInstance().gson.fromJson(pricesBitstampJson, PricesBitstamp.class);
 			}
 			String statsJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_stats", "");
 			if (statsJson != null && statsJson.length() > 0) {
@@ -128,6 +135,9 @@ public class MainActivity extends ActionBarActivity {
 	private void setSavedValues() {
 		if (this.prices != null) {
 			setPrices(this.prices);
+		}
+		if (this.pricesBitstamp != null) {
+			setPricesBitstamp(this.pricesBitstamp);
 		}
 		if (this.profile != null) {
 			setProfile(this.profile);
@@ -195,6 +205,7 @@ public class MainActivity extends ActionBarActivity {
 		savedInstanceState.putParcelable(STATE_PROFILE, this.profile);
 		savedInstanceState.putParcelable(STATE_STATS, this.stats);
 		savedInstanceState.putParcelable(STATE_PRICES, this.prices);
+		savedInstanceState.putParcelable(STATE_PRICES_BITSTAMP, this.pricesBitstamp);
 
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);
@@ -245,7 +256,20 @@ public class MainActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
-			reloadData();
+			doUnbindService();
+
+			Intent i = new Intent(this, UpdateService.class);
+			stopService(i);
+
+			initService();
+			
+			showProgress(true);
+			
+			if(App.getInstance().isTokenSet()){
+				showInfos();
+			}else{
+				hideInfos();
+			}
 			break;
 
 		case R.id.action_settings:
@@ -312,9 +336,9 @@ public class MainActivity extends ActionBarActivity {
 
 		showProgress(true);
 
-		if (App.getInstance().isTokenSet()) {
-			txtNoPools.setVisibility(View.INVISIBLE);
-		}
+//		if (App.getInstance().isTokenSet()) {
+//			txtNoPools.setVisibility(View.INVISIBLE);
+//		}
 
 		Message msg = new Message();
 		msg.what = 1337;
@@ -390,13 +414,23 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
-	public void setPrices(Prices prices) {
+	public void setPrices(PricesMtGox prices) {
 //		Toast.makeText(MainActivity.this, "setPrice", Toast.LENGTH_SHORT).show();
 		this.prices = prices;
 
 		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
 		if (frag != null) {
 			((PoolFragment) frag).setPrices(prices);
+		}
+	}
+	
+	public void setPricesBitstamp(PricesBitstamp pricesBitstamp) {
+//		Toast.makeText(MainActivity.this, "setPrice", Toast.LENGTH_SHORT).show();
+		this.pricesBitstamp = pricesBitstamp;
+		
+		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
+		if (frag != null) {
+			((PoolFragment) frag).setPricesBitstamp(pricesBitstamp);
 		}
 	}
 
@@ -414,7 +448,11 @@ public class MainActivity extends ActionBarActivity {
 				switch (msg.what) {
 				case UpdateService.MSG_PRICES:
 					activity.pricesLoaded = true;
-					activity.setPrices((Prices) msg.getData().getParcelable(UpdateService.MSG_PRICES_PARAM));
+					activity.setPrices((PricesMtGox) msg.getData().getParcelable(UpdateService.MSG_PRICES_PARAM));
+					break;
+				case UpdateService.MSG_PRICES_BITSTAMP:
+					activity.pricesLoaded = true;
+					activity.setPricesBitstamp((PricesBitstamp) msg.getData().getParcelable(UpdateService.MSG_PRICES_PARAM));
 					break;
 				case UpdateService.MSG_STATS:
 					activity.statsLoaded = true;
@@ -429,7 +467,9 @@ public class MainActivity extends ActionBarActivity {
 				}
 				if(activity.pricesLoaded == true && activity.statsLoaded == true && activity.profileLoaded == true){
 					activity.showProgress(false);
-					activity.pricesLoaded = activity.statsLoaded = activity.profileLoaded = false;
+					activity.pricesLoaded = false;
+					activity.statsLoaded = false;
+					activity.profileLoaded = false;
 				}
 			}
 		}

@@ -38,7 +38,7 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="price_enabled"
-            android:summary="Show the Price of 1 BTC (MtGox)"
+            android:summary="Show the Price of 1 BTC (Bitstamp)"
             android:title="Show Price" />
 
         <ListPreference

@@ -22,7 +22,8 @@ import android.widget.TextView;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Price;
-import com.eiabea.btcdroid.model.Prices;
+import com.eiabea.btcdroid.model.PricesBitstamp;
+import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
@@ -34,7 +35,8 @@ public class PoolFragment extends Fragment {
 
 	private Profile profile;
 	private Stats stats;
-	private Prices prices;
+	private PricesMtGox prices;
+	private PricesBitstamp pricesBitstamp;
 
 	private SharedPreferences pref;
 
@@ -47,7 +49,7 @@ public class PoolFragment extends Fragment {
 			txtAverageDuration, txtLuck24h, txtLuck7d, txtLuck30d;
 	private RatingBar ratRating;
 
-	public static PoolFragment create(int pageNumber, Profile profile, Stats stats, Prices prices) {
+	public static PoolFragment create(int pageNumber, Profile profile, Stats stats, PricesMtGox prices) {
 		PoolFragment fragment = new PoolFragment();
 		Bundle b = new Bundle();
 		b.putParcelable("profile", profile);
@@ -279,7 +281,7 @@ public class PoolFragment extends Fragment {
 
 	}
 
-	public void setPrices(Prices prices) {
+	public void setPrices(PricesMtGox prices) {
 		this.prices = prices;
 		if (txtCurrentValue != null && this.prices != null) {
 			fillUpPrices();
@@ -295,6 +297,24 @@ public class PoolFragment extends Fragment {
 			}
 		}
 
+	}
+	
+	public void setPricesBitstamp(PricesBitstamp pricesBitstamp) {
+		this.pricesBitstamp = pricesBitstamp;
+		if (txtCurrentValue != null && this.pricesBitstamp != null) {
+			fillUpPricesBitstamp(this.pricesBitstamp);
+		}
+		
+		if (llPriceHolder != null) {
+			if (App.isPriceEnabled) {
+				llPriceHolder.setVisibility(View.VISIBLE);
+				
+			} else {
+				llPriceHolder.setVisibility(View.GONE);
+				
+			}
+		}
+		
 	}
 
 	private void fillUpProfile() {
@@ -370,6 +390,16 @@ public class PoolFragment extends Fragment {
 
 		setPrice(txtCurrentValue, currentPrice);
 
+	}
+	
+	private void fillUpPricesBitstamp(PricesBitstamp prices) {
+		
+		Price currentPrice = new Price();
+		currentPrice.setValue(prices.getLast());
+		currentPrice.setDisplay_short("$ " + prices.getLast());
+		
+		setPrice(txtCurrentValue, currentPrice);
+		
 	}
 
 	// public void updateCurrentTotalHashrate(int hashrate) {

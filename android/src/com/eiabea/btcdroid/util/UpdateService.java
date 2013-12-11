@@ -20,7 +20,8 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.eiabea.btcdroid.R;
-import com.eiabea.btcdroid.model.Prices;
+import com.eiabea.btcdroid.model.PricesBitstamp;
+import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 
@@ -40,6 +41,7 @@ public class UpdateService extends Service {
 	public static final int MSG_PRICES = 3;
 	public static final int MSG_STATS = 4;
 	public static final int MSG_PROFILE = 5;
+	public static final int MSG_PRICES_BITSTAMP = 6;
 	public static final String MSG_PRICES_PARAM = "param_prices";
 	public static final String MSG_STATS_PARAM = "param_stats";
 	public static final String MSG_PROFILE_PARAM = "param_profile";
@@ -151,25 +153,48 @@ public class UpdateService extends Service {
 
 		Log.d(getClass().getSimpleName(), "Getting Prices");
 
-		App.getInstance().httpWorker.getPrices(new Listener<Prices>() {
-
-			@Override
-			public void onResponse(Prices prices) {
-				sendPrices(prices);
-				PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("pref_prices", App.getInstance().gson.toJson(prices)).commit();
-			}
-
-		}, new ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-
-				sendPrices(null);
+		if(false){
+			App.getInstance().httpWorker.getPricesMtGox(new Listener<PricesMtGox>() {
+				
+				@Override
+				public void onResponse(PricesMtGox prices) {
+					sendPrices(prices);
+					PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("pref_prices", App.getInstance().gson.toJson(prices)).commit();
+				}
+				
+			}, new ErrorListener() {
+				
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					
+					sendPrices(null);
 //				Toast.makeText(UpdateService.this, App.getResString(R.string.txt_error_loading_price, UpdateService.this), Toast.LENGTH_SHORT).show();
-				Log.i(getClass().getSimpleName(), "" + App.getResString(R.string.txt_error_loading_price, UpdateService.this));
-
-			}
-		});
+					Log.i(getClass().getSimpleName(), "" + App.getResString(R.string.txt_error_loading_price, UpdateService.this));
+					
+				}
+			});
+			
+		}else{
+			App.getInstance().httpWorker.getPricesBitstamp(new Listener<PricesBitstamp>() {
+				
+				@Override
+				public void onResponse(PricesBitstamp prices) {
+					sendPricesBitstamp(prices);
+					PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("pref_prices_bitstamp", App.getInstance().gson.toJson(prices)).commit();
+				}
+				
+			}, new ErrorListener() {
+				
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					
+					sendPricesBitstamp(null);
+//				Toast.makeText(UpdateService.this, App.getResString(R.string.txt_error_loading_price, UpdateService.this), Toast.LENGTH_SHORT).show();
+					Log.i(getClass().getSimpleName(), "" + App.getResString(R.string.txt_error_loading_price, UpdateService.this));
+					
+				}
+			});
+		}
 	}
 
 	private void getStats() {
@@ -222,7 +247,7 @@ public class UpdateService extends Service {
 		});
 	}
 
-	private void sendPrices(Prices prices) {
+	private void sendPrices(PricesMtGox prices) {
 		for (int i = mClients.size() - 1; i >= 0; i--) {
 			try {
 				// Send data as a String
@@ -240,6 +265,26 @@ public class UpdateService extends Service {
 			}
 		}
 
+	}
+	
+	private void sendPricesBitstamp(PricesBitstamp prices) {
+		for (int i = mClients.size() - 1; i >= 0; i--) {
+			try {
+				// Send data as a String
+				Bundle b = new Bundle();
+				b.putParcelable(MSG_PRICES_PARAM, prices);
+				Message msg = Message.obtain(null, MSG_PRICES_BITSTAMP);
+				msg.setData(b);
+				mClients.get(i).send(msg);
+				
+			} catch (RemoteException e) {
+				// The client is dead. Remove it from the list; we are going
+				// through the list from back to front so this is safe to do
+				// inside the loop.
+				mClients.remove(i);
+			}
+		}
+		
 	}
 
 	private void sendStats(Stats stats) {

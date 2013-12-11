@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.eiabea.btcdroid.util.App;
 import com.google.gson.JsonObject;
 
-public class Prices implements Parcelable {
+public class PricesMtGox implements Parcelable {
 
 	// Attributes
 	private String result;
@@ -15,10 +15,10 @@ public class Prices implements Parcelable {
 	
 	
 	// Standardconstructor
-	public Prices(){}
+	public PricesMtGox(){}
 
 	// Constructor used for Parcelable
-	public Prices(Parcel in) {
+	public PricesMtGox(Parcel in) {
 		
 		data = new JsonObject();
 		data = App.getInstance().gson.fromJson(in.readString(), JsonObject.class);
@@ -37,11 +37,11 @@ public class Prices implements Parcelable {
 
 	@SuppressWarnings("rawtypes")
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-    	public Prices createFromParcel(Parcel in) {
-    		return new Prices(in);
+    	public PricesMtGox createFromParcel(Parcel in) {
+    		return new PricesMtGox(in);
     	}
-    	public Prices[] newArray(int size) {
-        	return new Prices[size];
+    	public PricesMtGox[] newArray(int size) {
+        	return new PricesMtGox[size];
     	}
     };
 
