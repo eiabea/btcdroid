@@ -15,7 +15,6 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
@@ -26,6 +25,8 @@ import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 
 // TODO Errorhandling
+// TODO run service only sometimes
+// TODO on reboot --> register service
 
 public class UpdateService extends Service {
 
@@ -82,13 +83,15 @@ public class UpdateService extends Service {
 		super.onCreate();
 
 		resetInterval();
+		
+		reloadData(true);
 	}
 
 	public void resetInterval() {
 		int interval = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("update_interval_preference", "0"));
 		if (interval > 0) {
 			timer = new Timer();
-			Toast.makeText(getApplicationContext(), "Service wurde gestartet", Toast.LENGTH_SHORT).show();
+			Log.i(getClass().getSimpleName(), "Service started");
 			timer.scheduleAtFixedRate(new TimerTask() {
 				public void run() {
 					onTimerTick();
@@ -101,7 +104,6 @@ public class UpdateService extends Service {
 	}
 
 	private void onTimerTick() {
-		Log.i(getClass().getSimpleName(), "Timer doing work.");
 		try {
 			reloadData(false);
 
@@ -117,8 +119,9 @@ public class UpdateService extends Service {
 		if (timer != null) {
 			timer.cancel();
 			timer = null;
+			Log.i(getClass().getSimpleName(), "Service closed");
 		}
-		Toast.makeText(getApplicationContext(), "Service wurde beendet", Toast.LENGTH_SHORT).show();
+		Log.i(getClass().getSimpleName(), "Service closed");
 		isRunning = false;
 	}
 
@@ -161,7 +164,9 @@ public class UpdateService extends Service {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 
-				Toast.makeText(UpdateService.this, App.getResString(R.string.txt_error_loading_price, UpdateService.this), Toast.LENGTH_SHORT).show();
+				sendPrices(null);
+//				Toast.makeText(UpdateService.this, App.getResString(R.string.txt_error_loading_price, UpdateService.this), Toast.LENGTH_SHORT).show();
+				Log.i(getClass().getSimpleName(), "" + App.getResString(R.string.txt_error_loading_price, UpdateService.this));
 
 			}
 		});
@@ -183,8 +188,9 @@ public class UpdateService extends Service {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-
-				Toast.makeText(UpdateService.this, App.getResString(R.string.txt_error_loading_stats, UpdateService.this), Toast.LENGTH_SHORT).show();
+				sendStats(null);
+				Log.i(getClass().getSimpleName(), "" + App.getResString(R.string.txt_error_loading_stats, UpdateService.this));
+//				Toast.makeText(UpdateService.this, App.getResString(R.string.txt_error_loading_stats, UpdateService.this), Toast.LENGTH_SHORT).show();
 
 			}
 		});
@@ -208,7 +214,9 @@ public class UpdateService extends Service {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 
-				Toast.makeText(UpdateService.this, App.getResString(R.string.txt_error_loading_profile, UpdateService.this), Toast.LENGTH_SHORT).show();
+				sendProfile(null);
+				Log.i(getClass().getSimpleName(), "" + App.getResString(R.string.txt_error_loading_profile, UpdateService.this));
+//				Toast.makeText(UpdateService.this, App.getResString(R.string.txt_error_loading_profile, UpdateService.this), Toast.LENGTH_SHORT).show();
 
 			}
 		});

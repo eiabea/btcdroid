@@ -289,9 +289,15 @@ public class MainActivity extends ActionBarActivity {
 				stopService(i);
 
 				initService();
-
-				// reloadData(true);
-
+				
+				showProgress(true);
+				
+				if(App.getInstance().isTokenSet()){
+					showInfos();
+				}else{
+					hideInfos();
+				}
+				
 			}
 			break;
 
@@ -355,7 +361,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void setProfile(Profile profile) {
-		Toast.makeText(MainActivity.this, "setProfile", Toast.LENGTH_SHORT).show();
+//		Toast.makeText(MainActivity.this, "setProfile", Toast.LENGTH_SHORT).show();
 		this.profile = profile;
 		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
 		if (pool != null) {
@@ -370,7 +376,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void setStats(Stats stats) {
-		Toast.makeText(MainActivity.this, "setStats", Toast.LENGTH_SHORT).show();
+//		Toast.makeText(MainActivity.this, "setStats", Toast.LENGTH_SHORT).show();
 		this.stats = stats;
 		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
 		if (frag != null) {
@@ -385,8 +391,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void setPrices(Prices prices) {
-		Toast.makeText(MainActivity.this, "setPrice", Toast.LENGTH_SHORT).show();
-		showProgress(false);
+//		Toast.makeText(MainActivity.this, "setPrice", Toast.LENGTH_SHORT).show();
 		this.prices = prices;
 
 		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
@@ -408,16 +413,23 @@ public class MainActivity extends ActionBarActivity {
 			if (activity != null) {
 				switch (msg.what) {
 				case UpdateService.MSG_PRICES:
+					activity.pricesLoaded = true;
 					activity.setPrices((Prices) msg.getData().getParcelable(UpdateService.MSG_PRICES_PARAM));
 					break;
 				case UpdateService.MSG_STATS:
+					activity.statsLoaded = true;
 					activity.setStats((Stats) msg.getData().getParcelable(UpdateService.MSG_STATS_PARAM));
 					break;
 				case UpdateService.MSG_PROFILE:
+					activity.profileLoaded = true;
 					activity.setProfile((Profile) msg.getData().getParcelable(UpdateService.MSG_PROFILE_PARAM));
 					break;
 				default:
 					super.handleMessage(msg);
+				}
+				if(activity.pricesLoaded == true && activity.statsLoaded == true && activity.profileLoaded == true){
+					activity.showProgress(false);
+					activity.pricesLoaded = activity.statsLoaded = activity.profileLoaded = false;
 				}
 			}
 		}

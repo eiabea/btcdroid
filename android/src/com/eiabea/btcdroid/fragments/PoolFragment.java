@@ -8,7 +8,6 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -16,8 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -111,30 +108,30 @@ public class PoolFragment extends Fragment {
 		txtLuck7d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_7d);
 		txtLuck30d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_30d);
 
-		final ViewTreeObserver observer = llReferenceWidth.getViewTreeObserver();
-		observer.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-
-			@Override
-			public void onGlobalLayout() {
-				int referenceWidth = llReferenceWidth.getWidth();
-
-				LinearLayout.LayoutParams leftParams = new LinearLayout.LayoutParams(referenceWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
-				leftParams.setMargins(0, 0, App.getDipsFromPixel(3, getActivity()), 0);
-
-				LinearLayout.LayoutParams rightParams = new LinearLayout.LayoutParams(referenceWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
-				rightParams.setMargins(App.getDipsFromPixel(3, getActivity()), 0, 0, 0);
-
-				llHashrateLeft.setLayoutParams(leftParams);
-				llHashrateRight.setLayoutParams(rightParams);
-
-				llReferenceWidth.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-				if (Build.VERSION.SDK_INT >= 16) {
-					llReferenceWidth.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-				}
-
-			}
-
-		});
+//		final ViewTreeObserver observer = llReferenceWidth.getViewTreeObserver();
+//		observer.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+//
+//			@Override
+//			public void onGlobalLayout() {
+//				int referenceWidth = llReferenceWidth.getWidth();
+//
+//				LinearLayout.LayoutParams leftParams = new LinearLayout.LayoutParams(referenceWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
+//				leftParams.setMargins(0, 0, App.getDipsFromPixel(3, getActivity()), 0);
+//
+//				LinearLayout.LayoutParams rightParams = new LinearLayout.LayoutParams(referenceWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
+//				rightParams.setMargins(App.getDipsFromPixel(3, getActivity()), 0, 0, 0);
+//
+//				llHashrateLeft.setLayoutParams(leftParams);
+//				llHashrateRight.setLayoutParams(rightParams);
+//
+//				llReferenceWidth.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//				if (Build.VERSION.SDK_INT >= 16) {
+//					llReferenceWidth.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//				}
+//
+//			}
+//
+//		});
 
 	}
 
