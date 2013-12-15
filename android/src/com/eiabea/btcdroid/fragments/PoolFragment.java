@@ -38,8 +38,8 @@ public class PoolFragment extends Fragment {
 
 	private SharedPreferences pref;
 
-	private LinearLayout llPriceHolder, llReferenceWidth, llHashrateLeft,
-			llHashrateRight;
+	private LinearLayout llPriceHolder /*, llReferenceWidth, llHashrateLeft,
+			llHashrateRight */;
 
 	private TextView txtEstimatedReward, txtConfirmedReward, txtTotalReward,
 			txtCurrentValue, txtTotalHashrate, txtAverageHashrate,
@@ -89,9 +89,9 @@ public class PoolFragment extends Fragment {
 
 	@SuppressLint("NewApi")
 	private void initUi(LayoutInflater inflater, ViewGroup rootView) {
-		llReferenceWidth = (LinearLayout) rootView.findViewById(R.id.ll_reference_width);
-		llHashrateLeft = (LinearLayout) rootView.findViewById(R.id.ll_pool_hash_holder_left);
-		llHashrateRight = (LinearLayout) rootView.findViewById(R.id.ll_pool_hash_holder_right);
+//		llReferenceWidth = (LinearLayout) rootView.findViewById(R.id.ll_reference_width);
+//		llHashrateLeft = (LinearLayout) rootView.findViewById(R.id.ll_pool_hash_holder_left);
+//		llHashrateRight = (LinearLayout) rootView.findViewById(R.id.ll_pool_hash_holder_right);
 		llPriceHolder = (LinearLayout) rootView.findViewById(R.id.ll_main_info_price_holder);
 		txtCurrentValue = (TextView) rootView.findViewById(R.id.txt_main_info_current_value);
 		txtEstimatedReward = (TextView) rootView.findViewById(R.id.txt_main_info_estimated_reward);

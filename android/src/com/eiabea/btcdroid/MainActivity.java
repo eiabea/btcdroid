@@ -4,17 +4,18 @@ import java.util.Calendar;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Message;
 import android.os.Messenger;
-import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,8 +36,11 @@ public class MainActivity extends ActionBarActivity {
 
 	private static final int INTENT_PREF = 0;
 
-	public static final String BROADCAST_PRICE = "broadcast_price";
-	public static final String BROADCAST_PRICE_PARAM = "prices";
+	public static final int BROADCAST_PRICE = 10;
+	public static final int BROADCAST_STATS = 11;
+	public static final int BROADCAST_PROFILE = 12;
+	public static final String BROADCAST_TYPE = "type";
+	public static final String BROADCAST_DATA = "data";
 
 	public static final int FRAGMENT_POOL = 0;
 	public static final int FRAGMENT_WORKER = 1;
@@ -96,32 +100,8 @@ public class MainActivity extends ActionBarActivity {
 
 		initUi();
 
-		setListeners();
-
 		setSavedValues();
 
-		if(App.getInstance().isTokenSet()){
-			showInfos();
-		}else{
-			hideInfos();
-		}
-		
-		// SERVICE
-		// use this to start and trigger a service
-		Intent i= new Intent(MainActivity.this, UpdateService.class);
-		// potentially add data to the intent
-		i.putExtra("KEY1", "Value to be used by the service");
-		startService(i); 
-
-		Calendar cal = Calendar.getInstance();
-
-		Intent intent = new Intent(this, UpdateService.class);
-		PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
-
-		AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-		// Start every 30 seconds
-		alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 30*1000, pintent); 
-		
 	}
 
 	private void setSavedValues() {
@@ -136,20 +116,27 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
-//	private void initService() {
-//
-//		Intent i = new Intent(this, UpdateService.class);
-//
-//		startService(i);
-//
-//		doBindService();
-//
-//	}
+	// private void initService() {
+	//
+	// Intent i = new Intent(this, UpdateService.class);
+	//
+	// startService(i);
+	//
+	// doBindService();
+	//
+	// }
 
 	@Override
 	protected void onResume() {
 		supportInvalidateOptionsMenu();
+		registerReceiver(receiver, new IntentFilter(UpdateService.NOTIFICATION));
 		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		unregisterReceiver(receiver);
 	}
 
 	@Override
@@ -178,9 +165,12 @@ public class MainActivity extends ActionBarActivity {
 
 		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
 
-	}
+		if (App.getInstance().isTokenSet()) {
+			showInfos();
+		} else {
+			hideInfos();
+		}
 
-	private void setListeners() {
 	}
 
 	@Override
@@ -189,13 +179,6 @@ public class MainActivity extends ActionBarActivity {
 		getMenuInflater().inflate(R.menu.main, menu);
 
 		itemRefresh = menu.findItem(R.id.action_refresh);
-		// itemAdd = menu.findItem(R.id.action_add_pool);
-
-		// if (App.getInstance().isTokenSet()) {
-		// itemAdd.setVisible(false);
-		// } else {
-		// itemAdd.setVisible(true);
-		// }
 
 		if (!isProgessShowing && App.getInstance().isTokenSet()) {
 			itemRefresh.setVisible(true);
@@ -209,13 +192,11 @@ public class MainActivity extends ActionBarActivity {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
 
-//			showProgress(true);
-			
 			reloadData();
-			
-			if(App.getInstance().isTokenSet()){
+
+			if (App.getInstance().isTokenSet()) {
 				showInfos();
-			}else{
+			} else {
 				hideInfos();
 			}
 			break;
@@ -255,14 +236,21 @@ public class MainActivity extends ActionBarActivity {
 				App.getInstance().resetPriceThreshold();
 				App.getInstance().resetPriceEnabled();
 
-				showProgress(true);
-				
-				if(App.getInstance().isTokenSet()){
+				if (App.getInstance().isTokenSet()) {
 					showInfos();
-				}else{
+				} else {
 					hideInfos();
 				}
-				
+
+				int interval = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("update_interval_preference", "0"));
+
+				if (interval > 0) {
+					startUpdateService(interval);
+				} else {
+					stopUpdateService();
+					reloadData();
+				}
+
 			}
 			break;
 
@@ -275,31 +263,31 @@ public class MainActivity extends ActionBarActivity {
 
 	private void reloadData() {
 
-//		showProgress(true);
+		showProgress(true);
 
-//		if (App.getInstance().isTokenSet()) {
-//			txtNoPools.setVisibility(View.INVISIBLE);
-//		}
 		// SERVICE
-		// use this to start and trigger a service
-		Intent i= new Intent(MainActivity.this, UpdateService.class);
-		// potentially add data to the intent
-		i.putExtra("KEY1", "Value to be used by the service");
-		startService(i); 
+		Intent i = new Intent(MainActivity.this, UpdateService.class);
+		startService(i);
 
-//		Message msg = new Message();
-//		msg.what = 1337;
-//		if (mIsBound) {
-//			if (mService != null) {
-//				try {
-//					mService.send(msg);
-//				} catch (RemoteException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		}
+	}
 
+	private void startUpdateService(int interval) {
+		Calendar cal = Calendar.getInstance();
+		Intent startIntent = new Intent(this, UpdateService.class);
+		PendingIntent pintent = PendingIntent.getService(this, 0, startIntent, 0);
+
+		AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		// Start every 30 seconds
+		alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), interval * 1000, pintent);
+	}
+
+	private void stopUpdateService() {
+		Intent stopIntent = new Intent(this, UpdateService.class);
+		PendingIntent pintent = PendingIntent.getService(this, 0, stopIntent, 0);
+
+		AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		// Start every 30 seconds
+		alarm.cancel(pintent);
 	}
 
 	private void showInfos() {
@@ -332,7 +320,8 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void setProfile(Profile profile) {
-//		Toast.makeText(MainActivity.this, "setProfile", Toast.LENGTH_SHORT).show();
+		// Toast.makeText(MainActivity.this, "setProfile",
+		// Toast.LENGTH_SHORT).show();
 		this.profile = profile;
 		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
 		if (pool != null) {
@@ -347,7 +336,8 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void setStats(Stats stats) {
-//		Toast.makeText(MainActivity.this, "setStats", Toast.LENGTH_SHORT).show();
+		// Toast.makeText(MainActivity.this, "setStats",
+		// Toast.LENGTH_SHORT).show();
 		this.stats = stats;
 		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
 		if (frag != null) {
@@ -362,7 +352,8 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void setPrices(PricesMtGox prices) {
-//		Toast.makeText(MainActivity.this, "setPrice", Toast.LENGTH_SHORT).show();
+		// Toast.makeText(MainActivity.this, "setPrice",
+		// Toast.LENGTH_SHORT).show();
 		this.prices = prices;
 
 		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
@@ -370,6 +361,46 @@ public class MainActivity extends ActionBarActivity {
 			((PoolFragment) frag).setPrices(prices);
 		}
 	}
-	
+
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d(getClass().getSimpleName(), "onReceive");
+			Bundle bundle = intent.getExtras();
+			if (bundle != null) {
+
+				switch (intent.getIntExtra(BROADCAST_TYPE, -1)) {
+				case BROADCAST_PRICE:
+					PricesMtGox prices = intent.getParcelableExtra(BROADCAST_DATA);
+					setPrices(prices);
+					pricesLoaded = true;
+					break;
+				case BROADCAST_STATS:
+					Stats stats = intent.getParcelableExtra(BROADCAST_DATA);
+					setStats(stats);
+					statsLoaded = true;
+					break;
+				case BROADCAST_PROFILE:
+					Profile profile = intent.getParcelableExtra(BROADCAST_DATA);
+					setProfile(profile);
+					profileLoaded = true;
+					break;
+
+				default:
+					break;
+				}
+			}
+			handleProgessIndicator();
+		}
+
+	};
+
+	private void handleProgessIndicator() {
+		if (pricesLoaded && profileLoaded && statsLoaded) {
+			showProgress(false);
+			pricesLoaded = profileLoaded = statsLoaded = false;
+		}
+	}
 
 }

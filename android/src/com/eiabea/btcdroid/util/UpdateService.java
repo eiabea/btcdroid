@@ -9,6 +9,7 @@ import android.util.Log;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
@@ -21,6 +22,8 @@ import com.eiabea.btcdroid.model.Stats;
 public class UpdateService extends Service {
 
 
+	public static final String NOTIFICATION = "com.eiabea.btcdroid.util.UpdateService";
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -103,6 +106,11 @@ public class UpdateService extends Service {
 			@Override
 			public void onResponse(PricesMtGox prices) {
 //				sendPrices(prices);
+			    Intent intent = new Intent(NOTIFICATION);
+			    intent.putExtra(MainActivity.BROADCAST_TYPE, MainActivity.BROADCAST_PRICE);
+			    intent.putExtra(MainActivity.BROADCAST_DATA, prices);
+			    sendBroadcast(intent);
+			    
 				PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("pref_prices", App.getInstance().gson.toJson(prices)).commit();
 			}
 
@@ -111,6 +119,9 @@ public class UpdateService extends Service {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 
+				Intent intent = new Intent(NOTIFICATION);
+				intent.putExtra(MainActivity.BROADCAST_TYPE, MainActivity.BROADCAST_PRICE);
+				sendBroadcast(intent);
 //				sendPrices(null);
 				// Toast.makeText(UpdateService.this,
 				// App.getResString(R.string.txt_error_loading_price,
@@ -131,6 +142,10 @@ public class UpdateService extends Service {
 			public void onResponse(Stats stats) {
 
 //				sendStats(stats);
+			    Intent intent = new Intent(NOTIFICATION);
+			    intent.putExtra(MainActivity.BROADCAST_TYPE, MainActivity.BROADCAST_STATS);
+			    intent.putExtra(MainActivity.BROADCAST_DATA, stats);
+			    sendBroadcast(intent);
 				PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("pref_stats", App.getInstance().gson.toJson(stats)).commit();
 			}
 
@@ -139,6 +154,9 @@ public class UpdateService extends Service {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 //				sendStats(null);
+				Intent intent = new Intent(NOTIFICATION);
+				intent.putExtra(MainActivity.BROADCAST_TYPE, MainActivity.BROADCAST_STATS);
+				sendBroadcast(intent);
 				Log.i(getClass().getSimpleName(), "" + App.getResString(R.string.txt_error_loading_stats, UpdateService.this));
 				// Toast.makeText(UpdateService.this,
 				// App.getResString(R.string.txt_error_loading_stats,
@@ -157,6 +175,10 @@ public class UpdateService extends Service {
 			public void onResponse(Profile profile) {
 
 //				sendProfile(profile);
+			    Intent intent = new Intent(NOTIFICATION);
+			    intent.putExtra(MainActivity.BROADCAST_TYPE, MainActivity.BROADCAST_PROFILE);
+			    intent.putExtra(MainActivity.BROADCAST_DATA, profile);
+			    sendBroadcast(intent);
 				PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("pref_profile", App.getInstance().gson.toJson(profile)).commit();
 
 			}
@@ -166,6 +188,9 @@ public class UpdateService extends Service {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 
+				Intent intent = new Intent(NOTIFICATION);
+				intent.putExtra(MainActivity.BROADCAST_TYPE, MainActivity.BROADCAST_PROFILE);
+				sendBroadcast(intent);
 //				sendProfile(null);
 				Log.i(getClass().getSimpleName(), "" + App.getResString(R.string.txt_error_loading_profile, UpdateService.this));
 				// Toast.makeText(UpdateService.this,
@@ -175,88 +200,5 @@ public class UpdateService extends Service {
 			}
 		});
 	}
-
-//	private void sendPrices(PricesMtGox prices) {
-//		for (int i = mClients.size() - 1; i >= 0; i--) {
-//			try {
-//				// Send data as a String
-//				Bundle b = new Bundle();
-//				b.putParcelable(MSG_PRICES_PARAM, prices);
-//				Message msg = Message.obtain(null, MSG_PRICES);
-//				msg.setData(b);
-//				mClients.get(i).send(msg);
-//
-//			} catch (RemoteException e) {
-//				// The client is dead. Remove it from the list; we are going
-//				// through the list from back to front so this is safe to do
-//				// inside the loop.
-//				mClients.remove(i);
-//			}
-//		}
-//
-//	}
-//
-//	private void sendStats(Stats stats) {
-//		for (int i = mClients.size() - 1; i >= 0; i--) {
-//			try {
-//				// Send data as a String
-//				Bundle b = new Bundle();
-//				b.putParcelable(MSG_STATS_PARAM, stats);
-//				Message msg = Message.obtain(null, MSG_STATS);
-//				msg.setData(b);
-//				mClients.get(i).send(msg);
-//
-//			} catch (RemoteException e) {
-//				// The client is dead. Remove it from the list; we are going
-//				// through the list from back to front so this is safe to do
-//				// inside the loop.
-//				mClients.remove(i);
-//			}
-//		}
-//
-//	}
-//
-//	private void sendProfile(Profile profile) {
-//		for (int i = mClients.size() - 1; i >= 0; i--) {
-//			try {
-//				// Send data as a String
-//				Bundle b = new Bundle();
-//				b.putParcelable(MSG_PROFILE_PARAM, profile);
-//				Message msg = Message.obtain(null, MSG_PROFILE);
-//				msg.setData(b);
-//				mClients.get(i).send(msg);
-//
-//			} catch (RemoteException e) {
-//				// The client is dead. Remove it from the list; we are going
-//				// through the list from back to front so this is safe to do
-//				// inside the loop.
-//				mClients.remove(i);
-//			}
-//		}
-//
-//	}
-
-	// private void sendMessageToUI(int intvaluetosend) {
-	// for (int i = mClients.size() - 1; i >= 0; i--) {
-	// try {
-	// // Send data as an Integer
-	// mClients.get(i).send(Message.obtain(null, MSG_SET_INT_VALUE,
-	// intvaluetosend, 0));
-	//
-	// // Send data as a String
-	// Bundle b = new Bundle();
-	// b.putString("str1", "ab" + intvaluetosend + "cd");
-	// Message msg = Message.obtain(null, MSG_SET_STRING_VALUE);
-	// msg.setData(b);
-	// mClients.get(i).send(msg);
-	//
-	// } catch (RemoteException e) {
-	// // The client is dead. Remove it from the list; we are going
-	// // through the list from back to front so this is safe to do
-	// // inside the loop.
-	// mClients.remove(i);
-	// }
-	// }
-	// }
 
 }

@@ -91,7 +91,7 @@
 
     <string-array name="update_interval_values">
         <item>0</item>
-        <item>60</item>
+        <item>1800</item>
         <item>3600</item>
         <item>10800</item>
     </string-array>
