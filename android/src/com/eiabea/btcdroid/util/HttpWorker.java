@@ -6,7 +6,6 @@ import android.util.Log;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.eiabea.btcdroid.model.PricesBitstamp;
 import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
@@ -72,17 +71,6 @@ public class HttpWorker {
 
 		HttpWorker.mQueue.add(new GsonRequest<PricesMtGox>(url, PricesMtGox.class, null, success, error));
 
-	}
-	
-	public void getPricesBitstamp(Response.Listener<PricesBitstamp> success, Response.ErrorListener error) {
-		Log.d(getClass().getSimpleName(), "get Prices");
-		
-		String url = HttpWorker.PRICES_URL_BITSTAMP;
-		
-		System.out.println(HttpWorker.mQueue.toString());
-		
-		HttpWorker.mQueue.add(new GsonRequest<PricesBitstamp>(url, PricesBitstamp.class, null, success, error));
-		
 	}
 
 }

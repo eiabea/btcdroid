@@ -1,14 +1,12 @@
 package com.eiabea.btcdroid;
 
-import java.lang.ref.WeakReference;
+import java.util.Calendar;
 
-import android.content.ComponentName;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
@@ -17,7 +15,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +25,6 @@ import com.eiabea.btcdroid.adapter.MainViewAdapter;
 import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
-import com.eiabea.btcdroid.model.PricesBitstamp;
 import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
@@ -49,7 +45,6 @@ public class MainActivity extends ActionBarActivity {
 	private static final String STATE_PROFILE = "state_profile";
 	private static final String STATE_STATS = "state_stats";
 	private static final String STATE_PRICES = "state_prices";
-	private static final String STATE_PRICES_BITSTAMP = "state_prices_bitstamp";
 
 	private MenuItem itemRefresh;
 
@@ -68,11 +63,9 @@ public class MainActivity extends ActionBarActivity {
 	private Profile profile = null;
 	private Stats stats = null;
 	private PricesMtGox prices = null;
-	private PricesBitstamp pricesBitstamp = null;
 
 	Messenger mService = null;
 	boolean mIsBound;
-	final Messenger mMessenger = new Messenger(new IncomingHandler(this));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,15 +78,10 @@ public class MainActivity extends ActionBarActivity {
 			this.profile = savedInstanceState.getParcelable(STATE_PROFILE);
 			this.stats = savedInstanceState.getParcelable(STATE_STATS);
 			this.prices = savedInstanceState.getParcelable(STATE_PRICES);
-			this.pricesBitstamp = savedInstanceState.getParcelable(STATE_PRICES_BITSTAMP);
 		} else {
 			String pricesJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_prices", "");
 			if (pricesJson != null && pricesJson.length() > 0) {
 				this.prices = App.getInstance().gson.fromJson(pricesJson, PricesMtGox.class);
-			}
-			String pricesBitstampJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_prices_bitstamp", "");
-			if (pricesBitstampJson != null && pricesBitstampJson.length() > 0) {
-				this.pricesBitstamp = App.getInstance().gson.fromJson(pricesBitstampJson, PricesBitstamp.class);
 			}
 			String statsJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_stats", "");
 			if (statsJson != null && statsJson.length() > 0) {
@@ -112,32 +100,33 @@ public class MainActivity extends ActionBarActivity {
 
 		setSavedValues();
 
-		CheckIfServiceIsRunning();
-
-		initService();
-		
 		if(App.getInstance().isTokenSet()){
 			showInfos();
 		}else{
 			hideInfos();
 		}
+		
+		// SERVICE
+		// use this to start and trigger a service
+		Intent i= new Intent(MainActivity.this, UpdateService.class);
+		// potentially add data to the intent
+		i.putExtra("KEY1", "Value to be used by the service");
+		startService(i); 
 
-	}
+		Calendar cal = Calendar.getInstance();
 
-	private void CheckIfServiceIsRunning() {
-		// If the service is running when the activity starts, we want to
-		// automatically bind to it.
-		if (UpdateService.isRunning()) {
-			doBindService();
-		}
+		Intent intent = new Intent(this, UpdateService.class);
+		PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
+
+		AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+		// Start every 30 seconds
+		alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 30*1000, pintent); 
+		
 	}
 
 	private void setSavedValues() {
 		if (this.prices != null) {
 			setPrices(this.prices);
-		}
-		if (this.pricesBitstamp != null) {
-			setPricesBitstamp(this.pricesBitstamp);
 		}
 		if (this.profile != null) {
 			setProfile(this.profile);
@@ -147,51 +136,15 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
-	private void initService() {
-
-		Intent i = new Intent(this, UpdateService.class);
-
-		startService(i);
-
-		doBindService();
-
-	}
-
-	@Override
-	protected void onDestroy() {
-		try {
-			doUnbindService();
-		} catch (Throwable t) {
-			Log.e("MainActivity", "Failed to unbind from the service", t);
-		}
-
-		super.onDestroy();
-	}
-
-	void doBindService() {
-		bindService(new Intent(this, UpdateService.class), mConnection, Context.BIND_AUTO_CREATE);
-		mIsBound = true;
-	}
-
-	void doUnbindService() {
-		if (mIsBound) {
-			// If we have received the service, and hence registered with it,
-			// then now is the time to unregister.
-			if (mService != null) {
-				try {
-					Message msg = Message.obtain(null, UpdateService.MSG_UNREGISTER_CLIENT);
-					msg.replyTo = mMessenger;
-					mService.send(msg);
-				} catch (RemoteException e) {
-					// There is nothing special we need to do if the service has
-					// crashed.
-				}
-			}
-			// Detach our existing connection.
-			unbindService(mConnection);
-			mIsBound = false;
-		}
-	}
+//	private void initService() {
+//
+//		Intent i = new Intent(this, UpdateService.class);
+//
+//		startService(i);
+//
+//		doBindService();
+//
+//	}
 
 	@Override
 	protected void onResume() {
@@ -205,7 +158,6 @@ public class MainActivity extends ActionBarActivity {
 		savedInstanceState.putParcelable(STATE_PROFILE, this.profile);
 		savedInstanceState.putParcelable(STATE_STATS, this.stats);
 		savedInstanceState.putParcelable(STATE_PRICES, this.prices);
-		savedInstanceState.putParcelable(STATE_PRICES_BITSTAMP, this.pricesBitstamp);
 
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);
@@ -256,14 +208,10 @@ public class MainActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
-			doUnbindService();
 
-			Intent i = new Intent(this, UpdateService.class);
-			stopService(i);
-
-			initService();
+//			showProgress(true);
 			
-			showProgress(true);
+			reloadData();
 			
 			if(App.getInstance().isTokenSet()){
 				showInfos();
@@ -307,13 +255,6 @@ public class MainActivity extends ActionBarActivity {
 				App.getInstance().resetPriceThreshold();
 				App.getInstance().resetPriceEnabled();
 
-				doUnbindService();
-
-				Intent i = new Intent(this, UpdateService.class);
-				stopService(i);
-
-				initService();
-				
 				showProgress(true);
 				
 				if(App.getInstance().isTokenSet()){
@@ -334,24 +275,30 @@ public class MainActivity extends ActionBarActivity {
 
 	private void reloadData() {
 
-		showProgress(true);
+//		showProgress(true);
 
 //		if (App.getInstance().isTokenSet()) {
 //			txtNoPools.setVisibility(View.INVISIBLE);
 //		}
+		// SERVICE
+		// use this to start and trigger a service
+		Intent i= new Intent(MainActivity.this, UpdateService.class);
+		// potentially add data to the intent
+		i.putExtra("KEY1", "Value to be used by the service");
+		startService(i); 
 
-		Message msg = new Message();
-		msg.what = 1337;
-		if (mIsBound) {
-			if (mService != null) {
-				try {
-					mService.send(msg);
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+//		Message msg = new Message();
+//		msg.what = 1337;
+//		if (mIsBound) {
+//			if (mService != null) {
+//				try {
+//					mService.send(msg);
+//				} catch (RemoteException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		}
 
 	}
 
@@ -424,77 +371,5 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 	
-	public void setPricesBitstamp(PricesBitstamp pricesBitstamp) {
-//		Toast.makeText(MainActivity.this, "setPrice", Toast.LENGTH_SHORT).show();
-		this.pricesBitstamp = pricesBitstamp;
-		
-		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
-		if (frag != null) {
-			((PoolFragment) frag).setPricesBitstamp(pricesBitstamp);
-		}
-	}
-
-	static class IncomingHandler extends Handler {
-		private final WeakReference<MainActivity> mLink;
-
-		IncomingHandler(MainActivity service) {
-			mLink = new WeakReference<MainActivity>(service);
-		}
-
-		@Override
-		public void handleMessage(Message msg) {
-			MainActivity activity = mLink.get();
-			if (activity != null) {
-				switch (msg.what) {
-				case UpdateService.MSG_PRICES:
-					activity.pricesLoaded = true;
-					activity.setPrices((PricesMtGox) msg.getData().getParcelable(UpdateService.MSG_PRICES_PARAM));
-					break;
-				case UpdateService.MSG_PRICES_BITSTAMP:
-					activity.pricesLoaded = true;
-					activity.setPricesBitstamp((PricesBitstamp) msg.getData().getParcelable(UpdateService.MSG_PRICES_PARAM));
-					break;
-				case UpdateService.MSG_STATS:
-					activity.statsLoaded = true;
-					activity.setStats((Stats) msg.getData().getParcelable(UpdateService.MSG_STATS_PARAM));
-					break;
-				case UpdateService.MSG_PROFILE:
-					activity.profileLoaded = true;
-					activity.setProfile((Profile) msg.getData().getParcelable(UpdateService.MSG_PROFILE_PARAM));
-					break;
-				default:
-					super.handleMessage(msg);
-				}
-				if(activity.pricesLoaded == true && activity.statsLoaded == true && activity.profileLoaded == true){
-					activity.showProgress(false);
-					activity.pricesLoaded = false;
-					activity.statsLoaded = false;
-					activity.profileLoaded = false;
-				}
-			}
-		}
-	}
-
-	private ServiceConnection mConnection = new ServiceConnection() {
-		public void onServiceConnected(ComponentName className, IBinder service) {
-			mService = new Messenger(service);
-			Log.d("SERVICE", "onAttach");
-			try {
-				Message msg = Message.obtain(null, UpdateService.MSG_REGISTER_CLIENT);
-				msg.replyTo = mMessenger;
-				mService.send(msg);
-			} catch (RemoteException e) {
-				// In this case the service has crashed before we could even do
-				// anything with it
-			}
-		}
-
-		public void onServiceDisconnected(ComponentName className) {
-			// This is called when the connection with the service has been
-			// unexpectedly disconnected - process crashed.
-			mService = null;
-			Log.d("SERVICE", "disconnected");
-		}
-	};
 
 }
