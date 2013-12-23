@@ -1,7 +1,5 @@
 package com.eiabea.btcdroid;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,11 +9,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -26,20 +22,18 @@ public class ParticipantsActivity extends ActionBarActivity {
 
 	private ImageView imgQr;
 
-//	private LinearLayout llParticipantsHolder;
 	private RelativeLayout rlQrCodeHolder;
 
-	private ClipboardManager clipboard;
+//	private ClipboardManager clipboard;
 
-	private TextView txtZanglAddress;
-	private Button btnZanglAddress;
+	private LinearLayout llDonationAddress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_participants);
 
-		clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+//		clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
 		initUi();
 
@@ -52,29 +46,19 @@ public class ParticipantsActivity extends ActionBarActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
+		
+		getSupportActionBar().setSubtitle(R.string.action_participants);
 
-//		llParticipantsHolder = (LinearLayout) findViewById(R.id.ll_participants_holder);
 		rlQrCodeHolder = (RelativeLayout) findViewById(R.id.rl_qr_code_holder);
 
-		txtZanglAddress = (TextView) findViewById(R.id.txt_zangl_address);
-		btnZanglAddress = (Button) findViewById(R.id.btn_zangl_address);
+		llDonationAddress = (LinearLayout) findViewById(R.id.ll_donation_address);
 
 		imgQr = (ImageView) findViewById(R.id.img_qr_code);
 
 	}
 
 	private void setListeners() {
-		txtZanglAddress.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				ClipData clip = ClipData.newPlainText("zanglDonation", txtZanglAddress.getText().toString());
-				clipboard.setPrimaryClip(clip);
-				Toast.makeText(ParticipantsActivity.this, "Address copied to Clipboard", Toast.LENGTH_SHORT).show();
-
-			}
-		});
-		btnZanglAddress.setOnClickListener(new OnClickListener() {
+		llDonationAddress.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -82,7 +66,7 @@ public class ParticipantsActivity extends ActionBarActivity {
 				showQr(true);
 
 				LoadQrCode task = new LoadQrCode();
-				task.execute(new String[] { txtZanglAddress.getText().toString() });
+				task.execute(new String[] { "14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1" });
 			}
 		});
 

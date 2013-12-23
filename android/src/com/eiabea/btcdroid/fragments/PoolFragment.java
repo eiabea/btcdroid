@@ -47,12 +47,12 @@ public class PoolFragment extends Fragment {
 			txtAverageDuration, txtLuck24h, txtLuck7d, txtLuck30d;
 	private RatingBar ratRating;
 
-	public static PoolFragment create(int pageNumber, Profile profile, Stats stats, PricesMtGox prices) {
+	public static PoolFragment create(int pageNumber) {
 		PoolFragment fragment = new PoolFragment();
 		Bundle b = new Bundle();
-		b.putParcelable("profile", profile);
-		b.putParcelable("stats", stats);
-		b.putParcelable("prices", prices);
+//		b.putParcelable("profile", profile);
+//		b.putParcelable("stats", stats);
+//		b.putParcelable("prices", prices);
 		fragment.setArguments(b);
 		return fragment;
 	}
@@ -68,9 +68,9 @@ public class PoolFragment extends Fragment {
 
 		initUi(inflater, rootView);
 
-		this.profile = getArguments().getParcelable("profile");
-		this.stats = getArguments().getParcelable("stats");
-		this.prices = getArguments().getParcelable("prices");
+//		this.profile = getArguments().getParcelable("profile");
+//		this.stats = getArguments().getParcelable("stats");
+//		this.prices = getArguments().getParcelable("prices");
 
 		if (profile != null) {
 			setProfile(profile);
@@ -107,32 +107,6 @@ public class PoolFragment extends Fragment {
 		txtLuck24h = (TextView) rootView.findViewById(R.id.txt_main_info_luck_24h);
 		txtLuck7d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_7d);
 		txtLuck30d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_30d);
-
-//		final ViewTreeObserver observer = llReferenceWidth.getViewTreeObserver();
-//		observer.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-//
-//			@Override
-//			public void onGlobalLayout() {
-//				int referenceWidth = llReferenceWidth.getWidth();
-//
-//				LinearLayout.LayoutParams leftParams = new LinearLayout.LayoutParams(referenceWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
-//				leftParams.setMargins(0, 0, App.getDipsFromPixel(3, getActivity()), 0);
-//
-//				LinearLayout.LayoutParams rightParams = new LinearLayout.LayoutParams(referenceWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
-//				rightParams.setMargins(App.getDipsFromPixel(3, getActivity()), 0, 0, 0);
-//
-//				llHashrateLeft.setLayoutParams(leftParams);
-//				llHashrateRight.setLayoutParams(rightParams);
-//
-//				llReferenceWidth.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-//				if (Build.VERSION.SDK_INT >= 16) {
-//					llReferenceWidth.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//				}
-//
-//			}
-//
-//		});
-
 	}
 
 	private void setLuck(TextView txt, float current) {

@@ -1,21 +1,11 @@
 package com.eiabea.btcdroid;
 
-import java.util.Calendar;
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Messenger;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,17 +20,12 @@ import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.util.App;
-import com.eiabea.btcdroid.util.UpdateService;
+import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements
+		HttpWorkerInterface {
 
 	private static final int INTENT_PREF = 0;
-
-	public static final int BROADCAST_PRICE = 10;
-	public static final int BROADCAST_STATS = 11;
-	public static final int BROADCAST_PROFILE = 12;
-	public static final String BROADCAST_TYPE = "type";
-	public static final String BROADCAST_DATA = "data";
 
 	public static final int FRAGMENT_POOL = 0;
 	public static final int FRAGMENT_WORKER = 1;
@@ -68,39 +53,37 @@ public class MainActivity extends ActionBarActivity {
 	private Stats stats = null;
 	private PricesMtGox prices = null;
 
-	Messenger mService = null;
-	boolean mIsBound;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		initUi();
+
 		if (savedInstanceState != null) {
 			// Restore value of members from saved state
 			this.profile = savedInstanceState.getParcelable(STATE_PROFILE);
 			this.stats = savedInstanceState.getParcelable(STATE_STATS);
 			this.prices = savedInstanceState.getParcelable(STATE_PRICES);
+			
+			setSavedValues();
 		} else {
-			String pricesJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_prices", "");
-			if (pricesJson != null && pricesJson.length() > 0) {
-				this.prices = App.getInstance().gson.fromJson(pricesJson, PricesMtGox.class);
-			}
-			String statsJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_stats", "");
-			if (statsJson != null && statsJson.length() > 0) {
-				this.stats = App.getInstance().gson.fromJson(statsJson, Stats.class);
-			}
-			String profileJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_profile", "");
-			if (profileJson != null && profileJson.length() > 0) {
-				this.profile = App.getInstance().gson.fromJson(profileJson, Profile.class);
-			}
+//			String pricesJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_prices", "");
+//			if (pricesJson != null && pricesJson.length() > 0) {
+//				this.prices = App.getInstance().gson.fromJson(pricesJson, PricesMtGox.class);
+//			}
+//			String statsJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_stats", "");
+//			if (statsJson != null && statsJson.length() > 0) {
+//				this.stats = App.getInstance().gson.fromJson(statsJson, Stats.class);
+//			}
+//			String profileJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_profile", "");
+//			if (profileJson != null && profileJson.length() > 0) {
+//				this.profile = App.getInstance().gson.fromJson(profileJson, Profile.class);
+//			}
+			reloadData();
 
 		}
-
-		initUi();
-
-		setSavedValues();
 
 	}
 
@@ -116,27 +99,10 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
-	// private void initService() {
-	//
-	// Intent i = new Intent(this, UpdateService.class);
-	//
-	// startService(i);
-	//
-	// doBindService();
-	//
-	// }
-
 	@Override
 	protected void onResume() {
 		supportInvalidateOptionsMenu();
-		registerReceiver(receiver, new IntentFilter(UpdateService.NOTIFICATION));
 		super.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		unregisterReceiver(receiver);
 	}
 
 	@Override
@@ -194,21 +160,15 @@ public class MainActivity extends ActionBarActivity {
 
 			reloadData();
 
-			if (App.getInstance().isTokenSet()) {
-				showInfos();
-			} else {
-				hideInfos();
-			}
 			break;
 
 		case R.id.action_settings:
 			startActivityForResult(new Intent(this, PrefsActivity.class), INTENT_PREF);
 			break;
 
-		// case R.id.action_participants:
-		// startActivityForResult(new Intent(this, ParticipantsActivity.class),
-		// INTENT_PREF);
-		// break;
+		case R.id.action_participants:
+			startActivityForResult(new Intent(this, ParticipantsActivity.class), INTENT_PREF);
+			break;
 
 		case R.id.action_email:
 			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -236,21 +196,7 @@ public class MainActivity extends ActionBarActivity {
 				App.getInstance().resetPriceThreshold();
 				App.getInstance().resetPriceEnabled();
 
-				if (App.getInstance().isTokenSet()) {
-					showInfos();
-				} else {
-					hideInfos();
-				}
-
-				int interval = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("update_interval_preference", "0"));
-
-				if (interval > 0) {
-					startUpdateService(interval);
-				} else {
-					stopUpdateService();
-					reloadData();
-				}
-
+				reloadData();
 			}
 			break;
 
@@ -263,31 +209,15 @@ public class MainActivity extends ActionBarActivity {
 
 	private void reloadData() {
 
-		showProgress(true);
+		if (App.getInstance().isTokenSet()) {
+			App.getInstance().httpWorker.setHttpWorkerInterface(this);
+			showInfos();
+			showProgress(true);
+			App.getInstance().httpWorker.reload();
+		} else {
+			hideInfos();
+		}
 
-		// SERVICE
-		Intent i = new Intent(MainActivity.this, UpdateService.class);
-		startService(i);
-
-	}
-
-	private void startUpdateService(int interval) {
-		Calendar cal = Calendar.getInstance();
-		Intent startIntent = new Intent(this, UpdateService.class);
-		PendingIntent pintent = PendingIntent.getService(this, 0, startIntent, 0);
-
-		AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		// Start every 30 seconds
-		alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), interval * 1000, pintent);
-	}
-
-	private void stopUpdateService() {
-		Intent stopIntent = new Intent(this, UpdateService.class);
-		PendingIntent pintent = PendingIntent.getService(this, 0, stopIntent, 0);
-
-		AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		// Start every 30 seconds
-		alarm.cancel(pintent);
 	}
 
 	private void showInfos() {
@@ -362,45 +292,33 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
-	private BroadcastReceiver receiver = new BroadcastReceiver() {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Log.d(getClass().getSimpleName(), "onReceive");
-			Bundle bundle = intent.getExtras();
-			if (bundle != null) {
-
-				switch (intent.getIntExtra(BROADCAST_TYPE, -1)) {
-				case BROADCAST_PRICE:
-					PricesMtGox prices = intent.getParcelableExtra(BROADCAST_DATA);
-					setPrices(prices);
-					pricesLoaded = true;
-					break;
-				case BROADCAST_STATS:
-					Stats stats = intent.getParcelableExtra(BROADCAST_DATA);
-					setStats(stats);
-					statsLoaded = true;
-					break;
-				case BROADCAST_PROFILE:
-					Profile profile = intent.getParcelableExtra(BROADCAST_DATA);
-					setProfile(profile);
-					profileLoaded = true;
-					break;
-
-				default:
-					break;
-				}
-			}
-			handleProgessIndicator();
-		}
-
-	};
-
 	private void handleProgessIndicator() {
 		if (pricesLoaded && profileLoaded && statsLoaded) {
 			showProgress(false);
 			pricesLoaded = profileLoaded = statsLoaded = false;
+			// profileLoaded = false;
 		}
+	}
+
+	@Override
+	public void onProfileLoaded(Profile profile) {
+		profileLoaded = true;
+		setProfile(profile);
+		handleProgessIndicator();
+	}
+
+	@Override
+	public void onStatsLoaded(Stats stats) {
+		statsLoaded = true;
+		setStats(stats);
+		handleProgessIndicator();
+	}
+
+	@Override
+	public void onPricesLoaded(PricesMtGox prices) {
+		pricesLoaded = true;
+		setPrices(prices);
+		handleProgessIndicator();
 	}
 
 }
