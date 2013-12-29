@@ -13,7 +13,7 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setRetainInstance(true);
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
 

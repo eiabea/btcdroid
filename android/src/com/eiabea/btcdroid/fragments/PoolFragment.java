@@ -37,8 +37,7 @@ public class PoolFragment extends Fragment {
 
 	private SharedPreferences pref;
 
-	private LinearLayout llPriceHolder /*, llReferenceWidth, llHashrateLeft,
-			llHashrateRight */;
+	private LinearLayout llPriceHolder;
 
 	private TextView txtEstimatedReward, txtConfirmedReward, txtTotalReward,
 			txtCurrentValue, txtTotalHashrate, txtAverageHashrate,
@@ -49,9 +48,6 @@ public class PoolFragment extends Fragment {
 	public static PoolFragment create(int pageNumber) {
 		PoolFragment fragment = new PoolFragment();
 		Bundle b = new Bundle();
-//		b.putParcelable("profile", profile);
-//		b.putParcelable("stats", stats);
-//		b.putParcelable("prices", prices);
 		fragment.setArguments(b);
 		return fragment;
 	}
@@ -59,17 +55,13 @@ public class PoolFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.i(getClass().getSimpleName(), "onCreateView()");
-
+		setRetainInstance(true);
 		// Inflate the layout containing a title and body text.
 		rootView = (ViewGroup) inflater.inflate(R.layout.fragment_pool, null);
 
 		pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 		initUi(inflater, rootView);
-
-//		this.profile = getArguments().getParcelable("profile");
-//		this.stats = getArguments().getParcelable("stats");
-//		this.prices = getArguments().getParcelable("prices");
 
 		if (profile != null) {
 			setProfile(profile);
@@ -88,9 +80,6 @@ public class PoolFragment extends Fragment {
 
 	@SuppressLint("NewApi")
 	private void initUi(LayoutInflater inflater, ViewGroup rootView) {
-//		llReferenceWidth = (LinearLayout) rootView.findViewById(R.id.ll_reference_width);
-//		llHashrateLeft = (LinearLayout) rootView.findViewById(R.id.ll_pool_hash_holder_left);
-//		llHashrateRight = (LinearLayout) rootView.findViewById(R.id.ll_pool_hash_holder_right);
 		llPriceHolder = (LinearLayout) rootView.findViewById(R.id.ll_main_info_price_holder);
 		txtCurrentValue = (TextView) rootView.findViewById(R.id.txt_main_info_current_value);
 		txtEstimatedReward = (TextView) rootView.findViewById(R.id.txt_main_info_estimated_reward);
@@ -323,7 +312,7 @@ public class PoolFragment extends Fragment {
 			float cdf = Float.valueOf(stats.getShares_cdf());
 			System.out.println(cdf);
 			float estimated = (duration.getTime() / (cdf / 100));
-
+			
 			txtEstimatedDuration.setText(App.dateDurationFormat.format(new Date((long) estimated)));
 		}
 
@@ -339,16 +328,8 @@ public class PoolFragment extends Fragment {
 
 	private void fillUpPrices() {
 
-//		GenericPrice currentPrice = App.parsePrices(price.getValueFloat());
-
 		setPrice(txtCurrentValue, price);
 
 	}
-	
-	// public void updateCurrentTotalHashrate(int hashrate) {
-	// if (txtTotalHashrate != null) {
-	// txtTotalHashrate.setText(App.formatHashRate(hashrate));
-	// }
-	// }
 
 }

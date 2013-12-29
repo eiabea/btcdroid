@@ -42,7 +42,7 @@ public class WorkerFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.i(getClass().getSimpleName(), "onCreateView()");
-
+		setRetainInstance(true);
 		// Inflate the layout containing a title and body text.
 		rootView = (ViewGroup) inflater.inflate(R.layout.fragment_worker, null);
 
