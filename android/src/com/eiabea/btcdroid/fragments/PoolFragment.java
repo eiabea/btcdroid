@@ -21,8 +21,7 @@ import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
-import com.eiabea.btcdroid.model.Price;
-import com.eiabea.btcdroid.model.PricesMtGox;
+import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
@@ -34,7 +33,7 @@ public class PoolFragment extends Fragment {
 
 	private Profile profile;
 	private Stats stats;
-	private PricesMtGox prices;
+	private GenericPrice price;
 
 	private SharedPreferences pref;
 
@@ -80,8 +79,8 @@ public class PoolFragment extends Fragment {
 			setStats(stats);
 		}
 
-		if (prices != null) {
-			setPrices(prices);
+		if (price != null) {
+			setPrices(price);
 		}
 
 		return rootView;
@@ -148,10 +147,10 @@ public class PoolFragment extends Fragment {
 		}
 	}
 
-	private void setPrice(TextView txt, Price current) {
+	private void setPrice(TextView txt, GenericPrice current) {
 		if (current != null) {
 			float lastPriceFloat = pref.getFloat("txt_" + txt.getId() + "_value", 0f);
-			float currentPriceFloat = Float.parseFloat(current.getValue());
+			float currentPriceFloat = current.getValueFloat();
 
 			int minuteThreshold = App.getInstance().getPriceThreshold();
 			long threshold = minuteThreshold * 60 * 1000;
@@ -180,7 +179,7 @@ public class PoolFragment extends Fragment {
 				Log.d(getClass().getSimpleName(), "set last price to: " + currentPriceFloat);
 			}
 
-			txtCurrentValue.setText(current.getDisplay_short());
+			txtCurrentValue.setText(App.formatPrice(current.getValueFloat()));
 		}
 	}
 
@@ -253,9 +252,9 @@ public class PoolFragment extends Fragment {
 
 	}
 
-	public void setPrices(PricesMtGox prices) {
-		this.prices = prices;
-		if (txtCurrentValue != null && this.prices != null) {
+	public void setPrices(GenericPrice price) {
+		this.price = price;
+		if (txtCurrentValue != null && this.price != null) {
 			fillUpPrices();
 		}
 
@@ -340,9 +339,9 @@ public class PoolFragment extends Fragment {
 
 	private void fillUpPrices() {
 
-		Price currentPrice = App.parsePrices(prices.getData()).getLastPrice();
+//		GenericPrice currentPrice = App.parsePrices(price.getValueFloat());
 
-		setPrice(txtCurrentValue, currentPrice);
+		setPrice(txtCurrentValue, price);
 
 	}
 	

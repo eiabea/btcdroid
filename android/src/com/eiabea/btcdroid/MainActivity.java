@@ -16,7 +16,7 @@ import com.eiabea.btcdroid.adapter.MainViewAdapter;
 import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
-import com.eiabea.btcdroid.model.PricesMtGox;
+import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.util.App;
@@ -51,7 +51,7 @@ public class MainActivity extends ActionBarActivity implements
 
 	private Profile profile = null;
 	private Stats stats = null;
-	private PricesMtGox prices = null;
+	private GenericPrice price = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class MainActivity extends ActionBarActivity implements
 			// Restore value of members from saved state
 			this.profile = savedInstanceState.getParcelable(STATE_PROFILE);
 			this.stats = savedInstanceState.getParcelable(STATE_STATS);
-			this.prices = savedInstanceState.getParcelable(STATE_PRICES);
+			this.price = savedInstanceState.getParcelable(STATE_PRICES);
 			
 			setSavedValues();
 		} else {
@@ -88,8 +88,8 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	private void setSavedValues() {
-		if (this.prices != null) {
-			setPrices(this.prices);
+		if (this.price != null) {
+			setPrices(this.price);
 		}
 		if (this.profile != null) {
 			setProfile(this.profile);
@@ -110,7 +110,7 @@ public class MainActivity extends ActionBarActivity implements
 		// Save the user's current game state
 		savedInstanceState.putParcelable(STATE_PROFILE, this.profile);
 		savedInstanceState.putParcelable(STATE_STATS, this.stats);
-		savedInstanceState.putParcelable(STATE_PRICES, this.prices);
+		savedInstanceState.putParcelable(STATE_PRICES, this.price);
 
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);
@@ -126,7 +126,7 @@ public class MainActivity extends ActionBarActivity implements
 		viewPager = (ViewPager) findViewById(R.id.vp_main);
 		viewPager.setOffscreenPageLimit(3);
 
-		adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.prices);
+		adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price);
 		viewPager.setAdapter(adapter);
 
 		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
@@ -195,7 +195,7 @@ public class MainActivity extends ActionBarActivity implements
 				App.getInstance().resetThreshold();
 				App.getInstance().resetPriceThreshold();
 				App.getInstance().resetPriceEnabled();
-
+				
 				reloadData();
 			}
 			break;
@@ -281,14 +281,14 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
-	public void setPrices(PricesMtGox prices) {
+	public void setPrices(GenericPrice price) {
 		// Toast.makeText(MainActivity.this, "setPrice",
 		// Toast.LENGTH_SHORT).show();
-		this.prices = prices;
+		this.price = price;
 
 		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
 		if (frag != null) {
-			((PoolFragment) frag).setPrices(prices);
+			((PoolFragment) frag).setPrices(price);
 		}
 	}
 
@@ -315,9 +315,9 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	@Override
-	public void onPricesLoaded(PricesMtGox prices) {
+	public void onPricesLoaded(GenericPrice price) {
 		pricesLoaded = true;
-		setPrices(prices);
+		setPrices(price);
 		handleProgessIndicator();
 	}
 

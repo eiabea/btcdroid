@@ -35,13 +35,22 @@
             android:summary="Set the Threshold for reloading lucks"
             android:title="Luck Threshold" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Misc" >
+    <PreferenceCategory android:title="Price" >
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="price_enabled"
             android:summary="Show the Price of 1 BTC (Bitstamp)"
             android:title="Show Price" />
-
+        
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/price_source"
+            android:entryValues="@array/price_source_values"
+            android:key="price_source_preference"
+            android:summary="Where to get the Priceinformation"
+            android:title="Price Source" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Style" >
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/btc_style"

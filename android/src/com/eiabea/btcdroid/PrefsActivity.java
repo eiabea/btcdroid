@@ -22,7 +22,7 @@ public class PrefsActivity extends ActionBarActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		
-		getSupportActionBar().setTitle(R.string.txt_settings);
+		getSupportActionBar().setSubtitle(R.string.txt_settings);
 		
 	}
 

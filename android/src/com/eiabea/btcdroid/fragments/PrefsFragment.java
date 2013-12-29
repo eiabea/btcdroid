@@ -16,6 +16,8 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
+
+        setPricesSource();
     }
     
     @Override
@@ -33,8 +35,16 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		
+		setPricesSource();
+		
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra("key", key);
 		((PrefsActivity)getActivity()).setResultIntent(resultIntent);
+	}
+	
+	private void setPricesSource(){
+		boolean priceEnabled = getPreferenceManager().getSharedPreferences().getBoolean("price_enabled", false);
+		getPreferenceScreen().findPreference("price_source_preference").setEnabled(priceEnabled);
 	}
 }

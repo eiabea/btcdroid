@@ -18,6 +18,8 @@
     <string name="mbtc_short">m</string>
     <string name="ubtc_short">µ</string>
     <string name="percent_sign">%</string>
+    <string name="BitStamp">BitStamp</string>
+    <string name="MtGox">MtGox</string>
 
     <!-- MainActivity -->
     <string name="txt_no_token">No Token found, please set one</string>
@@ -70,6 +72,16 @@
     <string name="txt_confirmed">none</string>
 
     <!-- PreferencesFragment -->
+    <string-array name="price_source">
+        <item>@string/BitStamp</item>
+        <item>@string/MtGox</item>
+    </string-array>
+
+    <string-array name="price_source_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
     <string-array name="btc_style">
         <item>@string/btc</item>
         <item>@string/mbtc</item>

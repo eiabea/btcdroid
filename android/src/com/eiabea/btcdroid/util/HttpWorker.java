@@ -1,6 +1,7 @@
 package com.eiabea.btcdroid.util;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
@@ -9,14 +10,18 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.eiabea.btcdroid.model.GenericPrice;
+import com.eiabea.btcdroid.model.PricesBitStamp;
 import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 
 public class HttpWorker {
+	public static final int PRICE_SOURCE_BITSTAMP = 0;
+	public static final int PRICE_SOURCE_MTGOX = 1;
 
 	public static final String BASEURL = "https://mining.bitcoin.cz/";
-	public static final String PRICES_URL = "http://data.mtgox.com/api/2/BTCUSD/money/ticker_fast";
+	public static final String PRICES_URL_MTGOX = "http://data.mtgox.com/api/2/BTCUSD/money/ticker_fast";
 	public static final String PRICES_URL_BITSTAMP = "https://www.bitstamp.net/api/ticker/";
 
 	public static final String STATS_URL = BASEURL + "stats/json/";
@@ -69,13 +74,24 @@ public class HttpWorker {
 	}
 
 	public void getPricesMtGox(Response.Listener<PricesMtGox> success, Response.ErrorListener error) {
-		Log.d(getClass().getSimpleName(), "get Prices");
+		Log.d(getClass().getSimpleName(), "get Prices MtGox");
 
-		String url = HttpWorker.PRICES_URL;
+		String url = HttpWorker.PRICES_URL_MTGOX;
 
 		System.out.println(HttpWorker.mQueue.toString());
 
 		HttpWorker.mQueue.add(new GsonRequest<PricesMtGox>(url, PricesMtGox.class, null, success, error));
+
+	}
+
+	public void getPricesBitStamp(Response.Listener<PricesBitStamp> success, Response.ErrorListener error) {
+		Log.d(getClass().getSimpleName(), "get Prices BitStamp");
+
+		String url = HttpWorker.PRICES_URL_BITSTAMP;
+
+		System.out.println(HttpWorker.mQueue.toString());
+
+		HttpWorker.mQueue.add(new GsonRequest<PricesBitStamp>(url, PricesBitStamp.class, null, success, error));
 
 	}
 
@@ -84,7 +100,11 @@ public class HttpWorker {
 
 		getStats();
 
-		getPrices();
+		if (App.isPriceEnabled) {
+			getPrices();
+		}else{
+			httpWorkerInterface.onPricesLoaded(null);
+		}
 	}
 
 	private void getProfile() {
@@ -113,22 +133,59 @@ public class HttpWorker {
 
 		Log.d(getClass().getSimpleName(), "Getting Prices");
 
-		App.getInstance().httpWorker.getPricesMtGox(new Listener<PricesMtGox>() {
+		int source = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString("price_source_preference", "0"));
 
-			@Override
-			public void onResponse(PricesMtGox prices) {
-				httpWorkerInterface.onPricesLoaded(prices);
-			}
+		switch (source) {
+		case PRICE_SOURCE_BITSTAMP:
+			getPricesBitStamp(new Listener<PricesBitStamp>() {
 
-		}, new ErrorListener() {
+				@Override
+				public void onResponse(PricesBitStamp prices) {
 
-			@Override
-			public void onErrorResponse(VolleyError error) {
+					GenericPrice generic = new GenericPrice();
 
-				httpWorkerInterface.onPricesLoaded(null);
+					generic.setValueFloat(Float.parseFloat(prices.getLast()));
 
-			}
-		});
+					httpWorkerInterface.onPricesLoaded(generic);
+				}
+
+			}, new ErrorListener() {
+
+				@Override
+				public void onErrorResponse(VolleyError error) {
+
+					httpWorkerInterface.onPricesLoaded(null);
+
+				}
+			});
+			break;
+		case PRICE_SOURCE_MTGOX:
+
+			getPricesMtGox(new Listener<PricesMtGox>() {
+
+				@Override
+				public void onResponse(PricesMtGox prices) {
+
+					// Write jsonData to PricesMtGox Object
+					prices = App.parsePrices(prices.getData());
+
+					httpWorkerInterface.onPricesLoaded(prices.getLastPrice());
+				}
+
+			}, new ErrorListener() {
+
+				@Override
+				public void onErrorResponse(VolleyError error) {
+
+					httpWorkerInterface.onPricesLoaded(null);
+
+				}
+			});
+			break;
+
+		default:
+			break;
+		}
 
 	}
 
@@ -162,7 +219,7 @@ public class HttpWorker {
 
 		public void onStatsLoaded(Stats stats);
 
-		public void onPricesLoaded(PricesMtGox prices);
+		public void onPricesLoaded(GenericPrice price);
 	};
 
 }

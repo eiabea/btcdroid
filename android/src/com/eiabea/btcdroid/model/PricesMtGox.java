@@ -11,7 +11,7 @@ public class PricesMtGox implements Parcelable {
 	// Attributes
 	private String result;
 	private JsonObject data;
-	private Price lastPrice;
+	private GenericPrice lastPrice;
 	
 	
 	// Standardconstructor
@@ -61,11 +61,11 @@ public class PricesMtGox implements Parcelable {
 		this.data = data;
 	}
 
-	public Price getLastPrice() {
+	public GenericPrice getLastPrice() {
 		return lastPrice;
 	}
 
-	public void setLastPrice(Price lastPrice) {
+	public void setLastPrice(GenericPrice lastPrice) {
 		this.lastPrice = lastPrice;
 	}
 

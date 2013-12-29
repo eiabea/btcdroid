@@ -40,11 +40,11 @@ public class Block implements Parcelable{
 
 	@SuppressWarnings("rawtypes")
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-    	public Price createFromParcel(Parcel in) {
-    		return new Price(in);
+    	public Block createFromParcel(Parcel in) {
+    		return new Block(in);
     	}
-    	public Price[] newArray(int size) {
-        	return new Price[size];
+    	public Block[] newArray(int size) {
+        	return new Block[size];
     	}
     };
 

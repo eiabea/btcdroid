@@ -17,7 +17,7 @@ import android.preference.PreferenceManager;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
-import com.eiabea.btcdroid.model.Price;
+import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Worker;
 import com.google.gson.Gson;
@@ -146,13 +146,9 @@ public class App extends Application {
 
 				JsonObject data = current.getValue().getAsJsonObject();
 
-				Price tmpPrice = new Price();
+				GenericPrice tmpPrice = new GenericPrice();
 
-				tmpPrice.setValue(data.get("value").getAsString());
-				tmpPrice.setValue_int(data.get("value_int").getAsString());
-				tmpPrice.setDisplay(data.get("display").getAsString());
-				tmpPrice.setDisplay_short(data.get("display_short").getAsString());
-				tmpPrice.setCurrency(data.get("currency").getAsString());
+				tmpPrice.setValueFloat(Float.parseFloat(data.get("value").getAsString()));
 
 				prices.setLastPrice(tmpPrice);
 			}
@@ -215,6 +211,10 @@ public class App extends Application {
 			return String.format("%.6f", reward) + getResString(R.string.btc_short, getInstance());
 		}
 
+	}
+	
+	public static String formatPrice(float price){
+		return "$ " + String.format("%.2f", price);
 	}
 	
 	public static String getResString(int id, Context ctx){
