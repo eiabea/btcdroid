@@ -31,14 +31,14 @@
                     style="@style/style_small_card_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Manuel Zangl"
+                    android:text="@string/txt_manuel_zangl"
                     android:textColor="@color/bd_dark_grey_text" />
 
                 <TextView
                     style="@style/style_small_card_desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Developement" />
+                    android:text="@string/txt_development" />
             </LinearLayout>
 
             <FrameLayout
@@ -68,14 +68,14 @@
                     style="@style/style_small_card_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Florian Grau"
+                    android:text="@string/txt_florian_grau"
                     android:textColor="@color/bd_dark_grey_text" />
 
                 <TextView
                     style="@style/style_small_card_desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Design" />
+                    android:text="@string/txt_design" />
             </LinearLayout>
 
             <FrameLayout
@@ -106,14 +106,14 @@
                     style="@style/style_small_card_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Donations"
+                    android:text="@string/txt_donations"
                     android:textColor="@color/bd_actionbar_background" />
 
                 <TextView
                     style="@style/style_small_card_desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1" />
+                    android:text="@string/txt_donations_address" />
             </LinearLayout>
 
             <FrameLayout

@@ -44,11 +44,11 @@
     <string name="txt_estimated_reward">estimated</string>
     <string name="txt_confirmed_reward">confirmed</string>
     <string name="txt_total_reward">total</string>
-    <string name="txt_current_total_hashrate">current total</string>
-    <string name="txt_average_total_hashrate">average total</string>
+    <string name="txt_current_total_hashrate">total current</string>
+    <string name="txt_average_total_hashrate">total average</string>
     <string name="txt_round_started">started</string>
     <string name="txt_round_duration">current</string>
-    <string name="txt_round_estimated">estimated</string>
+    <string name="txt_round_estimated">worst case</string>
     <string name="txt_round_average">average</string>
     <string name="txt_luck_24h">24h</string>
     <string name="txt_luck_7d">7d</string>
@@ -67,6 +67,15 @@
 
     <!-- PrefsActivity -->
     <string name="txt_settings">Settings</string>
+
+    <!-- ParticipantsActivity -->
+    <string name="txt_manuel_zangl">Manuel Zangl</string>
+    <string name="txt_development">Development</string>
+    <string name="txt_florian_grau">Florian Grau</string>
+    <string name="txt_design">Design / Appicon</string>
+    <string name="txt_donations">Donations</string>
+    <string name="txt_donations_address">14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1</string>
+    <string name="txt_copied_to_clipboard">copied to clipboard</string>
 
     <!-- RoundsListAdapter -->
     <string name="txt_confirmed">none</string>
