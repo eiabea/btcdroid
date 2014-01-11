@@ -1,5 +1,7 @@
 package com.eiabea.btcdroid;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -24,7 +27,7 @@ public class ParticipantsActivity extends ActionBarActivity {
 
 	private RelativeLayout rlQrCodeHolder;
 
-//	private ClipboardManager clipboard;
+	private ClipboardManager clipboard;
 
 	private LinearLayout llDonationAddress;
 
@@ -33,7 +36,7 @@ public class ParticipantsActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_participants);
 
-//		clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+		clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
 		initUi();
 
@@ -66,7 +69,12 @@ public class ParticipantsActivity extends ActionBarActivity {
 				showQr(true);
 
 				LoadQrCode task = new LoadQrCode();
-				task.execute(new String[] { "14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1" });
+				String address = getString(R.string.txt_donations_address);
+				task.execute(new String[] { address });
+				
+				ClipData clipData = ClipData.newPlainText(getString(R.string.txt_donations), address);
+				clipboard.setPrimaryClip(clipData);
+				Toast.makeText(ParticipantsActivity.this, address + " " + getString(R.string.txt_copied_to_clipboard),  Toast.LENGTH_SHORT).show();
 			}
 		});
 
