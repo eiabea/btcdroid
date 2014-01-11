@@ -44,8 +44,8 @@
     <string name="txt_estimated_reward">estimated</string>
     <string name="txt_confirmed_reward">confirmed</string>
     <string name="txt_total_reward">total</string>
-    <string name="txt_current_total_hashrate">current total</string>
-    <string name="txt_average_total_hashrate">average total</string>
+    <string name="txt_current_total_hashrate">total current</string>
+    <string name="txt_average_total_hashrate">total average</string>
     <string name="txt_round_started">started</string>
     <string name="txt_round_duration">current</string>
     <string name="txt_round_estimated">worst case</string>

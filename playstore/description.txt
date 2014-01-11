@@ -2,10 +2,10 @@ Simple application which shows all relevant informations about your miners worki
 
 General information:
 
-.) Current price of 1 BTC (MtGox)
+.) Current price of 1 BTC (MtGox/BitStamp)
 .) Your confirmed reward
 .) Current hashrate of all your miners
-.) Average hashrate of last 10 rounds
+.) Average hashrate of the last 10 rounds
 .) Roundinformation
 .) Roundranking
 .) Luck
