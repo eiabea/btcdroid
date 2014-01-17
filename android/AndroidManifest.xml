@@ -19,18 +19,18 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.eiabea.btcdroid.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ParticipantsActivity">
+        <activity android:name="ParticipantsActivity" android:screenOrientation="portrait">
         </activity>
-        <activity android:name="PrefsActivity">
+        <activity android:name="PrefsActivity" android:screenOrientation="portrait">
         </activity>
-        
+        <service android:name=".service.NotificationService"></service>
     </application>
 
 </manifest>

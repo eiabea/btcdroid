@@ -81,7 +81,10 @@ public class MainActivity extends ActionBarActivity implements
 //			if (profileJson != null && profileJson.length() > 0) {
 //				this.profile = App.getInstance().gson.fromJson(profileJson, Profile.class);
 //			}
-			reloadData();
+			
+			
+			// TODO Reanable
+//			reloadData();
 
 		}
 

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -20,6 +21,7 @@ import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Worker;
+import com.eiabea.btcdroid.service.NotificationService;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -35,7 +37,7 @@ public class App extends Application {
 
 	public static boolean isPriceEnabled = true;
 	
-	private String token = "";
+	private static String token = "";
 	private int threshold = 15;
 	private int priceThreshold = 15;
 
@@ -62,6 +64,8 @@ public class App extends Application {
 		
 		me = this;
 		httpWorker = new HttpWorker(this.getApplicationContext(), token);
+		
+		startService(new Intent(getApplicationContext(), NotificationService.class));
 
 	}
 
@@ -83,9 +87,9 @@ public class App extends Application {
 	}
 	
 	public void resetToken(){
-		this.token = PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
+		App.token = PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
 		
-		setToken(this.token);
+		setToken(App.token);
 	}
 	
 
@@ -110,14 +114,14 @@ public class App extends Application {
 	}
 
 	public void setToken(String token) {
-		this.token = token;
+		App.token = token;
 
 		httpWorker = new HttpWorker(this.getApplicationContext(), token);
 		
 	}
 
-	public String getToken() {
-		return this.token;
+	public static String getToken() {
+		return token;
 	}
 
 	public boolean isTokenSet() {
