@@ -36,6 +36,7 @@ public class NotificationService extends Service implements Listener<Profile>,
 		return null;
 	}
 
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
