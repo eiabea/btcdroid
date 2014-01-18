@@ -18,6 +18,7 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
         addPreferencesFromResource(R.xml.preferences);
 
         setPricesSource();
+        setNotification();
     }
     
     @Override
@@ -37,6 +38,7 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		
 		setPricesSource();
+		setNotification();
 		
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra("key", key);
@@ -46,5 +48,14 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 	private void setPricesSource(){
 		boolean priceEnabled = getPreferenceManager().getSharedPreferences().getBoolean("price_enabled", false);
 		getPreferenceScreen().findPreference("price_source_preference").setEnabled(priceEnabled);
+	}
+	
+	private void setNotification(){
+		boolean notificationEnabled = getPreferenceManager().getSharedPreferences().getBoolean("notification_enabled", false);
+		getPreferenceScreen().findPreference("notification_hashrate").setEnabled(notificationEnabled);
+		getPreferenceScreen().findPreference("notification_interval").setEnabled(notificationEnabled);
+		getPreferenceScreen().findPreference("notification_sound").setEnabled(notificationEnabled);
+		getPreferenceScreen().findPreference("notification_vibrate").setEnabled(notificationEnabled);
+		getPreferenceScreen().findPreference("notification_led").setEnabled(notificationEnabled);
 	}
 }

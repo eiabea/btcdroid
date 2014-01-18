@@ -8,14 +8,15 @@
             android:summary="Set the Slush&apos;s Pool Token"
             android:title="API Token" />
 
-        <!-- 
+        <!--
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/update_interval"
             android:entryValues="@array/update_interval_values"
             android:key="update_interval_preference"
             android:summary="Controls how often data gets loaded"
-            android:title="Updateinterval" /> -->
+            android:title="Updateinterval" />
+        -->
     </PreferenceCategory>
     <PreferenceCategory android:title="Thresholds" >
         <EditTextPreference
@@ -41,7 +42,7 @@
             android:key="price_enabled"
             android:summary="Show the Price of 1 BTC (Bitstamp)"
             android:title="Show Price" />
-        
+
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/price_source"
@@ -58,6 +59,49 @@
             android:key="btc_style_preference"
             android:summary="Switch the style the values are formated"
             android:title="BTC Style" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Notification" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="notification_enabled"
+            android:summary="Notification if hashrate drops under a certain value"
+            android:title="Enable Notifications" />
+
+        <EditTextPreference
+            android:defaultValue="0"
+            android:dialogTitle="Hashrate (MH/s)"
+            android:enabled="true"
+            android:key="notification_hashrate"
+            android:numeric="integer"
+            android:summary="Limit for low hashrate"
+            android:title="Minimum hashrate" />
+
+        <EditTextPreference
+            android:defaultValue="60"
+            android:dialogTitle="Interval (min)"
+            android:enabled="true"
+            android:key="notification_interval"
+            android:numeric="integer"
+            android:summary="How often should the hashrate be checked"
+            android:title="Checking Interval" />
+        
+                <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="notification_sound"
+            android:summary="Play Notificationsound"
+            android:title="Sound" />
+        
+                <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="notification_vibrate"
+            android:summary="Vibrate on Notification"
+            android:title="Vibrate" />
+        
+                <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="notification_led"
+            android:summary="Flash LED on Notification"
+            android:title="LED" />
     </PreferenceCategory>
 
 </PreferenceScreen>

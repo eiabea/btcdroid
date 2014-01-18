@@ -1,16 +1,24 @@
 package com.eiabea.btcdroid;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.eiabea.btcdroid.adapter.MainViewAdapter;
 import com.eiabea.btcdroid.fragments.PoolFragment;
@@ -19,6 +27,7 @@ import com.eiabea.btcdroid.fragments.WorkerFragment;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
+import com.eiabea.btcdroid.service.NotificationService;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
 
@@ -45,7 +54,8 @@ public class MainActivity extends ActionBarActivity implements
 	private boolean profileLoaded = false;
 	private boolean pricesLoaded = false;
 
-	private TextView txtNoPools;
+	private LinearLayout llNoPools;;
+	private Button btnSetToken;
 
 	private boolean isProgessShowing = false;
 
@@ -61,30 +71,39 @@ public class MainActivity extends ActionBarActivity implements
 
 		initUi();
 
+		setListeners();
+
 		if (savedInstanceState != null) {
 			// Restore value of members from saved state
 			this.profile = savedInstanceState.getParcelable(STATE_PROFILE);
 			this.stats = savedInstanceState.getParcelable(STATE_STATS);
 			this.price = savedInstanceState.getParcelable(STATE_PRICES);
-			
+
 			setSavedValues();
 		} else {
-//			String pricesJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_prices", "");
-//			if (pricesJson != null && pricesJson.length() > 0) {
-//				this.prices = App.getInstance().gson.fromJson(pricesJson, PricesMtGox.class);
-//			}
-//			String statsJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_stats", "");
-//			if (statsJson != null && statsJson.length() > 0) {
-//				this.stats = App.getInstance().gson.fromJson(statsJson, Stats.class);
-//			}
-//			String profileJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_profile", "");
-//			if (profileJson != null && profileJson.length() > 0) {
-//				this.profile = App.getInstance().gson.fromJson(profileJson, Profile.class);
-//			}
-			
-			
-			// TODO Reanable
-//			reloadData();
+			// String pricesJson =
+			// PreferenceManager.getDefaultSharedPreferences(this).getString("pref_prices",
+			// "");
+			// if (pricesJson != null && pricesJson.length() > 0) {
+			// this.prices = App.getInstance().gson.fromJson(pricesJson,
+			// PricesMtGox.class);
+			// }
+			// String statsJson =
+			// PreferenceManager.getDefaultSharedPreferences(this).getString("pref_stats",
+			// "");
+			// if (statsJson != null && statsJson.length() > 0) {
+			// this.stats = App.getInstance().gson.fromJson(statsJson,
+			// Stats.class);
+			// }
+			// String profileJson =
+			// PreferenceManager.getDefaultSharedPreferences(this).getString("pref_profile",
+			// "");
+			// if (profileJson != null && profileJson.length() > 0) {
+			// this.profile = App.getInstance().gson.fromJson(profileJson,
+			// Profile.class);
+			// }
+
+			reloadData();
 
 		}
 
@@ -132,7 +151,8 @@ public class MainActivity extends ActionBarActivity implements
 		adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price);
 		viewPager.setAdapter(adapter);
 
-		txtNoPools = (TextView) findViewById(R.id.txt_main_no_pools);
+		llNoPools = (LinearLayout) findViewById(R.id.ll_main_no_pools);
+		btnSetToken = (Button) findViewById(R.id.txt_main_set_token);
 
 		if (App.getInstance().isTokenSet()) {
 			showInfos();
@@ -140,6 +160,37 @@ public class MainActivity extends ActionBarActivity implements
 			hideInfos();
 		}
 
+	}
+
+	private void setListeners() {
+		btnSetToken.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Set an EditText view to get user input 
+				final EditText input = new EditText(MainActivity.this);
+				new AlertDialog.Builder(MainActivity.this)
+			    .setTitle(getString(R.string.alert_set_token_title))
+			    .setMessage(getString(R.string.alert_set_token_message))
+			    .setView(input)
+			    .setPositiveButton(getString(R.string.alert_set_token_ok), new DialogInterface.OnClickListener() {
+			        public void onClick(DialogInterface dialog, int whichButton) {
+			            Editable value = input.getText(); 
+			            
+			            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+			            pref.edit().putString(App.PREF_TOKEN, value.toString()).commit();
+			            
+			            App.getInstance().resetToken();
+			            
+			            reloadData();
+			        }
+			    }).setNegativeButton(getString(R.string.alert_set_token_cancel), new DialogInterface.OnClickListener() {
+			        public void onClick(DialogInterface dialog, int whichButton) {
+			            // Do nothing.
+			        }
+			    }).show();
+			}
+		});
 	}
 
 	@Override
@@ -198,7 +249,9 @@ public class MainActivity extends ActionBarActivity implements
 				App.getInstance().resetThreshold();
 				App.getInstance().resetPriceThreshold();
 				App.getInstance().resetPriceEnabled();
-				
+
+				NotificationService.getInstance().startInterval();
+
 				reloadData();
 			}
 			break;
@@ -224,8 +277,8 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	private void showInfos() {
-		if (txtNoPools.getVisibility() == View.VISIBLE) {
-			txtNoPools.setVisibility(View.GONE);
+		if (llNoPools.getVisibility() == View.VISIBLE) {
+			llNoPools.setVisibility(View.GONE);
 		}
 		if (viewPager.getVisibility() == View.INVISIBLE) {
 			viewPager.setVisibility(View.VISIBLE);
@@ -233,8 +286,8 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	private void hideInfos() {
-		if (txtNoPools.getVisibility() == View.GONE) {
-			txtNoPools.setVisibility(View.VISIBLE);
+		if (llNoPools.getVisibility() == View.GONE) {
+			llNoPools.setVisibility(View.VISIBLE);
 		}
 		if (viewPager.getVisibility() == View.VISIBLE) {
 			viewPager.setVisibility(View.INVISIBLE);
