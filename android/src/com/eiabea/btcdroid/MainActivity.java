@@ -4,13 +4,16 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,7 +35,7 @@ import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
 
 public class MainActivity extends ActionBarActivity implements
-		HttpWorkerInterface {
+		HttpWorkerInterface, OnPageChangeListener {
 
 	private static final int INTENT_PREF = 0;
 
@@ -43,12 +46,18 @@ public class MainActivity extends ActionBarActivity implements
 	private static final String STATE_PROFILE = "state_profile";
 	private static final String STATE_STATS = "state_stats";
 	private static final String STATE_PRICES = "state_prices";
+	private static final String STATE_PROFILE_LOADED = "state_profile_loaded";
+	private static final String STATE_STATS_LOADED = "state_stats_loaded";
+	private static final String STATE_PRICES_LOADED = "state_prices_loaded";
+	private static final String STATE_CURRENT_PAGE = "state_current_page";
+	private static final String STATE_PROGRESS_SHOWING = "state_progress_showing";
 
 	private MenuItem itemRefresh;
 
 	private ViewPager viewPager;
 	private PagerTitleStrip viewPagerTitle;
 	private MainViewAdapter adapter;
+	private int currentPage = FRAGMENT_POOL;
 
 	private boolean statsLoaded = false;
 	private boolean profileLoaded = false;
@@ -73,40 +82,25 @@ public class MainActivity extends ActionBarActivity implements
 
 		setListeners();
 
-		if (savedInstanceState != null) {
-			// Restore value of members from saved state
-			this.profile = savedInstanceState.getParcelable(STATE_PROFILE);
-			this.stats = savedInstanceState.getParcelable(STATE_STATS);
-			this.price = savedInstanceState.getParcelable(STATE_PRICES);
-
-			setSavedValues();
-		} else {
-			// String pricesJson =
-			// PreferenceManager.getDefaultSharedPreferences(this).getString("pref_prices",
-			// "");
-			// if (pricesJson != null && pricesJson.length() > 0) {
-			// this.prices = App.getInstance().gson.fromJson(pricesJson,
-			// PricesMtGox.class);
-			// }
-			// String statsJson =
-			// PreferenceManager.getDefaultSharedPreferences(this).getString("pref_stats",
-			// "");
-			// if (statsJson != null && statsJson.length() > 0) {
-			// this.stats = App.getInstance().gson.fromJson(statsJson,
-			// Stats.class);
-			// }
-			// String profileJson =
-			// PreferenceManager.getDefaultSharedPreferences(this).getString("pref_profile",
-			// "");
-			// if (profileJson != null && profileJson.length() > 0) {
-			// this.profile = App.getInstance().gson.fromJson(profileJson,
-			// Profile.class);
-			// }
-
+		if (savedInstanceState == null) {
 			reloadData();
-
 		}
 
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		this.profile = savedInstanceState.getParcelable(STATE_PROFILE);
+		this.stats = savedInstanceState.getParcelable(STATE_STATS);
+		this.price = savedInstanceState.getParcelable(STATE_PRICES);
+		this.currentPage = savedInstanceState.getInt(STATE_CURRENT_PAGE);
+		this.isProgessShowing = savedInstanceState.getBoolean(STATE_PROGRESS_SHOWING);
+		this.profileLoaded = savedInstanceState.getBoolean(STATE_PROFILE_LOADED);
+		this.statsLoaded = savedInstanceState.getBoolean(STATE_STATS_LOADED);
+		this.pricesLoaded = savedInstanceState.getBoolean(STATE_PRICES_LOADED);
+
+		setSavedValues();
 	}
 
 	private void setSavedValues() {
@@ -119,6 +113,9 @@ public class MainActivity extends ActionBarActivity implements
 		if (this.stats != null) {
 			setStats(this.stats);
 		}
+
+		handleProgessIndicator();
+
 	}
 
 	@Override
@@ -129,13 +126,18 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
 		// Save the user's current game state
 		savedInstanceState.putParcelable(STATE_PROFILE, this.profile);
 		savedInstanceState.putParcelable(STATE_STATS, this.stats);
 		savedInstanceState.putParcelable(STATE_PRICES, this.price);
+		savedInstanceState.putInt(STATE_CURRENT_PAGE, this.currentPage);
+		savedInstanceState.putBoolean(STATE_PROGRESS_SHOWING, this.isProgessShowing);
+		savedInstanceState.putBoolean(STATE_PROFILE_LOADED, this.profileLoaded);
+		savedInstanceState.putBoolean(STATE_STATS_LOADED, this.statsLoaded);
+		savedInstanceState.putBoolean(STATE_PRICES_LOADED, this.pricesLoaded);
 
 		// Always call the superclass so it can save the view hierarchy state
-		super.onSaveInstanceState(savedInstanceState);
 	}
 
 	private void initUi() {
@@ -147,6 +149,8 @@ public class MainActivity extends ActionBarActivity implements
 
 		viewPager = (ViewPager) findViewById(R.id.vp_main);
 		viewPager.setOffscreenPageLimit(3);
+		viewPager.setOnPageChangeListener(this);
+		viewPager.setCurrentItem(currentPage);
 
 		adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price);
 		viewPager.setAdapter(adapter);
@@ -167,28 +171,24 @@ public class MainActivity extends ActionBarActivity implements
 
 			@Override
 			public void onClick(View v) {
-				// Set an EditText view to get user input 
+				// Set an EditText view to get user input
 				final EditText input = new EditText(MainActivity.this);
-				new AlertDialog.Builder(MainActivity.this)
-			    .setTitle(getString(R.string.alert_set_token_title))
-			    .setMessage(getString(R.string.alert_set_token_message))
-			    .setView(input)
-			    .setPositiveButton(getString(R.string.alert_set_token_ok), new DialogInterface.OnClickListener() {
-			        public void onClick(DialogInterface dialog, int whichButton) {
-			            Editable value = input.getText(); 
-			            
-			            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-			            pref.edit().putString(App.PREF_TOKEN, value.toString()).commit();
-			            
-			            App.getInstance().resetToken();
-			            
-			            reloadData();
-			        }
-			    }).setNegativeButton(getString(R.string.alert_set_token_cancel), new DialogInterface.OnClickListener() {
-			        public void onClick(DialogInterface dialog, int whichButton) {
-			            // Do nothing.
-			        }
-			    }).show();
+				new AlertDialog.Builder(MainActivity.this).setTitle(getString(R.string.alert_set_token_title)).setMessage(getString(R.string.alert_set_token_message)).setView(input).setPositiveButton(getString(R.string.alert_set_token_ok), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						Editable value = input.getText();
+
+						SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+						pref.edit().putString(App.PREF_TOKEN, value.toString()).commit();
+
+						App.getInstance().resetToken();
+
+						reloadData();
+					}
+				}).setNegativeButton(getString(R.string.alert_set_token_cancel), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						// Do nothing.
+					}
+				}).show();
 			}
 		});
 	}
@@ -202,7 +202,7 @@ public class MainActivity extends ActionBarActivity implements
 
 		if (!isProgessShowing && App.getInstance().isTokenSet()) {
 			itemRefresh.setVisible(true);
-		}
+		} 
 
 		return true;
 	}
@@ -266,9 +266,11 @@ public class MainActivity extends ActionBarActivity implements
 	private void reloadData() {
 
 		if (App.getInstance().isTokenSet()) {
+			pricesLoaded = profileLoaded = statsLoaded = false;
 			App.getInstance().httpWorker.setHttpWorkerInterface(this);
 			showInfos();
-			showProgress(true);
+			handleProgessIndicator();
+			// showProgress(true);
 			App.getInstance().httpWorker.reload();
 		} else {
 			hideInfos();
@@ -295,14 +297,16 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	private void showProgress(boolean show) {
+		
+		Log.w(getClass().getSimpleName(), "showProgress: " + show);
 
-		this.isProgessShowing = show;
+		setSupportProgressBarIndeterminateVisibility(show);
 
 		if (itemRefresh != null) {
 			itemRefresh.setVisible(!show);
 		}
-
-		setSupportProgressBarIndeterminateVisibility(show);
+		
+		this.isProgessShowing = show;
 	}
 
 	public void setProfile(Profile profile) {
@@ -349,10 +353,13 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	private void handleProgessIndicator() {
+		Log.w(getClass().getSimpleName(), "price: " + pricesLoaded);
+		Log.w(getClass().getSimpleName(), "profile: " + profileLoaded);
+		Log.w(getClass().getSimpleName(), "stats: " + statsLoaded);
 		if (pricesLoaded && profileLoaded && statsLoaded) {
 			showProgress(false);
-			pricesLoaded = profileLoaded = statsLoaded = false;
-			// profileLoaded = false;
+		} else {
+			showProgress(true);
 		}
 	}
 
@@ -377,4 +384,31 @@ public class MainActivity extends ActionBarActivity implements
 		handleProgessIndicator();
 	}
 
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onPageSelected(int arg0) {
+		currentPage = arg0;
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		// Force redraw to fix expandablelist arrows
+		viewPager.setAdapter(adapter);
+		viewPager.setCurrentItem(currentPage);
+	}
+	
+	
+	
 }

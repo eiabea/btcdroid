@@ -36,7 +36,7 @@ public class RoundsFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.i(getClass().getSimpleName(), "onCreateView()");
-		setRetainInstance(true);
+		// setRetainInstance(true);
 		// Inflate the layout containing a title and body text.
 		rootView = (ViewGroup) inflater.inflate(R.layout.fragment_rounds, null);
 
@@ -54,6 +54,7 @@ public class RoundsFragment extends Fragment {
 
 		metrics = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
 		width = metrics.widthPixels;
 
 		exlvRoundsHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_rounds_holder);
@@ -63,7 +64,7 @@ public class RoundsFragment extends Fragment {
 		} else {
 			exlvRoundsHolder.setIndicatorBoundsRelative(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
 		}
-		
+
 	}
 
 	public void setStats(Stats stats) {
@@ -76,5 +77,4 @@ public class RoundsFragment extends Fragment {
 		}
 
 	}
-
 }
