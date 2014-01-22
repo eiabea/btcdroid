@@ -62,7 +62,7 @@ public class WorkerViewHeader extends LinearLayout {
 				txtStatus.setTextColor(context.getResources().getColor(R.color.bd_circle_green_solid));
 			} else {
 				imgCircle.setImageResource(R.drawable.shape_circle_red);
-				txtStatus.setText("inactive");
+				txtStatus.setText(context.getString(R.string.txt_inactive));
 				txtStatus.setTypeface(null, Typeface.ITALIC);
 				txtStatus.setTextColor(context.getResources().getColor(R.color.bd_circle_red_solid));
 			}

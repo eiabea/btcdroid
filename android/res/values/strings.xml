@@ -32,9 +32,6 @@
     <string name="txt_viewpager_pool_fragment">Pool Data</string>
     <string name="txt_viewpager_worker_fragment">Worker</string>
     <string name="txt_viewpager_round_fragment">Rounds</string>
-    <string name="txt_error_loading_profile">Error loading Profile</string>
-    <string name="txt_error_loading_stats">Error loading Stats</string>
-    <string name="txt_error_loading_price">Error loading Price</string>
     <string name="mail_address">eiabea1989@gmail.com</string>
     <string name="mail_subject">BTCDroid</string>
     <string name="mail_intent_title">Send Email&#8230;</string>
@@ -64,12 +61,14 @@
     <string name="txt_confirmations_left">Confirmations left:</string>
     <string name="txt_block_found">Block found:</string>
     <string name="txt_block_started">Block started:</string>
+    <string name="txt_not_available">n.A.</string>
     
     <!-- WorkerFragment | WorkerView -->
     <string name="txt_score">Score:</string>
     <string name="txt_last_share">Last Share:</string>
     <string name="txt_hashrate">Hashrate:</string>
     <string name="txt_shares">Shares:</string>
+    <string name="txt_inactive">inactive</string>
 
     <!-- PrefsActivity -->
     <string name="txt_settings">Settings</string>

@@ -69,7 +69,7 @@ public class BlockViewHeader extends LinearLayout {
 				txt.setTextColor(context.getResources().getColor(R.color.bd_actionbar_background));
 			}
 		}else{
-			txt.setText("n.A.");
+			txt.setText(context.getString(R.string.txt_not_available));
 			txt.setTextColor(context.getResources().getColor(R.color.bd_circle_red_solid));
 		}
 		
