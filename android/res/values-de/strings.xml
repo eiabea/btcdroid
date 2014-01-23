@@ -78,6 +78,8 @@
     <string name="txt_development">Entwicklung</string>
     <string name="txt_florian_grau">Florian Grau</string>
     <string name="txt_design">Design / Appicon</string>
+    	<string name="txt_bas_de_jong">Bas de Jong</string>
+	<string name="txt_translate_dutch">Dänische Übersetzung</string>
     <string name="txt_donations">Spenden</string>
     <string name="txt_donations_address">14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1</string>
     <string name="txt_copied_to_clipboard">in Zwischenablage kopiert</string>
