@@ -89,6 +89,40 @@
     <string name="txt_confirmed">none</string>
 
     <!-- PreferencesFragment -->
+    <string name="txt_pref_api_title">API</string>
+    <string name="txt_pref_api_token_title">API Token</string>
+    <string name="txt_pref_api_token_message">Set the Slush\'s Pool Token</string>
+
+    <string name="txt_pref_thresholds_title">Thresholds</string>
+    <string name="txt_pref_thresholds_price_title">Price Threshold (minutes)</string>
+    <string name="txt_pref_thresholds_price_message">Set the Threshold for reloading price</string>
+    <string name="txt_pref_thresholds_luck_title">Luck Threshold (minutes)</string>
+    <string name="txt_pref_thresholds_luck_message">Set the Threshold for reloading lucks</string>
+
+    <string name="txt_pref_price_title">Price</string>
+    <string name="txt_pref_price_show_price_title">Show Price</string>
+    <string name="txt_pref_price_show_price_message">Show the Price of 1 BTC</string>
+    <string name="txt_pref_price_price_source_title">Price Source</string>
+    <string name="txt_pref_price_price_source_message">Where to get the Priceinformation</string>
+
+    <string name="txt_pref_style_title">Style</string>
+    <string name="txt_pref_style_btc_style_title">BTC Style</string>
+    <string name="txt_pref_style_btc_style_message">Switch the style the values are formated</string>
+
+    <string name="txt_pref_notification_title">Notification</string>
+    <string name="txt_pref_notification_show_notification_title">Notification</string>
+    <string name="txt_pref_notification_show_notification_message">Notification if hashrate drops under a certain value</string>
+    <string name="txt_pref_notification_minimum_hashrate_title">Minimum Hashrate (MH/s)</string>
+    <string name="txt_pref_notification_minimum_hashrate_message">Limit for low hashrate</string>
+    <string name="txt_pref_notification_checking_interval_title">Checking Interval (minutes)</string>
+    <string name="txt_pref_notification_checking_interval_message">How often should the hashrate be checked</string>
+    <string name="txt_pref_notification_sound_title">Sound</string>
+    <string name="txt_pref_notification_sound_message">Play Notificationsound</string>
+    <string name="txt_pref_notification_vibrate_title">Vibrate</string>
+    <string name="txt_pref_notification_vibrate_message">Vibrate on Notification</string>
+    <string name="txt_pref_notification_led_title">LED</string>
+    <string name="txt_pref_notification_led_message">Flash LED on Notification</string>
+
     <string-array name="price_source">
         <item>@string/BitStamp</item>
         <item>@string/MtGox</item>

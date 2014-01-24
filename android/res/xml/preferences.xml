@@ -1,107 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="API" >
+    <PreferenceCategory android:title="@string/txt_pref_api_title" >
         <EditTextPreference
-            android:dialogTitle="API Token"
+            android:dialogTitle="@string/txt_pref_api_token_title"
             android:key="token"
-            android:summary="Set the Slush&apos;s Pool Token"
-            android:title="API Token" />
-
-        <!--
-        <ListPreference
-            android:defaultValue="0"
-            android:entries="@array/update_interval"
-            android:entryValues="@array/update_interval_values"
-            android:key="update_interval_preference"
-            android:summary="Controls how often data gets loaded"
-            android:title="Updateinterval" />
-        -->
+            android:summary="@string/txt_pref_api_token_message"
+            android:title="@string/txt_pref_api_token_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Thresholds" >
+    <PreferenceCategory android:title="@string/txt_pref_thresholds_title" >
         <EditTextPreference
             android:defaultValue="15"
-            android:dialogTitle="Price Threshold (minutes)"
+            android:dialogTitle="@string/txt_pref_thresholds_price_title"
             android:enabled="true"
             android:key="price_threshold"
             android:numeric="integer"
-            android:summary="Set the Threshold for reloading price"
-            android:title="Price Threshold" />
+            android:summary="@string/txt_pref_thresholds_price_message"
+            android:title="@string/txt_pref_thresholds_price_title" />
         <EditTextPreference
             android:defaultValue="15"
-            android:dialogTitle="Luck Threshold (minutes)"
+            android:dialogTitle="@string/txt_pref_thresholds_luck_title"
             android:enabled="true"
             android:key="threshold"
             android:numeric="integer"
-            android:summary="Set the Threshold for reloading lucks"
-            android:title="Luck Threshold" />
+            android:summary="@string/txt_pref_thresholds_luck_message"
+            android:title="@string/txt_pref_thresholds_luck_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Price" >
+    <PreferenceCategory android:title="@string/txt_pref_price_title" >
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="price_enabled"
-            android:summary="Show the Price of 1 BTC (Bitstamp)"
-            android:title="Show Price" />
+            android:summary="@string/txt_pref_price_show_price_message"
+            android:title="@string/txt_pref_price_show_price_title" />
 
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/price_source"
             android:entryValues="@array/price_source_values"
             android:key="price_source_preference"
-            android:summary="Where to get the Priceinformation"
-            android:title="Price Source" />
+            android:summary="@string/txt_pref_price_price_source_message"
+            android:title="@string/txt_pref_price_price_source_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Style" >
+    <PreferenceCategory android:title="@string/txt_pref_style_title" >
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/btc_style"
             android:entryValues="@array/btc_style_values"
             android:key="btc_style_preference"
-            android:summary="Switch the style the values are formated"
-            android:title="BTC Style" />
+            android:summary="@string/txt_pref_style_btc_style_message"
+            android:title="@string/txt_pref_style_btc_style_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Notification" >
+    <PreferenceCategory android:title="@string/txt_pref_notification_title" >
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="notification_enabled"
-            android:summary="Notification if hashrate drops under a certain value"
-            android:title="Enable Notifications" />
+            android:summary="@string/txt_pref_notification_show_notification_message"
+            android:title="@string/txt_pref_notification_show_notification_title" />
 
         <EditTextPreference
             android:defaultValue="0"
-            android:dialogTitle="Hashrate (MH/s)"
+            android:dialogTitle="@string/txt_pref_notification_minimum_hashrate_title"
             android:enabled="true"
             android:key="notification_hashrate"
             android:numeric="integer"
-            android:summary="Limit for low hashrate"
-            android:title="Minimum hashrate" />
-
+            android:summary="@string/txt_pref_notification_minimum_hashrate_message"
+            android:title="@string/txt_pref_notification_minimum_hashrate_title" />
         <EditTextPreference
             android:defaultValue="60"
-            android:dialogTitle="Interval (min)"
+            android:dialogTitle="@string/txt_pref_notification_checking_interval_title"
             android:enabled="true"
             android:key="notification_interval"
             android:numeric="integer"
-            android:summary="How often should the hashrate be checked"
-            android:title="Checking Interval" />
-        
-                <CheckBoxPreference
+            android:summary="@string/txt_pref_notification_checking_interval_message"
+            android:title="@string/txt_pref_notification_checking_interval_title" />
+
+        <CheckBoxPreference
             android:defaultValue="true"
             android:key="notification_sound"
-            android:summary="Play Notificationsound"
-            android:title="Sound" />
-        
-                <CheckBoxPreference
+            android:summary="@string/txt_pref_notification_sound_message"
+            android:title="@string/txt_pref_notification_sound_title" />
+        <CheckBoxPreference
             android:defaultValue="false"
             android:key="notification_vibrate"
-            android:summary="Vibrate on Notification"
-            android:title="Vibrate" />
-        
-                <CheckBoxPreference
+            android:summary="@string/txt_pref_notification_vibrate_message"
+            android:title="@string/txt_pref_notification_vibrate_title" />
+        <CheckBoxPreference
             android:defaultValue="false"
             android:key="notification_led"
-            android:summary="Flash LED on Notification"
-            android:title="LED" />
+            android:summary="@string/txt_pref_notification_led_message"
+            android:title="@string/txt_pref_notification_led_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

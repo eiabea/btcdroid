@@ -82,7 +82,7 @@
                         android:paddingBottom="@dimen/small_card_content_padding_bottom"
                         android:paddingTop="@dimen/small_card_content_padding_top" >
 
-                        <TextView
+                        <com.eiabea.btcdroid.fonts.RobotoRegular
                             android:id="@+id/txt_main_info_estimated_reward"
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"
@@ -119,7 +119,7 @@
                         android:paddingBottom="@dimen/small_card_content_padding_bottom"
                         android:paddingTop="@dimen/small_card_content_padding_top" >
 
-                        <TextView
+                        <com.eiabea.btcdroid.fonts.RobotoLight
                             android:id="@+id/txt_main_info_confirmed_reward"
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"
@@ -155,7 +155,7 @@
                         android:paddingBottom="@dimen/small_card_content_padding_bottom"
                         android:paddingTop="@dimen/small_card_content_padding_top" >
 
-                        <TextView
+                        <com.eiabea.btcdroid.fonts.RobotoBold
                             android:id="@+id/txt_main_info_total_reward"
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"
@@ -199,11 +199,11 @@
                 android:orientation="horizontal" >
 
                 <LinearLayout
-                        android:id="@+id/ll_pool_hash_holder_left"
+                    android:id="@+id/ll_pool_hash_holder_left"
                     android:layout_width="match_parent"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="3dp"
+                    android:layout_weight="1"
                     android:background="@color/bd_white"
                     android:orientation="vertical" >
 
@@ -238,9 +238,9 @@
                 <LinearLayout
                     android:id="@+id/ll_pool_hash_holder_right"
                     android:layout_width="match_parent"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
+                    android:layout_weight="1"
                     android:background="@color/bd_white"
                     android:orientation="vertical" >
 
@@ -291,7 +291,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:gravity="left"
+                    android:gravity="left|center_horizontal"
                     android:orientation="horizontal"
                     android:paddingBottom="15dp"
                     android:paddingTop="25dp" >
@@ -300,19 +300,25 @@
                         style="@style/style_small_card_headline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:padding="0dp"
                         android:text="@string/txt_round"
                         android:textAllCaps="true" />
 
-                    <RatingBar
-                        android:id="@+id/rat_main_info_rating"
-                        style="?android:attr/ratingBarStyleSmall"
+                    <FrameLayout
+                        android:id="@+id/fl_main_info_rating_holder"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="22px"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
-                        android:isIndicator="true"
-                        android:numStars="5" />
+                        android:layout_marginLeft="5dp" >
+
+                        <RatingBar
+                            style="@style/style_custom_rating_bar_green"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:isIndicator="true"
+                            android:numStars="5" />
+                    </FrameLayout>
                 </LinearLayout>
 
                 <LinearLayout

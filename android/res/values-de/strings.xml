@@ -88,6 +88,40 @@
     <string name="txt_confirmed">keine</string>
 
     <!-- PreferencesFragment -->
+        <string name="txt_pref_api_title">API</string>
+    <string name="txt_pref_api_token_title">API Token</string>
+    <string name="txt_pref_api_token_message">Setze den Slush\'s Pool Token</string>
+
+    <string name="txt_pref_thresholds_title">Schwellenwerte</string>
+    <string name="txt_pref_thresholds_price_title">Preis Schwellenwert (Minuten)</string>
+    <string name="txt_pref_thresholds_price_message">Setze den Schwellenwert für das neu laden des Preises</string>
+    <string name="txt_pref_thresholds_luck_title">Luck Schwellenwert (Minuten)</string>
+    <string name="txt_pref_thresholds_luck_message">Setze den Schwellenwert für das neu laden des Lucks</string>
+
+    <string name="txt_pref_price_title">Preis</string>
+    <string name="txt_pref_price_show_price_title">Zeige Preis</string>
+    <string name="txt_pref_price_show_price_message">Zeige den Preis für 1 BTC</string>
+    <string name="txt_pref_price_price_source_title">Preis Quelle</string>
+    <string name="txt_pref_price_price_source_message">Von wo soll die Preisinformation geladen werden</string>
+
+    <string name="txt_pref_style_title">Aussehen</string>
+    <string name="txt_pref_style_btc_style_title">BTC Aussehen</string>
+    <string name="txt_pref_style_btc_style_message">Wechlse das Aussehen der BTC Werte</string>
+
+    <string name="txt_pref_notification_title">Benachrichtigung</string>
+    <string name="txt_pref_notification_show_notification_title">Benachrichtigung</string>
+    <string name="txt_pref_notification_show_notification_message">Benachrichtigung falls die Hashrate unter einen bestimmten Wert fällt</string>
+    <string name="txt_pref_notification_minimum_hashrate_title">Minimale Hashrate (MH/s)</string>
+    <string name="txt_pref_notification_minimum_hashrate_message">Limit für minimale Hashrate</string>
+    <string name="txt_pref_notification_checking_interval_title">Nachfrageinterval (Minuten)</string>
+    <string name="txt_pref_notification_checking_interval_message">Wie oft soll die Hashrate überprüft werden</string>
+    <string name="txt_pref_notification_sound_title">Ton</string>
+    <string name="txt_pref_notification_sound_message">Benachrichtigungston abspielen</string>
+    <string name="txt_pref_notification_vibrate_title">Vibrate</string>
+    <string name="txt_pref_notification_vibrate_message">Vibrate on Notification</string>
+    <string name="txt_pref_notification_led_title">LED</string>
+    <string name="txt_pref_notification_led_message">Flash LED on Notification</string>
+    
     <string-array name="price_source">
         <item>@string/BitStamp</item>
         <item>@string/MtGox</item>

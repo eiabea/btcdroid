@@ -45,7 +45,7 @@
         <item name="android:maxLines">1</item>
         <item name="android:textColor">@color/bd_white</item>
     </style>
-	
+
     <!-- SmallCard -->
     <style name="style_small_card_headline">
         <item name="android:ellipsize">end</item>
@@ -108,6 +108,27 @@
         <item name="android:maxLines">1</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/bd_dark_grey_text</item>
+    </style>
+
+    <style name="style_custom_rating_bar_red" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_rating_bar_full_red</item>
+        <item name="android:indeterminateDrawable">@drawable/custom_rating_bar_full_red</item>
+        <item name="android:minHeight">22dip</item>
+        <item name="android:maxHeight">22dip</item>
+    </style>
+
+    <style name="style_custom_rating_bar_orange" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_rating_bar_full_orange</item>
+        <item name="android:indeterminateDrawable">@drawable/custom_rating_bar_full_orange</item>
+        <item name="android:minHeight">22dip</item>
+        <item name="android:maxHeight">22dip</item>
+    </style>
+
+    <style name="style_custom_rating_bar_green" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_rating_bar_full_green</item>
+        <item name="android:indeterminateDrawable">@drawable/custom_rating_bar_full_green</item>
+        <item name="android:minHeight">22dip</item>
+        <item name="android:maxHeight">22dip</item>
     </style>
 
 </resources>
