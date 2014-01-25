@@ -308,12 +308,13 @@
                     <FrameLayout
                         android:id="@+id/fl_main_info_rating_holder"
                         android:layout_width="wrap_content"
-                        android:layout_height="22px"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp" >
 
                         <RatingBar
-                            style="@style/style_custom_rating_bar_green"
+                            android:id="@+id/rat_main_info_rating"
+                            style="?android:attr/ratingBarStyleSmall"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:isIndicator="true"

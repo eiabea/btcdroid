@@ -140,6 +140,14 @@ public class MainActivity extends ActionBarActivity implements
 		// Always call the superclass so it can save the view hierarchy state
 	}
 
+	
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+//		NotificationService.getInstance().clearShown();
+	}
+
 	private void initUi() {
 
 		getSupportActionBar().setSubtitle(R.string.app_name_subtitle);

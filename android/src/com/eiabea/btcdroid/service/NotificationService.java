@@ -32,54 +32,60 @@ public class NotificationService extends Service implements Listener<Profile>,
 		ErrorListener {
 
 	private SharedPreferences pref;
-	
+
+//	private boolean alreadyShown = false;
+
 	private static NotificationService me;
+	
+	private ScheduledExecutorService scheduleTaskExecutor;
 
 	@Override
 	public IBinder onBind(Intent arg0) {
 		return null;
 	}
 
-	
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		
+
 		me = this;
-		
+
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
-		
+
 		pref.edit().putInt("notification_last_hashrate", 0).commit();
 
 		Log.d(getClass().getSimpleName(), "onCreate");
-		
+
 		startInterval();
-		
+
 		// getProfile();
 	}
-	
-	public static NotificationService getInstance(){
+
+	public static NotificationService getInstance() {
 		return me;
 	}
-	
-	public void startInterval(){
-		boolean enabled = pref.getBoolean("notification_enabled", false);    // defaulting to false
-		if(enabled){
-			
+
+	public void startInterval() {
+		boolean enabled = pref.getBoolean("notification_enabled", false);
+		
+		if (enabled) {
+			if(scheduleTaskExecutor != null){
+				scheduleTaskExecutor.shutdownNow();
+			}
+
 			int interval = Integer.valueOf(pref.getString("notification_interval", "60"));
-			
-			ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
-			
-			// This schedule a runnable task every 2 minutes
+
+			scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
+
 			scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
 				public void run() {
-					if(App.getInstance().isTokenSet()){
+					if (App.getInstance().isTokenSet()) {
 						getProfile();
-					}else{
+					} else {
 						Log.d(getClass().getSimpleName(), "No Token set");
 					}
 				}
-			}, 0, interval, TimeUnit.MINUTES);
+			}, interval, interval, TimeUnit.MINUTES);
 		}
 	}
 
@@ -103,81 +109,104 @@ public class NotificationService extends Service implements Listener<Profile>,
 	@Override
 	public void onResponse(Profile response) {
 		List<Worker> workers = response.getWorkersList();
-		
+
 		int totalHashrate = 0;
 		int limit = Integer.valueOf(pref.getString("notification_hashrate", "0"));
 
 		for (Worker tmp : workers) {
 			totalHashrate += tmp.getHashrate();
 		}
-		
-		if(limit > 0 && totalHashrate < limit){
-			int last_hashrate = pref.getInt("notification_last_hashrate", 0);
-			if(totalHashrate < last_hashrate){
-				createStillDroppingNotification(last_hashrate);
-			}else{
-				createFirstDropNotification(totalHashrate);
-			}
-			pref.edit().putInt("notification_last_hashrate", totalHashrate).commit();
+
+		if (limit > 0 && totalHashrate < limit) {
 			
+			// int last_hashrate = pref.getInt("notification_last_hashrate", 0);
+			// if(totalHashrate < last_hashrate){
+			// createStillDroppingNotification(last_hashrate);
+			// }else{
+			createFirstDropNotification(totalHashrate);
+			// }
+			// pref.edit().putInt("notification_last_hashrate",
+			// totalHashrate).commit();
+
 		}
 
 		Log.d(getClass().getSimpleName(), "onResponse!: " + totalHashrate);
 	}
 
 	public void createFirstDropNotification(int hashrate) {
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher) // notification
-																														// icon
-		.setContentTitle("Hashrate dropped!") // title for notification
-		.setContentText("Current Hashrate: " + App.formatHashRate(hashrate)) // message for notification
-		.setAutoCancel(true); // clear notification after click
-		Intent intent = new Intent(this, MainActivity.class);
-		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-		mBuilder.setContentIntent(pi);
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notif = setDefaults(mBuilder.build());
-		
-		mNotificationManager.notify(0, notif);
+//		if (!alreadyShown) {
+
+			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setContentTitle("Hashrate dropped!")
+				.setContentText("Current Hashrate: " + App.formatHashRate(hashrate))
+				.setAutoCancel(true);
+			
+			Intent deleteIntent = new Intent(this, OnDeleteReceiver.class);
+			deleteIntent.setAction("delete");
+			PendingIntent pendingDeleteIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, deleteIntent, 0);
+			
+			Intent intent = new Intent(this, MainActivity.class);
+			PendingIntent pi = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+			
+			mBuilder.setContentIntent(pi);
+			mBuilder.setDeleteIntent(pendingDeleteIntent);
+			NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			Notification notif = setDefaults(mBuilder.build());
+
+			mNotificationManager.notify(0, notif);
+			
+//			alreadyShown = true;
+//		}
 
 	}
-	
-	public void createStillDroppingNotification(int hashrate) {
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher) // notification
-				// icon
-				.setContentTitle("Hashrate still dropping!") // title for notification
-				.setContentText("Hashrate fell beyond last Hashrate of: " + App.formatHashRate(hashrate)) // message for notification
-				.setAutoCancel(true); // clear notification after click
-		Intent intent = new Intent(this, MainActivity.class);
-		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-		mBuilder.setContentIntent(pi);
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notif = setDefaults(mBuilder.build());
-		
-		mNotificationManager.notify(0, notif);
-		
-	}
 
-	private Notification setDefaults(Notification notification){
+	// public void createStillDroppingNotification(int hashrate) {
+	// NotificationCompat.Builder mBuilder = new
+	// NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher) //
+	// notification
+	// // icon
+	// .setContentTitle("Hashrate still dropping!") // title for notification
+	// .setContentText("Hashrate fell beyond last Hashrate of: " +
+	// App.formatHashRate(hashrate)) // message for notification
+	// .setAutoCancel(true); // clear notification after click
+	// Intent intent = new Intent(this, MainActivity.class);
+	// PendingIntent pi = PendingIntent.getActivity(this, 0, intent,
+	// Intent.FLAG_ACTIVITY_NEW_TASK);
+	// mBuilder.setContentIntent(pi);
+	// NotificationManager mNotificationManager = (NotificationManager)
+	// getSystemService(Context.NOTIFICATION_SERVICE);
+	// Notification notif = setDefaults(mBuilder.build());
+	//
+	// mNotificationManager.notify(0, notif);
+	//
+	// }
+
+	private Notification setDefaults(Notification notification) {
 		boolean sound = pref.getBoolean("notification_sound", true);
 		boolean vibrate = pref.getBoolean("notification_vibrate", false);
 		boolean led = pref.getBoolean("notification_led", false);
-		
-		if(sound){
+
+		if (sound) {
 			notification.defaults |= Notification.DEFAULT_SOUND;
 		}
-		
-		if(vibrate){
+
+		if (vibrate) {
 			notification.defaults |= Notification.DEFAULT_VIBRATE;
 		}
-		
-		if(led){
-			notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+
+		if (led) {
 			notification.ledARGB = 0xffff8b00;
 			notification.ledOnMS = 300;
 			notification.ledOffMS = 1000;
+			notification.flags |= Notification.FLAG_SHOW_LIGHTS;
 		}
-		
+
 		return notification;
 	}
-	
+
+//	public void clearShown() {
+//		alreadyShown = false;
+//	}
+
 }
