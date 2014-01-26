@@ -34,6 +34,7 @@
     <string name="alert_set_token_message">.) Login at mining.bitcoin.cz\n.) Manage API tokens\n.) Your current token\n\nHint: Open Website on your Phone to Copy &amp; Paste the Token</string>
     <string name="alert_set_token_ok">Set Token</string>
     <string name="alert_set_token_cancel">Cancel</string>
+    <string name="txt_viewpager_payout_fragment">Payout</string>
     <string name="txt_viewpager_pool_fragment">Pool Data</string>
     <string name="txt_viewpager_worker_fragment">Worker</string>
     <string name="txt_viewpager_round_fragment">Rounds</string>

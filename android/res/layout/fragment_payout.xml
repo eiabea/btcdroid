@@ -38,9 +38,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:indeterminate="false"
-                        android:max="360"
-                        android:progress="245"
-                        android:progressDrawable="@drawable/bob_circular_progressbar"
+                        android:max="1000"
+                        android:progressDrawable="@drawable/circular_progressbar"
                         android:rotation="90" />
 
                     <ImageView
@@ -48,7 +47,7 @@
                         android:layout_height="match_parent"
                         android:padding="0dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/overlay_gauge"
+                        android:src="@drawable/gauge_payout_white"
                         android:visibility="visible" />
 
                 </RelativeLayout>

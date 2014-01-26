@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.eiabea.btcdroid.adapter.MainViewAdapter;
+import com.eiabea.btcdroid.fragments.PayoutFragment;
 import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
@@ -39,9 +40,10 @@ public class MainActivity extends ActionBarActivity implements
 
 	private static final int INTENT_PREF = 0;
 
-	public static final int FRAGMENT_POOL = 0;
-	public static final int FRAGMENT_WORKER = 1;
-	public static final int FRAGMENT_ROUNDS = 2;
+	public static final int FRAGMENT_PAYOUT = 0;
+	public static final int FRAGMENT_POOL = 1;
+	public static final int FRAGMENT_WORKER = 2;
+	public static final int FRAGMENT_ROUNDS = 3;
 
 	private static final String STATE_PROFILE = "state_profile";
 	private static final String STATE_STATS = "state_stats";
@@ -57,7 +59,7 @@ public class MainActivity extends ActionBarActivity implements
 	private ViewPager viewPager;
 	private PagerTitleStrip viewPagerTitle;
 	private MainViewAdapter adapter;
-	private int currentPage = FRAGMENT_POOL;
+	private int currentPage = FRAGMENT_PAYOUT;
 
 	private boolean statsLoaded = false;
 	private boolean profileLoaded = false;
@@ -325,6 +327,10 @@ public class MainActivity extends ActionBarActivity implements
 
 	public void setProfile(Profile profile) {
 		this.profile = profile;
+		Fragment payout = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_PAYOUT));
+		if (payout != null) {
+			((PayoutFragment) payout).setProfile(profile);
+		}
 		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
 		if (pool != null) {
 			((PoolFragment) pool).setProfile(profile);

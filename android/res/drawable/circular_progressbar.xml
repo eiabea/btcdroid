@@ -9,4 +9,12 @@
         </shape>
     </item>
 
+    <item android:id="@android:id/secondaryProgress">
+        <shape
+            android:shape="ring"
+            android:thickness="40dp" >
+            <solid android:color="@color/bd_green" />
+        </shape>
+    </item>
+
 </layer-list>
