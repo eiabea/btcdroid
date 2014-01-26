@@ -68,7 +68,7 @@ public class BlockView extends LinearLayout {
 			txt.setTextColor(context.getResources().getColor(R.color.bd_circle_green_solid));
 		}else{
 			txt.setText(String.valueOf(confirmationsLeft));
-			txt.setTextColor(context.getResources().getColor(R.color.bd_actionbar_background));
+			txt.setTextColor(context.getResources().getColor(R.color.bd_orange));
 		}
 		
 	}

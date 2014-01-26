@@ -66,7 +66,7 @@ public class BlockViewHeader extends LinearLayout {
 			if(confirmationsLeft <= 0){
 				txt.setTextColor(context.getResources().getColor(R.color.bd_circle_green_solid));
 			}else{
-				txt.setTextColor(context.getResources().getColor(R.color.bd_actionbar_background));
+				txt.setTextColor(context.getResources().getColor(R.color.bd_orange));
 			}
 		}else{
 			txt.setText(context.getString(R.string.txt_not_available));

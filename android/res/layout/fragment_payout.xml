@@ -88,7 +88,7 @@
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/bd_actionbar_background" />
+                            android:textColor="@color/bd_orange" />
 
                         <TextView
                             style="@style/style_small_card_desc"

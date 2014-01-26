@@ -2,6 +2,7 @@
 <resources>
 
     <item name="is_land" type="bool">false</item>
+    <item name="is_tablet" type="bool">false</item>
 
     <string name="app_name">BTCDroid</string>
     <string name="app_name_subtitle">for Slush\'s Pool</string>

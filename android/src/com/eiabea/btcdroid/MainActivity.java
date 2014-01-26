@@ -38,6 +38,8 @@ import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
 public class MainActivity extends ActionBarActivity implements
 		HttpWorkerInterface, OnPageChangeListener {
 
+	// TODO Tablet UI
+	
 	private static final int INTENT_PREF = 0;
 
 	public static final int FRAGMENT_PAYOUT = 0;
@@ -80,13 +82,23 @@ public class MainActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		initUi();
+		boolean isLand = getResources().getBoolean(R.bool.is_land);
+		boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
+		
+		if(!isTablet){
+			initUiDefault();
+			setListenersDefault();
 
-		setListeners();
-
-		if (savedInstanceState == null) {
-			reloadData();
+			if (savedInstanceState == null) {
+				reloadData();
+			}
 		}
+		
+		if(isTablet && isLand){
+			Log.d(getClass().getSimpleName(), "create tablet design");
+		}
+
+
 
 	}
 
@@ -150,7 +162,7 @@ public class MainActivity extends ActionBarActivity implements
 //		NotificationService.getInstance().clearShown();
 	}
 
-	private void initUi() {
+	private void initUiDefault() {
 
 		getSupportActionBar().setSubtitle(R.string.app_name_subtitle);
 
@@ -176,7 +188,7 @@ public class MainActivity extends ActionBarActivity implements
 
 	}
 
-	private void setListeners() {
+	private void setListenersDefault() {
 		btnSetToken.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -418,9 +430,13 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		// Force redraw to fix expandablelist arrows
-		viewPager.setAdapter(adapter);
-		viewPager.setCurrentItem(currentPage);
+		
+		boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
+		if(!isTablet){
+			// Force redraw to fix expandablelist arrows
+			viewPager.setAdapter(adapter);
+			viewPager.setCurrentItem(currentPage);
+		}
 	}
 	
 	

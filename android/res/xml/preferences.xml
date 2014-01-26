@@ -5,6 +5,7 @@
         <EditTextPreference
             android:dialogTitle="@string/txt_pref_api_token_title"
             android:key="token"
+            android:selectable="true"
             android:summary="@string/txt_pref_api_token_message"
             android:title="@string/txt_pref_api_token_title" />
     </PreferenceCategory>
