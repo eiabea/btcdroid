@@ -21,6 +21,10 @@
     <string name="percent_sign">%</string>
     <string name="BitStamp">BitStamp</string>
     <string name="MtGox">MtGox</string>
+    
+    <!-- Notification -->
+    <string name="txt_hashrate_dropped_title">Hash snelheid is weggevallen!</string>
+    <string name="txt_hashrate_dropped_message">Huidige hash snelheid: %1$s</string>
 
     <!-- MainActivity -->
     <string name="txt_no_token">Geen correcte Token gevonden, stel er in</string>

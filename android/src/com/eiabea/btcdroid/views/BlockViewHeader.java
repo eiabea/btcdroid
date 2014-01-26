@@ -73,8 +73,6 @@ public class BlockViewHeader extends LinearLayout {
 			txt.setTextColor(context.getResources().getColor(R.color.bd_circle_red_solid));
 		}
 		
-		
-		
 	}
 	
 	private void handleExpand(boolean expanded){

@@ -19,16 +19,12 @@ public class RoundsListAdapter extends BaseExpandableListAdapter {
 	
 	private List<Block> data;
 	
-//	private LayoutInflater inflater;
-
 	public RoundsListAdapter(Context context, List<Block> data) {
 		this.context = context;
 		this.data = data;
 		
 		Collections.sort(this.data, new App.BlockSorter());
 		
-//		inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-
 		notifyDataSetChanged();
 	}
 	
@@ -92,21 +88,6 @@ public class RoundsListAdapter extends BaseExpandableListAdapter {
 		Block currentBlock = data.get(groupPosition);
 		
 		header.setData(currentBlock, isExpanded);
-		
-//		TextView txtDuration = (TextView) header.findViewById(R.id.txt_block_header_duration);
-//		TextView txtReward = (TextView) header.findViewById(R.id.txt_block_header_reward);
-//		
-//		int confirmationsLeft = 100 - currentBlock.getConfirmations();
-//		
-//		txtDuration.setText(currentBlock.getMining_duration());
-//		
-//		//Log.d(getClass().getSimpleName(), "current block reward: " + currentBlock.getReward());
-//		
-//		if(currentBlock.getReward() != null){
-//			float reward = Float.valueOf(currentBlock.getReward());
-//			txtReward.setText(App.formatReward(reward));
-//		}
-		
 
 		return header;
 	}

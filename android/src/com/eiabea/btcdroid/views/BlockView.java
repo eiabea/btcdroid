@@ -34,13 +34,6 @@ public class BlockView extends LinearLayout {
 		txtConfirmations = (TextView) findViewById(R.id.txt_block_confirmations);
 		txtFound = (TextView) findViewById(R.id.txt_block_found);
 		txtStarted = (TextView) findViewById(R.id.txt_block_started);
-		
-
-
-//		txtScore = (TextView) findViewById(R.id.txt_worker_score);
-//		txtLastShare = (TextView) findViewById(R.id.txt_worker_last_share);
-//		txtHashrate = (TextView) findViewById(R.id.txt_worker_hashrate);
-//		txtShares = (TextView) findViewById(R.id.txt_worker_shares);
 	}
 	
 	public void setData(Block block) {
@@ -64,13 +57,6 @@ public class BlockView extends LinearLayout {
 		if(started != null){
 			txtStarted.setText(App.dateFormat.format(started));
 		}
-		
-//		if(worker != null){
-//			txtScore.setText(worker.getScore());
-//			txtLastShare.setText(App.dateFormat.format(new Date(worker.getLast_share() * 1000)));
-//			txtHashrate.setText(App.formatHashRate(worker.getHashrate()));
-//			txtShares.setText(String.valueOf(worker.getShares()));
-//		}
 	}
 	
 	private void setConfirmation(TextView txt, Block currentBlock) {
@@ -84,7 +70,6 @@ public class BlockView extends LinearLayout {
 			txt.setText(String.valueOf(confirmationsLeft));
 			txt.setTextColor(context.getResources().getColor(R.color.bd_actionbar_background));
 		}
-		
 		
 	}
 	

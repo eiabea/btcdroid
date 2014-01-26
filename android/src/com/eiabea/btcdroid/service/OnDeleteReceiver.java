@@ -10,7 +10,6 @@ public class OnDeleteReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
     	if(intent.getAction().equalsIgnoreCase("delete")){
-//    		NotificationService.getInstance().clearShown();
     		Log.d(getClass().getSimpleName(), "User dismissed Notification");
     	}
     }

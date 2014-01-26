@@ -3,17 +3,10 @@
 
     <item
         android:id="@+id/action_refresh"
-        android:icon="@android:drawable/ic_menu_rotate"
+        android:icon="@drawable/ic_action_refresh"
         android:title="@string/action_refresh"
         android:visible="false"
         btcdroid:showAsAction="always"/>
-    <!--
-    <item
-        android:id="@+id/action_add_pool"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/action_add_pool"
-        btcdroid:showAsAction="always"/>
-    -->
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
