@@ -5,7 +5,7 @@
         <shape
             android:shape="ring"
             android:thickness="40dp" >
-            <solid android:color="@color/bd_actionbar_background" />
+            <solid android:color="@color/bd_dark_grey_text" />
         </shape>
     </item>
 

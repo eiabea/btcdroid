@@ -40,16 +40,21 @@
     <string name="mail_subject">BTCDroid</string>
     <string name="mail_intent_title">Email senden&#8230;</string>
 
-	<!-- PoolFragment | Headers -->
+    
+        <!-- PayoutFragment -->
+    <string name="txt_progress">Fortschritt</string>
+    <string name="txt_send_threshold">Auszahlungsgrenze</string>
+    <string name="txt_estimated_reward">zu erwarten</string>
+    <string name="txt_confirmed_reward">bestätigt</string>
     <string name="txt_rewards">Vergütung</string>
+    
+    <!-- PoolFragment | Headers -->
     <string name="txt_hashrates">Hashrate</string>
     <string name="txt_round">Runde</string>
     <string name="txt_luck">Luck</string>
     
     <!-- PoolFragment | left -->
     <string name="txt_one_btc_is">1 BTC ist:</string>
-    <string name="txt_estimated_reward">zu erwarten</string>
-    <string name="txt_confirmed_reward">bestätigt</string>
     <string name="txt_total_reward">gesamt</string>
     <string name="txt_current_total_hashrate">derzeit</string>
     <string name="txt_average_total_hashrate">durchschnittlich</string>

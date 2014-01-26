@@ -39,17 +39,23 @@
     <string name="mail_address">eiabea1989@gmail.com</string>
     <string name="mail_subject">BTCDroid</string>
     <string name="mail_intent_title">Verstuur Mail&#8230;</string>
-
-	<!-- PoolFragment | Headers -->
+    
+    <!-- PayoutFragment -->
+    <string name="txt_progress">voortgang</string>
+    <string name="txt_send_threshold">Threshold om te versturen</string>
+    <string name="txt_estimated_reward">Verwacht</string>
+    <string name="txt_confirmed_reward">Bevestigd</string>
     <string name="txt_rewards">Opbrengst</string>
+    
+    <!-- PoolFragment | Headers -->
     <string name="txt_hashrates">Hash Snelheid</string>
     <string name="txt_round">Ronde</string>
     <string name="txt_luck">Geluk</string>
+
+	<!-- PoolFragment | Headers -->
     
     <!-- PoolFragment | left -->
     <string name="txt_one_btc_is">1 BTC is:</string>
-    <string name="txt_estimated_reward">Verwacht</string>
-    <string name="txt_confirmed_reward">Bevestigd</string>
     <string name="txt_total_reward">Totaal</string>
     <string name="txt_current_total_hashrate">Totaal Huidig</string>
     <string name="txt_average_total_hashrate">Totaal Gemiddeld</string>

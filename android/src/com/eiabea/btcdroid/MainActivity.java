@@ -360,9 +360,9 @@ public class MainActivity extends ActionBarActivity implements
 	public void setPrices(GenericPrice price) {
 		this.price = price;
 
-		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
+		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_PAYOUT));
 		if (frag != null) {
-			((PoolFragment) frag).setPrices(price);
+			((PayoutFragment) frag).setPrices(price);
 		}
 	}
 

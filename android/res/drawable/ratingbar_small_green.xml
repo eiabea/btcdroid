@@ -15,8 +15,8 @@
 -->
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+android:id/background" android:drawable="@drawable/star_off" />
-    <item android:id="@+android:id/secondaryProgress" android:drawable="@drawable/star_green_half" />
-    <item android:id="@+android:id/progress" android:drawable="@drawable/star_green_full" />
+    <item android:id="@+android:id/background" android:drawable="@drawable/grey" />
+    <item android:id="@+android:id/secondaryProgress" android:drawable="@drawable/half" />
+    <item android:id="@+android:id/progress" android:drawable="@drawable/green" />
 </layer-list>
 

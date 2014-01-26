@@ -15,13 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
-import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
@@ -33,14 +31,10 @@ public class PoolFragment extends Fragment {
 
 	private Profile profile;
 	private Stats stats;
-	private GenericPrice price;
 
 	private SharedPreferences pref;
 
-	private LinearLayout llPriceHolder;
-
-	private TextView txtEstimatedReward, txtConfirmedReward, txtTotalReward,
-			txtCurrentValue, txtTotalHashrate, txtAverageHashrate,
+	private TextView txtTotalHashrate, txtAverageHashrate,
 			txtRoundStarted, txtRoundDuration, txtEstimatedDuration,
 			txtAverageDuration, txtLuck24h, txtLuck7d, txtLuck30d;
 	private RatingBar ratRating;
@@ -72,25 +66,11 @@ public class PoolFragment extends Fragment {
 			setStats(stats);
 		}
 
-		if (price != null) {
-			setPrices(price);
-		}
-
 		return rootView;
 	}
 
 	@SuppressLint("NewApi")
 	private void initUi(LayoutInflater inflater, ViewGroup rootView) {
-		llPriceHolder = (LinearLayout) rootView
-				.findViewById(R.id.ll_main_info_price_holder);
-		txtCurrentValue = (TextView) rootView
-				.findViewById(R.id.txt_main_info_current_value);
-		txtEstimatedReward = (TextView) rootView
-				.findViewById(R.id.txt_main_info_estimated_reward);
-		txtConfirmedReward = (TextView) rootView
-				.findViewById(R.id.txt_main_info_confirmed_reward);
-		txtTotalReward = (TextView) rootView
-				.findViewById(R.id.txt_main_info_total_reward);
 		txtTotalHashrate = (TextView) rootView
 				.findViewById(R.id.txt_main_info_total_hashrate);
 		txtAverageHashrate = (TextView) rootView
@@ -159,56 +139,6 @@ public class PoolFragment extends Fragment {
 			txt.setText(App.formatProcent(current));
 		} else {
 			txt.setText(App.formatProcent(current));
-		}
-	}
-
-	private void setPrice(TextView txt, GenericPrice current) {
-		if (current != null) {
-			float lastPriceFloat = pref.getFloat("txt_" + txt.getId()
-					+ "_value", 0f);
-			float currentPriceFloat = current.getValueFloat();
-
-			int minuteThreshold = App.getInstance().getPriceThreshold();
-			long threshold = minuteThreshold * 60 * 1000;
-
-			long lastUpdated = pref.getLong("txt_" + txt.getId(), 0);
-
-			long now = Calendar.getInstance().getTimeInMillis();
-
-			Log.d(getClass().getSimpleName(), "Pricethreshold min: "
-					+ minuteThreshold);
-			Log.d(getClass().getSimpleName(), "Pricethreshold: " + threshold);
-			Log.d(getClass().getSimpleName(), "Price last Updated: "
-					+ lastUpdated);
-			Log.d(getClass().getSimpleName(), "Price now: " + now);
-			Log.d(getClass().getSimpleName(), "time until priceupdate: "
-					+ (((lastUpdated + threshold) - now) / 1000) + " sec");
-
-			if ((lastUpdated + threshold) < now) {
-
-				Log.d(getClass().getSimpleName(),
-						"threshold expired --> set colors for " + "txt_"
-								+ txt.getId());
-				if (lastPriceFloat > currentPriceFloat) {
-					txtCurrentValue.setTextColor(getResources().getColor(
-							R.color.bd_red));
-				} else {
-					txtCurrentValue.setTextColor(getResources().getColor(
-							R.color.bd_green));
-				}
-
-				pref.edit()
-						.putFloat("txt_" + txt.getId() + "_value",
-								currentPriceFloat).commit();
-				pref.edit()
-						.putLong("txt_" + txt.getId(),
-								Calendar.getInstance().getTimeInMillis())
-						.commit();
-				Log.d(getClass().getSimpleName(), "set last price to: "
-						+ currentPriceFloat);
-			}
-
-			txtCurrentValue.setText(App.formatPrice(current.getValueFloat()));
 		}
 	}
 
@@ -289,24 +219,6 @@ public class PoolFragment extends Fragment {
 
 	}
 
-	public void setPrices(GenericPrice price) {
-		this.price = price;
-		if (txtCurrentValue != null && this.price != null) {
-			fillUpPrices();
-		}
-
-		if (llPriceHolder != null) {
-			if (App.isPriceEnabled) {
-				llPriceHolder.setVisibility(View.VISIBLE);
-
-			} else {
-				llPriceHolder.setVisibility(View.GONE);
-
-			}
-		}
-
-	}
-
 	private void fillUpProfile() {
 
 		ArrayList<Worker> list = profile.getWorkersList();
@@ -317,14 +229,14 @@ public class PoolFragment extends Fragment {
 			totalHashrate += tmp.getHashrate();
 		}
 
-		float estimated = Float.valueOf(profile.getEstimated_reward());
-		float unconfirmed = Float.valueOf(profile.getUnconfirmed_reward());
-		float confirmed = Float.valueOf(profile.getConfirmed_reward());
-		float total = confirmed + unconfirmed;
+//		float estimated = Float.valueOf(profile.getEstimated_reward());
+//		float unconfirmed = Float.valueOf(profile.getUnconfirmed_reward());
+//		float confirmed = Float.valueOf(profile.getConfirmed_reward());
+//		float total = confirmed + unconfirmed;
 
-		txtEstimatedReward.setText(App.formatReward(estimated));
-		txtConfirmedReward.setText(App.formatReward(confirmed));
-		txtTotalReward.setText(App.formatReward(total));
+//		txtEstimatedReward.setText(App.formatReward(estimated));
+//		txtConfirmedReward.setText(App.formatReward(confirmed));
+//		txtTotalReward.setText(App.formatReward(total));
 
 		txtTotalHashrate.setText(App.formatHashRate(totalHashrate));
 		txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
@@ -375,10 +287,5 @@ public class PoolFragment extends Fragment {
 
 	}
 
-	private void fillUpPrices() {
-
-		setPrice(txtCurrentValue, price);
-
-	}
 
 }
