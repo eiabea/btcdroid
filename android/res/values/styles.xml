@@ -51,8 +51,8 @@
         <item name="android:ellipsize">end</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/bd_dark_text</item>
-        <item name="android:paddingTop">25dp</item>
-        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">10dp</item>
         <item name="android:textSize">18sp</item>
         <item name="android:maxLines">1</item>
     </style>
@@ -110,25 +110,14 @@
         <item name="android:textColor">@color/bd_dark_grey_text</item>
     </style>
 
-    <style name="style_custom_rating_bar_red" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/custom_rating_bar_full_red</item>
-        <item name="android:indeterminateDrawable">@drawable/custom_rating_bar_full_red</item>
-        <item name="android:minHeight">22dip</item>
-        <item name="android:maxHeight">22dip</item>
-    </style>
-
-    <style name="style_custom_rating_bar_orange" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/custom_rating_bar_full_orange</item>
-        <item name="android:indeterminateDrawable">@drawable/custom_rating_bar_full_orange</item>
-        <item name="android:minHeight">22dip</item>
-        <item name="android:maxHeight">22dip</item>
-    </style>
-
-    <style name="style_custom_rating_bar_green" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/custom_rating_bar_full_green</item>
-        <item name="android:indeterminateDrawable">@drawable/custom_rating_bar_full_green</item>
-        <item name="android:minHeight">22dip</item>
-        <item name="android:maxHeight">22dip</item>
+    <style name="style_progress">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/ratingbar_small_green</item>
+        <item name="android:indeterminateDrawable">@drawable/ratingbar_small_green</item>
+        <item name="android:minHeight">14dip</item>
+        <item name="android:maxHeight">14dip</item>
+        <item name="android:thumb">@null</item>
+        <item name="android:isIndicator">true</item>
     </style>
 
 </resources>

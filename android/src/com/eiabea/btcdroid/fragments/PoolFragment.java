@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -32,7 +30,6 @@ import com.eiabea.btcdroid.util.App;
 public class PoolFragment extends Fragment {
 
 	private ViewGroup rootView;
-	private FrameLayout flRatingHolder;
 
 	private Profile profile;
 	private Stats stats;
@@ -59,7 +56,7 @@ public class PoolFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		Log.i(getClass().getSimpleName(), "onCreateView()");
-		// setRetainInstance(true);
+		
 		// Inflate the layout containing a title and body text.
 		rootView = (ViewGroup) inflater.inflate(R.layout.fragment_pool, null);
 
@@ -106,9 +103,8 @@ public class PoolFragment extends Fragment {
 				.findViewById(R.id.txt_main_info_estimated_duration);
 		txtAverageDuration = (TextView) rootView
 				.findViewById(R.id.txt_main_info_average_duration);
-		flRatingHolder = (FrameLayout) rootView.findViewById(R.id.fl_main_info_rating_holder);
-//		ratRating = (RatingBar) rootView
-//				.findViewById(R.id.rat_main_info_rating);
+		ratRating = (RatingBar) rootView
+				.findViewById(R.id.rat_main_info_rating);
 		txtLuck24h = (TextView) rootView
 				.findViewById(R.id.txt_main_info_luck_24h);
 		txtLuck7d = (TextView) rootView
@@ -218,7 +214,6 @@ public class PoolFragment extends Fragment {
 
 	private void setRatingBar(double rating) {
 		double stars = 5;
-		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 
 		if (rating < 0) {
 			rating = 0;
@@ -227,21 +222,10 @@ public class PoolFragment extends Fragment {
 		if (rating > stars) {
 			rating = stars;
 		}
-
-		if (rating < 2d) {
-			ratRating = (RatingBar) inflater.inflate(R.layout.view_ratingbar_green, null);
-		} else if (rating >= 2d && rating < 4d) {
-			ratRating = (RatingBar) inflater.inflate(R.layout.view_ratingbar_orange, null);
-		} else {
-			ratRating = (RatingBar) inflater.inflate(R.layout.view_ratingbar_red, null);
-		}
 		
 		ratRating.setMax((int)stars);
 		ratRating.setIsIndicator(true);
 		ratRating.setRating((float) (stars - rating));
-		
-		flRatingHolder.removeAllViews();
-		flRatingHolder.addView(ratRating);
 
 		Log.d(getClass().getSimpleName(),
 				"Rating: " + rating);

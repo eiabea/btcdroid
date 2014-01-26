@@ -34,14 +34,14 @@
             android:padding="5dp"
             android:orientation="horizontal" >
 
-            <TextView
+            <com.eiabea.btcdroid.fonts.RobotoBold
                 android:id="@+id/txt_worker_name"
                 style="@style/style_card_header_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <TextView
+            <com.eiabea.btcdroid.fonts.RobotoRegular
                 android:id="@+id/txt_worker_status"
                 style="@style/style_card_header_status"
                 android:layout_width="match_parent"
@@ -74,7 +74,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="@dimen/small_card_bottom_line_height"
             android:background="@color/bd_card_bottom_line" >
         </FrameLayout>
     </FrameLayout>

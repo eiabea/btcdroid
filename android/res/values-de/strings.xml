@@ -21,6 +21,10 @@
     <string name="percent_sign">%</string>
     <string name="BitStamp">BitStamp</string>
     <string name="MtGox">MtGox</string>
+    
+    <!-- Notification -->
+    <string name="txt_hashrate_dropped_title">Hashrate gefallen!</string>
+    <string name="txt_hashrate_dropped_message">Derzeitige Hashrate: %1$s</string>
 
     <!-- MainActivity -->
     <string name="txt_no_token">Es wurde kein gültiger API-Token gefunden, bitte füge einen hinzu</string>

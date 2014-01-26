@@ -52,7 +52,7 @@
             android:layout_marginRight="10dp"
             android:orientation="vertical" >
 
-            <TextView
+            <com.eiabea.btcdroid.fonts.RobotoBold
                 style="@style/style_small_card_headline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                         android:paddingBottom="@dimen/small_card_content_padding_bottom"
                         android:paddingTop="@dimen/small_card_content_padding_top" >
 
-                        <com.eiabea.btcdroid.fonts.RobotoRegular
+                        <com.eiabea.btcdroid.fonts.RobotoBold
                             android:id="@+id/txt_main_info_estimated_reward"
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"
@@ -119,7 +119,7 @@
                         android:paddingBottom="@dimen/small_card_content_padding_bottom"
                         android:paddingTop="@dimen/small_card_content_padding_top" >
 
-                        <com.eiabea.btcdroid.fonts.RobotoLight
+                        <com.eiabea.btcdroid.fonts.RobotoBold
                             android:id="@+id/txt_main_info_confirmed_reward"
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"
@@ -185,7 +185,7 @@
             android:layout_marginRight="10dp"
             android:orientation="vertical" >
 
-            <TextView
+            <com.eiabea.btcdroid.fonts.RobotoBold
                 style="@style/style_small_card_headline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -214,7 +214,7 @@
                         android:paddingBottom="@dimen/small_card_content_padding_bottom"
                         android:paddingTop="@dimen/small_card_content_padding_top" >
 
-                        <TextView
+                        <com.eiabea.btcdroid.fonts.RobotoBold
                             android:id="@+id/txt_main_info_average_hashrate"
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"
@@ -251,7 +251,7 @@
                         android:paddingBottom="@dimen/small_card_content_padding_bottom"
                         android:paddingTop="@dimen/small_card_content_padding_top" >
 
-                        <TextView
+                        <com.eiabea.btcdroid.fonts.RobotoBold
                             android:id="@+id/txt_main_info_total_hashrate"
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"
@@ -296,7 +296,7 @@
                     android:paddingBottom="15dp"
                     android:paddingTop="25dp" >
 
-                    <TextView
+                    <com.eiabea.btcdroid.fonts.RobotoBold
                         style="@style/style_small_card_headline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -305,20 +305,15 @@
                         android:text="@string/txt_round"
                         android:textAllCaps="true" />
 
-                    <FrameLayout
-                        android:id="@+id/fl_main_info_rating_holder"
+                    <RatingBar
+                        android:id="@+id/rat_main_info_rating"
+                        style="@style/style_progress"
                         android:layout_width="wrap_content"
-                        android:layout_height="22px"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp" >
-
-                        <RatingBar
-                            style="@style/style_custom_rating_bar_green"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:isIndicator="true"
-                            android:numStars="5" />
-                    </FrameLayout>
+                        android:layout_marginLeft="5dp"
+                        android:isIndicator="true"
+                        android:numStars="5" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -328,7 +323,7 @@
                     android:layout_alignParentRight="true"
                     android:gravity="right"
                     android:orientation="vertical"
-                    android:paddingBottom="15dp" >
+                    android:paddingBottom="10dp" >
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -364,7 +359,7 @@
                         android:paddingBottom="@dimen/small_card_content_padding_bottom"
                         android:paddingTop="@dimen/small_card_content_padding_top" >
 
-                        <TextView
+                        <com.eiabea.btcdroid.fonts.RobotoBold
                             android:id="@+id/txt_main_info_average_duration"
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"
@@ -401,7 +396,7 @@
                         android:paddingBottom="@dimen/small_card_content_padding_bottom"
                         android:paddingTop="@dimen/small_card_content_padding_top" >
 
-                        <TextView
+                        <com.eiabea.btcdroid.fonts.RobotoBold
                             android:id="@+id/txt_main_info_round_duration"
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"
@@ -437,7 +432,7 @@
                         android:paddingBottom="@dimen/small_card_content_padding_bottom"
                         android:paddingTop="@dimen/small_card_content_padding_top" >
 
-                        <TextView
+                        <com.eiabea.btcdroid.fonts.RobotoBold
                             android:id="@+id/txt_main_info_estimated_duration"
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"
@@ -468,7 +463,7 @@
             android:orientation="vertical"
             android:paddingBottom="20dp" >
 
-            <TextView
+            <com.eiabea.btcdroid.fonts.RobotoBold
                 style="@style/style_small_card_headline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -496,7 +491,7 @@
                         android:paddingBottom="@dimen/small_card_content_padding_bottom"
                         android:paddingTop="@dimen/small_card_content_padding_top" >
 
-                        <TextView
+                        <com.eiabea.btcdroid.fonts.RobotoBold
                             android:id="@+id/txt_main_info_luck_24h"
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"
@@ -533,7 +528,7 @@
                         android:paddingBottom="@dimen/small_card_content_padding_bottom"
                         android:paddingTop="@dimen/small_card_content_padding_top" >
 
-                        <TextView
+                        <com.eiabea.btcdroid.fonts.RobotoBold
                             android:id="@+id/txt_main_info_luck_7d"
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"
@@ -569,7 +564,7 @@
                         android:paddingBottom="@dimen/small_card_content_padding_bottom"
                         android:paddingTop="@dimen/small_card_content_padding_top" >
 
-                        <TextView
+                        <com.eiabea.btcdroid.fonts.RobotoBold
                             android:id="@+id/txt_main_info_luck_30d"
                             style="@style/style_small_card_value"
                             android:layout_width="match_parent"

@@ -12,6 +12,6 @@
 
     <dimen name="small_card_content_padding_top">10dp</dimen>
     <dimen name="small_card_content_padding_bottom">10dp</dimen>
-    <dimen name="small_card_bottom_line_height">1px</dimen>
+    <dimen name="small_card_bottom_line_height">1dp</dimen>
 
 </resources>

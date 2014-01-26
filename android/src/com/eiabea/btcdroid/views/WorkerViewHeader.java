@@ -53,17 +53,19 @@ public class WorkerViewHeader extends LinearLayout {
 		handleExpand(isExpanded);
 
 		if (worker != null) {
+			Typeface tfRegular = Typeface.createFromAsset(context.getAssets(), "RobotoCondensed-Regular.ttf");
+			Typeface tfItalic = Typeface.createFromAsset(context.getAssets(), "RobotoCondensed-Italic.ttf");
 
 			txtName.setText(worker.getName());
 			if (worker.isAlive()) {
 				imgCircle.setImageResource(R.drawable.shape_circle_green);
 				txtStatus.setText(App.formatHashRate(worker.getHashrate()));
-				txtStatus.setTypeface(null, Typeface.NORMAL);
+				txtStatus.setTypeface(tfRegular);
 				txtStatus.setTextColor(context.getResources().getColor(R.color.bd_circle_green_solid));
 			} else {
 				imgCircle.setImageResource(R.drawable.shape_circle_red);
 				txtStatus.setText(context.getString(R.string.txt_inactive));
-				txtStatus.setTypeface(null, Typeface.ITALIC);
+				txtStatus.setTypeface(tfItalic);
 				txtStatus.setTextColor(context.getResources().getColor(R.color.bd_circle_red_solid));
 			}
 			

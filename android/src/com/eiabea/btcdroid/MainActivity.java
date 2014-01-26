@@ -140,6 +140,14 @@ public class MainActivity extends ActionBarActivity implements
 		// Always call the superclass so it can save the view hierarchy state
 	}
 
+	
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+//		NotificationService.getInstance().clearShown();
+	}
+
 	private void initUi() {
 
 		getSupportActionBar().setSubtitle(R.string.app_name_subtitle);
@@ -249,8 +257,14 @@ public class MainActivity extends ActionBarActivity implements
 				App.getInstance().resetThreshold();
 				App.getInstance().resetPriceThreshold();
 				App.getInstance().resetPriceEnabled();
+				
+				boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notification_enabled", false);
 
-				NotificationService.getInstance().startInterval();
+				if(enabled){
+					NotificationService.getInstance().startInterval();
+				}else{
+					NotificationService.getInstance().stopInterval();
+				}
 
 				reloadData();
 			}
@@ -310,8 +324,6 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	public void setProfile(Profile profile) {
-		// Toast.makeText(MainActivity.this, "setProfile",
-		// Toast.LENGTH_SHORT).show();
 		this.profile = profile;
 		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
 		if (pool != null) {
@@ -326,8 +338,6 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	public void setStats(Stats stats) {
-		// Toast.makeText(MainActivity.this, "setStats",
-		// Toast.LENGTH_SHORT).show();
 		this.stats = stats;
 		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
 		if (frag != null) {
@@ -342,8 +352,6 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	public void setPrices(GenericPrice price) {
-		// Toast.makeText(MainActivity.this, "setPrice",
-		// Toast.LENGTH_SHORT).show();
 		this.price = price;
 
 		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));

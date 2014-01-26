@@ -88,8 +88,6 @@ public class WorkerListAdapter extends BaseExpandableListAdapter {
 
 		view.setData(holders.get(groupPosition).getWorker(), isExpanded);
 		
-//		view.invalidate();
-
 		return view;
 	}
 

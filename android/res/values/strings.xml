@@ -23,6 +23,10 @@
     <string name="BitStamp">BitStamp</string>
     <string name="MtGox">MtGox</string>
 
+    <!-- Notification -->
+    <string name="txt_hashrate_dropped_title">Hashrate has dropped!</string>
+    <string name="txt_hashrate_dropped_message">Current Hashrate: %1$s</string>
+    
     <!-- MainActivity -->
     <string name="txt_no_token">No valid Token found, please set one</string>
     <string name="txt_set_token">Set Token</string>
