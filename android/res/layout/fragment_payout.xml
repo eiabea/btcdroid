@@ -15,14 +15,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/bd_white"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:visibility="gone" >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="5dp"
-                android:visibility="gone" >
+                android:padding="5dp" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -237,8 +237,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_centerInParent="true"
+                        android:orientation="vertical"
                         android:paddingBottom="10dp" >
 
                         <com.eiabea.btcdroid.fonts.RobotoBold

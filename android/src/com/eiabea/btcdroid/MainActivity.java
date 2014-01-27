@@ -61,7 +61,7 @@ public class MainActivity extends ActionBarActivity implements
 	private MenuItem itemRefresh;
 
 	// Tiles Layout
-	// private LinearLayout llTilesHolder;
+	private LinearLayout llTilesHolder;
 
 	// ViewPager Layout
 	private ViewPager viewPager;
@@ -87,8 +87,8 @@ public class MainActivity extends ActionBarActivity implements
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 
-		initUiDefault();
-		setListenersDefault();
+		initUi();
+		setListeners();
 
 		if (savedInstanceState == null) {
 			reloadData();
@@ -154,7 +154,7 @@ public class MainActivity extends ActionBarActivity implements
 		// NotificationService.getInstance().clearShown();
 	}
 
-	private void initUiDefault() {
+	private void initUi() {
 
 		boolean isLand = getResources().getBoolean(R.bool.is_land);
 		boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
@@ -165,6 +165,9 @@ public class MainActivity extends ActionBarActivity implements
 
 		adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price);
 		if (isTablet && isLand) {
+
+			llTilesHolder = (LinearLayout) findViewById(R.id.ll_tiles_holder);
+
 			FragmentManager fm = getSupportFragmentManager();
 			FragmentTransaction ft = fm.beginTransaction();
 			ft.replace(R.id.fl_payout_tile, adapter.getItem(FRAGMENT_PAYOUT), getFragmentTag(FRAGMENT_PAYOUT));
@@ -197,7 +200,7 @@ public class MainActivity extends ActionBarActivity implements
 
 	}
 
-	private void setListenersDefault() {
+	private void setListeners() {
 		btnSetToken.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -323,7 +326,7 @@ public class MainActivity extends ActionBarActivity implements
 			// }
 			// if (viewPager.getVisibility() == View.INVISIBLE) {
 			viewPager.setVisibility(View.VISIBLE);
-			// llTilesHolder.setVisibility(View.VISIBLE);
+			llTilesHolder.setVisibility(View.VISIBLE);
 			// }
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -338,7 +341,7 @@ public class MainActivity extends ActionBarActivity implements
 			// }
 			// if (viewPager.getVisibility() == View.INVISIBLE) {
 			viewPager.setVisibility(View.INVISIBLE);
-			// llTilesHolder.setVisibility(View.INVISIBLE);
+			llTilesHolder.setVisibility(View.INVISIBLE);
 			// }
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -484,8 +487,8 @@ public class MainActivity extends ActionBarActivity implements
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 
-		initUiDefault();
-		setListenersDefault();
+		initUi();
+		setListeners();
 
 	}
 
