@@ -27,6 +27,9 @@ import com.eiabea.btcdroid.util.App;
 
 public class PoolFragment extends Fragment {
 
+	public static final String PARAM_PROFILE = "param_profile";
+	public static final String PARAM_STATS = "param_stats";
+	
 	private ViewGroup rootView;
 
 	private Profile profile;
@@ -39,9 +42,11 @@ public class PoolFragment extends Fragment {
 			txtAverageDuration, txtLuck24h, txtLuck7d, txtLuck30d;
 	private RatingBar ratRating;
 
-	public static PoolFragment create(int pageNumber) {
+	public static PoolFragment create(Profile profile, Stats stats) {
 		PoolFragment fragment = new PoolFragment();
 		Bundle b = new Bundle();
+		b.putParcelable(PARAM_PROFILE, profile);
+		b.putParcelable(PARAM_STATS, stats);
 		fragment.setArguments(b);
 		return fragment;
 	}
@@ -50,11 +55,13 @@ public class PoolFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		Log.i(getClass().getSimpleName(), "onCreateView()");
-		
 		// Inflate the layout containing a title and body text.
 		rootView = (ViewGroup) inflater.inflate(R.layout.fragment_pool, null);
 
 		pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		
+		this.profile = getArguments().getParcelable(PARAM_PROFILE);
+		this.stats = getArguments().getParcelable(PARAM_STATS);
 
 		initUi(inflater, rootView);
 

@@ -17,6 +17,8 @@ import com.eiabea.btcdroid.util.App;
 
 public class RoundsFragment extends Fragment {
 
+	public static final String PARAM_STATS = "param_stats";
+	
 	private ViewGroup rootView;
 
 	private Stats stats;
@@ -28,18 +30,22 @@ public class RoundsFragment extends Fragment {
 	private DisplayMetrics metrics;
 	private int width;
 
-	public static RoundsFragment create(int pageNumber) {
+	public static RoundsFragment create(Stats stats) {
 		RoundsFragment fragment = new RoundsFragment();
+		Bundle b = new Bundle();
+		b.putParcelable(PARAM_STATS, stats);
+		fragment.setArguments(b);
 		return fragment;
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.i(getClass().getSimpleName(), "onCreateView()");
-
 		// Inflate the layout containing a title and body text.
 		rootView = (ViewGroup) inflater.inflate(R.layout.fragment_rounds, null);
 
+		this.stats = getArguments().getParcelable(PARAM_STATS);
+		
 		initUi(inflater, rootView);
 
 		if (stats != null) {

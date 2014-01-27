@@ -22,8 +22,11 @@ import com.eiabea.btcdroid.util.App;
 
 public class PayoutFragment extends Fragment {
 
-	private Profile profile;
+	public static final String PARAM_PRICE = "param_price";
+	public static final String PARAM_PROFILE = "param_profile";
+	
 	private GenericPrice price;
+	private Profile profile;
 
 	private View rootView;
 	private TextView txtCurrentValue, txtEstimatedReward, txtConfirmedReward,
@@ -34,10 +37,12 @@ public class PayoutFragment extends Fragment {
 	private LinearLayout llPriceHolder;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup root, Bundle savedInstanceState) {
-
 		this.rootView = inflater.inflate(R.layout.fragment_payout, root, false);
 
 		pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		
+		price = getArguments().getParcelable(PARAM_PRICE);
+		profile = getArguments().getParcelable(PARAM_PROFILE);
 
 		initUi();
 
@@ -70,9 +75,11 @@ public class PayoutFragment extends Fragment {
 	private void setListeners() {
 	}
 
-	public static PayoutFragment create(int pageNumber) {
+	public static PayoutFragment create(GenericPrice price, Profile profile) {
 		PayoutFragment fragment = new PayoutFragment();
 		Bundle b = new Bundle();
+		b.putParcelable(PARAM_PRICE, price);
+		b.putParcelable(PARAM_PROFILE, profile);
 		fragment.setArguments(b);
 		return fragment;
 	}

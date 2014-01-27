@@ -23,6 +23,8 @@ import com.eiabea.btcdroid.util.App;
 
 public class WorkerFragment extends Fragment {
 
+	public static final String PARAM_PROFILE = "param_profile";
+	
 	private ViewGroup rootView;
 
 	private Profile profile;
@@ -34,17 +36,21 @@ public class WorkerFragment extends Fragment {
 	private DisplayMetrics metrics;
 	private int width;
 
-	public static WorkerFragment create(int pageNumber) {
+	public static WorkerFragment create(Profile profile) {
 		WorkerFragment fragment = new WorkerFragment();
+		Bundle b = new Bundle();
+		b.putParcelable(PARAM_PROFILE, profile);
+		fragment.setArguments(b);
 		return fragment;
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.i(getClass().getSimpleName(), "onCreateView()");
-		
 		// Inflate the layout containing a title and body text.
 		rootView = (ViewGroup) inflater.inflate(R.layout.fragment_worker, null);
+		
+		this.profile = getArguments().getParcelable(PARAM_PROFILE);
 
 		initUi(inflater, rootView);
 

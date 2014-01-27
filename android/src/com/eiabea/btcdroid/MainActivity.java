@@ -8,6 +8,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -39,7 +41,7 @@ public class MainActivity extends ActionBarActivity implements
 		HttpWorkerInterface, OnPageChangeListener {
 
 	// TODO Tablet UI
-	
+
 	private static final int INTENT_PREF = 0;
 
 	public static final int FRAGMENT_PAYOUT = 0;
@@ -58,6 +60,10 @@ public class MainActivity extends ActionBarActivity implements
 
 	private MenuItem itemRefresh;
 
+	// Tiles Layout
+	// private LinearLayout llTilesHolder;
+
+	// ViewPager Layout
 	private ViewPager viewPager;
 	private PagerTitleStrip viewPagerTitle;
 	private MainViewAdapter adapter;
@@ -80,25 +86,13 @@ public class MainActivity extends ActionBarActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 
-		boolean isLand = getResources().getBoolean(R.bool.is_land);
-		boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
-		
-		if(!isTablet){
-			initUiDefault();
-			setListenersDefault();
+		initUiDefault();
+		setListenersDefault();
 
-			if (savedInstanceState == null) {
-				reloadData();
-			}
+		if (savedInstanceState == null) {
+			reloadData();
 		}
-		
-		if(isTablet && isLand){
-			Log.d(getClass().getSimpleName(), "create tablet design");
-		}
-
-
 
 	}
 
@@ -154,28 +148,43 @@ public class MainActivity extends ActionBarActivity implements
 		// Always call the superclass so it can save the view hierarchy state
 	}
 
-	
-	
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-//		NotificationService.getInstance().clearShown();
+		// NotificationService.getInstance().clearShown();
 	}
 
 	private void initUiDefault() {
 
+		boolean isLand = getResources().getBoolean(R.bool.is_land);
+		boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
+
+		setContentView(R.layout.activity_main);
+
 		getSupportActionBar().setSubtitle(R.string.app_name_subtitle);
 
-		viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
-		viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
-
-		viewPager = (ViewPager) findViewById(R.id.vp_main);
-		viewPager.setOffscreenPageLimit(3);
-		viewPager.setOnPageChangeListener(this);
-		viewPager.setCurrentItem(currentPage);
-
 		adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price);
-		viewPager.setAdapter(adapter);
+		if (isTablet && isLand) {
+			FragmentManager fm = getSupportFragmentManager();
+			FragmentTransaction ft = fm.beginTransaction();
+			ft.replace(R.id.fl_payout_tile, adapter.getItem(FRAGMENT_PAYOUT), getFragmentTag(FRAGMENT_PAYOUT));
+			ft.replace(R.id.fl_pool_tile, adapter.getItem(FRAGMENT_POOL), getFragmentTag(FRAGMENT_POOL));
+			ft.replace(R.id.fl_worker_tile, adapter.getItem(FRAGMENT_WORKER), getFragmentTag(FRAGMENT_WORKER));
+			ft.replace(R.id.fl_round_tile, adapter.getItem(FRAGMENT_ROUNDS), getFragmentTag(FRAGMENT_ROUNDS));
+			ft.commitAllowingStateLoss();
+		} else {
+			Log.d(getClass().getSimpleName(), "viewpager");
+
+			viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
+			viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
+
+			viewPager = (ViewPager) findViewById(R.id.vp_main);
+			viewPager.setOffscreenPageLimit(2);
+			viewPager.setOnPageChangeListener(this);
+
+			viewPager.setAdapter(adapter);
+			viewPager.setCurrentItem(currentPage);
+		}
 
 		llNoPools = (LinearLayout) findViewById(R.id.ll_main_no_pools);
 		btnSetToken = (Button) findViewById(R.id.txt_main_set_token);
@@ -224,7 +233,7 @@ public class MainActivity extends ActionBarActivity implements
 
 		if (!isProgessShowing && App.getInstance().isTokenSet()) {
 			itemRefresh.setVisible(true);
-		} 
+		}
 
 		return true;
 	}
@@ -271,12 +280,12 @@ public class MainActivity extends ActionBarActivity implements
 				App.getInstance().resetThreshold();
 				App.getInstance().resetPriceThreshold();
 				App.getInstance().resetPriceEnabled();
-				
+
 				boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notification_enabled", false);
 
-				if(enabled){
+				if (enabled) {
 					NotificationService.getInstance().startInterval();
-				}else{
+				} else {
 					NotificationService.getInstance().stopInterval();
 				}
 
@@ -307,25 +316,37 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	private void showInfos() {
-		if (llNoPools.getVisibility() == View.VISIBLE) {
+		try {
+
+			// if (llNoPools.getVisibility() == View.VISIBLE) {
 			llNoPools.setVisibility(View.GONE);
-		}
-		if (viewPager.getVisibility() == View.INVISIBLE) {
+			// }
+			// if (viewPager.getVisibility() == View.INVISIBLE) {
 			viewPager.setVisibility(View.VISIBLE);
+			// llTilesHolder.setVisibility(View.VISIBLE);
+			// }
+		} catch (NullPointerException e) {
+			e.printStackTrace();
 		}
 	}
 
 	private void hideInfos() {
-		if (llNoPools.getVisibility() == View.GONE) {
+		try {
+
+			// if (llNoPools.getVisibility() == View.VISIBLE) {
 			llNoPools.setVisibility(View.VISIBLE);
-		}
-		if (viewPager.getVisibility() == View.VISIBLE) {
+			// }
+			// if (viewPager.getVisibility() == View.INVISIBLE) {
 			viewPager.setVisibility(View.INVISIBLE);
+			// llTilesHolder.setVisibility(View.INVISIBLE);
+			// }
+		} catch (NullPointerException e) {
+			e.printStackTrace();
 		}
 	}
 
 	private void showProgress(boolean show) {
-		
+
 		Log.w(getClass().getSimpleName(), "showProgress: " + show);
 
 		setSupportProgressBarIndeterminateVisibility(show);
@@ -333,49 +354,53 @@ public class MainActivity extends ActionBarActivity implements
 		if (itemRefresh != null) {
 			itemRefresh.setVisible(!show);
 		}
-		
+
 		this.isProgessShowing = show;
 	}
 
 	public void setProfile(Profile profile) {
 		this.profile = profile;
-		Fragment payout = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_PAYOUT));
-		if (payout != null) {
-			((PayoutFragment) payout).setProfile(profile);
-		}
-		Fragment pool = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
-		if (pool != null) {
-			((PoolFragment) pool).setProfile(profile);
-		}
-		Fragment worker = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_WORKER));
-		if (worker != null) {
-			((WorkerFragment) worker).setProfile(profile);
-
-		}
-
+		((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setProfile(profile);
+		((PoolFragment) getFragment(FRAGMENT_POOL)).setProfile(profile);
+		((WorkerFragment) getFragment(FRAGMENT_WORKER)).setProfile(profile);
 	}
 
 	public void setStats(Stats stats) {
 		this.stats = stats;
-		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_POOL));
-		if (frag != null) {
-			((PoolFragment) frag).setStats(stats);
-
-		}
-		Fragment rounds = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_ROUNDS));
-		if (rounds != null) {
-			((RoundsFragment) rounds).setStats(stats);
-
-		}
+		((PoolFragment) getFragment(FRAGMENT_POOL)).setStats(stats);
+		((RoundsFragment) getFragment(FRAGMENT_ROUNDS)).setStats(stats);
 	}
 
 	public void setPrices(GenericPrice price) {
 		this.price = price;
+		((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setPrices(price);
+	}
 
-		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + FRAGMENT_PAYOUT));
+	private Fragment getFragment(int which) {
+		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + which));
 		if (frag != null) {
-			((PayoutFragment) frag).setPrices(price);
+			return frag;
+		} else {
+			frag = getSupportFragmentManager().findFragmentByTag(getFragmentTag(which));
+			if (frag != null) {
+				return frag;
+			}
 		}
+		return null;
+	}
+
+	private String getFragmentTag(int which) {
+		switch (which) {
+		case FRAGMENT_PAYOUT:
+			return PayoutFragment.class.getSimpleName();
+		case FRAGMENT_POOL:
+			return PoolFragment.class.getSimpleName();
+		case FRAGMENT_WORKER:
+			return WorkerFragment.class.getSimpleName();
+		case FRAGMENT_ROUNDS:
+			return RoundsFragment.class.getSimpleName();
+		}
+		return "";
 	}
 
 	private void handleProgessIndicator() {
@@ -384,9 +409,37 @@ public class MainActivity extends ActionBarActivity implements
 		Log.w(getClass().getSimpleName(), "stats: " + statsLoaded);
 		if (pricesLoaded && profileLoaded && statsLoaded) {
 			showProgress(false);
+			if (adapter == null) {
+				adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price);
+
+				// FragmentManager fm = getSupportFragmentManager();
+				// FragmentTransaction ft = fm.beginTransaction();
+				// ft.replace(R.id.fl_payout_tile,
+				// adapter.getItem(FRAGMENT_PAYOUT), "");
+				// ft.replace(R.id.fl_pool_tile, adapter.getItem(FRAGMENT_POOL),
+				// "");
+				// ft.replace(R.id.fl_worker_tile,
+				// adapter.getItem(FRAGMENT_WORKER), "");
+				// ft.replace(R.id.fl_round_tile,
+				// adapter.getItem(FRAGMENT_ROUNDS), "");
+				// ft.commitAllowingStateLoss();
+			} else {
+				adapter.setProfile(profile);
+				adapter.setStats(stats);
+				adapter.setPrice(price);
+			}
+
+			try {
+				viewPager.setAdapter(adapter);
+				viewPager.setCurrentItem(currentPage);
+
+			} catch (NullPointerException e) {
+
+			}
 		} else {
 			showProgress(true);
 		}
+
 	}
 
 	@Override
@@ -430,15 +483,10 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		
-		boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
-		if(!isTablet){
-			// Force redraw to fix expandablelist arrows
-			viewPager.setAdapter(adapter);
-			viewPager.setCurrentItem(currentPage);
-		}
+
+		initUiDefault();
+		setListenersDefault();
+
 	}
-	
-	
-	
+
 }

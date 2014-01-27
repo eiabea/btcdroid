@@ -15,6 +15,6 @@
     <color name="bd_circle_green_stroke">#4dab62</color>
     <color name="bd_circle_red_solid">#F96351</color>
     <color name="bd_circle_red_stroke">#ad372d</color>
-    <color name="bd_card_bottom_line">#999999</color>
+    <color name="bd_card_bottom_line">#9a9a9a</color>
     
 </resources>
