@@ -67,7 +67,7 @@ public class MainActivity extends ActionBarActivity implements
 	private ViewPager viewPager;
 	private PagerTitleStrip viewPagerTitle;
 	private MainViewAdapter adapter;
-	private int currentPage = FRAGMENT_PAYOUT;
+	private int currentPage = FRAGMENT_POOL;
 
 	private boolean statsLoaded = false;
 	private boolean profileLoaded = false;
@@ -170,8 +170,8 @@ public class MainActivity extends ActionBarActivity implements
 
 			FragmentManager fm = getSupportFragmentManager();
 			FragmentTransaction ft = fm.beginTransaction();
-			ft.replace(R.id.fl_payout_tile, adapter.getItem(FRAGMENT_PAYOUT), getFragmentTag(FRAGMENT_PAYOUT));
 			ft.replace(R.id.fl_pool_tile, adapter.getItem(FRAGMENT_POOL), getFragmentTag(FRAGMENT_POOL));
+			ft.replace(R.id.fl_payout_tile, adapter.getItem(FRAGMENT_PAYOUT), getFragmentTag(FRAGMENT_PAYOUT));
 			ft.replace(R.id.fl_worker_tile, adapter.getItem(FRAGMENT_WORKER), getFragmentTag(FRAGMENT_WORKER));
 			ft.replace(R.id.fl_round_tile, adapter.getItem(FRAGMENT_ROUNDS), getFragmentTag(FRAGMENT_ROUNDS));
 			ft.commitAllowingStateLoss();
@@ -182,7 +182,7 @@ public class MainActivity extends ActionBarActivity implements
 			viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
 
 			viewPager = (ViewPager) findViewById(R.id.vp_main);
-			viewPager.setOffscreenPageLimit(2);
+//			viewPager.setOffscreenPageLimit(2);
 			viewPager.setOnPageChangeListener(this);
 
 			viewPager.setAdapter(adapter);
@@ -363,20 +363,34 @@ public class MainActivity extends ActionBarActivity implements
 
 	public void setProfile(Profile profile) {
 		this.profile = profile;
-		((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setProfile(profile);
-		((PoolFragment) getFragment(FRAGMENT_POOL)).setProfile(profile);
-		((WorkerFragment) getFragment(FRAGMENT_WORKER)).setProfile(profile);
+		try{
+			((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setProfile(profile);
+			((PoolFragment) getFragment(FRAGMENT_POOL)).setProfile(profile);
+			((WorkerFragment) getFragment(FRAGMENT_WORKER)).setProfile(profile);
+		} catch(NullPointerException e){
+			e.printStackTrace();
+		}
 	}
 
 	public void setStats(Stats stats) {
 		this.stats = stats;
-		((PoolFragment) getFragment(FRAGMENT_POOL)).setStats(stats);
-		((RoundsFragment) getFragment(FRAGMENT_ROUNDS)).setStats(stats);
+		try{
+			((PoolFragment) getFragment(FRAGMENT_POOL)).setStats(stats);
+			((RoundsFragment) getFragment(FRAGMENT_ROUNDS)).setStats(stats);
+			
+		} catch(NullPointerException e){
+			e.printStackTrace();
+		}
 	}
 
 	public void setPrices(GenericPrice price) {
 		this.price = price;
-		((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setPrices(price);
+		try{
+			((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setPrices(price);
+			
+		}catch(NullPointerException e){
+			e.printStackTrace();
+		}
 	}
 
 	private Fragment getFragment(int which) {

@@ -197,7 +197,7 @@ public class PayoutFragment extends Fragment {
 			while (prgGauge.getProgress() < params[0]) {
 				publishProgress();
 				try {
-					Thread.sleep(10);
+					Thread.sleep(7);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -218,7 +218,7 @@ public class PayoutFragment extends Fragment {
 			while (prgGauge.getSecondaryProgress() < params[0]) {
 				publishProgress();
 				try {
-					Thread.sleep(10);
+					Thread.sleep(7);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

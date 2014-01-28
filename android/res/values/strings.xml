@@ -5,7 +5,7 @@
     <item name="is_tablet" type="bool">false</item>
 
     <string name="app_name">BTCDroid</string>
-    <string name="app_name_subtitle">for Slush\'s Pool</string>
+    <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_add_pool">Add Pool</string>
     <string name="action_settings">Settings</string>

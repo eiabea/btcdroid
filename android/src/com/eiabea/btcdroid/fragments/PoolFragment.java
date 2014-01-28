@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
+import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
@@ -29,7 +29,7 @@ public class PoolFragment extends Fragment {
 
 	public static final String PARAM_PROFILE = "param_profile";
 	public static final String PARAM_STATS = "param_stats";
-	
+
 	private ViewGroup rootView;
 
 	private Profile profile;
@@ -37,9 +37,9 @@ public class PoolFragment extends Fragment {
 
 	private SharedPreferences pref;
 
-	private TextView txtTotalHashrate, txtAverageHashrate,
-			txtRoundStarted, txtRoundDuration, txtEstimatedDuration,
-			txtAverageDuration, txtLuck24h, txtLuck7d, txtLuck30d;
+	private TextView txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
+			txtRoundDuration, txtEstimatedDuration, txtAverageDuration,
+			txtLuck24h, txtLuck7d, txtLuck30d;
 	private RatingBar ratRating;
 
 	public static PoolFragment create(Profile profile, Stats stats) {
@@ -59,11 +59,11 @@ public class PoolFragment extends Fragment {
 		rootView = (ViewGroup) inflater.inflate(R.layout.fragment_pool, null);
 
 		pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		
+
 		this.profile = getArguments().getParcelable(PARAM_PROFILE);
 		this.stats = getArguments().getParcelable(PARAM_STATS);
 
-		initUi(inflater, rootView);
+		initUi();
 
 		if (profile != null) {
 			setProfile(profile);
@@ -76,8 +76,7 @@ public class PoolFragment extends Fragment {
 		return rootView;
 	}
 
-	@SuppressLint("NewApi")
-	private void initUi(LayoutInflater inflater, ViewGroup rootView) {
+	private void initUi() {
 		txtTotalHashrate = (TextView) rootView
 				.findViewById(R.id.txt_main_info_total_hashrate);
 		txtAverageHashrate = (TextView) rootView
@@ -148,9 +147,9 @@ public class PoolFragment extends Fragment {
 			txt.setText(App.formatProcent(current));
 		}
 	}
-
+	
 	private void setRatingBar(double rating) {
-		double stars = 5;
+		double stars = ratRating.getNumStars();
 
 		if (rating < 0) {
 			rating = 0;
@@ -160,14 +159,20 @@ public class PoolFragment extends Fragment {
 			rating = stars;
 		}
 		
-		ratRating.setMax((int)stars);
-		ratRating.setIsIndicator(true);
-		ratRating.setRating((float) (stars - rating));
+		// Dirty hack to set ratingbar
+		final float ratingToSet = (float) (stars - rating);
+		
+		ratRating.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+			
+			@Override
+			public void onRatingChanged(RatingBar arg0, float arg1, boolean arg2) {
+				Log.d(getClass().getSimpleName(), "Rating changed: " + arg1);
+				arg0.setRating(ratingToSet);
+			}
+		});
 
-		Log.d(getClass().getSimpleName(),
-				"Rating: " + rating);
-		Log.d(getClass().getSimpleName(),
-				"Rating set: " + ratRating.getRating());
+		ratRating.setRating(ratingToSet);
+		Log.d(getClass().getSimpleName(), "Rating set: " + ratRating.getRating());
 
 	}
 
@@ -236,14 +241,14 @@ public class PoolFragment extends Fragment {
 			totalHashrate += tmp.getHashrate();
 		}
 
-//		float estimated = Float.valueOf(profile.getEstimated_reward());
-//		float unconfirmed = Float.valueOf(profile.getUnconfirmed_reward());
-//		float confirmed = Float.valueOf(profile.getConfirmed_reward());
-//		float total = confirmed + unconfirmed;
+		// float estimated = Float.valueOf(profile.getEstimated_reward());
+		// float unconfirmed = Float.valueOf(profile.getUnconfirmed_reward());
+		// float confirmed = Float.valueOf(profile.getConfirmed_reward());
+		// float total = confirmed + unconfirmed;
 
-//		txtEstimatedReward.setText(App.formatReward(estimated));
-//		txtConfirmedReward.setText(App.formatReward(confirmed));
-//		txtTotalReward.setText(App.formatReward(total));
+		// txtEstimatedReward.setText(App.formatReward(estimated));
+		// txtConfirmedReward.setText(App.formatReward(confirmed));
+		// txtTotalReward.setText(App.formatReward(total));
 
 		txtTotalHashrate.setText(App.formatHashRate(totalHashrate));
 		txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
@@ -252,7 +257,9 @@ public class PoolFragment extends Fragment {
 
 	private void fillUpStats() {
 
-		Date started, average, duration = null;
+		Date started = null;
+		Date average = null;
+		Date duration = null;
 
 		average = getAverageRoundTime(App.parseBlocks(stats.getBlocks()));
 		txtAverageDuration.setText(App.dateDurationFormat.format(average));
@@ -293,6 +300,5 @@ public class PoolFragment extends Fragment {
 		setLuck(txtLuck30d, currentLuck30d);
 
 	}
-
 
 }

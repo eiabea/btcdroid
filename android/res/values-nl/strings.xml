@@ -3,7 +3,7 @@
     <item type="bool" name="is_land">false</item>
 
     <string name="app_name">BTCDroid</string>
-    <string name="app_name_subtitle">voor Slush\'s Pool</string>
+    <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
     <string name="action_refresh">Vernieuwen</string>
     <string name="action_add_pool">Pool toevoegen</string>
     <string name="action_settings">Instellingen</string>
@@ -33,6 +33,7 @@
     <string name="alert_set_token_message">.) Login bij mining.bitcoin.cz\n.) Beheer API tokens\n.) Uw huidige token\n\nHint: Open de Website op uw telefoon om de token te kopieren en &amp; Plak de Token hier onder:</string>
     <string name="alert_set_token_ok">Token instellen</string>
     <string name="alert_set_token_cancel">Annuleren</string>
+    <string name="txt_viewpager_payout_fragment">Payout</string>
     <string name="txt_viewpager_pool_fragment">Pool gegevens</string>
     <string name="txt_viewpager_worker_fragment">Werkers</string>
     <string name="txt_viewpager_round_fragment">Ronden</string>
