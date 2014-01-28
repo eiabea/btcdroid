@@ -33,7 +33,7 @@
     <string name="alert_set_token_message">.) Login bij mining.bitcoin.cz\n.) Beheer API tokens\n.) Uw huidige token\n\nHint: Open de Website op uw telefoon om de token te kopieren en &amp; Plak de Token hier onder:</string>
     <string name="alert_set_token_ok">Token instellen</string>
     <string name="alert_set_token_cancel">Annuleren</string>
-    <string name="txt_viewpager_payout_fragment">Payout</string>
+    <string name="txt_viewpager_payout_fragment">Uitbetaling</string>
     <string name="txt_viewpager_pool_fragment">Pool gegevens</string>
     <string name="txt_viewpager_worker_fragment">Werkers</string>
     <string name="txt_viewpager_round_fragment">Ronden</string>
@@ -43,7 +43,7 @@
     
     <!-- PayoutFragment -->
     <string name="txt_progress">voortgang</string>
-    <string name="txt_send_threshold">Threshold om te versturen</string>
+    <string name="txt_send_threshold">Hoeveelheid tot uitbetaling</string>
     <string name="txt_estimated_reward">Verwacht</string>
     <string name="txt_confirmed_reward">Bevestigd</string>
     <string name="txt_rewards">Opbrengst</string>

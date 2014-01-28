@@ -24,6 +24,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.eiabea.btcdroid.adapter.MainViewAdapter;
 import com.eiabea.btcdroid.fragments.PayoutFragment;
@@ -320,13 +321,19 @@ public class MainActivity extends ActionBarActivity implements
 
 	private void showInfos() {
 		try {
-
+			boolean isLand = getResources().getBoolean(R.bool.is_land);
+			boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
 			// if (llNoPools.getVisibility() == View.VISIBLE) {
 			llNoPools.setVisibility(View.GONE);
 			// }
 			// if (viewPager.getVisibility() == View.INVISIBLE) {
-			viewPager.setVisibility(View.VISIBLE);
-			llTilesHolder.setVisibility(View.VISIBLE);
+			if(isLand && isTablet){
+				llTilesHolder.setVisibility(View.VISIBLE);
+				
+			}else{
+				viewPager.setVisibility(View.VISIBLE);
+				
+			}
 			// }
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -335,13 +342,19 @@ public class MainActivity extends ActionBarActivity implements
 
 	private void hideInfos() {
 		try {
-
+			boolean isLand = getResources().getBoolean(R.bool.is_land);
+			boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
 			// if (llNoPools.getVisibility() == View.VISIBLE) {
 			llNoPools.setVisibility(View.VISIBLE);
 			// }
 			// if (viewPager.getVisibility() == View.INVISIBLE) {
-			viewPager.setVisibility(View.INVISIBLE);
-			llTilesHolder.setVisibility(View.INVISIBLE);
+			if(isLand && isTablet){
+				llTilesHolder.setVisibility(View.INVISIBLE);
+				
+			}else{
+				viewPager.setVisibility(View.INVISIBLE);
+				
+			}
 			// }
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -504,6 +517,27 @@ public class MainActivity extends ActionBarActivity implements
 		initUi();
 		setListeners();
 
+	}
+
+	@Override
+	public void onProfileError() {
+		profileLoaded = true;
+		handleProgessIndicator();
+		Toast.makeText(MainActivity.this, getString(R.string.toast_error_loading_profile), Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onStatsError() {
+		statsLoaded = true;
+		handleProgessIndicator();
+		Toast.makeText(MainActivity.this, getString(R.string.toast_error_loading_stats), Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onPricesError() {
+		pricesLoaded = true;
+		handleProgessIndicator();
+		Toast.makeText(MainActivity.this, getString(R.string.toast_error_loading_price), Toast.LENGTH_SHORT).show();
 	}
 
 }

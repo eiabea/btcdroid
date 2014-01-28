@@ -54,7 +54,7 @@ public class HttpWorker {
 	public void getProfile(Response.Listener<Profile> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Profile");
 
-		String url = HttpWorker.PROFILE_URL + token;
+		String url = HttpWorker.PROFILE_URL + "wrong" + token;
 
 		System.out.println(HttpWorker.mQueue.toString());
 
@@ -123,7 +123,7 @@ public class HttpWorker {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				httpWorkerInterface.onProfileLoaded(null);
+				httpWorkerInterface.onProfileError();
 
 			}
 		});
@@ -154,7 +154,7 @@ public class HttpWorker {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 
-					httpWorkerInterface.onPricesLoaded(null);
+					httpWorkerInterface.onPricesError();
 
 				}
 			});
@@ -177,7 +177,7 @@ public class HttpWorker {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 
-					httpWorkerInterface.onPricesLoaded(null);
+					httpWorkerInterface.onPricesError();
 
 				}
 			});
@@ -204,7 +204,7 @@ public class HttpWorker {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				httpWorkerInterface.onStatsLoaded(null);
+				httpWorkerInterface.onStatsError();
 
 			}
 		});
@@ -216,10 +216,13 @@ public class HttpWorker {
 
 	public interface HttpWorkerInterface {
 		public void onProfileLoaded(Profile profile);
+		public void onProfileError();
 
 		public void onStatsLoaded(Stats stats);
+		public void onStatsError();
 
 		public void onPricesLoaded(GenericPrice price);
+		public void onPricesError();
 	};
 
 }
