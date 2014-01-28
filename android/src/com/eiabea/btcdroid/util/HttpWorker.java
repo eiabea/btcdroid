@@ -54,7 +54,7 @@ public class HttpWorker {
 	public void getProfile(Response.Listener<Profile> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Profile");
 
-		String url = HttpWorker.PROFILE_URL + "wrong" + token;
+		String url = HttpWorker.PROFILE_URL + token;
 
 		System.out.println(HttpWorker.mQueue.toString());
 
