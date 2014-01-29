@@ -51,10 +51,28 @@ public class PoolFragment extends Fragment {
 		return fragment;
 	}
 
+	// @Override
+	// public void onCreate(Bundle savedInstanceState) {
+	// super.onCreate(savedInstanceState);
+	// if(savedInstanceState != null){
+	// this.luck24hColor = savedInstanceState.getInt("24hColor");
+	// this.luck7dColor = savedInstanceState.getInt("7dColor");
+	// this.luck30dColor = savedInstanceState.getInt("30dColor");
+	// }
+	// }
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		setRetainInstance(true);
 		Log.i(getClass().getSimpleName(), "onCreateView()");
+
+		// if(savedInstanceState != null){
+		// this.luck24hColor = savedInstanceState.getInt("24hColor");
+		// this.luck7dColor = savedInstanceState.getInt("7dColor");
+		// this.luck30dColor = savedInstanceState.getInt("30dColor");
+		// }
+
 		// Inflate the layout containing a title and body text.
 		rootView = (ViewGroup) inflater.inflate(R.layout.fragment_pool, null);
 
@@ -147,7 +165,15 @@ public class PoolFragment extends Fragment {
 			txt.setText(App.formatProcent(current));
 		}
 	}
-	
+
+	// @Override
+	// public void onSaveInstanceState(Bundle outState) {
+	// super.onSaveInstanceState(outState);
+	// outState.putInt("24hColor", txtLuck24h.getCurrentTextColor());
+	// outState.putInt("7dColor", txtLuck7d.getCurrentTextColor());
+	// outState.putInt("30dColor", txtLuck30d.getCurrentTextColor());
+	// }
+
 	private void setRatingBar(double rating) {
 		double stars = ratRating.getNumStars();
 
@@ -158,12 +184,12 @@ public class PoolFragment extends Fragment {
 		if (rating > stars) {
 			rating = stars;
 		}
-		
+
 		// Dirty hack to set ratingbar
 		final float ratingToSet = (float) (stars - rating);
-		
+
 		ratRating.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
-			
+
 			@Override
 			public void onRatingChanged(RatingBar arg0, float arg1, boolean arg2) {
 				Log.d(getClass().getSimpleName(), "Rating changed: " + arg1);
@@ -172,7 +198,8 @@ public class PoolFragment extends Fragment {
 		});
 
 		ratRating.setRating(ratingToSet);
-		Log.d(getClass().getSimpleName(), "Rating set: " + ratRating.getRating());
+		Log.d(getClass().getSimpleName(),
+				"Rating set: " + ratRating.getRating());
 
 	}
 
