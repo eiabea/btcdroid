@@ -110,7 +110,6 @@ public class WorkerListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public void onGroupExpanded(int groupPosition) {
-		// TODO Auto-generated method stub
 		super.onGroupExpanded(groupPosition);
 	}
 

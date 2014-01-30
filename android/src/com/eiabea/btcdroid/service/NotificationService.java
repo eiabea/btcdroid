@@ -101,7 +101,6 @@ public class NotificationService extends Service implements Listener<Profile>,
 
 	@Override
 	public void onErrorResponse(VolleyError error) {
-		// TODO Auto-generated method stub
 
 	}
 

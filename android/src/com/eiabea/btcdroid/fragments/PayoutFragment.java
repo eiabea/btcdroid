@@ -38,8 +38,7 @@ public class PayoutFragment extends Fragment {
 	private SharedPreferences pref;
 	private LinearLayout llPriceHolder;
 
-	public View onCreateView(LayoutInflater inflater, ViewGroup root,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup root, Bundle savedInstanceState) {
 		this.rootView = inflater.inflate(R.layout.fragment_payout, root, false);
 
 		pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -64,21 +63,15 @@ public class PayoutFragment extends Fragment {
 	}
 
 	private void initUi() {
-		llPriceHolder = (LinearLayout) rootView
-				.findViewById(R.id.ll_main_info_price_holder);
-		txtCurrentValue = (TextView) rootView
-				.findViewById(R.id.txt_main_info_current_value);
+		llPriceHolder = (LinearLayout) rootView.findViewById(R.id.ll_main_info_price_holder);
+		txtCurrentValue = (TextView) rootView.findViewById(R.id.txt_main_info_current_value);
 
-		txtEstimatedReward = (TextView) rootView
-				.findViewById(R.id.txt_main_info_estimated_reward);
-		txtConfirmedReward = (TextView) rootView
-				.findViewById(R.id.txt_main_info_confirmed_reward);
-		txtTotalReward = (TextView) rootView
-				.findViewById(R.id.txt_main_info_total_reward);
+		txtEstimatedReward = (TextView) rootView.findViewById(R.id.txt_main_info_estimated_reward);
+		txtConfirmedReward = (TextView) rootView.findViewById(R.id.txt_main_info_confirmed_reward);
+		txtTotalReward = (TextView) rootView.findViewById(R.id.txt_main_info_total_reward);
 
 		prgGauge = (ProgressBar) rootView.findViewById(R.id.prg_data_gauge);
-		txtSendThreshold = (TextView) rootView
-				.findViewById(R.id.txt_main_info_send_threshold);
+		txtSendThreshold = (TextView) rootView.findViewById(R.id.txt_main_info_send_threshold);
 	}
 
 	private void setListeners() {
@@ -120,8 +113,7 @@ public class PayoutFragment extends Fragment {
 
 	private void setPrice(TextView txt, GenericPrice current) {
 		if (current != null) {
-			float lastPriceFloat = pref.getFloat("txt_" + txt.getId()
-					+ "_value", 0f);
+			float lastPriceFloat = pref.getFloat("txt_" + txt.getId() + "_value", 0f);
 			float currentPriceFloat = current.getValueFloat();
 
 			int minuteThreshold = App.getInstance().getPriceThreshold();
@@ -131,37 +123,24 @@ public class PayoutFragment extends Fragment {
 
 			long now = Calendar.getInstance().getTimeInMillis();
 
-			Log.d(getClass().getSimpleName(), "Pricethreshold min: "
-					+ minuteThreshold);
+			Log.d(getClass().getSimpleName(), "Pricethreshold min: " + minuteThreshold);
 			Log.d(getClass().getSimpleName(), "Pricethreshold: " + threshold);
-			Log.d(getClass().getSimpleName(), "Price last Updated: "
-					+ lastUpdated);
+			Log.d(getClass().getSimpleName(), "Price last Updated: " + lastUpdated);
 			Log.d(getClass().getSimpleName(), "Price now: " + now);
-			Log.d(getClass().getSimpleName(), "time until priceupdate: "
-					+ (((lastUpdated + threshold) - now) / 1000) + " sec");
+			Log.d(getClass().getSimpleName(), "time until priceupdate: " + (((lastUpdated + threshold) - now) / 1000) + " sec");
 
 			if ((lastUpdated + threshold) < now) {
 
-				Log.d(getClass().getSimpleName(),
-						"threshold expired --> set colors for " + "txt_"
-								+ txt.getId());
+				Log.d(getClass().getSimpleName(), "threshold expired --> set colors for " + "txt_" + txt.getId());
 				if (lastPriceFloat > currentPriceFloat) {
-					txtCurrentValue.setTextColor(getResources().getColor(
-							R.color.bd_red));
+					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
 				} else {
-					txtCurrentValue.setTextColor(getResources().getColor(
-							R.color.bd_green));
+					txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
 				}
 
-				pref.edit()
-						.putFloat("txt_" + txt.getId() + "_value",
-								currentPriceFloat).commit();
-				pref.edit()
-						.putLong("txt_" + txt.getId(),
-								Calendar.getInstance().getTimeInMillis())
-						.commit();
-				Log.d(getClass().getSimpleName(), "set last price to: "
-						+ currentPriceFloat);
+				pref.edit().putFloat("txt_" + txt.getId() + "_value", currentPriceFloat).commit();
+				pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).commit();
+				Log.d(getClass().getSimpleName(), "set last price to: " + currentPriceFloat);
 			}
 
 			txtCurrentValue.setText(App.formatPrice(current.getValueFloat()));
@@ -200,7 +179,7 @@ public class PayoutFragment extends Fragment {
 			}
 
 			prgGauge.setMax(max + (2 * offset));
-			
+
 			ProgressBarAnimation anim = new ProgressBarAnimation(prgGauge, offset, total, -50, confirmedProgress);
 			anim.setDuration(1000);
 			prgGauge.startAnimation(anim);
@@ -257,31 +236,31 @@ public class PayoutFragment extends Fragment {
 			return null;
 		}
 	}
-	
-	public class ProgressBarAnimation extends Animation{
-	    private ProgressBar progressBar;
-	    private float from;
-	    private float  to;
-	    private float secondFrom;
-	    private float secondTo;
 
-	    public ProgressBarAnimation(ProgressBar progressBar, float from, float to, float secondFrom, float secondTo) {
-	        super();
-	        this.progressBar = progressBar;
-	        this.from = from;
-	        this.to = to;
-	        this.secondFrom = secondFrom;
-	        this.secondTo = secondTo;
-	    }
+	public class ProgressBarAnimation extends Animation {
+		private ProgressBar progressBar;
+		private float from;
+		private float to;
+		private float secondFrom;
+		private float secondTo;
 
-	    @Override
-	    protected void applyTransformation(float interpolatedTime, Transformation t) {
-	        super.applyTransformation(interpolatedTime, t);
-	        float value = from + (to - from) * interpolatedTime;
-	        float secondValue = secondFrom + (secondTo - secondFrom) * interpolatedTime;
-	        progressBar.setProgress((int) value);
-	        progressBar.setSecondaryProgress((int) secondValue);
-	    }
+		public ProgressBarAnimation(ProgressBar progressBar, float from, float to, float secondFrom, float secondTo) {
+			super();
+			this.progressBar = progressBar;
+			this.from = from;
+			this.to = to;
+			this.secondFrom = secondFrom;
+			this.secondTo = secondTo;
+		}
+
+		@Override
+		protected void applyTransformation(float interpolatedTime, Transformation t) {
+			super.applyTransformation(interpolatedTime, t);
+			float value = from + (to - from) * interpolatedTime;
+			float secondValue = secondFrom + (secondTo - secondFrom) * interpolatedTime;
+			progressBar.setProgress((int) value);
+			progressBar.setSecondaryProgress((int) secondValue);
+		}
 
 	}
 

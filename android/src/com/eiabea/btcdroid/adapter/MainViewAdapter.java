@@ -19,16 +19,16 @@ import com.eiabea.btcdroid.model.Stats;
 public class MainViewAdapter extends FragmentStatePagerAdapter {
 
 	private static final int PAGES = 4;
-	
+
 	private Profile profile;
 	private Stats stats;
 	private GenericPrice price;
-	
+
 	private Context context;
 
 	public MainViewAdapter(Context context, FragmentManager fm, Profile profile, Stats stats, GenericPrice price) {
 		super(fm);
-		
+
 		this.context = context;
 		this.profile = profile;
 		this.stats = stats;
@@ -57,7 +57,6 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 		return null;
 
 	}
-	
 
 	@Override
 	public int getCount() {

@@ -41,8 +41,6 @@ import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
 public class MainActivity extends ActionBarActivity implements
 		HttpWorkerInterface, OnPageChangeListener {
 
-	// TODO Tablet UI
-
 	private static final int INTENT_PREF = 0;
 
 	public static final int FRAGMENT_PAYOUT = 0;
@@ -183,7 +181,7 @@ public class MainActivity extends ActionBarActivity implements
 			viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
 
 			viewPager = (ViewPager) findViewById(R.id.vp_main);
-//			viewPager.setOffscreenPageLimit(2);
+			// viewPager.setOffscreenPageLimit(2);
 			viewPager.setOnPageChangeListener(this);
 
 			viewPager.setAdapter(adapter);
@@ -327,12 +325,12 @@ public class MainActivity extends ActionBarActivity implements
 			llNoPools.setVisibility(View.GONE);
 			// }
 			// if (viewPager.getVisibility() == View.INVISIBLE) {
-			if(isLand && isTablet){
+			if (isLand && isTablet) {
 				llTilesHolder.setVisibility(View.VISIBLE);
-				
-			}else{
+
+			} else {
 				viewPager.setVisibility(View.VISIBLE);
-				
+
 			}
 			// }
 		} catch (NullPointerException e) {
@@ -348,12 +346,12 @@ public class MainActivity extends ActionBarActivity implements
 			llNoPools.setVisibility(View.VISIBLE);
 			// }
 			// if (viewPager.getVisibility() == View.INVISIBLE) {
-			if(isLand && isTablet){
+			if (isLand && isTablet) {
 				llTilesHolder.setVisibility(View.INVISIBLE);
-				
-			}else{
+
+			} else {
 				viewPager.setVisibility(View.INVISIBLE);
-				
+
 			}
 			// }
 		} catch (NullPointerException e) {
@@ -376,32 +374,32 @@ public class MainActivity extends ActionBarActivity implements
 
 	public void setProfile(Profile profile) {
 		this.profile = profile;
-		try{
+		try {
 			((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setProfile(profile);
 			((PoolFragment) getFragment(FRAGMENT_POOL)).setProfile(profile);
 			((WorkerFragment) getFragment(FRAGMENT_WORKER)).setProfile(profile);
-		} catch(NullPointerException e){
+		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void setStats(Stats stats) {
 		this.stats = stats;
-		try{
+		try {
 			((PoolFragment) getFragment(FRAGMENT_POOL)).setStats(stats);
 			((RoundsFragment) getFragment(FRAGMENT_ROUNDS)).setStats(stats);
-			
-		} catch(NullPointerException e){
+
+		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void setPrices(GenericPrice price) {
 		this.price = price;
-		try{
+		try {
 			((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setPrices(price);
-			
-		}catch(NullPointerException e){
+
+		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
 	}
@@ -441,18 +439,6 @@ public class MainActivity extends ActionBarActivity implements
 			showProgress(false);
 			if (adapter == null) {
 				adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price);
-
-				// FragmentManager fm = getSupportFragmentManager();
-				// FragmentTransaction ft = fm.beginTransaction();
-				// ft.replace(R.id.fl_payout_tile,
-				// adapter.getItem(FRAGMENT_PAYOUT), "");
-				// ft.replace(R.id.fl_pool_tile, adapter.getItem(FRAGMENT_POOL),
-				// "");
-				// ft.replace(R.id.fl_worker_tile,
-				// adapter.getItem(FRAGMENT_WORKER), "");
-				// ft.replace(R.id.fl_round_tile,
-				// adapter.getItem(FRAGMENT_ROUNDS), "");
-				// ft.commitAllowingStateLoss();
 			} else {
 				adapter.setProfile(profile);
 				adapter.setStats(stats);
@@ -495,13 +481,11 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
 
 	}
 

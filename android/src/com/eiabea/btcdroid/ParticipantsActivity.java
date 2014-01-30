@@ -1,8 +1,13 @@
 package com.eiabea.btcdroid;
 
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -23,6 +28,8 @@ import com.jwetherell.quick_response_code.qrcode.QRCodeEncoder;
 
 public class ParticipantsActivity extends ActionBarActivity {
 
+	// TODO Wording
+	
 	private ImageView imgQr;
 
 	private RelativeLayout rlQrCodeHolder;
@@ -49,7 +56,7 @@ public class ParticipantsActivity extends ActionBarActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
-		
+
 		getSupportActionBar().setSubtitle(R.string.action_participants);
 
 		rlQrCodeHolder = (RelativeLayout) findViewById(R.id.rl_qr_code_holder);
@@ -66,15 +73,36 @@ public class ParticipantsActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 
-				showQr(true);
+				final String address = getString(R.string.txt_donations_address);
 
-				LoadQrCode task = new LoadQrCode();
-				String address = getString(R.string.txt_donations_address);
-				task.execute(new String[] { address });
-				
-				ClipData clipData = ClipData.newPlainText(getString(R.string.txt_donations), address);
-				clipboard.setPrimaryClip(clipData);
-				Toast.makeText(ParticipantsActivity.this, address + " " + getString(R.string.txt_copied_to_clipboard),  Toast.LENGTH_SHORT).show();
+				AlertDialog.Builder builder = new AlertDialog.Builder(ParticipantsActivity.this);
+				builder.setTitle("Donation");
+				builder.setItems(new CharSequence[] { "Copy Bitcoinadress", "Show QR-Code", "Open Bitcoinwallet" }, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+						case 0:
+							ClipData clipData = ClipData.newPlainText(getString(R.string.txt_donations), address);
+							clipboard.setPrimaryClip(clipData);
+							Toast.makeText(ParticipantsActivity.this, address + " " + getString(R.string.txt_copied_to_clipboard), Toast.LENGTH_SHORT).show();
+							break;
+						case 1:
+							showQr(true);
+
+							LoadQrCode task = new LoadQrCode();
+							task.execute(new String[] { address });
+							break;
+						case 2:
+							try {
+								startActivity(makeBitcoinIntent());
+							} catch (ActivityNotFoundException e) {
+								Toast.makeText(ParticipantsActivity.this, "No Bitcoin Wallet found", Toast.LENGTH_SHORT).show();
+							}
+							break;
+						}
+					}
+				});
+				builder.create().show();
+
 			}
 		});
 
@@ -105,7 +133,7 @@ public class ParticipantsActivity extends ActionBarActivity {
 			finish();
 		}
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -140,5 +168,19 @@ public class ParticipantsActivity extends ActionBarActivity {
 			imgQr.setImageBitmap(qr);
 
 		}
+	}
+
+	private Intent makeBitcoinIntent() {
+		// {bitcoin:<address>[?amount=<amount>][?label=<label>][?message=<message>]
+
+		String address = getString(R.string.txt_donations_address);
+
+		StringBuilder uri = new StringBuilder("bitcoin:");
+
+		uri.append(address);
+
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
+
+		return intent;
 	}
 }
