@@ -163,29 +163,34 @@ public class MainActivity extends ActionBarActivity implements
 		getSupportActionBar().setSubtitle(R.string.app_name_subtitle);
 
 		adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price);
-		if (isTablet && isLand) {
-
-			llTilesHolder = (LinearLayout) findViewById(R.id.ll_tiles_holder);
-
-			FragmentManager fm = getSupportFragmentManager();
-			FragmentTransaction ft = fm.beginTransaction();
-			ft.replace(R.id.fl_pool_tile, adapter.getItem(FRAGMENT_POOL), getFragmentTag(FRAGMENT_POOL));
-			ft.replace(R.id.fl_payout_tile, adapter.getItem(FRAGMENT_PAYOUT), getFragmentTag(FRAGMENT_PAYOUT));
-			ft.replace(R.id.fl_worker_tile, adapter.getItem(FRAGMENT_WORKER), getFragmentTag(FRAGMENT_WORKER));
-			ft.replace(R.id.fl_round_tile, adapter.getItem(FRAGMENT_ROUNDS), getFragmentTag(FRAGMENT_ROUNDS));
-			ft.commitAllowingStateLoss();
-		} else {
-			Log.d(getClass().getSimpleName(), "viewpager");
-
-			viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
-			viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
-
-			viewPager = (ViewPager) findViewById(R.id.vp_main);
-			// viewPager.setOffscreenPageLimit(2);
-			viewPager.setOnPageChangeListener(this);
-
-			viewPager.setAdapter(adapter);
-			viewPager.setCurrentItem(currentPage);
+		try{
+			if (isTablet && isLand) {
+				
+				llTilesHolder = (LinearLayout) findViewById(R.id.ll_tiles_holder);
+				
+				FragmentManager fm = getSupportFragmentManager();
+				FragmentTransaction ft = fm.beginTransaction();
+				ft.replace(R.id.fl_pool_tile, adapter.getItem(FRAGMENT_POOL), getFragmentTag(FRAGMENT_POOL));
+				ft.replace(R.id.fl_payout_tile, adapter.getItem(FRAGMENT_PAYOUT), getFragmentTag(FRAGMENT_PAYOUT));
+				ft.replace(R.id.fl_worker_tile, adapter.getItem(FRAGMENT_WORKER), getFragmentTag(FRAGMENT_WORKER));
+				ft.replace(R.id.fl_round_tile, adapter.getItem(FRAGMENT_ROUNDS), getFragmentTag(FRAGMENT_ROUNDS));
+				ft.commitAllowingStateLoss();
+			} else {
+				Log.d(getClass().getSimpleName(), "viewpager");
+				
+				viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
+				viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
+				
+				viewPager = (ViewPager) findViewById(R.id.vp_main);
+				// viewPager.setOffscreenPageLimit(2);
+				viewPager.setOnPageChangeListener(this);
+				
+				viewPager.setAdapter(adapter);
+				viewPager.setCurrentItem(currentPage);
+			}
+			
+		}catch (NullPointerException e){
+			e.printStackTrace();
 		}
 
 		llNoPools = (LinearLayout) findViewById(R.id.ll_main_no_pools);

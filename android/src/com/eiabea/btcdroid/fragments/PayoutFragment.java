@@ -3,7 +3,6 @@ package com.eiabea.btcdroid.fragments;
 import java.util.Calendar;
 
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -149,8 +148,8 @@ public class PayoutFragment extends Fragment {
 
 	private void setGauge(Profile profile) {
 		try {
-			int max = 100;
-			int offset = 4;
+			int max = 1000;
+			int offset = 48;
 
 			float sendThreshold = Float.valueOf(profile.getSend_threshold());
 			float estimated = Float.valueOf(profile.getEstimated_reward());
@@ -179,6 +178,8 @@ public class PayoutFragment extends Fragment {
 			}
 
 			prgGauge.setMax(max + (2 * offset));
+			prgGauge.setProgress(0);
+			prgGauge.setSecondaryProgress(0);
 
 			ProgressBarAnimation anim = new ProgressBarAnimation(prgGauge, offset, total, -50, confirmedProgress);
 			anim.setDuration(1000);
@@ -193,48 +194,6 @@ public class PayoutFragment extends Fragment {
 
 		setPrice(txtCurrentValue, price);
 
-	}
-
-	public class TotalAnimator extends AsyncTask<Integer, Void, Void> {
-
-		@Override
-		protected void onProgressUpdate(Void... values) {
-			prgGauge.incrementProgressBy(1);
-		}
-
-		@Override
-		protected Void doInBackground(Integer... params) {
-			while (prgGauge.getProgress() < params[0]) {
-				publishProgress();
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			return null;
-		}
-	}
-
-	public class ConfirmedAnimator extends AsyncTask<Integer, Void, Void> {
-
-		@Override
-		protected void onProgressUpdate(Void... values) {
-			prgGauge.incrementSecondaryProgressBy(1);
-		}
-
-		@Override
-		protected Void doInBackground(Integer... params) {
-			while (prgGauge.getSecondaryProgress() < params[0]) {
-				publishProgress();
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			return null;
-		}
 	}
 
 	public class ProgressBarAnimation extends Animation {
