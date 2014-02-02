@@ -1,33 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_widget_holder"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="5dp" >
+    android:layout_height="match_parent" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal|center_vertical"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:baselineAligned="false"
         android:orientation="horizontal" >
 
-        <TextView
-            style="@android:style/TextAppearance.Medium"
+        <LinearLayout
+            android:id="@+id/ll_pool_hash_holder_left"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
             android:layout_weight="1"
-            android:text="Price:" >
-        </TextView>
+            android:background="@color/bd_white"
+            android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/txt_widget_price"
-            style="@android:style/TextAppearance.Medium"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/small_card_content_padding_bottom"
+                android:paddingTop="@dimen/small_card_content_padding_top" >
+
+                <TextView
+                    android:id="@+id/txt_main_info_average_hashrate"
+                    style="@style/style_small_card_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/bd_dark_grey_text" />
+
+                <TextView
+                    style="@style/style_small_card_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/txt_average_total_hashrate" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/small_card_bottom_line_height"
+                android:background="@color/bd_card_bottom_line" >
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_pool_hash_holder_right"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
             android:layout_weight="1"
-            android:text="$345645" >
-        </TextView>
+            android:background="@color/bd_white"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/small_card_content_padding_bottom"
+                android:paddingTop="@dimen/small_card_content_padding_top" >
+
+                <TextView
+                    android:id="@+id/txt_main_info_total_hashrate"
+                    style="@style/style_small_card_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/bd_green" />
+
+                <TextView
+                    style="@style/style_small_card_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/txt_current_total_hashrate" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/small_card_bottom_line_height"
+                android:background="@color/bd_card_bottom_line" >
+            </FrameLayout>
+        </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+    <FrameLayout
+        android:id="@+id/fl_widget_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="#aa383838"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+</RelativeLayout>

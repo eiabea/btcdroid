@@ -118,6 +118,9 @@
         <item name="android:maxHeight">14dip</item>
         <item name="android:thumb">@null</item>
         <item name="android:isIndicator">true</item>
+        <item name="android:numStars">5</item>
+        <item name="android:max">5</item>
+        <item name="android:stepSize">0.5</item>
     </style>
 
 </resources>

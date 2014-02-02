@@ -138,9 +138,10 @@ public class PoolFragment extends Fragment {
 			rating = stars;
 		}
 
-		// Dirty hack to set ratingbar
 		final float ratingToSet = (float) (stars - rating);
+//		final float ratingToSet = 2.4f;
 
+		// Dirty hack to set ratingbar
 		ratRating.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
 
 			@Override

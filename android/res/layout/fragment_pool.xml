@@ -139,12 +139,10 @@
                     <RatingBar
                         android:id="@+id/rat_main_info_rating"
                         style="@style/style_progress"
-                        android:isIndicator="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
-                        android:numStars="5" />
+                        android:layout_marginLeft="5dp" />
                 </LinearLayout>
 
                 <LinearLayout

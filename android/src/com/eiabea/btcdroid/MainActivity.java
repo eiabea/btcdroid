@@ -1,6 +1,7 @@
 package com.eiabea.btcdroid;
 
 import android.app.AlertDialog;
+import android.appwidget.AppWidgetManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,6 +38,7 @@ import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.service.NotificationService;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
+import com.eiabea.btcdroid.widget.WidgetProvider;
 
 public class MainActivity extends ActionBarActivity implements
 		HttpWorkerInterface, OnPageChangeListener {
@@ -380,9 +382,16 @@ public class MainActivity extends ActionBarActivity implements
 	public void setProfile(Profile profile) {
 		this.profile = profile;
 		try {
+			// Update Widget
+			Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
+			i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+			i.putExtra("profile", profile);
+			getApplicationContext().sendBroadcast(i);	
+
 			((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setProfile(profile);
 			((PoolFragment) getFragment(FRAGMENT_POOL)).setProfile(profile);
 			((WorkerFragment) getFragment(FRAGMENT_WORKER)).setProfile(profile);
+			
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
@@ -456,6 +465,8 @@ public class MainActivity extends ActionBarActivity implements
 
 			} catch (NullPointerException e) {
 
+			} catch (Exception e) {
+				
 			}
 		} else {
 			showProgress(true);

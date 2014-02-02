@@ -9,6 +9,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +28,7 @@ import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.GsonRequest;
 import com.eiabea.btcdroid.util.HttpWorker;
+import com.eiabea.btcdroid.widget.WidgetProvider;
 
 public class NotificationService extends Service implements Listener<Profile>,
 		ErrorListener {
@@ -36,6 +38,8 @@ public class NotificationService extends Service implements Listener<Profile>,
 	private static NotificationService me;
 
 	private ScheduledExecutorService scheduleTaskExecutor;
+	
+//	private LoadingInterface loadingInterface;
 
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -88,7 +92,7 @@ public class NotificationService extends Service implements Listener<Profile>,
 		}
 	}
 
-	private void getProfile() {
+	public void getProfile() {
 		Log.d(getClass().getSimpleName(), "get Profile");
 
 		String url = HttpWorker.PROFILE_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
@@ -101,6 +105,10 @@ public class NotificationService extends Service implements Listener<Profile>,
 
 	@Override
 	public void onErrorResponse(VolleyError error) {
+		// Update Widget
+	    Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
+	    i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+	    getApplicationContext().sendBroadcast(i);	
 
 	}
 
@@ -118,6 +126,12 @@ public class NotificationService extends Service implements Listener<Profile>,
 		if (limit > 0 && totalHashrate < limit) {
 			createFirstDropNotification(totalHashrate);
 		}
+		
+		// Update Widget
+	    Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
+	    i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+	    i.putExtra(WidgetProvider.PARAM_PROFILE, response);
+	    getApplicationContext().sendBroadcast(i);	
 
 		Log.d(getClass().getSimpleName(), "onResponse!: " + totalHashrate);
 	}
@@ -169,5 +183,13 @@ public class NotificationService extends Service implements Listener<Profile>,
 
 		return notification;
 	}
+	
+	public interface LoadingInterface{
+		public void onResponse(Profile profile);
+	}
+
+//	public void setOnResponseListener(LoadingInterface loadingInterface) {
+//		this.loadingInterface = loadingInterface;
+//	}
 
 }

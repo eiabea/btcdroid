@@ -28,8 +28,6 @@ import com.jwetherell.quick_response_code.qrcode.QRCodeEncoder;
 
 public class ParticipantsActivity extends ActionBarActivity {
 
-	// TODO Wording
-	
 	private ImageView imgQr;
 
 	private RelativeLayout rlQrCodeHolder;
