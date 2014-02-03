@@ -107,7 +107,7 @@ public class NotificationService extends Service implements Listener<Profile>,
 	public void onErrorResponse(VolleyError error) {
 		// Update Widget
 	    Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
-	    i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+	    i.setAction(WidgetProvider.LOADING_FAILED);
 	    getApplicationContext().sendBroadcast(i);	
 
 	}

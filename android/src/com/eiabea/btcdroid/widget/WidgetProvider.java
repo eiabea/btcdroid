@@ -21,6 +21,7 @@ public class WidgetProvider extends AppWidgetProvider {
 	public static final String PARAM_PROFILE = "param_profile";
 
 	private static final String ACTION_CLICK = "ACTION_CLICK";
+	public static final String LOADING_FAILED = "ACTION_FAILED";
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -70,7 +71,9 @@ public class WidgetProvider extends AppWidgetProvider {
 
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
 
-			} 
+			} else if (intent.getAction().equals(LOADING_FAILED)) {
+				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+			}
 
 			ComponentName widget = new ComponentName(context, WidgetProvider.class);
 			AppWidgetManager.getInstance(context).updateAppWidget(widget, remoteViews);
