@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.android.volley.Response.ErrorListener;
@@ -28,16 +29,16 @@ import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.GsonRequest;
 import com.eiabea.btcdroid.util.HttpWorker;
+import com.eiabea.btcdroid.widget.DashClockWidget;
 import com.eiabea.btcdroid.widget.WidgetProvider;
 
-public class NotificationService extends Service implements Listener<Profile>,
-		ErrorListener {
+public class ProfileUpdateService extends Service implements ErrorListener {
 
 	private SharedPreferences pref;
 
-	private static NotificationService me;
+	private static ProfileUpdateService me;
 
-	private ScheduledExecutorService scheduleTaskExecutor;
+	private ScheduledExecutorService scheduleNotification, scheduleWidgets;
 	
 //	private LoadingInterface loadingInterface;
 
@@ -54,53 +55,129 @@ public class NotificationService extends Service implements Listener<Profile>,
 
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
 
-		pref.edit().putInt("notification_last_hashrate", 0).commit();
-
 		Log.d(getClass().getSimpleName(), "onCreate");
 
-		startInterval();
+		start();
 	}
 
-	public static NotificationService getInstance() {
+	public static ProfileUpdateService getInstance() {
 		return me;
 	}
 
-	public void startInterval() {
-
-		if (scheduleTaskExecutor != null) {
-			scheduleTaskExecutor.shutdownNow();
+	public void start() {
+		startNotification();
+		startWidgets();
+	}
+	
+	public void startNotification() {
+		if (scheduleNotification != null) {
+			scheduleNotification.shutdownNow();
 		}
+		
+		int intervalNotificaion = Integer.valueOf(pref.getString("notification_interval", "60"));
 
-		int interval = Integer.valueOf(pref.getString("notification_interval", "60"));
+		scheduleNotification = Executors.newScheduledThreadPool(5);
 
-		scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
-
-		scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+		scheduleNotification.scheduleAtFixedRate(new Runnable() {
 			public void run() {
 				if (App.getInstance().isTokenSet()) {
-					getProfile();
+					getProfileNotification();
 				} else {
 					Log.d(getClass().getSimpleName(), "No Token set");
 				}
 			}
-		}, interval, interval, TimeUnit.MINUTES);
+		}, intervalNotificaion, intervalNotificaion, TimeUnit.MINUTES);
 	}
 	
-	public void stopInterval(){
-		if (scheduleTaskExecutor != null) {
-			scheduleTaskExecutor.shutdownNow();
+	public void startWidgets() {
+		if (scheduleWidgets != null) {
+			scheduleWidgets.shutdownNow();
+		}
+		
+		int intervalWidget = Integer.valueOf(pref.getString("widget_interval", "30"));
+		scheduleWidgets = Executors.newScheduledThreadPool(4);
+		
+		scheduleWidgets.scheduleAtFixedRate(new Runnable() {
+			public void run() {
+				if (App.getInstance().isTokenSet()) {
+					getProfileWidgets();
+				} else {
+					Log.d(getClass().getSimpleName(), "No Token set");
+				}
+			}
+		}, 0, intervalWidget, TimeUnit.MINUTES);
+	}
+	
+	public void stop(){
+		stopNotification();
+		stopWidgets();
+	}
+	
+	public void stopNotification(){
+		if (scheduleNotification != null) {
+			scheduleNotification.shutdownNow();
+		}
+	}
+	
+	public void stopWidgets(){
+		if (scheduleWidgets != null) {
+			scheduleWidgets.shutdownNow();
 		}
 	}
 
-	public void getProfile() {
-		Log.d(getClass().getSimpleName(), "get Profile");
+	public void getProfileWidgets() {
+		Log.d(getClass().getSimpleName(), "get Profile Widgets");
 
 		String url = HttpWorker.PROFILE_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
 
 		System.out.println(HttpWorker.mQueue.toString());
 
-		HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null, this, this));
+		HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null, new Listener<Profile>() {
 
+			@Override
+			public void onResponse(Profile response) {
+			    Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
+			    i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+			    i.putExtra(WidgetProvider.PARAM_PROFILE, response);
+			    getApplicationContext().sendBroadcast(i);	
+			    
+			    Intent dashclockIntent = new Intent(DashClockWidget.UPDATE_DASHCLOCK);
+			    dashclockIntent.putExtra(WidgetProvider.PARAM_PROFILE, response);
+			    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(dashclockIntent);
+			    Log.d(getClass().getSimpleName(), "onResponse Widgets");
+			}
+		}, this));
+
+	}
+	
+	public void getProfileNotification() {
+		Log.d(getClass().getSimpleName(), "get Profile Notification");
+		
+		String url = HttpWorker.PROFILE_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
+		
+		System.out.println(HttpWorker.mQueue.toString());
+		
+		HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null, new Listener<Profile>() {
+
+			@Override
+			public void onResponse(Profile response) {
+				// TODO Auto-generated method stub
+				List<Worker> workers = response.getWorkersList();
+
+				int totalHashrate = 0;
+				int limit = Integer.valueOf(pref.getString("notification_hashrate", "0"));
+
+				for (Worker tmp : workers) {
+					totalHashrate += tmp.getHashrate();
+				}
+
+				if (limit > 0 && totalHashrate < limit) {
+					createFirstDropNotification(totalHashrate);
+				}
+				Log.d(getClass().getSimpleName(), "onResponse Notification");
+			}
+		}, this));
+		
 	}
 
 	@Override
@@ -110,30 +187,6 @@ public class NotificationService extends Service implements Listener<Profile>,
 	    i.setAction(WidgetProvider.LOADING_FAILED);
 	    getApplicationContext().sendBroadcast(i);	
 
-	}
-
-	@Override
-	public void onResponse(Profile response) {
-		List<Worker> workers = response.getWorkersList();
-
-		int totalHashrate = 0;
-		int limit = Integer.valueOf(pref.getString("notification_hashrate", "0"));
-
-		for (Worker tmp : workers) {
-			totalHashrate += tmp.getHashrate();
-		}
-
-		if (limit > 0 && totalHashrate < limit) {
-			createFirstDropNotification(totalHashrate);
-		}
-		
-		// Update Widget
-	    Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
-	    i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-	    i.putExtra(WidgetProvider.PARAM_PROFILE, response);
-	    getApplicationContext().sendBroadcast(i);	
-
-		Log.d(getClass().getSimpleName(), "onResponse!: " + totalHashrate);
 	}
 
 	public void createFirstDropNotification(int hashrate) {
@@ -187,9 +240,5 @@ public class NotificationService extends Service implements Listener<Profile>,
 	public interface LoadingInterface{
 		public void onResponse(Profile profile);
 	}
-
-//	public void setOnResponseListener(LoadingInterface loadingInterface) {
-//		this.loadingInterface = loadingInterface;
-//	}
 
 }

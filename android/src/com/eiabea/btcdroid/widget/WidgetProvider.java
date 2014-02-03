@@ -14,7 +14,7 @@ import android.widget.RemoteViews;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Worker;
-import com.eiabea.btcdroid.service.NotificationService;
+import com.eiabea.btcdroid.service.ProfileUpdateService;
 import com.eiabea.btcdroid.util.App;
 
 public class WidgetProvider extends AppWidgetProvider {
@@ -54,7 +54,7 @@ public class WidgetProvider extends AppWidgetProvider {
 
 			if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-				NotificationService.getInstance().getProfile();
+				ProfileUpdateService.getInstance().getProfileWidgets();
 			} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 				Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
 				

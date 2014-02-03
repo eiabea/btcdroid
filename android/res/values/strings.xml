@@ -119,6 +119,10 @@
     <string name="txt_pref_style_btc_style_title">BTC Style</string>
     <string name="txt_pref_style_btc_style_message">Switch the style the values are formated</string>
 
+    <string name="txt_pref_widgets_title">Widgets</string>
+    <string name="txt_pref_widgets_checking_interval_title">Checking Interval (minutes)</string>
+    <string name="txt_pref_widgets_checking_interval_message">How often should the widgets be updated</string>
+
     <string name="txt_pref_notification_title">Notification</string>
     <string name="txt_pref_notification_show_notification_title">Notification</string>
     <string name="txt_pref_notification_show_notification_message">Notification if hashrate drops under a certain value</string>

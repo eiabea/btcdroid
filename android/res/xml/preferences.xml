@@ -51,6 +51,16 @@
             android:summary="@string/txt_pref_style_btc_style_message"
             android:title="@string/txt_pref_style_btc_style_title" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/txt_pref_widgets_title" >
+        <EditTextPreference
+            android:defaultValue="30"
+            android:dialogTitle="@string/txt_pref_widgets_checking_interval_title"
+            android:enabled="true"
+            android:key="widget_interval"
+            android:numeric="integer"
+            android:summary="@string/txt_pref_widgets_checking_interval_message"
+            android:title="@string/txt_pref_widgets_checking_interval_title" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/txt_pref_notification_title" >
         <CheckBoxPreference
             android:defaultValue="false"

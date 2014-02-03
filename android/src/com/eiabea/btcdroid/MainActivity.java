@@ -35,7 +35,7 @@ import com.eiabea.btcdroid.fragments.WorkerFragment;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
-import com.eiabea.btcdroid.service.NotificationService;
+import com.eiabea.btcdroid.service.ProfileUpdateService;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
 import com.eiabea.btcdroid.widget.WidgetProvider;
@@ -43,6 +43,8 @@ import com.eiabea.btcdroid.widget.WidgetProvider;
 public class MainActivity extends ActionBarActivity implements
 		HttpWorkerInterface, OnPageChangeListener {
 
+	// TODO test widgets
+	
 	private static final int INTENT_PREF = 0;
 
 	public static final int FRAGMENT_PAYOUT = 0;
@@ -293,10 +295,12 @@ public class MainActivity extends ActionBarActivity implements
 				boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notification_enabled", false);
 
 				if (enabled) {
-					NotificationService.getInstance().startInterval();
+					ProfileUpdateService.getInstance().startNotification();
 				} else {
-					NotificationService.getInstance().stopInterval();
+					ProfileUpdateService.getInstance().stopNotification();
 				}
+				
+				ProfileUpdateService.getInstance().startWidgets();
 
 				reloadData();
 			}
@@ -385,7 +389,7 @@ public class MainActivity extends ActionBarActivity implements
 			// Update Widget
 			Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
 			i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-			i.putExtra("profile", profile);
+			i.putExtra(WidgetProvider.PARAM_PROFILE, profile);
 			getApplicationContext().sendBroadcast(i);	
 
 			((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setProfile(profile);

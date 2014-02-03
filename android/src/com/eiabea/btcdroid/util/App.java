@@ -21,7 +21,7 @@ import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Worker;
-import com.eiabea.btcdroid.service.NotificationService;
+import com.eiabea.btcdroid.service.ProfileUpdateService;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -65,7 +65,7 @@ public class App extends Application {
 		me = this;
 		httpWorker = new HttpWorker(this.getApplicationContext(), token);
 		
-		startService(new Intent(getApplicationContext(), NotificationService.class));
+		startService(new Intent(getApplicationContext(), ProfileUpdateService.class));
 
 	}
 
