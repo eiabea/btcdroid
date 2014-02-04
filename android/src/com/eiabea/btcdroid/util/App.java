@@ -217,8 +217,8 @@ public class App extends Application {
 
 	}
 	
-	public static String formatPrice(float price){
-		return "$ " + String.format("%.2f", price);
+	public static String formatPrice(String symbol, float price){
+		return symbol + " " + String.format("%.2f", price);
 	}
 	
 	public static String getResString(int id, Context ctx){

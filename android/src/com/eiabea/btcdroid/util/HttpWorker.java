@@ -19,9 +19,11 @@ import com.eiabea.btcdroid.model.Stats;
 public class HttpWorker {
 	public static final int PRICE_SOURCE_BITSTAMP = 0;
 	public static final int PRICE_SOURCE_MTGOX = 1;
+	public static final int PRICE_SOURCE_MTGOX_EUR = 2;
 
 	public static final String BASEURL = "https://mining.bitcoin.cz/";
-	public static final String PRICES_URL_MTGOX = "http://data.mtgox.com/api/2/BTCUSD/money/ticker_fast";
+	public static final String PRICES_URL_MTGOX_FRONT = "http://data.mtgox.com/api/2/BTC";
+	public static final String PRICES_URL_MTGOX_END = "/money/ticker_fast";
 	public static final String PRICES_URL_BITSTAMP = "https://www.bitstamp.net/api/ticker/";
 
 	public static final String STATS_URL = BASEURL + "stats/json/";
@@ -73,10 +75,10 @@ public class HttpWorker {
 
 	}
 
-	public void getPricesMtGox(Response.Listener<PricesMtGox> success, Response.ErrorListener error) {
+	public void getPricesMtGox(String currency, Response.Listener<PricesMtGox> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Prices MtGox");
 
-		String url = HttpWorker.PRICES_URL_MTGOX;
+		String url = HttpWorker.PRICES_URL_MTGOX_FRONT + currency + HttpWorker.PRICES_URL_MTGOX_END;
 
 		System.out.println(HttpWorker.mQueue.toString());
 
@@ -142,11 +144,12 @@ public class HttpWorker {
 				@Override
 				public void onResponse(PricesBitStamp prices) {
 
-					GenericPrice generic = new GenericPrice();
+					GenericPrice price = new GenericPrice();
 
-					generic.setValueFloat(Float.parseFloat(prices.getLast()));
+					price.setValueFloat(Float.parseFloat(prices.getLast()));
+					price.setSymbol("$");
 
-					httpWorkerInterface.onPricesLoaded(generic);
+					httpWorkerInterface.onPricesLoaded(price);
 				}
 
 			}, new ErrorListener() {
@@ -161,15 +164,17 @@ public class HttpWorker {
 			break;
 		case PRICE_SOURCE_MTGOX:
 
-			getPricesMtGox(new Listener<PricesMtGox>() {
+			getPricesMtGox("USD", new Listener<PricesMtGox>() {
 
 				@Override
 				public void onResponse(PricesMtGox prices) {
 
 					// Write jsonData to PricesMtGox Object
-					prices = App.parsePrices(prices.getData());
+					GenericPrice price = prices.getLastPrice();
+					price.setSymbol("$");
+					
+					httpWorkerInterface.onPricesLoaded(price);
 
-					httpWorkerInterface.onPricesLoaded(prices.getLastPrice());
 				}
 
 			}, new ErrorListener() {
@@ -179,6 +184,32 @@ public class HttpWorker {
 
 					httpWorkerInterface.onPricesError();
 
+				}
+			});
+			break;
+		case PRICE_SOURCE_MTGOX_EUR:
+			
+			getPricesMtGox("EUR", new Listener<PricesMtGox>() {
+				
+				@Override
+				public void onResponse(PricesMtGox prices) {
+					
+					// Write jsonData to PricesMtGox Object
+					prices = App.parsePrices(prices.getData());
+					
+					GenericPrice price = prices.getLastPrice();
+					price.setSymbol("€");
+					
+					httpWorkerInterface.onPricesLoaded(price);
+				}
+				
+			}, new ErrorListener() {
+				
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					
+					httpWorkerInterface.onPricesError();
+					
 				}
 			});
 			break;

@@ -142,7 +142,7 @@ public class PayoutFragment extends Fragment {
 				Log.d(getClass().getSimpleName(), "set last price to: " + currentPriceFloat);
 			}
 
-			txtCurrentValue.setText(App.formatPrice(current.getValueFloat()));
+			txtCurrentValue.setText(App.formatPrice(current.getSymbol(), current.getValueFloat()));
 		}
 	}
 

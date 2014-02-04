@@ -7,6 +7,7 @@ public class GenericPrice implements Parcelable {
 
 	// Attributes
 	private float valueFloat;
+	private String symbol = "";
 
 	// Standardconstructor
 	public GenericPrice(){}
@@ -14,6 +15,7 @@ public class GenericPrice implements Parcelable {
 	// Constructor used for Parcelable
 	public GenericPrice(Parcel in) {
 		valueFloat = in.readFloat();
+		symbol = in.readString();
 	}
 	
 	@Override
@@ -24,6 +26,7 @@ public class GenericPrice implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeFloat(valueFloat);
+		dest.writeString(symbol);
 
 	}
 
@@ -45,5 +48,12 @@ public class GenericPrice implements Parcelable {
 		this.valueFloat = valueFloat;
 	}
 
+	public String getSymbol() {
+		return symbol;
+	}
+
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
+	}
     
 }

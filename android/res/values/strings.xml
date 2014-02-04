@@ -21,8 +21,9 @@
     <string name="mbtc_short">m</string>
     <string name="ubtc_short">µ</string>
     <string name="percent_sign">%</string>
-    <string name="BitStamp">BitStamp</string>
-    <string name="MtGox">MtGox</string>
+    <string name="BitStamp">BitStamp (USD)</string>
+    <string name="MtGoxUsd">MtGox (USD)</string>
+    <string name="MtGoxEur">MtGox (EUR)</string>
 
     <!-- Notification -->
     <string name="txt_hashrate_dropped_title">Hashrate has dropped!</string>
@@ -139,11 +140,13 @@
 
     <string-array name="price_source">
         <item>@string/BitStamp</item>
-        <item>@string/MtGox</item>
+        <item>@string/MtGoxUsd</item>
+        <item>@string/MtGoxEur</item>
     </string-array>
     <string-array name="price_source_values">
         <item>0</item>
         <item>1</item>
+        <item>2</item>
     </string-array>
     <string-array name="btc_style">
         <item>@string/btc</item>
