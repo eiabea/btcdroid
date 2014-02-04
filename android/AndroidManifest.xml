@@ -62,7 +62,7 @@
 
         <service
             android:name=".widget.DashClockWidget"
-            android:icon="@drawable/ic_launcher"
+            android:icon="@drawable/ic_launcher_dashclock"
             android:label="@string/app_name"
             android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA" >
             <intent-filter>
@@ -74,7 +74,7 @@
                 android:value="1" />
             <meta-data
                 android:name="description"
-                android:value="Desc" />
+                android:value="@string/txt_dashclock_description" />
         </service>
     </application>
 

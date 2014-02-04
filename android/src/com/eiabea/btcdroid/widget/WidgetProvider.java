@@ -8,6 +8,12 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Align;
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -83,5 +89,22 @@ public class WidgetProvider extends AppWidgetProvider {
 		}
 
 	}
+	
+	public Bitmap buildBitmapUpdate(Context context, String value)     {
+		Bitmap myBitmap = Bitmap.createBitmap(160, 84, Bitmap.Config.ARGB_4444);
+		Canvas myCanvas = new Canvas(myBitmap);
+		Paint paint = new Paint();
+		Typeface clock = Typeface.createFromAsset(context.getAssets(),"RobotoCondensed-Regular.ttf");
+		paint.setAntiAlias(true);
+		paint.setSubpixelText(true);
+		paint.setTypeface(clock);
+		paint.setStyle(Paint.Style.FILL);
+		paint.setColor(Color.BLACK);
+		paint.setTextSize(65);
+		paint.setTextAlign(Align.CENTER);
+		myCanvas.drawText(value, 80, 60, paint);
+		return myBitmap;
+		}//build custom font message in widget
+	
 
 }

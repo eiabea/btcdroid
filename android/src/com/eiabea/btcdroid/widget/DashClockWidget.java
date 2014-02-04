@@ -27,7 +27,10 @@ public class DashClockWidget extends DashClockExtension {
 	@Override
 	protected void onUpdateData(int reason) {
 		
-		ProfileUpdateService.getInstance().getProfileWidgets();
+		try{
+			ProfileUpdateService.getInstance().getProfileWidgets();
+		}catch(Exception ignore){
+		}
 		
 		updateWidget(null);
 	
@@ -85,7 +88,7 @@ public class DashClockWidget extends DashClockExtension {
 			.icon(R.drawable.ic_launcher_dashclock)
 			.status(App.formatHashRate(totalHashrate))
 			.expandedTitle(App.formatHashRate(totalHashrate))
-			.expandedBody("total current hashrate")
+			.expandedBody(getString(R.string.txt_dashclock_expanded_body))
 			.clickIntent(i));
 		}else{
 			publishUpdate(new ExtensionData()

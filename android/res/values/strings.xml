@@ -171,5 +171,9 @@
     <string name="toast_error_loading_profile">Error loading Profile</string>
     <string name="toast_error_loading_stats">Error loading Stats</string>
     <string name="toast_error_loading_price">Error loading Price</string>
+    
+    <!-- DashClock -->
+    <string name="txt_dashclock_description">Displays the current total hashrate of your workers at slush\'s pool</string>
+    <string name="txt_dashclock_expanded_body">total current hashrate</string>
 
 </resources>
