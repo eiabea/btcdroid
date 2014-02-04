@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 import com.eiabea.btcdroid.fragments.PrefsFragment;
+import com.eiabea.btcdroid.service.ProfileUpdateService;
 
 public class PrefsActivity extends ActionBarActivity {
 	@Override
@@ -42,7 +43,5 @@ public class PrefsActivity extends ActionBarActivity {
 	public void setResultIntent(Intent intent){
 		setResult(RESULT_OK, intent);
 	}
-	
-	
 
 }

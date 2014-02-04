@@ -31,6 +31,11 @@ public class WidgetProvider extends AppWidgetProvider {
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+		
+		try{
+			ProfileUpdateService.getInstance().getProfileWidgets();
+		}catch(Exception ignore){
+		}
 
 		// Get all ids
 		ComponentName thisWidget = new ComponentName(context, WidgetProvider.class);
@@ -51,6 +56,8 @@ public class WidgetProvider extends AppWidgetProvider {
 		}
 	}
 
+	
+	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
@@ -80,7 +87,7 @@ public class WidgetProvider extends AppWidgetProvider {
 			} else if (intent.getAction().equals(LOADING_FAILED)) {
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
 			}
-
+			
 			ComponentName widget = new ComponentName(context, WidgetProvider.class);
 			AppWidgetManager.getInstance(context).updateAppWidget(widget, remoteViews);
 
@@ -89,22 +96,5 @@ public class WidgetProvider extends AppWidgetProvider {
 		}
 
 	}
-	
-	public Bitmap buildBitmapUpdate(Context context, String value)     {
-		Bitmap myBitmap = Bitmap.createBitmap(160, 84, Bitmap.Config.ARGB_4444);
-		Canvas myCanvas = new Canvas(myBitmap);
-		Paint paint = new Paint();
-		Typeface clock = Typeface.createFromAsset(context.getAssets(),"RobotoCondensed-Regular.ttf");
-		paint.setAntiAlias(true);
-		paint.setSubpixelText(true);
-		paint.setTypeface(clock);
-		paint.setStyle(Paint.Style.FILL);
-		paint.setColor(Color.BLACK);
-		paint.setTextSize(65);
-		paint.setTextAlign(Align.CENTER);
-		myCanvas.drawText(value, 80, 60, paint);
-		return myBitmap;
-		}//build custom font message in widget
-	
 
 }

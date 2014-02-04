@@ -301,7 +301,7 @@ public class MainActivity extends ActionBarActivity implements
 				}
 				
 				ProfileUpdateService.getInstance().startWidgets();
-
+				
 				reloadData();
 			}
 			break;
