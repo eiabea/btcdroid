@@ -65,13 +65,9 @@ public class PoolFragment extends Fragment {
 
 		initUi();
 
-		if (profile != null) {
-			setProfile(profile);
-		}
+		setProfile(profile);
 
-		if (stats != null) {
-			setStats(stats);
-		}
+		setStats(stats);
 
 		return rootView;
 	}
@@ -106,20 +102,20 @@ public class PoolFragment extends Fragment {
 			Log.d(getClass().getSimpleName(), "now: " + now);
 			Log.d(getClass().getSimpleName(), "time until update: " + (((lastUpdated + threshold) - now) / 1000) + " sec");
 
-			// if ((lastUpdated + threshold) < now) {
+			if ((lastUpdated + threshold) < now) {
 
-			Log.d(getClass().getSimpleName(), "threshold expired --> set colors for " + "txt_" + txt.getId());
-			if (last > current) {
-				txt.setTextColor(getResources().getColor(R.color.bd_red));
-			} else if (last < current) {
-				txt.setTextColor(getResources().getColor(R.color.bd_green));
-			} else {
-				txt.setTextColor(getResources().getColor(R.color.bd_dark_grey_text));
+				Log.d(getClass().getSimpleName(), "threshold expired --> set colors for " + "txt_" + txt.getId());
+				if (last > current) {
+					txt.setTextColor(getResources().getColor(R.color.bd_red));
+				} else if (last < current) {
+					txt.setTextColor(getResources().getColor(R.color.bd_green));
+				} else {
+					txt.setTextColor(getResources().getColor(R.color.bd_dark_grey_text));
+				}
+				pref.edit().putFloat("txt_" + txt.getId() + "_value", current).commit();
+				pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).commit();
+				Log.d(getClass().getSimpleName(), "set last luck to: " + current);
 			}
-			pref.edit().putFloat("txt_" + txt.getId() + "_value", current).commit();
-			pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).commit();
-			Log.d(getClass().getSimpleName(), "set last luck to: " + current);
-			// }
 
 			txt.setText(App.formatProcent(current));
 		} else {
@@ -139,7 +135,7 @@ public class PoolFragment extends Fragment {
 		}
 
 		final float ratingToSet = (float) (stars - rating);
-//		final float ratingToSet = 2.4f;
+		// final float ratingToSet = 2.4f;
 
 		// Dirty hack to set ratingbar
 		ratRating.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
@@ -192,35 +188,30 @@ public class PoolFragment extends Fragment {
 	}
 
 	public void setProfile(Profile profile) {
-
 		this.profile = profile;
-		if (txtTotalHashrate != null && this.profile != null) {
-			fillUpProfile();
-		}
-
+		fillUpProfile();
 	}
 
 	public void setStats(Stats stats) {
-
 		this.stats = stats;
-		if (txtRoundDuration != null && this.stats != null) {
-			fillUpStats();
-		}
-
+		fillUpStats();
 	}
 
 	private void fillUpProfile() {
 
-		ArrayList<Worker> list = profile.getWorkersList();
+		try {
+			ArrayList<Worker> list = profile.getWorkersList();
 
-		int totalHashrate = 0;
+			int totalHashrate = 0;
 
-		for (Worker tmp : list) {
-			totalHashrate += tmp.getHashrate();
+			for (Worker tmp : list) {
+				totalHashrate += tmp.getHashrate();
+			}
+
+			txtTotalHashrate.setText(App.formatHashRate(totalHashrate));
+			txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
+		} catch (NullPointerException ignore) {
 		}
-
-		txtTotalHashrate.setText(App.formatHashRate(totalHashrate));
-		txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
 
 	}
 
@@ -230,42 +221,51 @@ public class PoolFragment extends Fragment {
 		Date average = null;
 		Date duration = null;
 
-		average = getAverageRoundTime(App.parseBlocks(stats.getBlocks()));
-		txtAverageDuration.setText(App.dateDurationFormat.format(average));
 		try {
-			started = App.dateStatsFormat.parse(stats.getRound_started());
-			txtRoundStarted.setText(App.dateFormat.format(started));
-		} catch (java.text.ParseException e) {
-			e.printStackTrace();
+			average = getAverageRoundTime(App.parseBlocks(stats.getBlocks()));
+			txtAverageDuration.setText(App.dateDurationFormat.format(average));
+			try {
+				started = App.dateStatsFormat.parse(stats.getRound_started());
+				txtRoundStarted.setText(App.dateFormat.format(started));
+			} catch (java.text.ParseException e) {
+				e.printStackTrace();
+			}
+			try {
+				started = App.dateStatsFormat.parse(stats.getRound_started());
+				txtRoundStarted.setText(App.dateFormat.format(started));
+			} catch (java.text.ParseException e) {
+				e.printStackTrace();
+			}
+			try {
+				duration = App.dateDurationFormat.parse(stats.getRound_duration());
+				txtRoundDuration.setText(App.dateDurationFormat.format(duration));
+			} catch (java.text.ParseException e) {
+				e.printStackTrace();
+			}
+
+			if (average != null && duration != null) {
+				double rating = calculateRoundRating(average, duration);
+
+				setRatingBar(rating);
+			}
+
+			if (duration != null) {
+				float cdf = Float.valueOf(stats.getShares_cdf());
+				System.out.println(cdf);
+				float estimated = (duration.getTime() / (cdf / 100));
+
+				txtEstimatedDuration.setText(App.dateDurationFormat.format(new Date((long) estimated)));
+			}
+
+			float currentLuck24 = Float.parseFloat(stats.getLuck_1());
+			float currentLuck7d = Float.parseFloat(stats.getLuck_7());
+			float currentLuck30d = Float.parseFloat(stats.getLuck_30());
+
+			setLuck(txtLuck24h, currentLuck24);
+			setLuck(txtLuck7d, currentLuck7d);
+			setLuck(txtLuck30d, currentLuck30d);
+		} catch (NullPointerException ignore) {
 		}
-		try {
-			duration = App.dateDurationFormat.parse(stats.getRound_duration());
-			txtRoundDuration.setText(App.dateDurationFormat.format(duration));
-		} catch (java.text.ParseException e) {
-			e.printStackTrace();
-		}
-
-		if (average != null && duration != null) {
-			double rating = calculateRoundRating(average, duration);
-
-			setRatingBar(rating);
-		}
-
-		if (duration != null) {
-			float cdf = Float.valueOf(stats.getShares_cdf());
-			System.out.println(cdf);
-			float estimated = (duration.getTime() / (cdf / 100));
-
-			txtEstimatedDuration.setText(App.dateDurationFormat.format(new Date((long) estimated)));
-		}
-
-		float currentLuck24 = Float.parseFloat(stats.getLuck_1());
-		float currentLuck7d = Float.parseFloat(stats.getLuck_7());
-		float currentLuck30d = Float.parseFloat(stats.getLuck_30());
-
-		setLuck(txtLuck24h, currentLuck24);
-		setLuck(txtLuck7d, currentLuck7d);
-		setLuck(txtLuck30d, currentLuck30d);
 
 	}
 

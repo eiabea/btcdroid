@@ -49,13 +49,9 @@ public class PayoutFragment extends Fragment {
 
 		setListeners();
 
-		if (price != null) {
-			setPrices(price);
-		}
+		setPrices(price);
 
-		if (profile != null) {
-			setProfile(profile);
-		}
+		setProfile(profile);
 
 		return rootView;
 
@@ -94,9 +90,7 @@ public class PayoutFragment extends Fragment {
 
 	public void setPrices(GenericPrice price) {
 		this.price = price;
-		if (txtCurrentValue != null && this.price != null) {
-			fillUpPrices();
-		}
+		fillUpPrices();
 
 		if (llPriceHolder != null) {
 			if (App.isPriceEnabled) {
@@ -111,7 +105,7 @@ public class PayoutFragment extends Fragment {
 	}
 
 	private void setPrice(TextView txt, GenericPrice current) {
-		if (current != null) {
+		if (current != null && txt != null) {
 			float lastPriceFloat = pref.getFloat("txt_" + txt.getId() + "_value", 0f);
 			float currentPriceFloat = current.getValueFloat();
 

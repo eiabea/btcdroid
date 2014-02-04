@@ -18,7 +18,7 @@ import com.eiabea.btcdroid.util.App;
 public class RoundsFragment extends Fragment {
 
 	public static final String PARAM_STATS = "param_stats";
-	
+
 	private ViewGroup rootView;
 
 	private Stats stats;
@@ -45,12 +45,10 @@ public class RoundsFragment extends Fragment {
 		rootView = (ViewGroup) inflater.inflate(R.layout.fragment_rounds, null);
 
 		this.stats = getArguments().getParcelable(PARAM_STATS);
-		
+
 		initUi(inflater, rootView);
 
-		if (stats != null) {
-			setStats(stats);
-		}
+		setStats(stats);
 
 		return rootView;
 	}
@@ -76,10 +74,12 @@ public class RoundsFragment extends Fragment {
 	public void setStats(Stats stats) {
 
 		this.stats = stats;
-		if (exlvRoundsHolder != null && this.stats != null) {
+		try {
 			adapter = new RoundsListAdapter(getActivity(), App.parseBlocks(stats.getBlocks()));
 
 			exlvRoundsHolder.setAdapter(adapter);
+		} catch (NullPointerException ignore) {
+
 		}
 
 	}

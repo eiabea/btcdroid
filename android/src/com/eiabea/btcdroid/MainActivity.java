@@ -44,7 +44,7 @@ public class MainActivity extends ActionBarActivity implements
 		HttpWorkerInterface, OnPageChangeListener {
 
 	// TODO test widgets
-	
+
 	private static final int INTENT_PREF = 0;
 
 	public static final int FRAGMENT_PAYOUT = 0;
@@ -115,15 +115,9 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	private void setSavedValues() {
-		if (this.price != null) {
-			setPrices(this.price);
-		}
-		if (this.profile != null) {
-			setProfile(this.profile);
-		}
-		if (this.stats != null) {
-			setStats(this.stats);
-		}
+		setPrices(this.price);
+		setProfile(this.profile);
+		setStats(this.stats);
 
 		handleProgessIndicator();
 
@@ -147,8 +141,6 @@ public class MainActivity extends ActionBarActivity implements
 		savedInstanceState.putBoolean(STATE_PROFILE_LOADED, this.profileLoaded);
 		savedInstanceState.putBoolean(STATE_STATS_LOADED, this.statsLoaded);
 		savedInstanceState.putBoolean(STATE_PRICES_LOADED, this.pricesLoaded);
-
-		// Always call the superclass so it can save the view hierarchy state
 	}
 
 	@Override
@@ -167,11 +159,11 @@ public class MainActivity extends ActionBarActivity implements
 		getSupportActionBar().setSubtitle(R.string.app_name_subtitle);
 
 		adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price);
-		try{
+		try {
 			if (isTablet && isLand) {
-				
+
 				llTilesHolder = (LinearLayout) findViewById(R.id.ll_tiles_holder);
-				
+
 				FragmentManager fm = getSupportFragmentManager();
 				FragmentTransaction ft = fm.beginTransaction();
 				ft.replace(R.id.fl_pool_tile, adapter.getItem(FRAGMENT_POOL), getFragmentTag(FRAGMENT_POOL));
@@ -181,19 +173,19 @@ public class MainActivity extends ActionBarActivity implements
 				ft.commitAllowingStateLoss();
 			} else {
 				Log.d(getClass().getSimpleName(), "viewpager");
-				
+
 				viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
 				viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
-				
+
 				viewPager = (ViewPager) findViewById(R.id.vp_main);
 				// viewPager.setOffscreenPageLimit(2);
 				viewPager.setOnPageChangeListener(this);
-				
+
 				viewPager.setAdapter(adapter);
 				viewPager.setCurrentItem(currentPage);
 			}
-			
-		}catch (NullPointerException e){
+
+		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
 
@@ -299,9 +291,9 @@ public class MainActivity extends ActionBarActivity implements
 				} else {
 					ProfileUpdateService.getInstance().stopNotification();
 				}
-				
+
 				ProfileUpdateService.getInstance().startWidgets();
-				
+
 				reloadData();
 			}
 			break;
@@ -320,7 +312,6 @@ public class MainActivity extends ActionBarActivity implements
 			App.getInstance().httpWorker.setHttpWorkerInterface(this);
 			showInfos();
 			handleProgessIndicator();
-			// showProgress(true);
 			App.getInstance().httpWorker.reload();
 		} else {
 			hideInfos();
@@ -332,18 +323,14 @@ public class MainActivity extends ActionBarActivity implements
 		try {
 			boolean isLand = getResources().getBoolean(R.bool.is_land);
 			boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
-			// if (llNoPools.getVisibility() == View.VISIBLE) {
+
 			llNoPools.setVisibility(View.GONE);
-			// }
-			// if (viewPager.getVisibility() == View.INVISIBLE) {
+
 			if (isLand && isTablet) {
 				llTilesHolder.setVisibility(View.VISIBLE);
-
 			} else {
 				viewPager.setVisibility(View.VISIBLE);
-
 			}
-			// }
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
@@ -353,18 +340,13 @@ public class MainActivity extends ActionBarActivity implements
 		try {
 			boolean isLand = getResources().getBoolean(R.bool.is_land);
 			boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
-			// if (llNoPools.getVisibility() == View.VISIBLE) {
 			llNoPools.setVisibility(View.VISIBLE);
-			// }
-			// if (viewPager.getVisibility() == View.INVISIBLE) {
+
 			if (isLand && isTablet) {
 				llTilesHolder.setVisibility(View.INVISIBLE);
-
 			} else {
 				viewPager.setVisibility(View.INVISIBLE);
-
 			}
-			// }
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
@@ -390,12 +372,12 @@ public class MainActivity extends ActionBarActivity implements
 			Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
 			i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 			i.putExtra(WidgetProvider.PARAM_PROFILE, profile);
-			getApplicationContext().sendBroadcast(i);	
+			getApplicationContext().sendBroadcast(i);
 
 			((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setProfile(profile);
 			((PoolFragment) getFragment(FRAGMENT_POOL)).setProfile(profile);
 			((WorkerFragment) getFragment(FRAGMENT_WORKER)).setProfile(profile);
-			
+
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
@@ -453,25 +435,24 @@ public class MainActivity extends ActionBarActivity implements
 		Log.w(getClass().getSimpleName(), "price: " + pricesLoaded);
 		Log.w(getClass().getSimpleName(), "profile: " + profileLoaded);
 		Log.w(getClass().getSimpleName(), "stats: " + statsLoaded);
+
+		if (adapter == null) {
+			adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price);
+		} else {
+			adapter.setProfile(profile);
+			adapter.setStats(stats);
+			adapter.setPrice(price);
+		}
+
+		try {
+			viewPager.setAdapter(adapter);
+			viewPager.setCurrentItem(currentPage);
+
+		} catch (Exception ignore) {
+		}
+
 		if (pricesLoaded && profileLoaded && statsLoaded) {
 			showProgress(false);
-			if (adapter == null) {
-				adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price);
-			} else {
-				adapter.setProfile(profile);
-				adapter.setStats(stats);
-				adapter.setPrice(price);
-			}
-
-			try {
-				viewPager.setAdapter(adapter);
-				viewPager.setCurrentItem(currentPage);
-
-			} catch (NullPointerException e) {
-
-			} catch (Exception e) {
-				
-			}
 		} else {
 			showProgress(true);
 		}

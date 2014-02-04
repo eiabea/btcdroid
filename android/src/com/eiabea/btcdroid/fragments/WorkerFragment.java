@@ -24,7 +24,7 @@ import com.eiabea.btcdroid.util.App;
 public class WorkerFragment extends Fragment {
 
 	public static final String PARAM_PROFILE = "param_profile";
-	
+
 	private ViewGroup rootView;
 
 	private Profile profile;
@@ -49,14 +49,12 @@ public class WorkerFragment extends Fragment {
 		Log.i(getClass().getSimpleName(), "onCreateView()");
 		// Inflate the layout containing a title and body text.
 		rootView = (ViewGroup) inflater.inflate(R.layout.fragment_worker, null);
-		
+
 		this.profile = getArguments().getParcelable(PARAM_PROFILE);
 
 		initUi(inflater, rootView);
 
-		if (profile != null) {
-			setProfile(profile);
-		}
+		setProfile(profile);
 
 		return rootView;
 	}
@@ -79,26 +77,27 @@ public class WorkerFragment extends Fragment {
 	}
 
 	public void setProfile(Profile profile) {
-
 		this.profile = profile;
-		if (exlvWOrkerHolder != null && this.profile != null) {
-			fillUpProfile();
-		}
-
+		fillUpProfile();
 	}
 
 	private void fillUpProfile() {
-		ArrayList<Worker> list = profile.getWorkersList();
+		try {
+			ArrayList<Worker> list = profile.getWorkersList();
 
-		Collections.sort(list, new App.WorkerSorter());
+			Collections.sort(list, new App.WorkerSorter());
 
-		adapter = new WorkerListAdapter(getActivity());
+			adapter = new WorkerListAdapter(getActivity());
 
-		adapter.setData(list);
+			adapter.setData(list);
 
-		exlvWOrkerHolder.setAdapter(adapter);
+			exlvWOrkerHolder.setAdapter(adapter);
 
-		expandAllActiveWorker();
+			expandAllActiveWorker();
+
+		} catch (NullPointerException ignore) {
+
+		}
 	}
 
 	private void expandAllActiveWorker() {
