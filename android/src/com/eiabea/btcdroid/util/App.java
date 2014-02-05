@@ -11,17 +11,23 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import android.app.Application;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.PricesMtGox;
+import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.service.ProfileUpdateService;
+import com.eiabea.btcdroid.widget.DashClockWidget;
+import com.eiabea.btcdroid.widget.WidgetProvider;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -38,7 +44,7 @@ public class App extends Application {
 	public static boolean isPriceEnabled = true;
 	
 	private static String token = "";
-	private int threshold = 15;
+	private int luckThreshold = 15;
 	private int priceThreshold = 15;
 
 	public HttpWorker httpWorker;
@@ -73,7 +79,7 @@ public class App extends Application {
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		token = pref.getString(PREF_TOKEN, "");
-		threshold = Integer.valueOf(pref.getString("threshold", "15"));
+		luckThreshold = Integer.valueOf(pref.getString("luck_threshold", "15"));
 		priceThreshold = Integer.valueOf(pref.getString("price_threshold", "15"));
 		isPriceEnabled = pref.getBoolean("price_enabled", false);
 		
@@ -93,12 +99,12 @@ public class App extends Application {
 	}
 	
 
-	public void resetThreshold() {
-		this.threshold = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("threshold", "15"));
+	public void resetLuckThreshold() {
+		this.luckThreshold = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("luck_threshold", "15"));
 	}
 	
-	public int getThreshold(){
-		return this.threshold;
+	public int getLuckThreshold(){
+		return this.luckThreshold;
 	}
 
 	public void resetPriceThreshold() {
@@ -252,5 +258,20 @@ public class App extends Application {
 			return 0;
 		}
 		
+	}
+
+	public static void updateWidgets(Context context, Profile profile) {
+		// Update Widget
+		Intent i = new Intent(context, WidgetProvider.class);
+		i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		i.putExtra(WidgetProvider.PARAM_PROFILE, profile);
+		context.sendBroadcast(i);
+		Log.d(context.getClass().getSimpleName(), "sent Broadcast to update Widget");
+		
+		// Update Dashclock
+	    Intent dashclockIntent = new Intent(DashClockWidget.UPDATE_DASHCLOCK);
+	    dashclockIntent.putExtra(WidgetProvider.PARAM_PROFILE, profile);
+	    LocalBroadcastManager.getInstance(context).sendBroadcast(dashclockIntent);
+	    Log.d(context.getClass().getSimpleName(), "sent Broadcast to update DashClock");
 	}
 }

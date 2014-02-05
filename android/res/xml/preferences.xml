@@ -22,7 +22,7 @@
             android:defaultValue="15"
             android:dialogTitle="@string/txt_pref_thresholds_luck_title"
             android:enabled="true"
-            android:key="threshold"
+            android:key="luck_threshold"
             android:numeric="integer"
             android:summary="@string/txt_pref_thresholds_luck_message"
             android:title="@string/txt_pref_thresholds_luck_title" />

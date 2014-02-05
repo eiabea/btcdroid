@@ -89,7 +89,7 @@ public class PoolFragment extends Fragment {
 		if (current > 0) {
 			float last = pref.getFloat("txt_" + txt.getId() + "_value", 0f);
 
-			int minuteThreshold = App.getInstance().getThreshold();
+			int minuteThreshold = App.getInstance().getLuckThreshold();
 			long threshold = minuteThreshold * 60 * 1000;
 
 			long lastUpdated = pref.getLong("txt_" + txt.getId(), 0);

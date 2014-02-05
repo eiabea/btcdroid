@@ -9,14 +9,12 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.android.volley.Response.ErrorListener;
@@ -29,7 +27,6 @@ import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.GsonRequest;
 import com.eiabea.btcdroid.util.HttpWorker;
-import com.eiabea.btcdroid.widget.DashClockWidget;
 import com.eiabea.btcdroid.widget.WidgetProvider;
 
 public class ProfileUpdateService extends Service implements ErrorListener {
@@ -135,16 +132,17 @@ public class ProfileUpdateService extends Service implements ErrorListener {
 		HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null, new Listener<Profile>() {
 
 			@Override
-			public void onResponse(Profile response) {
-			    Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
-			    i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-			    i.putExtra(WidgetProvider.PARAM_PROFILE, response);
-			    getApplicationContext().sendBroadcast(i);	
-			    
-			    Intent dashclockIntent = new Intent(DashClockWidget.UPDATE_DASHCLOCK);
-			    dashclockIntent.putExtra(WidgetProvider.PARAM_PROFILE, response);
-			    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(dashclockIntent);
+			public void onResponse(Profile profile) {
+//			    Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
+//			    i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+//			    i.putExtra(WidgetProvider.PARAM_PROFILE, response);
+//			    getApplicationContext().sendBroadcast(i);	
+//			    
+//			    Intent dashclockIntent = new Intent(DashClockWidget.UPDATE_DASHCLOCK);
+//			    dashclockIntent.putExtra(WidgetProvider.PARAM_PROFILE, response);
+//			    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(dashclockIntent);
 			    Log.d(getClass().getSimpleName(), "onResponse Widgets");
+			    App.updateWidgets(getApplicationContext(), profile);
 			}
 		}, this));
 
@@ -161,7 +159,6 @@ public class ProfileUpdateService extends Service implements ErrorListener {
 
 			@Override
 			public void onResponse(Profile response) {
-				// TODO Auto-generated method stub
 				List<Worker> workers = response.getWorkersList();
 
 				int totalHashrate = 0;

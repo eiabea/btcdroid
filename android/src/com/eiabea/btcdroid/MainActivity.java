@@ -1,7 +1,6 @@
 package com.eiabea.btcdroid;
 
 import android.app.AlertDialog;
-import android.appwidget.AppWidgetManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,12 +37,9 @@ import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.service.ProfileUpdateService;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
-import com.eiabea.btcdroid.widget.WidgetProvider;
 
 public class MainActivity extends ActionBarActivity implements
 		HttpWorkerInterface, OnPageChangeListener {
-
-	// TODO test widgets
 
 	private static final int INTENT_PREF = 0;
 
@@ -279,10 +275,25 @@ public class MainActivity extends ActionBarActivity implements
 		switch (reqCode) {
 		case INTENT_PREF:
 			if (resCode == RESULT_OK) {
-				App.getInstance().resetToken();
-				App.getInstance().resetThreshold();
-				App.getInstance().resetPriceThreshold();
-				App.getInstance().resetPriceEnabled();
+				
+//				ArrayList<String> changed = intent.getStringArrayListExtra("changed");
+				
+//				if(changed.contains("price_enabled")||changed.contains("price_source_preference")){
+					App.getInstance().resetPriceEnabled();
+//				}
+
+//				if(changed.contains("btc_style_preference")||changed.contains("token")){
+					App.getInstance().resetToken();
+//				}
+
+//				if(changed.contains("price_threshold")){
+					App.getInstance().resetPriceThreshold();
+//				}
+
+//				if(changed.contains("luck_threshold")){
+					App.getInstance().resetLuckThreshold();
+//				}
+				
 
 				boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notification_enabled", false);
 
@@ -294,6 +305,7 @@ public class MainActivity extends ActionBarActivity implements
 
 				ProfileUpdateService.getInstance().startWidgets();
 
+				// TODO Split
 				reloadData();
 			}
 			break;
@@ -368,12 +380,7 @@ public class MainActivity extends ActionBarActivity implements
 	public void setProfile(Profile profile) {
 		this.profile = profile;
 		try {
-			// Update Widget
-			Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
-			i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-			i.putExtra(WidgetProvider.PARAM_PROFILE, profile);
-			getApplicationContext().sendBroadcast(i);
-
+			
 			((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setProfile(profile);
 			((PoolFragment) getFragment(FRAGMENT_POOL)).setProfile(profile);
 			((WorkerFragment) getFragment(FRAGMENT_WORKER)).setProfile(profile);
@@ -462,6 +469,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onProfileLoaded(Profile profile) {
 		profileLoaded = true;
+		App.updateWidgets(MainActivity.this, profile);
 		setProfile(profile);
 		handleProgessIndicator();
 	}

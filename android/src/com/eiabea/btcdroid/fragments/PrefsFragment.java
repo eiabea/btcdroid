@@ -1,5 +1,9 @@
 package com.eiabea.btcdroid.fragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -10,10 +14,30 @@ import com.eiabea.btcdroid.PrefsActivity;
 import com.eiabea.btcdroid.R;
 
 public class PrefsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+	
+//	public static final String KEY_API_TOKEN = "key_api_token";
+//	public static final String KEY_PRICE_THRESHOLD = "key_price_threshold";
+//	public static final String KEY_LUCK_THRESHOLD = "key_luck_threshold";
+//	public static final String KEY_SHOW_PRICE = "key_show_price";
+//	public static final String KEY_BTC_STYLE = "key_btc_style";
+//	public static final String KEY_NOTIFICATION = "key_notification";
+	
+	private List<String> changed;
+	
+//	private boolean apiTokenChanged = false;
+//	private boolean priceThresholdChanged = false;
+//	private boolean luckThresholdChanged = false;
+//	private boolean showPriceChanged = false;
+//	private boolean btcStyleChanged = false;
+//	private boolean notificationChanged = false;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        
+        changed = new ArrayList<String>();
+        
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
 
@@ -40,9 +64,14 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 		setPricesSource();
 		setNotification();
 		
-		Intent resultIntent = new Intent();
-		resultIntent.putExtra("key", key);
-		((PrefsActivity)getActivity()).setResultIntent(resultIntent);
+		if(!changed.contains(key)){
+			changed.add(key);
+		}
+		
+        Intent resultIntent = new Intent();
+        resultIntent.putStringArrayListExtra("changed", (ArrayList<String>)changed);
+        ((PrefsActivity)getActivity()).setResultIntent(Activity.RESULT_OK, resultIntent);
+		
 	}
 	
 	private void setPricesSource(){

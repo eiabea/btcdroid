@@ -39,8 +39,8 @@ public class PrefsActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void setResultIntent(Intent intent){
-		setResult(RESULT_OK, intent);
+	public void setResultIntent(int result, Intent intent){
+		setResult(result, intent);
 	}
 
 }
