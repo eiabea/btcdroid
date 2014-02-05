@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">BTCDroid</string>
     <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
     <string name="action_refresh">Vernieuwen</string>
@@ -20,7 +21,9 @@
     <string name="BitStamp">BitStamp (USD)</string>
     <string name="MtGoxUsd">MtGox (USD)</string>
     <string name="MtGoxEur">MtGox (EUR)</string>
-    
+    <string name="BTCeUsd">BTC-e (USD)</string>
+    <string name="BTCeEur">BTC-e (EUR)</string>
+
     <!-- Notification -->
     <string name="txt_hashrate_dropped_title">Hash snelheid is weggevallen!</string>
     <string name="txt_hashrate_dropped_message">Huidige hash snelheid: %1$s</string>
@@ -39,21 +42,22 @@
     <string name="mail_address">eiabea1989@gmail.com</string>
     <string name="mail_subject">BTCDroid</string>
     <string name="mail_intent_title">Verstuur Mail&#8230;</string>
-    
+
     <!-- PayoutFragment -->
     <string name="txt_progress">voortgang</string>
     <string name="txt_send_threshold">Hoeveelheid tot uitbetaling</string>
     <string name="txt_estimated_reward">Verwacht</string>
     <string name="txt_confirmed_reward">Bevestigd</string>
     <string name="txt_rewards">Opbrengst</string>
-    
+
     <!-- PoolFragment | Headers -->
     <string name="txt_hashrates">Hash Snelheid</string>
     <string name="txt_round">Ronde</string>
     <string name="txt_luck">Geluk</string>
 
-	<!-- PoolFragment | Headers -->
-    
+    <!-- PoolFragment | Headers -->
+
+
     <!-- PoolFragment | left -->
     <string name="txt_one_btc_is">1 BTC is:</string>
     <string name="txt_total_reward">Totaal</string>
@@ -66,13 +70,13 @@
     <string name="txt_luck_24h">24 Uur</string>
     <string name="txt_luck_7d">7 Dagen</string>
     <string name="txt_luck_30d">30 Dagen</string>
-    
+
     <!-- RoundFragment | BlockView -->
     <string name="txt_confirmations_left">Bevestigingen te gaan:</string>
     <string name="txt_block_found">Block gevonden:</string>
     <string name="txt_block_started">Block Gestart:</string>
     <string name="txt_not_available">n.B.</string>
-    
+
     <!-- WorkerFragment | WorkerView -->
     <string name="txt_score">Score:</string>
     <string name="txt_last_share">Laatste bijdrage:</string>
@@ -87,8 +91,8 @@
     <string name="txt_manuel_zangl">Manuel Zangl</string>
     <string name="txt_development">Development</string>
     <string name="txt_florian_grau">Florian Grau</string>
-	<string name="txt_bas_de_jong">Bas de Jong</string>
-	<string name="txt_translate_dutch">Dutch Translator</string>
+    <string name="txt_bas_de_jong">Bas de Jong</string>
+    <string name="txt_translate_dutch">Dutch Translator</string>
     <string name="txt_design">Design / Appicon</string>
     <string name="txt_donations">Donations</string>
     <string name="txt_donations_address">14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1</string>
@@ -98,27 +102,23 @@
     <string name="txt_confirmed">Geen</string>
 
     <!-- PreferencesFragment -->
-    
-        <string name="txt_pref_api_title">API</string>
+
+    <string name="txt_pref_api_title">API</string>
     <string name="txt_pref_api_token_title">API Token</string>
     <string name="txt_pref_api_token_message">Stel de Slush\'s Pool Token in</string>
-
     <string name="txt_pref_thresholds_title">Vernieuwings tijd</string>
     <string name="txt_pref_thresholds_price_title">Prijs Update (Update)</string>
     <string name="txt_pref_thresholds_price_message">Stel de update tijd in voor de prijzen</string>
     <string name="txt_pref_thresholds_luck_title">Geluk Update (Minuten)</string>
     <string name="txt_pref_thresholds_luck_message">Stel de update tijd in voor de GeluksPercentage</string>
-
     <string name="txt_pref_price_title">Prijs</string>
     <string name="txt_pref_price_show_price_title">Prijs weergeven</string>
     <string name="txt_pref_price_show_price_message">Laat de prijs zien van 1 BTC</string>
     <string name="txt_pref_price_price_source_title">Prijs Bron</string>
     <string name="txt_pref_price_price_source_message">Bron van de Prijsinformatie</string>
-
     <string name="txt_pref_style_title">Stijl</string>
     <string name="txt_pref_style_btc_style_title">BTC Stijl</string>
     <string name="txt_pref_style_btc_style_message">De stijl waarop Bitcoins worden weergeven</string>
-
     <string name="txt_pref_notification_title">Meldingen</string>
     <string name="txt_pref_notification_show_notification_title">Meldingen</string>
     <string name="txt_pref_notification_show_notification_message">Melding als de Hashsnelheid onder een bepaalde waarde komt</string>
@@ -132,36 +132,37 @@
     <string name="txt_pref_notification_vibrate_message">Trillen bij een Melding</string>
     <string name="txt_pref_notification_led_title">LED</string>
     <string name="txt_pref_notification_led_message">Laat LED-lampjes knipperen bij een Melding</string>
+
     <string-array name="price_source">
         <item>@string/BitStamp</item>
         <item>@string/MtGoxUsd</item>
         <item>@string/MtGoxEur</item>
+        <item>@string/BTCeUsd</item>
+        <item>@string/BTCeEur</item>
     </string-array>
     <string-array name="price_source_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
+        <item>3</item>
+        <item>4</item>
     </string-array>
-
     <string-array name="btc_style">
         <item>@string/btc</item>
         <item>@string/mbtc</item>
         <item>@string/ubtc</item>
     </string-array>
-
     <string-array name="btc_style_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
     </string-array>
-
     <string-array name="update_interval">
         <item>Handmatig</item>
         <item>30 Minuten</item>
         <item>1 Uur</item>
         <item>3 Uur</item>
     </string-array>
-
     <string-array name="update_interval_values">
         <item>0</item>
         <item>1800</item>

@@ -1,5 +1,7 @@
 package com.eiabea.btcdroid.util;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -11,19 +13,24 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.eiabea.btcdroid.model.GenericPrice;
+import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
 import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 
 public class HttpWorker {
-	public static final int PRICE_SOURCE_BITSTAMP = 0;
-	public static final int PRICE_SOURCE_MTGOX = 1;
+	public static final int PRICE_SOURCE_BITSTAMP_USD = 0;
+	public static final int PRICE_SOURCE_MTGOX_USD = 1;
 	public static final int PRICE_SOURCE_MTGOX_EUR = 2;
+	public static final int PRICE_SOURCE_BTCE_USD = 3;
+	public static final int PRICE_SOURCE_BTCE_EUR = 4;
 
 	public static final String BASEURL = "https://mining.bitcoin.cz/";
 	public static final String PRICES_URL_MTGOX_FRONT = "http://data.mtgox.com/api/2/BTC";
 	public static final String PRICES_URL_MTGOX_END = "/money/ticker_fast";
+	public static final String PRICES_URL_BTCE_FRONT = "https://btc-e.com/api/2/btc_";
+	public static final String PRICES_URL_BTCE_END = "/ticker";
 	public static final String PRICES_URL_BITSTAMP = "https://www.bitstamp.net/api/ticker/";
 
 	public static final String STATS_URL = BASEURL + "stats/json/";
@@ -85,6 +92,17 @@ public class HttpWorker {
 		HttpWorker.mQueue.add(new GsonRequest<PricesMtGox>(url, PricesMtGox.class, null, success, error));
 
 	}
+	
+	public void getPricesBTCe(String currency, Response.Listener<PricesBTCe> success, Response.ErrorListener error) {
+		Log.d(getClass().getSimpleName(), "get Prices BTC-e");
+		
+		String url = HttpWorker.PRICES_URL_BTCE_FRONT + currency.toLowerCase(Locale.ENGLISH) + HttpWorker.PRICES_URL_BTCE_END;
+		
+		System.out.println(HttpWorker.mQueue.toString());
+		
+		HttpWorker.mQueue.add(new GsonRequest<PricesBTCe>(url, PricesBTCe.class, null, success, error));
+		
+	}
 
 	public void getPricesBitStamp(Response.Listener<PricesBitStamp> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Prices BitStamp");
@@ -138,7 +156,7 @@ public class HttpWorker {
 		int source = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString("price_source_preference", "0"));
 
 		switch (source) {
-		case PRICE_SOURCE_BITSTAMP:
+		case PRICE_SOURCE_BITSTAMP_USD:
 			getPricesBitStamp(new Listener<PricesBitStamp>() {
 
 				@Override
@@ -162,7 +180,7 @@ public class HttpWorker {
 				}
 			});
 			break;
-		case PRICE_SOURCE_MTGOX:
+		case PRICE_SOURCE_MTGOX_USD:
 
 			getPricesMtGox("USD", new Listener<PricesMtGox>() {
 
@@ -201,6 +219,61 @@ public class HttpWorker {
 					price.setSymbol("€");
 					
 					httpWorkerInterface.onPricesLoaded(price);
+				}
+				
+			}, new ErrorListener() {
+				
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					
+					httpWorkerInterface.onPricesError();
+					
+				}
+			});
+			break;
+		case PRICE_SOURCE_BTCE_USD:
+			
+			getPricesBTCe("USD", new Listener<PricesBTCe>() {
+				
+				@Override
+				public void onResponse(PricesBTCe prices) {
+					try{
+						GenericPrice price = new GenericPrice();
+						price.setValueFloat(prices.getTicker().getLast());
+						price.setSymbol("$");
+						
+						httpWorkerInterface.onPricesLoaded(price);
+					}catch (NullPointerException e){
+						httpWorkerInterface.onPricesError();
+					}
+				}
+				
+			}, new ErrorListener() {
+				
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					
+					httpWorkerInterface.onPricesError();
+					
+				}
+			});
+			break;
+		case PRICE_SOURCE_BTCE_EUR:
+			
+			getPricesBTCe("EUR", new Listener<PricesBTCe>() {
+				
+				@Override
+				public void onResponse(PricesBTCe prices) {
+					
+					try{
+						GenericPrice price = new GenericPrice();
+						price.setValueFloat(prices.getTicker().getLast());
+						price.setSymbol("€");
+						
+						httpWorkerInterface.onPricesLoaded(price);
+					}catch (NullPointerException e){
+						httpWorkerInterface.onPricesError();
+					}
 				}
 				
 			}, new ErrorListener() {
