@@ -451,12 +451,12 @@ public class MainActivity extends ActionBarActivity implements
 			adapter.setPrice(price);
 		}
 
-		try {
+		if(viewPager != null){
+			
 			viewPager.setAdapter(adapter);
 			viewPager.setCurrentItem(currentPage);
 
-		} catch (Exception ignore) {
-		}
+		} 
 
 		if (pricesLoaded && profileLoaded && statsLoaded) {
 			showProgress(false);
