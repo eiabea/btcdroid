@@ -61,6 +61,7 @@ public class CustomizeFragment extends ListFragment {
 			} else {
 				adapter.notifyDataSetChanged();
 			}
+			updateOrderList();
 		}
 
 	};
