@@ -1,11 +1,12 @@
 package com.eiabea.btcdroid.fragments;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,7 +14,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.adapter.CustomizeAdapter;
@@ -22,17 +26,19 @@ import com.eiabea.btcdroid.model.CustomizeItem;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
-public class CustomizeFragment extends ListFragment {
+public class CustomizeFragment extends Fragment {
 
 	private ArrayAdapter<CustomizeItem> adapter;
 
-//	private int[] array;
+	// private int[] array;
 	private ArrayList<CustomizeItem> list;
 	private ArrayList<String> userList;
+//	private Spinner spnMainFragment;
 
+	private ViewGroup rootView;
 	private DragSortListView mDslv;
 	private DragSortController mController;
-	
+
 	private SharedPreferences pref;
 
 	public int dragStartMode = DragSortController.ON_DOWN;
@@ -65,23 +71,31 @@ public class CustomizeFragment extends ListFragment {
 		}
 
 	};
-	
-	private void updateOrderList(){
+
+	private void updateOrderList() {
 		userList = new ArrayList<String>();
 		StringBuilder builder = new StringBuilder();
-		
-		for(int i = 0; i < adapter.getCount(); i++){
+
+		for (int i = 0; i < adapter.getCount(); i++) {
 			builder.append(adapter.getItem(i).getId());
-			if(i < adapter.getCount() - 1){
+			if (i < adapter.getCount() - 1) {
 				builder.append(":");
 			}
 			Log.d(getClass().getSimpleName(), "count: " + i + " = " + adapter.getItem(i).getId());
 			userList.add(String.valueOf(adapter.getItem(i).getId()));
 		}
 		Log.d(getClass().getSimpleName(), "userOrder: " + builder.toString());
-		
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
 		pref.edit().putString("userOrder", builder.toString()).commit();
+		
+//		List<String> spinnerList = new ArrayList<String>();
+//		for(String tmp : userList){
+//			spinnerList.add(MainViewAdapter.getNameOfFragment(Integer.valueOf(tmp), getActivity()));
+//		}
+//		
+//		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+//		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//		spnMainFragment.setAdapter(dataAdapter);
 	}
 
 	protected int getLayout() {
@@ -109,17 +123,17 @@ public class CustomizeFragment extends ListFragment {
 	 * adapter.
 	 */
 	public void setListAdapter() {
-		
+
 		String userOrder = pref.getString("userOrder", "0:1:2:3");
 		String[] split = userOrder.split(":");
-		
+
 		list = new ArrayList<CustomizeItem>(split.length);
-		for (int i = 0; i < split.length; i++)  {
+		for (int i = 0; i < split.length; i++) {
 			list.add(new CustomizeItem(Integer.valueOf(split[i]), MainViewAdapter.getNameOfFragment(Integer.valueOf(split[i]), getActivity()), false));
 		}
-		
-		adapter = new CustomizeAdapter(getActivity(),R.layout.list_item_handle_left, list);
-		setListAdapter(adapter);
+
+		adapter = new CustomizeAdapter(getActivity(), R.layout.list_item_handle_left, list);
+		mDslv.setAdapter(adapter);
 		updateOrderList();
 	}
 
@@ -144,17 +158,45 @@ public class CustomizeFragment extends ListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		setHasOptionsMenu(true);
-		
+
 		pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		
-		mDslv = (DragSortListView) inflater.inflate(getLayout(), container, false);
+
+		rootView = (ViewGroup) inflater.inflate(getLayout(), container, false);
+
+		/*
+		spnMainFragment = (Spinner) rootView.findViewById(R.id.spn_customize_main_fragment);
+		
+		spnMainFragment.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
+				pref.edit().putString("userMainFragment", userList.get(position)).commit();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		int spinnerFragment = Integer.valueOf(pref.getString("userMainFragment", "0"));
+		spnMainFragment.setSelection(spinnerFragment); */
+
+		mDslv = (DragSortListView) rootView.findViewById(android.R.id.list);
+
+		mDslv.setDropListener(onDrop);
+		mDslv.setRemoveListener(onRemove);
 
 		mController = buildController(mDslv);
 		mDslv.setFloatViewManager(mController);
 		mDslv.setOnTouchListener(mController);
 		mDslv.setDragEnabled(dragEnabled);
 
-		return mDslv;
+		setListAdapter();
+
+		return rootView;
 	}
 
 	@Override
@@ -179,15 +221,15 @@ public class CustomizeFragment extends ListFragment {
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
-		mDslv = (DragSortListView) getListView();
-
-		mDslv.setDropListener(onDrop);
-		mDslv.setRemoveListener(onRemove);
-
-		setListAdapter();
-	}
+	// @Override
+	// public void onActivityCreated(Bundle savedInstanceState) {
+	// super.onActivityCreated(savedInstanceState);
+	//
+	// mDslv = (DragSortListView) rootView.findViewById(android.R.id.li);
+	//
+	// mDslv.setDropListener(onDrop);
+	// mDslv.setRemoveListener(onRemove);
+	//
+	// setListAdapter();
+	// }
 }

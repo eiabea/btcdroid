@@ -47,21 +47,6 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 			fragmentOrder[i] = Integer.valueOf(split[i]);
 		}
 		
-//		Set<String> userOrder = pref.getStringSet("userOrder", null);
-		
-//		if(userOrder != null){
-//			String[] temp = userOrder.toArray(new String[userOrder.size()]);
-//			int[] tempInt = new int[temp.length];
-//			for(int i = 0; i < temp.length; i++){
-//				tempInt[i] = Integer.valueOf(temp[i]);
-//			}
-//			fragmentOrder = tempInt;
-//		}else{
-//			fragmentOrder = context.getResources().getIntArray(R.array.default_fragment_order);
-//		}
-//		fragmentOrder = context.getResources().getIntArray(R.array.default_fragment_order);
-		
-		
 		PAGES = getValidPages(fragmentOrder);
 	}
 

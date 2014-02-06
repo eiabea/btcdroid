@@ -181,11 +181,4 @@
     <string name="txt_dashclock_description">Displays the current total hashrate of your workers at slush\'s pool</string>
     <string name="txt_dashclock_expanded_body">total current hashrate</string>
 
-    <integer-array name="default_fragment_order">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </integer-array>
-
 </resources>

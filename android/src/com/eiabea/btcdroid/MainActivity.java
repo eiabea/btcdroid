@@ -78,6 +78,8 @@ public class MainActivity extends ActionBarActivity implements
 	private Button btnSetToken;
 
 	private boolean isProgessShowing = false;
+	
+	private SharedPreferences pref;
 
 	private Profile profile = null;
 	private Stats stats = null;
@@ -88,27 +90,10 @@ public class MainActivity extends ActionBarActivity implements
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 		
-//		try{
-//			FRAGMENT_PAYOUT = fragmentOrder[0];
-//		} catch (ArrayIndexOutOfBoundsException e){
-//			
-//		}
-//		try{
-//			FRAGMENT_POOL = fragmentOrder[1];
-//		} catch (ArrayIndexOutOfBoundsException e){
-//			
-//		}
-//		try{
-//			FRAGMENT_WORKER = fragmentOrder[2];
-//		} catch (ArrayIndexOutOfBoundsException e){
-//			
-//		}
-//		try{
-//			FRAGMENT_ROUNDS = fragmentOrder[3];
-//		} catch (ArrayIndexOutOfBoundsException e){
-//			
-//		}
-
+		pref = PreferenceManager.getDefaultSharedPreferences(this);
+		
+//		currentPage = Integer.valueOf(pref.getString("userMainFragment", "0"));
+		
 		initUi();
 		setListeners();
 
@@ -338,6 +323,7 @@ public class MainActivity extends ActionBarActivity implements
 			break;
 			
 		case INTENT_CUSTOMIZE:
+//			currentPage = Integer.valueOf(pref.getString("userMainFragment", "0"));
 			initUi();
 			setListeners();
 			break;
