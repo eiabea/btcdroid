@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <item name="is_land" type="bool">false</item>
     <item name="is_tablet" type="bool">false</item>
-    
+
     <string name="app_name">BTCDroid</string>
     <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_add_pool">Add Pool</string>
     <string name="action_settings">Settings</string>
+    <string name="action_customize">Customize</string>
     <string name="action_participants">Participants</string>
     <string name="action_email">Email me</string>
     <string name="th_per_second">TH/s</string>
@@ -30,7 +31,7 @@
     <!-- Notification -->
     <string name="txt_hashrate_dropped_title">Hashrate has dropped!</string>
     <string name="txt_hashrate_dropped_message">Current Hashrate: %1$s</string>
-    
+
     <!-- MainActivity -->
     <string name="txt_no_token">No valid Token found, please set one</string>
     <string name="txt_set_token">Set Token</string>
@@ -52,7 +53,7 @@
     <string name="txt_estimated_reward">estimated</string>
     <string name="txt_confirmed_reward">confirmed</string>
     <string name="txt_rewards">Rewards</string>
-    
+
     <!-- PoolFragment | Headers -->
     <string name="txt_hashrates">Hashrates</string>
     <string name="txt_round">Round</string>
@@ -105,27 +106,22 @@
     <string name="txt_pref_api_title">API</string>
     <string name="txt_pref_api_token_title">API Token</string>
     <string name="txt_pref_api_token_message">Set the Slush\'s Pool Token</string>
-
     <string name="txt_pref_thresholds_title">Thresholds</string>
     <string name="txt_pref_thresholds_price_title">Price Threshold (minutes)</string>
     <string name="txt_pref_thresholds_price_message">Set the Threshold for reloading price</string>
     <string name="txt_pref_thresholds_luck_title">Luck Threshold (minutes)</string>
     <string name="txt_pref_thresholds_luck_message">Set the Threshold for reloading lucks</string>
-
     <string name="txt_pref_price_title">Price</string>
     <string name="txt_pref_price_show_price_title">Show Price</string>
     <string name="txt_pref_price_show_price_message">Show the Price of 1 BTC</string>
     <string name="txt_pref_price_price_source_title">Price Source</string>
     <string name="txt_pref_price_price_source_message">Where to get the Priceinformation</string>
-
     <string name="txt_pref_style_title">Style</string>
     <string name="txt_pref_style_btc_style_title">BTC Style</string>
     <string name="txt_pref_style_btc_style_message">Switch the style the values are formated</string>
-
     <string name="txt_pref_widgets_title">Widgets</string>
     <string name="txt_pref_widgets_checking_interval_title">Checking Interval (minutes)</string>
     <string name="txt_pref_widgets_checking_interval_message">How often should the widgets be updated</string>
-
     <string name="txt_pref_notification_title">Notification</string>
     <string name="txt_pref_notification_show_notification_title">Notification</string>
     <string name="txt_pref_notification_show_notification_message">Notification if hashrate drops under a certain value</string>
@@ -180,9 +176,16 @@
     <string name="toast_error_loading_profile">Error loading Profile</string>
     <string name="toast_error_loading_stats">Error loading Stats</string>
     <string name="toast_error_loading_price">Error loading Price</string>
-    
+
     <!-- DashClock -->
     <string name="txt_dashclock_description">Displays the current total hashrate of your workers at slush\'s pool</string>
     <string name="txt_dashclock_expanded_body">total current hashrate</string>
+
+    <integer-array name="default_fragment_order">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </integer-array>
 
 </resources>

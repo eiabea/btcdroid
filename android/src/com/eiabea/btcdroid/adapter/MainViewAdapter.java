@@ -1,10 +1,11 @@
 package com.eiabea.btcdroid.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
@@ -18,13 +19,15 @@ import com.eiabea.btcdroid.model.Stats;
 
 public class MainViewAdapter extends FragmentStatePagerAdapter {
 
-	private static final int PAGES = 4;
+	private static int PAGES = 0;
 
 	private Profile profile;
 	private Stats stats;
 	private GenericPrice price;
 
 	private Context context;
+	
+	private static int[] fragmentOrder;
 
 	public MainViewAdapter(Context context, FragmentManager fm, Profile profile, Stats stats, GenericPrice price) {
 		super(fm);
@@ -33,29 +36,90 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 		this.profile = profile;
 		this.stats = stats;
 		this.price = price;
+		
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		String userOrder = pref.getString("userOrder", "0:1:2:3");
+		String[] split = userOrder.split(":");
+		fragmentOrder = new int[split.length];
+		
+		for (int i = 0; i < split.length; i++)  {
+			fragmentOrder[i] = Integer.valueOf(split[i]);
+		}
+		
+//		Set<String> userOrder = pref.getStringSet("userOrder", null);
+		
+//		if(userOrder != null){
+//			String[] temp = userOrder.toArray(new String[userOrder.size()]);
+//			int[] tempInt = new int[temp.length];
+//			for(int i = 0; i < temp.length; i++){
+//				tempInt[i] = Integer.valueOf(temp[i]);
+//			}
+//			fragmentOrder = tempInt;
+//		}else{
+//			fragmentOrder = context.getResources().getIntArray(R.array.default_fragment_order);
+//		}
+//		fragmentOrder = context.getResources().getIntArray(R.array.default_fragment_order);
+		
+		
+		PAGES = getValidPages(fragmentOrder);
+	}
+
+	private int getValidPages(int[] fragmentOrder) {
+		int count = 0;
+		for(int i : fragmentOrder){
+			if(i != -1){
+				count ++;
+			}
+		}
+		return count;
 	}
 
 	@Override
 	public Fragment getItem(int position) {
-
-		Log.i(getClass().getSimpleName(), "getItem: " + position);
-		switch (position) {
-		case MainActivity.FRAGMENT_PAYOUT:
+//		
+//		if(fragmentOrder[position] == MainActivity.FRAGMENT_PAYOUT){
+//			PayoutFragment payoutFragment = PayoutFragment.create(price, profile);
+//			return payoutFragment;
+//		}
+//
+//		Log.i(getClass().getSimpleName(), "getItem: " + position);
+//		switch (position) {
+//		case MainActivity.FRAGMENT_PAYOUT:
+//			PayoutFragment payoutFragment = PayoutFragment.create(price, profile);
+//			return payoutFragment;
+//		case MainActivity.FRAGMENT_POOL:
+//			PoolFragment poolFragment = PoolFragment.create(profile, stats);
+//			return poolFragment;
+//		case MainActivity.FRAGMENT_WORKER:
+//			WorkerFragment workerFragment = WorkerFragment.create(profile);
+//			return workerFragment;
+//		case MainActivity.FRAGMENT_ROUNDS:
+//			RoundsFragment roundsFragment = RoundsFragment.create(stats);
+//			return roundsFragment;
+//		}
+		position = positionToCustomPosition(position);
+		
+		if (position == MainActivity.FRAGMENT_PAYOUT) {
 			PayoutFragment payoutFragment = PayoutFragment.create(price, profile);
 			return payoutFragment;
-		case MainActivity.FRAGMENT_POOL:
+		} else if (position == MainActivity.FRAGMENT_POOL) {
 			PoolFragment poolFragment = PoolFragment.create(profile, stats);
 			return poolFragment;
-		case MainActivity.FRAGMENT_WORKER:
+		} else if (position == MainActivity.FRAGMENT_WORKER) {
 			WorkerFragment workerFragment = WorkerFragment.create(profile);
 			return workerFragment;
-		case MainActivity.FRAGMENT_ROUNDS:
+		} else if (position == MainActivity.FRAGMENT_ROUNDS) {
 			RoundsFragment roundsFragment = RoundsFragment.create(stats);
 			return roundsFragment;
 		}
 
 		return null;
 
+	}
+	
+	private int positionToCustomPosition(int position){
+		return fragmentOrder[position];
 	}
 
 	@Override
@@ -65,17 +129,33 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-		switch (position) {
-		case MainActivity.FRAGMENT_PAYOUT:
+//		switch (position) {
+//		case MainActivity.FRAGMENT_PAYOUT:
+//			return context.getResources().getString(R.string.txt_viewpager_payout_fragment);
+//		case MainActivity.FRAGMENT_POOL:
+//			return context.getResources().getString(R.string.txt_viewpager_pool_fragment);
+//		case MainActivity.FRAGMENT_WORKER:
+//			return context.getResources().getString(R.string.txt_viewpager_worker_fragment);
+//		case MainActivity.FRAGMENT_ROUNDS:
+//			return context.getResources().getString(R.string.txt_viewpager_round_fragment);
+//		}
+		position = positionToCustomPosition(position);
+		
+		return getNameOfFragment(position, context);
+
+	}
+	
+	public static String getNameOfFragment(int which, Context context){
+		if (which == MainActivity.FRAGMENT_PAYOUT) {
 			return context.getResources().getString(R.string.txt_viewpager_payout_fragment);
-		case MainActivity.FRAGMENT_POOL:
+		} else if (which == MainActivity.FRAGMENT_POOL) {
 			return context.getResources().getString(R.string.txt_viewpager_pool_fragment);
-		case MainActivity.FRAGMENT_WORKER:
+		} else if (which == MainActivity.FRAGMENT_WORKER) {
 			return context.getResources().getString(R.string.txt_viewpager_worker_fragment);
-		case MainActivity.FRAGMENT_ROUNDS:
+		} else if (which == MainActivity.FRAGMENT_ROUNDS) {
 			return context.getResources().getString(R.string.txt_viewpager_round_fragment);
 		}
-		return null;
+		return "";
 	}
 
 	public Profile getProfile() {

@@ -42,6 +42,8 @@ public class MainActivity extends ActionBarActivity implements
 		HttpWorkerInterface, OnPageChangeListener {
 
 	private static final int INTENT_PREF = 0;
+	private static final int INTENT_CUSTOMIZE = 1;
+	private static final int INTENT_PARTICIPANTS = 2;
 
 	public static final int FRAGMENT_PAYOUT = 0;
 	public static final int FRAGMENT_POOL = 1;
@@ -85,6 +87,27 @@ public class MainActivity extends ActionBarActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
+		
+//		try{
+//			FRAGMENT_PAYOUT = fragmentOrder[0];
+//		} catch (ArrayIndexOutOfBoundsException e){
+//			
+//		}
+//		try{
+//			FRAGMENT_POOL = fragmentOrder[1];
+//		} catch (ArrayIndexOutOfBoundsException e){
+//			
+//		}
+//		try{
+//			FRAGMENT_WORKER = fragmentOrder[2];
+//		} catch (ArrayIndexOutOfBoundsException e){
+//			
+//		}
+//		try{
+//			FRAGMENT_ROUNDS = fragmentOrder[3];
+//		} catch (ArrayIndexOutOfBoundsException e){
+//			
+//		}
 
 		initUi();
 		setListeners();
@@ -249,9 +272,13 @@ public class MainActivity extends ActionBarActivity implements
 		case R.id.action_settings:
 			startActivityForResult(new Intent(this, PrefsActivity.class), INTENT_PREF);
 			break;
+			
+		case R.id.action_customize:
+			startActivityForResult(new Intent(this, CustomizeActivity.class), INTENT_CUSTOMIZE);
+			break;
 
 		case R.id.action_participants:
-			startActivityForResult(new Intent(this, ParticipantsActivity.class), INTENT_PREF);
+			startActivityForResult(new Intent(this, ParticipantsActivity.class), INTENT_PARTICIPANTS);
 			break;
 
 		case R.id.action_email:
@@ -275,25 +302,25 @@ public class MainActivity extends ActionBarActivity implements
 		switch (reqCode) {
 		case INTENT_PREF:
 			if (resCode == RESULT_OK) {
-				
-//				ArrayList<String> changed = intent.getStringArrayListExtra("changed");
-				
-//				if(changed.contains("price_enabled")||changed.contains("price_source_preference")){
-					App.getInstance().resetPriceEnabled();
-//				}
 
-//				if(changed.contains("btc_style_preference")||changed.contains("token")){
-					App.getInstance().resetToken();
-//				}
+				// ArrayList<String> changed =
+				// intent.getStringArrayListExtra("changed");
 
-//				if(changed.contains("price_threshold")){
-					App.getInstance().resetPriceThreshold();
-//				}
+				// if(changed.contains("price_enabled")||changed.contains("price_source_preference")){
+				App.getInstance().resetPriceEnabled();
+				// }
 
-//				if(changed.contains("luck_threshold")){
-					App.getInstance().resetLuckThreshold();
-//				}
-				
+				// if(changed.contains("btc_style_preference")||changed.contains("token")){
+				App.getInstance().resetToken();
+				// }
+
+				// if(changed.contains("price_threshold")){
+				App.getInstance().resetPriceThreshold();
+				// }
+
+				// if(changed.contains("luck_threshold")){
+				App.getInstance().resetLuckThreshold();
+				// }
 
 				boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notification_enabled", false);
 
@@ -308,6 +335,11 @@ public class MainActivity extends ActionBarActivity implements
 				// TODO Split
 				reloadData();
 			}
+			break;
+			
+		case INTENT_CUSTOMIZE:
+			initUi();
+			setListeners();
 			break;
 
 		default:
@@ -380,7 +412,7 @@ public class MainActivity extends ActionBarActivity implements
 	public void setProfile(Profile profile) {
 		this.profile = profile;
 		try {
-			
+
 			((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setProfile(profile);
 			((PoolFragment) getFragment(FRAGMENT_POOL)).setProfile(profile);
 			((WorkerFragment) getFragment(FRAGMENT_WORKER)).setProfile(profile);
@@ -425,14 +457,13 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	private String getFragmentTag(int which) {
-		switch (which) {
-		case FRAGMENT_PAYOUT:
+		if (which == FRAGMENT_PAYOUT) {
 			return PayoutFragment.class.getSimpleName();
-		case FRAGMENT_POOL:
+		} else if (which == FRAGMENT_POOL) {
 			return PoolFragment.class.getSimpleName();
-		case FRAGMENT_WORKER:
+		} else if (which == FRAGMENT_WORKER) {
 			return WorkerFragment.class.getSimpleName();
-		case FRAGMENT_ROUNDS:
+		} else if (which == FRAGMENT_WORKER) {
 			return RoundsFragment.class.getSimpleName();
 		}
 		return "";
@@ -451,12 +482,12 @@ public class MainActivity extends ActionBarActivity implements
 			adapter.setPrice(price);
 		}
 
-		if(viewPager != null){
-			
+		if (viewPager != null) {
+
 			viewPager.setAdapter(adapter);
 			viewPager.setCurrentItem(currentPage);
 
-		} 
+		}
 
 		if (pricesLoaded && profileLoaded && statsLoaded) {
 			showProgress(false);

@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:btcdroid="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/action_reset"
+        android:icon="@drawable/ic_action_refresh"
+        android:title="@string/action_refresh"
+        android:visible="true"
+        btcdroid:showAsAction="always"/>
+
+</menu>

@@ -32,7 +32,9 @@
         </activity>
         <activity android:name="ParticipantsActivity" >
         </activity>
-        <activity android:name="PrefsActivity">
+        <activity android:name="PrefsActivity" >
+        </activity>
+        <activity android:name="CustomizeActivity" >
         </activity>
 
         <service android:name=".service.ProfileUpdateService" >
@@ -76,11 +78,13 @@
                 android:name="description"
                 android:value="@string/txt_dashclock_description" />
 
-            <!-- A settings activity is optional 
+            <!--
+            A settings activity is optional 
             <meta-data
                 android:name="settingsActivity"
                 android:value="com.eiabea.btcdroid.PrefsActivity"
-                 />-->
+                 />
+            -->
         </service>
     </application>
 
