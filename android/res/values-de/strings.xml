@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">BTCDroid</string>
     <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
-    <string name="action_refresh">Refresh</string>
+    <string name="action_refresh">Aktualisieren</string>
+    <string name="action_reset">Zurücksetzen</string>
     <string name="action_accept">Akzeptieren</string>
     <string name="action_add_pool">Pool hinzufügen</string>
     <string name="action_settings">Einstellungen</string>
+	<string name="action_customize">Personalisieren</string>
     <string name="action_participants">Mitwirkende</string>
     <string name="action_email">Schreibe mir</string>
     <string name="th_per_second">TH/s</string>
@@ -23,7 +26,7 @@
     <string name="MtGoxEur">MtGox (EUR)</string>
     <string name="BTCeUsd">BTC-e (USD)</string>
     <string name="BTCeEur">BTC-e (EUR)</string>
-    
+
     <!-- Notification -->
     <string name="txt_hashrate_dropped_title">Hashrate gefallen!</string>
     <string name="txt_hashrate_dropped_message">Derzeitige Hashrate: %1$s</string>
@@ -43,19 +46,18 @@
     <string name="mail_subject">BTCDroid</string>
     <string name="mail_intent_title">Email senden&#8230;</string>
 
-    
-        <!-- PayoutFragment -->
+    <!-- PayoutFragment -->
     <string name="txt_progress">Fortschritt</string>
     <string name="txt_send_threshold">Auszahlungsgrenze</string>
     <string name="txt_estimated_reward">zu erwarten</string>
     <string name="txt_confirmed_reward">bestätigt</string>
     <string name="txt_rewards">Vergütung</string>
-    
+
     <!-- PoolFragment | Headers -->
     <string name="txt_hashrates">Hashrate</string>
     <string name="txt_round">Runde</string>
     <string name="txt_luck">Luck</string>
-    
+
     <!-- PoolFragment | left -->
     <string name="txt_one_btc_is">1 BTC ist:</string>
     <string name="txt_total_reward">gesamt</string>
@@ -68,13 +70,13 @@
     <string name="txt_luck_24h">24 Stunden</string>
     <string name="txt_luck_7d">7 Tage</string>
     <string name="txt_luck_30d">30 Tage</string>
-    
+
     <!-- RoundFragment | BlockView -->
     <string name="txt_confirmations_left">Bestätigungen ausstehend:</string>
     <string name="txt_block_found">Block gefunden:</string>
     <string name="txt_block_started">Block gestartet:</string>
     <string name="txt_not_available">n.V.</string>
-    
+
     <!-- WorkerFragment | WorkerView -->
     <string name="txt_score">Score:</string>
     <string name="txt_last_share">Letzter Share:</string>
@@ -90,8 +92,8 @@
     <string name="txt_development">Entwicklung</string>
     <string name="txt_florian_grau">Florian Grau</string>
     <string name="txt_design">Design / Appicon</string>
-    	<string name="txt_bas_de_jong">Bas de Jong</string>
-	<string name="txt_translate_dutch">Dänische Übersetzung</string>
+    <string name="txt_bas_de_jong">Bas de Jong</string>
+    <string name="txt_translate_dutch">Dänische Übersetzung</string>
     <string name="txt_donations">Spenden</string>
     <string name="txt_donations_address">14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1</string>
     <string name="txt_copied_to_clipboard">in Zwischenablage kopiert</string>
@@ -100,26 +102,25 @@
     <string name="txt_confirmed">keine</string>
 
     <!-- PreferencesFragment -->
-        <string name="txt_pref_api_title">API</string>
+    <string name="txt_pref_api_title">API</string>
     <string name="txt_pref_api_token_title">API Token</string>
     <string name="txt_pref_api_token_message">Setze den Slush\'s Pool Token</string>
-
     <string name="txt_pref_thresholds_title">Schwellenwerte</string>
     <string name="txt_pref_thresholds_price_title">Preis Schwellenwert (Minuten)</string>
     <string name="txt_pref_thresholds_price_message">Setze den Schwellenwert für das neu laden des Preises</string>
     <string name="txt_pref_thresholds_luck_title">Luck Schwellenwert (Minuten)</string>
     <string name="txt_pref_thresholds_luck_message">Setze den Schwellenwert für das neu laden des Lucks</string>
-
     <string name="txt_pref_price_title">Preis</string>
     <string name="txt_pref_price_show_price_title">Zeige Preis</string>
     <string name="txt_pref_price_show_price_message">Zeige den Preis für 1 BTC</string>
     <string name="txt_pref_price_price_source_title">Preis Quelle</string>
     <string name="txt_pref_price_price_source_message">Von wo soll die Preisinformation geladen werden</string>
-
     <string name="txt_pref_style_title">Aussehen</string>
     <string name="txt_pref_style_btc_style_title">BTC Aussehen</string>
     <string name="txt_pref_style_btc_style_message">Wechlse das Aussehen der BTC Werte</string>
-
+    <string name="txt_pref_widgets_title">Widgets</string>
+    <string name="txt_pref_widgets_checking_interval_title">Aktualisierungsinterval (Minuten)</string>
+    <string name="txt_pref_widgets_checking_interval_message">Wie oft sollen die Wigets aktualisiert werden</string>
     <string name="txt_pref_notification_title">Benachrichtigung</string>
     <string name="txt_pref_notification_show_notification_title">Benachrichtigung</string>
     <string name="txt_pref_notification_show_notification_message">Benachrichtigung falls die Hashrate unter einen bestimmten Wert fällt</string>
@@ -133,7 +134,11 @@
     <string name="txt_pref_notification_vibrate_message">Vibrate on Notification</string>
     <string name="txt_pref_notification_led_title">LED</string>
     <string name="txt_pref_notification_led_message">Flash LED on Notification</string>
-    
+
+    <!-- DashClock -->
+    <string name="txt_dashclock_description">Displays the current total hashrate of your workers at slush\'s pool</string>
+    <string name="txt_dashclock_expanded_body">total current hashrate</string>
+
     <string-array name="price_source">
         <item>@string/BitStamp</item>
         <item>@string/MtGoxUsd</item>
@@ -148,31 +153,31 @@
         <item>3</item>
         <item>4</item>
     </string-array>
-
     <string-array name="btc_style">
         <item>@string/btc</item>
         <item>@string/mbtc</item>
         <item>@string/ubtc</item>
     </string-array>
-
     <string-array name="btc_style_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
     </string-array>
-
     <string-array name="update_interval">
         <item>Manuell</item>
         <item>30 Minuten</item>
         <item>1 Stunden</item>
         <item>3 Stunden</item>
     </string-array>
-
     <string-array name="update_interval_values">
         <item>0</item>
         <item>1800</item>
         <item>3600</item>
         <item>10800</item>
     </string-array>
+
+    <string name="toast_error_loading_profile">Error loading Profile</string>
+    <string name="toast_error_loading_stats">Error loading Stats</string>
+    <string name="toast_error_loading_price">Error loading Price</string>
 
 </resources>

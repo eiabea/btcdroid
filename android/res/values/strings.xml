@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <item name="is_land" type="bool">false</item>
-    <item name="is_tablet" type="bool">false</item>
-
-    <string name="app_name">BTCDroid</string>
+	<string name="app_name">BTCDroid</string>
     <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_reset">Reset</string>
     <string name="action_accept">Accept</string>
     <string name="action_add_pool">Add Pool</string>
     <string name="action_settings">Settings</string>
@@ -137,6 +135,10 @@
     <string name="txt_pref_notification_led_title">LED</string>
     <string name="txt_pref_notification_led_message">Flash LED on Notification</string>
 
+    <!-- DashClock -->
+    <string name="txt_dashclock_description">Displays the current total hashrate of your workers at slush\'s pool</string>
+    <string name="txt_dashclock_expanded_body">total current hashrate</string>
+
     <string-array name="price_source">
         <item>@string/BitStamp</item>
         <item>@string/MtGoxUsd</item>
@@ -178,8 +180,7 @@
     <string name="toast_error_loading_stats">Error loading Stats</string>
     <string name="toast_error_loading_price">Error loading Price</string>
 
-    <!-- DashClock -->
-    <string name="txt_dashclock_description">Displays the current total hashrate of your workers at slush\'s pool</string>
-    <string name="txt_dashclock_expanded_body">total current hashrate</string>
+    <item name="is_land" type="bool">false</item>
+    <item name="is_tablet" type="bool">false</item>
 
 </resources>

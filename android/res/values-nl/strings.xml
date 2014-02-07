@@ -4,9 +4,11 @@
     <string name="app_name">BTCDroid</string>
     <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
     <string name="action_refresh">Vernieuwen</string>
+    <string name="action_reset">Reset</string>
     <string name="action_accept">Accept</string>
     <string name="action_add_pool">Pool toevoegen</string>
     <string name="action_settings">Instellingen</string>
+	<string name="action_customize">Customize</string>
     <string name="action_participants">Deelnemers</string>
     <string name="action_email">E-mail Ontwikkelaar</string>
     <string name="th_per_second">TH/s</string>
@@ -56,9 +58,6 @@
     <string name="txt_round">Ronde</string>
     <string name="txt_luck">Geluk</string>
 
-    <!-- PoolFragment | Headers -->
-
-
     <!-- PoolFragment | left -->
     <string name="txt_one_btc_is">1 BTC is:</string>
     <string name="txt_total_reward">Totaal</string>
@@ -92,9 +91,9 @@
     <string name="txt_manuel_zangl">Manuel Zangl</string>
     <string name="txt_development">Development</string>
     <string name="txt_florian_grau">Florian Grau</string>
+	<string name="txt_design">Design / Appicon</string>
     <string name="txt_bas_de_jong">Bas de Jong</string>
     <string name="txt_translate_dutch">Dutch Translator</string>
-    <string name="txt_design">Design / Appicon</string>
     <string name="txt_donations">Donations</string>
     <string name="txt_donations_address">14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1</string>
     <string name="txt_copied_to_clipboard">Gekopieerd naar Klembord</string>
@@ -103,7 +102,6 @@
     <string name="txt_confirmed">Geen</string>
 
     <!-- PreferencesFragment -->
-
     <string name="txt_pref_api_title">API</string>
     <string name="txt_pref_api_token_title">API Token</string>
     <string name="txt_pref_api_token_message">Stel de Slush\'s Pool Token in</string>
@@ -120,6 +118,9 @@
     <string name="txt_pref_style_title">Stijl</string>
     <string name="txt_pref_style_btc_style_title">BTC Stijl</string>
     <string name="txt_pref_style_btc_style_message">De stijl waarop Bitcoins worden weergeven</string>
+    <string name="txt_pref_widgets_title">Widgets</string>
+    <string name="txt_pref_widgets_checking_interval_title">Checking Interval (minutes)</string>
+    <string name="txt_pref_widgets_checking_interval_message">How often should the widgets be updated</string>
     <string name="txt_pref_notification_title">Meldingen</string>
     <string name="txt_pref_notification_show_notification_title">Meldingen</string>
     <string name="txt_pref_notification_show_notification_message">Melding als de Hashsnelheid onder een bepaalde waarde komt</string>
@@ -133,6 +134,10 @@
     <string name="txt_pref_notification_vibrate_message">Trillen bij een Melding</string>
     <string name="txt_pref_notification_led_title">LED</string>
     <string name="txt_pref_notification_led_message">Laat LED-lampjes knipperen bij een Melding</string>
+
+    <!-- DashClock -->
+    <string name="txt_dashclock_description">Displays the current total hashrate of your workers at slush\'s pool</string>
+    <string name="txt_dashclock_expanded_body">total current hashrate</string>
 
     <string-array name="price_source">
         <item>@string/BitStamp</item>
@@ -170,5 +175,9 @@
         <item>3600</item>
         <item>10800</item>
     </string-array>
+
+    <string name="toast_error_loading_profile">Error loading Profile</string>
+    <string name="toast_error_loading_stats">Error loading Stats</string>
+    <string name="toast_error_loading_price">Error loading Price</string>
 
 </resources>
