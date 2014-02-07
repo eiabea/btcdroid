@@ -22,6 +22,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.adapter.CustomizeAdapter;
 import com.eiabea.btcdroid.adapter.MainViewAdapter;
@@ -100,7 +101,7 @@ public class CustomizeFragment extends Fragment {
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, spinnerList);
 		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spnMainFragment.setAdapter(dataAdapter);
-		int selection = pref.getInt("userMainFragment", 1);
+		int selection = pref.getInt("userMainFragment", MainActivity.FRAGMENT_POOL);
 		if(selection < spnMainFragment.getAdapter().getCount()){
 			spnMainFragment.setSelection(selection);
 		}else{

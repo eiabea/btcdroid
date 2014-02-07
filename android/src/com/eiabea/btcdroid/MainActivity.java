@@ -78,7 +78,7 @@ public class MainActivity extends ActionBarActivity implements
 	private Button btnSetToken;
 
 	private boolean isProgessShowing = false;
-	
+
 	private SharedPreferences pref;
 
 	private Profile profile = null;
@@ -89,11 +89,11 @@ public class MainActivity extends ActionBarActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
-		
+
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		currentPage = pref.getInt("userMainFragment", 0);
-		
+
+		currentPage = pref.getInt("userMainFragment", FRAGMENT_POOL);
+
 		initUi();
 		setListeners();
 
@@ -257,7 +257,7 @@ public class MainActivity extends ActionBarActivity implements
 		case R.id.action_settings:
 			startActivityForResult(new Intent(this, PrefsActivity.class), INTENT_PREF);
 			break;
-			
+
 		case R.id.action_customize:
 			startActivityForResult(new Intent(this, CustomizeActivity.class), INTENT_CUSTOMIZE);
 			break;
@@ -321,9 +321,10 @@ public class MainActivity extends ActionBarActivity implements
 				reloadData();
 			}
 			break;
-			
+
 		case INTENT_CUSTOMIZE:
-//			currentPage = Integer.valueOf(pref.getString("userMainFragment", "0"));
+			// currentPage = Integer.valueOf(pref.getString("userMainFragment",
+			// "0"));
 			currentPage = pref.getInt("userMainFragment", 0);
 			initUi();
 			setListeners();
@@ -469,11 +470,13 @@ public class MainActivity extends ActionBarActivity implements
 			adapter.setPrice(price);
 		}
 
-		if (viewPager != null) {
-
+		try {
 			viewPager.setAdapter(adapter);
 			viewPager.setCurrentItem(currentPage);
-
+		} catch (IllegalStateException e) {
+			// ignore?
+		} catch (NullPointerException e) {
+			// ignore?
 		}
 
 		if (pricesLoaded && profileLoaded && statsLoaded) {
