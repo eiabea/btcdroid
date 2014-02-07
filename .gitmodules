@@ -1,0 +1,4 @@
+[submodule "lib_drag-sort-listview"]
+    path = lib_drag-sort-listview
+    url = https://github.com/bauerca/drag-sort-listview.git
+    ignore = dirty
