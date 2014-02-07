@@ -7,6 +7,7 @@
     <string name="app_name">BTCDroid</string>
     <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_accept">Accept</string>
     <string name="action_add_pool">Add Pool</string>
     <string name="action_settings">Settings</string>
     <string name="action_customize">Customize</string>

@@ -92,7 +92,7 @@ public class MainActivity extends ActionBarActivity implements
 		
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		
-//		currentPage = Integer.valueOf(pref.getString("userMainFragment", "0"));
+		currentPage = pref.getInt("userMainFragment", 0);
 		
 		initUi();
 		setListeners();
@@ -324,6 +324,7 @@ public class MainActivity extends ActionBarActivity implements
 			
 		case INTENT_CUSTOMIZE:
 //			currentPage = Integer.valueOf(pref.getString("userMainFragment", "0"));
+			currentPage = pref.getInt("userMainFragment", 0);
 			initUi();
 			setListeners();
 			break;

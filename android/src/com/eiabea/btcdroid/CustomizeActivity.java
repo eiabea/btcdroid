@@ -14,12 +14,24 @@ public class CustomizeActivity extends ActionBarActivity {
 		super.onCreate(icicle);
 		setContentView(R.layout.activity_customize);
 		
+		initUi();
+		
+		setFragment();
+		
+	}
+	
+	private void initUi(){
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+		getSupportActionBar().setSubtitle(R.string.action_customize);
+	}
+	
+	private void setFragment(){
 		CustomizeFragment nav = new CustomizeFragment();
 		FragmentManager manager = getSupportFragmentManager();
 		FragmentTransaction trans = manager.beginTransaction();
 		trans.replace(R.id.blank, nav, "");
 		trans.commit();
-		
 	}
-	
 }

@@ -3,6 +3,9 @@ package com.eiabea.btcdroid.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -30,10 +33,9 @@ public class CustomizeFragment extends Fragment {
 
 	private ArrayAdapter<CustomizeItem> adapter;
 
-	// private int[] array;
 	private ArrayList<CustomizeItem> list;
 	private ArrayList<String> userList;
-//	private Spinner spnMainFragment;
+	private Spinner spnMainFragment;
 
 	private ViewGroup rootView;
 	private DragSortListView mDslv;
@@ -88,14 +90,22 @@ public class CustomizeFragment extends Fragment {
 
 		pref.edit().putString("userOrder", builder.toString()).commit();
 		
-//		List<String> spinnerList = new ArrayList<String>();
-//		for(String tmp : userList){
-//			spinnerList.add(MainViewAdapter.getNameOfFragment(Integer.valueOf(tmp), getActivity()));
-//		}
-//		
-//		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-//		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//		spnMainFragment.setAdapter(dataAdapter);
+		// Set Spinner
+		List<String> spinnerList = new ArrayList<String>();
+		for(int i = 0; i < userList.size(); i++){
+			// +1 to use userfriendly indexes
+			spinnerList.add(String.valueOf(i + 1));
+		}
+		
+		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spnMainFragment.setAdapter(dataAdapter);
+		int selection = pref.getInt("userMainFragment", 1);
+		if(selection < spnMainFragment.getAdapter().getCount()){
+			spnMainFragment.setSelection(selection);
+		}else{
+			spnMainFragment.setSelection(0);
+		}
 	}
 
 	protected int getLayout() {
@@ -164,14 +174,13 @@ public class CustomizeFragment extends Fragment {
 
 		rootView = (ViewGroup) inflater.inflate(getLayout(), container, false);
 
-		/*
 		spnMainFragment = (Spinner) rootView.findViewById(R.id.spn_customize_main_fragment);
 		
 		spnMainFragment.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				pref.edit().putString("userMainFragment", userList.get(position)).commit();
+				pref.edit().putInt("userMainFragment", position).commit();
 			}
 
 			@Override
@@ -181,9 +190,6 @@ public class CustomizeFragment extends Fragment {
 			}
 		});
 		
-		int spinnerFragment = Integer.valueOf(pref.getString("userMainFragment", "0"));
-		spnMainFragment.setSelection(spinnerFragment); */
-
 		mDslv = (DragSortListView) rootView.findViewById(android.R.id.list);
 
 		mDslv.setDropListener(onDrop);
@@ -208,10 +214,12 @@ public class CustomizeFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case android.R.id.home:
+		case R.id.action_accept:
+			getActivity().finish();
+			break;
 		case R.id.action_reset:
-			// Force default order
-			pref.edit().remove("userOrder").commit();
-			setListAdapter();
+			showResetAlert();
 
 			break;
 
@@ -221,15 +229,27 @@ public class CustomizeFragment extends Fragment {
 		return super.onOptionsItemSelected(item);
 	}
 
-	// @Override
-	// public void onActivityCreated(Bundle savedInstanceState) {
-	// super.onActivityCreated(savedInstanceState);
-	//
-	// mDslv = (DragSortListView) rootView.findViewById(android.R.id.li);
-	//
-	// mDslv.setDropListener(onDrop);
-	// mDslv.setRemoveListener(onRemove);
-	//
-	// setListAdapter();
-	// }
+	private void showResetAlert() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle("Warining");
+		builder.setMessage("Would you like to reset to the default settings?");
+		builder.setPositiveButton("Yes", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// Force default order
+				pref.edit().remove("userMainFragment").commit();
+				pref.edit().remove("userOrder").commit();
+				setListAdapter();
+			}
+		});
+		builder.setNegativeButton("Cancel", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// close dialog
+			}
+		});
+		builder.create().show();
+	}
 }

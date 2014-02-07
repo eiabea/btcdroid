@@ -2,8 +2,15 @@
     xmlns:btcdroid="http://schemas.android.com/apk/res-auto" >
 
     <item
+        android:id="@+id/action_accept"
+        android:icon="@drawable/ic_action_navigation_accept"
+        android:title="@string/action_accept"
+        android:visible="true"
+        btcdroid:showAsAction="always"/>
+
+    <item
         android:id="@+id/action_reset"
-        android:icon="@drawable/ic_action_refresh"
+        android:icon="@drawable/ic_action_content_undo"
         android:title="@string/action_refresh"
         android:visible="true"
         btcdroid:showAsAction="always"/>

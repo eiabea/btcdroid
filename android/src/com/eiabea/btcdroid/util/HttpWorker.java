@@ -163,11 +163,16 @@ public class HttpWorker {
 				public void onResponse(PricesBitStamp prices) {
 
 					GenericPrice price = new GenericPrice();
+					
+					try{
+						price.setValueFloat(Float.parseFloat(prices.getLast()));
+						price.setSymbol("$");
+						
+						httpWorkerInterface.onPricesLoaded(price);
+					} catch (NullPointerException ignore){
+						httpWorkerInterface.onPricesError();
+					}
 
-					price.setValueFloat(Float.parseFloat(prices.getLast()));
-					price.setSymbol("$");
-
-					httpWorkerInterface.onPricesLoaded(price);
 				}
 
 			}, new ErrorListener() {
@@ -187,11 +192,16 @@ public class HttpWorker {
 				@Override
 				public void onResponse(PricesMtGox prices) {
 
-					// Write jsonData to PricesMtGox Object
-					GenericPrice price = prices.getLastPrice();
-					price.setSymbol("$");
 					
-					httpWorkerInterface.onPricesLoaded(price);
+					try{
+						// Write jsonData to PricesMtGox Object
+						GenericPrice price = prices.getLastPrice();
+						price.setSymbol("$");
+						
+						httpWorkerInterface.onPricesLoaded(price);
+					} catch (NullPointerException ignore){
+						httpWorkerInterface.onPricesError();
+					}
 
 				}
 
@@ -212,13 +222,17 @@ public class HttpWorker {
 				@Override
 				public void onResponse(PricesMtGox prices) {
 					
-					// Write jsonData to PricesMtGox Object
-					prices = App.parsePrices(prices.getData());
-					
-					GenericPrice price = prices.getLastPrice();
-					price.setSymbol("€");
-					
-					httpWorkerInterface.onPricesLoaded(price);
+					try{
+						// Write jsonData to PricesMtGox Object
+						prices = App.parsePrices(prices.getData());
+						
+						GenericPrice price = prices.getLastPrice();
+						price.setSymbol("€");
+						
+						httpWorkerInterface.onPricesLoaded(price);
+					} catch (NullPointerException ignore){
+						httpWorkerInterface.onPricesError();
+					}
 				}
 				
 			}, new ErrorListener() {

@@ -2,14 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dslv="http://schemas.android.com/apk/res/com.eiabea.btcdroid"
     android:layout_width="wrap_content"
-    android:orientation="vertical"
-    android:layout_height="match_parent" >
-    
-    <Spinner 
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:id="@+id/spn_customize_main_fragment"/>
+        android:background="@color/bd_white"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:paddingBottom="@dimen/small_card_content_padding_bottom"
+            android:paddingTop="@dimen/small_card_content_padding_top" >
+
+            <com.eiabea.btcdroid.fonts.RobotoBold
+                style="@style/style_small_card_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="Main Page:" />
+
+            <Spinner
+                android:id="@+id/spn_customize_main_fragment"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/small_card_bottom_line_height"
+            android:background="@color/bd_card_bottom_line" >
+        </FrameLayout>
+    </LinearLayout>
 
     <com.mobeta.android.dslv.DragSortListView
         android:id="@android:id/list"
