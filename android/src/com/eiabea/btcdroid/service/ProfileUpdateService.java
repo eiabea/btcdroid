@@ -29,7 +29,7 @@ import com.eiabea.btcdroid.util.GsonRequest;
 import com.eiabea.btcdroid.util.HttpWorker;
 import com.eiabea.btcdroid.widget.WidgetProvider;
 
-public class ProfileUpdateService extends Service implements ErrorListener {
+public class ProfileUpdateService extends Service{
 
 	private SharedPreferences pref;
 
@@ -37,8 +37,6 @@ public class ProfileUpdateService extends Service implements ErrorListener {
 
 	private ScheduledExecutorService scheduleNotification, scheduleWidgets;
 	
-//	private LoadingInterface loadingInterface;
-
 	@Override
 	public IBinder onBind(Intent arg0) {
 		return null;
@@ -73,7 +71,7 @@ public class ProfileUpdateService extends Service implements ErrorListener {
 		
 		int intervalNotificaion = Integer.valueOf(pref.getString("notification_interval", "60"));
 
-		scheduleNotification = Executors.newScheduledThreadPool(5);
+		scheduleNotification = Executors.newSingleThreadScheduledExecutor();
 
 		scheduleNotification.scheduleAtFixedRate(new Runnable() {
 			public void run() {
@@ -92,7 +90,7 @@ public class ProfileUpdateService extends Service implements ErrorListener {
 		}
 		
 		int intervalWidget = Integer.valueOf(pref.getString("widget_interval", "30"));
-		scheduleWidgets = Executors.newScheduledThreadPool(4);
+		scheduleWidgets = Executors.newSingleThreadScheduledExecutor();
 		
 		scheduleWidgets.scheduleAtFixedRate(new Runnable() {
 			public void run() {
@@ -133,18 +131,21 @@ public class ProfileUpdateService extends Service implements ErrorListener {
 
 			@Override
 			public void onResponse(Profile profile) {
-//			    Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
-//			    i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//			    i.putExtra(WidgetProvider.PARAM_PROFILE, response);
-//			    getApplicationContext().sendBroadcast(i);	
-//			    
-//			    Intent dashclockIntent = new Intent(DashClockWidget.UPDATE_DASHCLOCK);
-//			    dashclockIntent.putExtra(WidgetProvider.PARAM_PROFILE, response);
-//			    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(dashclockIntent);
 			    Log.d(getClass().getSimpleName(), "onResponse Widgets");
 			    App.updateWidgets(getApplicationContext(), profile);
 			}
-		}, this));
+		}, new ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.d(getClass().getSimpleName(), "onErrorResponse Widgets");
+				Log.d(getClass().getSimpleName(), " " + error.getCause());
+//			    Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
+//			    i.setAction(WidgetProvider.LOADING_FAILED);
+//			    getApplicationContext().sendBroadcast(i);	
+				
+			}
+		}));
 
 	}
 	
@@ -173,17 +174,18 @@ public class ProfileUpdateService extends Service implements ErrorListener {
 				}
 				Log.d(getClass().getSimpleName(), "onResponse Notification");
 			}
-		}, this));
+		}, new ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.d(getClass().getSimpleName(), "onErrorResponse Notification");
+				Log.d(getClass().getSimpleName(), " " + error.getCause());
+			    Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
+			    i.setAction(WidgetProvider.LOADING_FAILED);
+			    getApplicationContext().sendBroadcast(i);	
+			}
+		}));
 		
-	}
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-		// Update Widget
-	    Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
-	    i.setAction(WidgetProvider.LOADING_FAILED);
-	    getApplicationContext().sendBroadcast(i);	
-
 	}
 
 	public void createFirstDropNotification(int hashrate) {
