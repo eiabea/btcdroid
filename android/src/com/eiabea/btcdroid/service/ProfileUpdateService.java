@@ -102,6 +102,7 @@ public class ProfileUpdateService extends Service{
 				if (App.getInstance().isTokenSet()) {
 					getProfileWidgets();
 					getStatsWidgets();
+					getPriceWidgets();
 				} else {
 					Log.d(getClass().getSimpleName(), "No Token set");
 				}
@@ -197,6 +198,45 @@ public class ProfileUpdateService extends Service{
 			    }
 			}
 		}));
+	}
+	
+	public void getPriceWidgets() {
+		Log.d(getClass().getSimpleName(), "get Price Widgets");
+		
+		HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
+		HttpWorker.getInstance().getPrices(interFace);
+		
+//		String url = HttpWorker.STATS_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
+//		
+//		System.out.println(HttpWorker.mQueue.toString());
+//		
+//		HttpWorker.mQueue.add(new GsonRequest<Stats>(url, Stats.class, null, new Listener<Stats>() {
+//			
+//			@Override
+//			public void onResponse(Stats stats) {
+//				Log.d(getClass().getSimpleName(), "onResponse Stats Widgets");
+//				ProfileUpdateService.this.stats = stats;
+//				App.updateWidgets(getApplicationContext(), stats);
+//				
+//				HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
+//				if(interFace != null){
+//					interFace.onStatsLoaded(stats);
+//				}
+//			}
+//		}, new ErrorListener() {
+//			
+//			@Override
+//			public void onErrorResponse(VolleyError error) {
+//				Log.d(getClass().getSimpleName(), "onErrorResponse Stats Widgets");
+//				Log.d(getClass().getSimpleName(), " " + error.getCause());
+//				Stats stats = null;
+//				App.updateWidgets(getApplicationContext(), stats);
+//				HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
+//				if(interFace != null){
+//					interFace.onStatsError();
+//				}
+//			}
+//		}));
 	}
 	
 	public void getProfileNotification() {

@@ -156,9 +156,13 @@ public class HttpWorker {
 //		});
 //	}
 
-	public void getPrices() {
+	public void getPrices(final HttpWorkerInterface interFace) {
 
 		Log.d(getClass().getSimpleName(), "Getting Prices");
+		
+		if(interFace == null){
+			return;
+		}
 
 		int source = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString("price_source_preference", "0"));
 
@@ -175,9 +179,9 @@ public class HttpWorker {
 						price.setValueFloat(Float.parseFloat(prices.getLast()));
 						price.setSymbol("$");
 						
-						httpWorkerInterface.onPricesLoaded(price);
+						interFace.onPricesLoaded(price);
 					} catch (NullPointerException ignore){
-						httpWorkerInterface.onPricesError();
+						interFace.onPricesError();
 					}
 
 				}
@@ -187,7 +191,7 @@ public class HttpWorker {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 
-					httpWorkerInterface.onPricesError();
+					interFace.onPricesError();
 
 				}
 			});
@@ -205,9 +209,9 @@ public class HttpWorker {
 						GenericPrice price = prices.getLastPrice();
 						price.setSymbol("$");
 						
-						httpWorkerInterface.onPricesLoaded(price);
+						interFace.onPricesLoaded(price);
 					} catch (NullPointerException ignore){
-						httpWorkerInterface.onPricesError();
+						interFace.onPricesError();
 					}
 
 				}
@@ -217,7 +221,7 @@ public class HttpWorker {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 
-					httpWorkerInterface.onPricesError();
+					interFace.onPricesError();
 
 				}
 			});
@@ -236,9 +240,9 @@ public class HttpWorker {
 						GenericPrice price = prices.getLastPrice();
 						price.setSymbol("€");
 						
-						httpWorkerInterface.onPricesLoaded(price);
+						interFace.onPricesLoaded(price);
 					} catch (NullPointerException ignore){
-						httpWorkerInterface.onPricesError();
+						interFace.onPricesError();
 					}
 				}
 				
@@ -247,7 +251,7 @@ public class HttpWorker {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					
-					httpWorkerInterface.onPricesError();
+					interFace.onPricesError();
 					
 				}
 			});
@@ -263,9 +267,9 @@ public class HttpWorker {
 						price.setValueFloat(prices.getTicker().getLast());
 						price.setSymbol("$");
 						
-						httpWorkerInterface.onPricesLoaded(price);
+						interFace.onPricesLoaded(price);
 					}catch (NullPointerException e){
-						httpWorkerInterface.onPricesError();
+						interFace.onPricesError();
 					}
 				}
 				
@@ -274,7 +278,7 @@ public class HttpWorker {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					
-					httpWorkerInterface.onPricesError();
+					interFace.onPricesError();
 					
 				}
 			});
@@ -291,9 +295,9 @@ public class HttpWorker {
 						price.setValueFloat(prices.getTicker().getLast());
 						price.setSymbol("€");
 						
-						httpWorkerInterface.onPricesLoaded(price);
+						interFace.onPricesLoaded(price);
 					}catch (NullPointerException e){
-						httpWorkerInterface.onPricesError();
+						interFace.onPricesError();
 					}
 				}
 				
@@ -302,7 +306,7 @@ public class HttpWorker {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					
-					httpWorkerInterface.onPricesError();
+					interFace.onPricesError();
 					
 				}
 			});

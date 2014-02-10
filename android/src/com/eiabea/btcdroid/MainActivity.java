@@ -364,7 +364,7 @@ public class MainActivity extends ActionBarActivity implements
 			App.getInstance().httpWorker.setHttpWorkerInterface(this);
 			showInfos();
 			handleProgessIndicator();
-			App.getInstance().httpWorker.getPrices();
+//			App.getInstance().httpWorker.getPrices();
 
 			try {
 				ProfileUpdateService.getInstance().startWidgets();

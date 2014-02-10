@@ -31,6 +31,7 @@ import com.eiabea.btcdroid.widget.AverageHashrateWidgetProvider;
 import com.eiabea.btcdroid.widget.ConfirmedRewardWidgetProvider;
 import com.eiabea.btcdroid.widget.DashClockWidget;
 import com.eiabea.btcdroid.widget.EstimatedRewardWidgetProvider;
+import com.eiabea.btcdroid.widget.PriceWidgetProvider;
 import com.eiabea.btcdroid.widget.RoundDurationWidgetProvider;
 import com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider;
 import com.google.gson.Gson;
@@ -286,7 +287,6 @@ public class App extends Application {
 		estimatedIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 		estimatedIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
 		context.sendBroadcast(estimatedIntent);
-		Log.d(context.getClass().getSimpleName(), "sent Broadcast to update Widget");
 		
 		// Update Dashclock
 	    Intent dashclockIntent = new Intent(DashClockWidget.UPDATE_DASHCLOCK);
@@ -301,5 +301,13 @@ public class App extends Application {
 		roundIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 		roundIntent.putExtra(RoundDurationWidgetProvider.PARAM_STATS, stats);
 		context.sendBroadcast(roundIntent);
+	}
+	
+	public static void updateWidgets(Context context, GenericPrice price) {
+		// Update Price Widget
+		Intent priceIntent = new Intent(context, PriceWidgetProvider.class);
+		priceIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		priceIntent.putExtra(PriceWidgetProvider.PARAM_PRICE, price);
+		context.sendBroadcast(priceIntent);
 	}
 }
