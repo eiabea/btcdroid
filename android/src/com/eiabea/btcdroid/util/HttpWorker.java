@@ -36,6 +36,8 @@ public class HttpWorker {
 	public static final String STATS_URL = BASEURL + "stats/json/";
 	public static final String PROFILE_URL = BASEURL + "accounts/profile/json/";
 
+	private static HttpWorker me;
+	
 	private Context context;
 
 	private String token;
@@ -48,11 +50,16 @@ public class HttpWorker {
 	}
 
 	public HttpWorker(Context context, String token) {
+		HttpWorker.me = this;
 		this.context = context;
 
 		this.token = token;
 
 		initVolley();
+	}
+	
+	public static HttpWorker getInstance(){
+		return me;
 	}
 
 	private void initVolley() {
@@ -82,7 +89,7 @@ public class HttpWorker {
 
 	}
 
-	public void getPricesMtGox(String currency, Response.Listener<PricesMtGox> success, Response.ErrorListener error) {
+	private void getPricesMtGox(String currency, Response.Listener<PricesMtGox> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Prices MtGox");
 
 		String url = HttpWorker.PRICES_URL_MTGOX_FRONT + currency + HttpWorker.PRICES_URL_MTGOX_END;
@@ -93,7 +100,7 @@ public class HttpWorker {
 
 	}
 	
-	public void getPricesBTCe(String currency, Response.Listener<PricesBTCe> success, Response.ErrorListener error) {
+	private void getPricesBTCe(String currency, Response.Listener<PricesBTCe> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Prices BTC-e");
 		
 		String url = HttpWorker.PRICES_URL_BTCE_FRONT + currency.toLowerCase(Locale.ENGLISH) + HttpWorker.PRICES_URL_BTCE_END;
@@ -104,7 +111,7 @@ public class HttpWorker {
 		
 	}
 
-	public void getPricesBitStamp(Response.Listener<PricesBitStamp> success, Response.ErrorListener error) {
+	private void getPricesBitStamp(Response.Listener<PricesBitStamp> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Prices BitStamp");
 
 		String url = HttpWorker.PRICES_URL_BITSTAMP;
@@ -115,41 +122,41 @@ public class HttpWorker {
 
 	}
 
-	public void reload() {
-		getProfile();
+//	public void reload() {
+//		getProfile();
+//
+//		getStats();
+//
+//		if (App.isPriceEnabled) {
+//			getPrices();
+//		}else{
+//			httpWorkerInterface.onPricesLoaded(null);
+//		}
+//	}
 
-		getStats();
+//	private void getProfile() {
+//		Log.d(getClass().getSimpleName(), "Getting Profile");
+//
+//		getProfile(new Listener<Profile>() {
+//
+//			@Override
+//			public void onResponse(Profile profile) {
+//
+//				httpWorkerInterface.onProfileLoaded(profile);
+//
+//			}
+//
+//		}, new ErrorListener() {
+//
+//			@Override
+//			public void onErrorResponse(VolleyError error) {
+//				httpWorkerInterface.onProfileError();
+//
+//			}
+//		});
+//	}
 
-		if (App.isPriceEnabled) {
-			getPrices();
-		}else{
-			httpWorkerInterface.onPricesLoaded(null);
-		}
-	}
-
-	private void getProfile() {
-		Log.d(getClass().getSimpleName(), "Getting Profile");
-
-		getProfile(new Listener<Profile>() {
-
-			@Override
-			public void onResponse(Profile profile) {
-
-				httpWorkerInterface.onProfileLoaded(profile);
-
-			}
-
-		}, new ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				httpWorkerInterface.onProfileError();
-
-			}
-		});
-	}
-
-	private void getPrices() {
+	public void getPrices() {
 
 		Log.d(getClass().getSimpleName(), "Getting Prices");
 
@@ -307,26 +314,26 @@ public class HttpWorker {
 
 	}
 
-	private void getStats() {
-		Log.d(getClass().getSimpleName(), "Getting Stats");
-
-		App.getInstance().httpWorker.getStats(new Listener<Stats>() {
-
-			@Override
-			public void onResponse(Stats stats) {
-				httpWorkerInterface.onStatsLoaded(stats);
-
-			}
-
-		}, new ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				httpWorkerInterface.onStatsError();
-
-			}
-		});
-	}
+//	private void getStats() {
+//		Log.d(getClass().getSimpleName(), "Getting Stats");
+//
+//		App.getInstance().httpWorker.getStats(new Listener<Stats>() {
+//
+//			@Override
+//			public void onResponse(Stats stats) {
+//				httpWorkerInterface.onStatsLoaded(stats);
+//
+//			}
+//
+//		}, new ErrorListener() {
+//
+//			@Override
+//			public void onErrorResponse(VolleyError error) {
+//				httpWorkerInterface.onStatsError();
+//
+//			}
+//		});
+//	}
 
 	public void setHttpWorkerInterface(HttpWorkerInterface httpWorkerInterface) {
 		this.httpWorkerInterface = httpWorkerInterface;

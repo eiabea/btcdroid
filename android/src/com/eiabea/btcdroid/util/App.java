@@ -30,6 +30,7 @@ import com.eiabea.btcdroid.service.ProfileUpdateService;
 import com.eiabea.btcdroid.widget.AverageHashrateWidgetProvider;
 import com.eiabea.btcdroid.widget.ConfirmedRewardWidgetProvider;
 import com.eiabea.btcdroid.widget.DashClockWidget;
+import com.eiabea.btcdroid.widget.EstimatedRewardWidgetProvider;
 import com.eiabea.btcdroid.widget.RoundDurationWidgetProvider;
 import com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider;
 import com.google.gson.Gson;
@@ -280,6 +281,11 @@ public class App extends Application {
 		confirmedIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 		confirmedIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
 		context.sendBroadcast(confirmedIntent);
+		// Update Estimated Reward Widget
+		Intent estimatedIntent = new Intent(context, EstimatedRewardWidgetProvider.class);
+		estimatedIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		estimatedIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
+		context.sendBroadcast(estimatedIntent);
 		Log.d(context.getClass().getSimpleName(), "sent Broadcast to update Widget");
 		
 		// Update Dashclock

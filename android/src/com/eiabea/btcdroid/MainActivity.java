@@ -59,6 +59,8 @@ public class MainActivity extends ActionBarActivity implements
 	private static final String STATE_CURRENT_PAGE = "state_current_page";
 	private static final String STATE_PROGRESS_SHOWING = "state_progress_showing";
 
+	// TODO price into service
+
 	private MenuItem itemRefresh;
 
 	// Tiles Layout
@@ -97,10 +99,26 @@ public class MainActivity extends ActionBarActivity implements
 		initUi();
 		setListeners();
 
-		if (savedInstanceState == null) {
+		// if (savedInstanceState == null) {
+		// reloadData();
+		// }else{
+		// }
+		tryGettingDataFromService();
+
+	}
+
+	private void tryGettingDataFromService() {
+		try {
+			this.profile = ProfileUpdateService.getInstance().getProfile();
+			this.stats = ProfileUpdateService.getInstance().getStats();
+			profileLoaded = true;
+			statsLoaded = true;
+			pricesLoaded = true;
+			setSavedValues();
+
+		} catch (NullPointerException e) {
 			reloadData();
 		}
-
 	}
 
 	@Override
@@ -249,7 +267,6 @@ public class MainActivity extends ActionBarActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
-
 			reloadData();
 
 			break;
@@ -316,9 +333,12 @@ public class MainActivity extends ActionBarActivity implements
 				}
 
 				ProfileUpdateService.getInstance().startWidgets();
+				// ProfileUpdateService.getInstance().getProfileWidgets();
+				// ProfileUpdateService.getInstance().getStatsWidgets();
 
 				// TODO Split
-				reloadData();
+				// reloadData();
+
 			}
 			break;
 
@@ -344,7 +364,12 @@ public class MainActivity extends ActionBarActivity implements
 			App.getInstance().httpWorker.setHttpWorkerInterface(this);
 			showInfos();
 			handleProgessIndicator();
-			App.getInstance().httpWorker.reload();
+			App.getInstance().httpWorker.getPrices();
+
+			try {
+				ProfileUpdateService.getInstance().startWidgets();
+			} catch (NullPointerException ignore) {
+			}
 		} else {
 			hideInfos();
 		}

@@ -28,12 +28,16 @@ import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.GsonRequest;
 import com.eiabea.btcdroid.util.HttpWorker;
+import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
 import com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider;
 
 public class ProfileUpdateService extends Service{
 
 	private SharedPreferences pref;
-
+	
+	private Profile profile;
+	private Stats stats;
+	
 	private static ProfileUpdateService me;
 
 	private ScheduledExecutorService scheduleNotification, scheduleWidgets;
@@ -134,7 +138,13 @@ public class ProfileUpdateService extends Service{
 			@Override
 			public void onResponse(Profile profile) {
 			    Log.d(getClass().getSimpleName(), "onResponse Profile Widgets");
+			    ProfileUpdateService.this.profile = profile;
 			    App.updateWidgets(getApplicationContext(), profile);
+			    
+			    HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
+			    if(interFace != null){
+			    	interFace.onProfileLoaded(profile);
+			    }
 			}
 		}, new ErrorListener() {
 
@@ -142,7 +152,12 @@ public class ProfileUpdateService extends Service{
 			public void onErrorResponse(VolleyError error) {
 				Log.d(getClass().getSimpleName(), "onErrorResponse Profile Widgets");
 				Log.d(getClass().getSimpleName(), " " + error.getCause());
-				
+				Profile profile = null;
+				App.updateWidgets(getApplicationContext(), profile);
+				HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
+			    if(interFace != null){
+			    	interFace.onProfileError();
+			    }
 			}
 		}));
 		
@@ -160,7 +175,13 @@ public class ProfileUpdateService extends Service{
 			@Override
 			public void onResponse(Stats stats) {
 				Log.d(getClass().getSimpleName(), "onResponse Stats Widgets");
+				ProfileUpdateService.this.stats = stats;
 				App.updateWidgets(getApplicationContext(), stats);
+				
+				HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
+			    if(interFace != null){
+			    	interFace.onStatsLoaded(stats);
+			    }
 			}
 		}, new ErrorListener() {
 			
@@ -168,7 +189,12 @@ public class ProfileUpdateService extends Service{
 			public void onErrorResponse(VolleyError error) {
 				Log.d(getClass().getSimpleName(), "onErrorResponse Stats Widgets");
 				Log.d(getClass().getSimpleName(), " " + error.getCause());
-				
+				Stats stats = null;
+				App.updateWidgets(getApplicationContext(), stats);
+				HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
+			    if(interFace != null){
+			    	interFace.onStatsError();
+			    }
 			}
 		}));
 	}
@@ -259,9 +285,21 @@ public class ProfileUpdateService extends Service{
 
 		return notification;
 	}
-	
-	public interface LoadingInterface{
-		public void onResponse(Profile profile);
+
+	public Profile getProfile() {
+		return profile;
 	}
 
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+	}
+
+	public Stats getStats() {
+		return stats;
+	}
+
+	public void setStats(Stats stats) {
+		this.stats = stats;
+	}
+	
 }
