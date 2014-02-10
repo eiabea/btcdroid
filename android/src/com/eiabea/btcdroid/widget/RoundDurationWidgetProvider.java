@@ -1,6 +1,6 @@
 package com.eiabea.btcdroid.widget;
 
-import java.util.ArrayList;
+import java.util.Date;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -12,34 +12,31 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.eiabea.btcdroid.R;
-import com.eiabea.btcdroid.model.Profile;
-import com.eiabea.btcdroid.model.Worker;
+import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.service.ProfileUpdateService;
 import com.eiabea.btcdroid.util.App;
 
-public class WidgetProvider extends AppWidgetProvider {
-	public static final String PARAM_PROFILE = "param_profile";
+public class RoundDurationWidgetProvider extends AppWidgetProvider {
+	public static final String PARAM_STATS = "param_stats";
 
 	private static final String ACTION_CLICK = "ACTION_CLICK";
 	public static final String LOADING_FAILED = "ACTION_FAILED";
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-		
-		try{
-			ProfileUpdateService.getInstance().getProfileWidgets();
-		}catch(Exception ignore){
+
+		try {
+			ProfileUpdateService.getInstance().getStatsWidgets();
+		} catch (Exception ignore) {
 		}
 
 		// Get all ids
-		ComponentName thisWidget = new ComponentName(context, WidgetProvider.class);
+		ComponentName thisWidget = new ComponentName(context, RoundDurationWidgetProvider.class);
 		int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 		for (int widgetId : allWidgetIds) {
-			// create some random data
-
 			RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
-			Intent intent = new Intent(context, WidgetProvider.class);
+			Intent intent = new Intent(context, RoundDurationWidgetProvider.class);
 
 			intent.setAction(ACTION_CLICK);
 			intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
@@ -50,8 +47,6 @@ public class WidgetProvider extends AppWidgetProvider {
 		}
 	}
 
-	
-	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
@@ -61,28 +56,28 @@ public class WidgetProvider extends AppWidgetProvider {
 
 			if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-				ProfileUpdateService.getInstance().getProfileWidgets();
+				ProfileUpdateService.getInstance().getStatsWidgets();
 			} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-				Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
-				
-				ArrayList<Worker> list = profile.getWorkersList();
+				Stats stats = intent.getParcelableExtra(PARAM_STATS);
 
-				int totalHashrate = 0;
+				Date duration = null;
 
-				for (Worker tmp : list) {
-					totalHashrate += tmp.getHashrate();
+				try {
+					duration = App.dateDurationFormat.parse(stats.getRound_duration());
+					remoteViews.setTextViewText(R.id.txt_widget_value, App.dateDurationFormat.format(duration));
+					remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_green));
+					remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_round_duration_widget));
+				} catch (java.text.ParseException e) {
+					e.printStackTrace();
 				}
-
-				remoteViews.setTextViewText(R.id.txt_main_info_total_hashrate, App.formatHashRate(totalHashrate));
-				remoteViews.setTextViewText(R.id.txt_main_info_average_hashrate, App.formatHashRate(profile.getHashrate()));
 
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
 
 			} else if (intent.getAction().equals(LOADING_FAILED)) {
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
 			}
-			
-			ComponentName widget = new ComponentName(context, WidgetProvider.class);
+
+			ComponentName widget = new ComponentName(context, RoundDurationWidgetProvider.class);
 			AppWidgetManager.getInstance(context).updateAppWidget(widget, remoteViews);
 
 		} catch (NullPointerException e) {

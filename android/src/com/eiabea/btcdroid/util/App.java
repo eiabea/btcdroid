@@ -24,10 +24,14 @@ import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
+import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.service.ProfileUpdateService;
+import com.eiabea.btcdroid.widget.AverageHashrateWidgetProvider;
+import com.eiabea.btcdroid.widget.ConfirmedRewardWidgetProvider;
 import com.eiabea.btcdroid.widget.DashClockWidget;
-import com.eiabea.btcdroid.widget.WidgetProvider;
+import com.eiabea.btcdroid.widget.RoundDurationWidgetProvider;
+import com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -261,17 +265,35 @@ public class App extends Application {
 	}
 
 	public static void updateWidgets(Context context, Profile profile) {
-		// Update Widget
-		Intent i = new Intent(context, WidgetProvider.class);
-		i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-		i.putExtra(WidgetProvider.PARAM_PROFILE, profile);
-		context.sendBroadcast(i);
+		// Update Total Widget
+		Intent totalIntent = new Intent(context, TotalHashrateWidgetProvider.class);
+		totalIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		totalIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
+		context.sendBroadcast(totalIntent);
+		// Update Total Widget
+		Intent averageIntent = new Intent(context, AverageHashrateWidgetProvider.class);
+		averageIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		averageIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
+		context.sendBroadcast(averageIntent);
+		// Update Confirmed Reward Widget
+		Intent confirmedIntent = new Intent(context, ConfirmedRewardWidgetProvider.class);
+		confirmedIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		confirmedIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
+		context.sendBroadcast(confirmedIntent);
 		Log.d(context.getClass().getSimpleName(), "sent Broadcast to update Widget");
 		
 		// Update Dashclock
 	    Intent dashclockIntent = new Intent(DashClockWidget.UPDATE_DASHCLOCK);
-	    dashclockIntent.putExtra(WidgetProvider.PARAM_PROFILE, profile);
+	    dashclockIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
 	    LocalBroadcastManager.getInstance(context).sendBroadcast(dashclockIntent);
 	    Log.d(context.getClass().getSimpleName(), "sent Broadcast to update DashClock");
+	}
+	
+	public static void updateWidgets(Context context, Stats stats) {
+		// Update Round Widget
+		Intent roundIntent = new Intent(context, RoundDurationWidgetProvider.class);
+		roundIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		roundIntent.putExtra(RoundDurationWidgetProvider.PARAM_STATS, stats);
+		context.sendBroadcast(roundIntent);
 	}
 }

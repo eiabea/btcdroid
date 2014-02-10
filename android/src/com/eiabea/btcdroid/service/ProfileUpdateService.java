@@ -23,11 +23,12 @@ import com.android.volley.VolleyError;
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Profile;
+import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.GsonRequest;
 import com.eiabea.btcdroid.util.HttpWorker;
-import com.eiabea.btcdroid.widget.WidgetProvider;
+import com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider;
 
 public class ProfileUpdateService extends Service{
 
@@ -96,6 +97,7 @@ public class ProfileUpdateService extends Service{
 			public void run() {
 				if (App.getInstance().isTokenSet()) {
 					getProfileWidgets();
+					getStatsWidgets();
 				} else {
 					Log.d(getClass().getSimpleName(), "No Token set");
 				}
@@ -131,22 +133,44 @@ public class ProfileUpdateService extends Service{
 
 			@Override
 			public void onResponse(Profile profile) {
-			    Log.d(getClass().getSimpleName(), "onResponse Widgets");
+			    Log.d(getClass().getSimpleName(), "onResponse Profile Widgets");
 			    App.updateWidgets(getApplicationContext(), profile);
 			}
 		}, new ErrorListener() {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				Log.d(getClass().getSimpleName(), "onErrorResponse Widgets");
+				Log.d(getClass().getSimpleName(), "onErrorResponse Profile Widgets");
 				Log.d(getClass().getSimpleName(), " " + error.getCause());
-//			    Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
-//			    i.setAction(WidgetProvider.LOADING_FAILED);
-//			    getApplicationContext().sendBroadcast(i);	
 				
 			}
 		}));
-
+		
+	}
+	
+	public void getStatsWidgets() {
+		Log.d(getClass().getSimpleName(), "get Stats Widgets");
+		
+		String url = HttpWorker.STATS_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
+		
+		System.out.println(HttpWorker.mQueue.toString());
+		
+		HttpWorker.mQueue.add(new GsonRequest<Stats>(url, Stats.class, null, new Listener<Stats>() {
+			
+			@Override
+			public void onResponse(Stats stats) {
+				Log.d(getClass().getSimpleName(), "onResponse Stats Widgets");
+				App.updateWidgets(getApplicationContext(), stats);
+			}
+		}, new ErrorListener() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.d(getClass().getSimpleName(), "onErrorResponse Stats Widgets");
+				Log.d(getClass().getSimpleName(), " " + error.getCause());
+				
+			}
+		}));
 	}
 	
 	public void getProfileNotification() {
@@ -180,8 +204,8 @@ public class ProfileUpdateService extends Service{
 			public void onErrorResponse(VolleyError error) {
 				Log.d(getClass().getSimpleName(), "onErrorResponse Notification");
 				Log.d(getClass().getSimpleName(), " " + error.getCause());
-			    Intent i = new Intent(getApplicationContext(), WidgetProvider.class);
-			    i.setAction(WidgetProvider.LOADING_FAILED);
+			    Intent i = new Intent(getApplicationContext(), TotalHashrateWidgetProvider.class);
+			    i.setAction(TotalHashrateWidgetProvider.LOADING_FAILED);
 			    getApplicationContext().sendBroadcast(i);	
 			}
 		}));

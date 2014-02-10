@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.eiabea.btcdroid"
-    android:versionCode="33"
-    android:versionName="1.0.3" >
+    android:versionCode="34"
+    android:versionName="1.0.3.1" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -50,9 +50,45 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".widget.WidgetProvider"
+            android:name=".widget.TotalHashrateWidgetProvider"
             android:icon="@drawable/ic_launcher"
-            android:label="BTCDroid Widget" >
+            android:label="BTCDroid Total Hashrate" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
+        <receiver
+            android:name=".widget.AverageHashrateWidgetProvider"
+            android:icon="@drawable/ic_launcher"
+            android:label="BTCDroid Average Hashrate" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
+        <receiver
+            android:name=".widget.ConfirmedRewardWidgetProvider"
+            android:icon="@drawable/ic_launcher"
+            android:label="BTCDroid Confirmed Reward" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
+        <receiver
+            android:name=".widget.RoundDurationWidgetProvider"
+            android:icon="@drawable/ic_launcher"
+            android:label="BTCDroid Round Duration" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

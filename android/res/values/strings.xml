@@ -138,6 +138,10 @@
     <!-- DashClock -->
     <string name="txt_dashclock_description">Displays the current total hashrate of your workers at slush\'s pool</string>
     <string name="txt_dashclock_expanded_body">total current hashrate</string>
+    
+    <!-- Widget -->
+    <string name="txt_loading">loading</string>
+    <string name="txt_round_duration_widget">round duration</string>
 
     <string-array name="price_source">
         <item>@string/BitStamp</item>

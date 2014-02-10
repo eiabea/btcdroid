@@ -56,7 +56,7 @@ public class DashClockWidget extends DashClockExtension {
 	    @Override
 	    public void onReceive(Context context, Intent intent) {
 	    	Log.d(getClass().getSimpleName(), "onReceive");
-	    	Profile profile = intent.getParcelableExtra(WidgetProvider.PARAM_PROFILE);
+	    	Profile profile = intent.getParcelableExtra(TotalHashrateWidgetProvider.PARAM_PROFILE);
 	    	updateWidget(profile);
 	    }
 	}
