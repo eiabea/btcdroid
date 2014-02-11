@@ -11,7 +11,7 @@ import android.widget.RemoteViews;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.GenericPrice;
-import com.eiabea.btcdroid.service.ProfileUpdateService;
+import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;
 
 public class PriceWidgetProvider extends AppWidgetProvider {
@@ -24,7 +24,7 @@ public class PriceWidgetProvider extends AppWidgetProvider {
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		
 		try{
-			ProfileUpdateService.getInstance().getPriceWidgets();
+			UpdateService.getInstance().getPriceWidgets();
 		}catch(Exception ignore){
 		}
 
@@ -56,13 +56,13 @@ public class PriceWidgetProvider extends AppWidgetProvider {
 
 			if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-				ProfileUpdateService.getInstance().getPriceWidgets();
+				UpdateService.getInstance().getPriceWidgets();
 			} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 				GenericPrice price = intent.getParcelableExtra(PARAM_PRICE);
 
 				remoteViews.setTextViewText(R.id.txt_widget_value, App.formatPrice(price.getSymbol(), price.getValueFloat()));
 				remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
-				remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_average_total_hashrate));
+				remoteViews.setTextViewText(R.id.txt_widget_desc, price.getSource());
 
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
 

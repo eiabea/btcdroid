@@ -26,7 +26,6 @@ import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
-import com.eiabea.btcdroid.service.ProfileUpdateService;
 import com.eiabea.btcdroid.widget.AverageHashrateWidgetProvider;
 import com.eiabea.btcdroid.widget.ConfirmedRewardWidgetProvider;
 import com.eiabea.btcdroid.widget.DashClockWidget;
@@ -77,8 +76,6 @@ public class App extends Application {
 		me = this;
 		httpWorker = new HttpWorker(this.getApplicationContext(), token);
 		
-		startService(new Intent(getApplicationContext(), ProfileUpdateService.class));
-
 	}
 
 	private void initPrefs() {

@@ -13,7 +13,7 @@ import android.widget.RemoteViews;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Stats;
-import com.eiabea.btcdroid.service.ProfileUpdateService;
+import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;
 
 public class RoundDurationWidgetProvider extends AppWidgetProvider {
@@ -26,7 +26,7 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
 		try {
-			ProfileUpdateService.getInstance().getStatsWidgets();
+			UpdateService.getInstance().getStatsWidgets();
 		} catch (Exception ignore) {
 		}
 
@@ -56,7 +56,7 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
 
 			if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-				ProfileUpdateService.getInstance().getStatsWidgets();
+				UpdateService.getInstance().getStatsWidgets();
 			} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 				Stats stats = intent.getParcelableExtra(PARAM_STATS);
 

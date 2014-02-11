@@ -31,14 +31,14 @@ import com.eiabea.btcdroid.util.HttpWorker;
 import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
 import com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider;
 
-public class ProfileUpdateService extends Service{
+public class UpdateService extends Service{
 
 	private SharedPreferences pref;
 	
 	private Profile profile;
 	private Stats stats;
 	
-	private static ProfileUpdateService me;
+	private static UpdateService me;
 
 	private ScheduledExecutorService scheduleNotification, scheduleWidgets;
 	
@@ -60,7 +60,7 @@ public class ProfileUpdateService extends Service{
 		start();
 	}
 
-	public static ProfileUpdateService getInstance() {
+	public static UpdateService getInstance() {
 		return me;
 	}
 
@@ -139,7 +139,7 @@ public class ProfileUpdateService extends Service{
 			@Override
 			public void onResponse(Profile profile) {
 			    Log.d(getClass().getSimpleName(), "onResponse Profile Widgets");
-			    ProfileUpdateService.this.profile = profile;
+			    UpdateService.this.profile = profile;
 			    App.updateWidgets(getApplicationContext(), profile);
 			    
 			    HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
@@ -176,7 +176,7 @@ public class ProfileUpdateService extends Service{
 			@Override
 			public void onResponse(Stats stats) {
 				Log.d(getClass().getSimpleName(), "onResponse Stats Widgets");
-				ProfileUpdateService.this.stats = stats;
+				UpdateService.this.stats = stats;
 				App.updateWidgets(getApplicationContext(), stats);
 				
 				HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
@@ -203,40 +203,7 @@ public class ProfileUpdateService extends Service{
 	public void getPriceWidgets() {
 		Log.d(getClass().getSimpleName(), "get Price Widgets");
 		
-		HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
-		HttpWorker.getInstance().getPrices(interFace);
-		
-//		String url = HttpWorker.STATS_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
-//		
-//		System.out.println(HttpWorker.mQueue.toString());
-//		
-//		HttpWorker.mQueue.add(new GsonRequest<Stats>(url, Stats.class, null, new Listener<Stats>() {
-//			
-//			@Override
-//			public void onResponse(Stats stats) {
-//				Log.d(getClass().getSimpleName(), "onResponse Stats Widgets");
-//				ProfileUpdateService.this.stats = stats;
-//				App.updateWidgets(getApplicationContext(), stats);
-//				
-//				HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
-//				if(interFace != null){
-//					interFace.onStatsLoaded(stats);
-//				}
-//			}
-//		}, new ErrorListener() {
-//			
-//			@Override
-//			public void onErrorResponse(VolleyError error) {
-//				Log.d(getClass().getSimpleName(), "onErrorResponse Stats Widgets");
-//				Log.d(getClass().getSimpleName(), " " + error.getCause());
-//				Stats stats = null;
-//				App.updateWidgets(getApplicationContext(), stats);
-//				HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
-//				if(interFace != null){
-//					interFace.onStatsError();
-//				}
-//			}
-//		}));
+		HttpWorker.getInstance().getPrices();
 	}
 	
 	public void getProfileNotification() {

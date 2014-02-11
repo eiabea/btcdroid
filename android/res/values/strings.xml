@@ -21,6 +21,9 @@
     <string name="mbtc_short">m</string>
     <string name="ubtc_short">µ</string>
     <string name="percent_sign">%</string>
+    <string name="BitStamp_short">BitStamp</string>
+    <string name="MtGox_short">MtGox</string>
+    <string name="BTCe_short">BTC-e</string>
     <string name="BitStamp">BitStamp (USD)</string>
     <string name="MtGoxUsd">MtGox (USD)</string>
     <string name="MtGoxEur">MtGox (EUR)</string>

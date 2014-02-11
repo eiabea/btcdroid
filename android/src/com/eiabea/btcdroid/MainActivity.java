@@ -34,7 +34,7 @@ import com.eiabea.btcdroid.fragments.WorkerFragment;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
-import com.eiabea.btcdroid.service.ProfileUpdateService;
+import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
 
@@ -104,13 +104,14 @@ public class MainActivity extends ActionBarActivity implements
 		// }else{
 		// }
 		tryGettingDataFromService();
+		startService(new Intent(getApplicationContext(), UpdateService.class));
 
 	}
 
 	private void tryGettingDataFromService() {
 		try {
-			this.profile = ProfileUpdateService.getInstance().getProfile();
-			this.stats = ProfileUpdateService.getInstance().getStats();
+			this.profile = UpdateService.getInstance().getProfile();
+			this.stats = UpdateService.getInstance().getStats();
 			profileLoaded = true;
 			statsLoaded = true;
 			pricesLoaded = true;
@@ -327,17 +328,17 @@ public class MainActivity extends ActionBarActivity implements
 				boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notification_enabled", false);
 
 				if (enabled) {
-					ProfileUpdateService.getInstance().startNotification();
+					UpdateService.getInstance().startNotification();
 				} else {
-					ProfileUpdateService.getInstance().stopNotification();
+					UpdateService.getInstance().stopNotification();
 				}
 
-				ProfileUpdateService.getInstance().startWidgets();
+//				UpdateService.getInstance().startWidgets();
 				// ProfileUpdateService.getInstance().getProfileWidgets();
 				// ProfileUpdateService.getInstance().getStatsWidgets();
 
 				// TODO Split
-				// reloadData();
+				 reloadData();
 
 			}
 			break;
@@ -367,7 +368,7 @@ public class MainActivity extends ActionBarActivity implements
 //			App.getInstance().httpWorker.getPrices();
 
 			try {
-				ProfileUpdateService.getInstance().startWidgets();
+				UpdateService.getInstance().startWidgets();
 			} catch (NullPointerException ignore) {
 			}
 		} else {

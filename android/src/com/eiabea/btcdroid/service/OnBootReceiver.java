@@ -8,7 +8,7 @@ public class OnBootReceiver extends BroadcastReceiver {
  
     @Override
     public void onReceive(Context context, Intent intent) {
-    	Intent service = new Intent(context, ProfileUpdateService.class);
+    	Intent service = new Intent(context, UpdateService.class);
         context.startService(service);
     }
 }

@@ -13,7 +13,7 @@ import android.util.Log;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Worker;
-import com.eiabea.btcdroid.service.ProfileUpdateService;
+import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;
 import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
@@ -28,7 +28,7 @@ public class DashClockWidget extends DashClockExtension {
 	protected void onUpdateData(int reason) {
 		
 		try{
-			ProfileUpdateService.getInstance().getProfileWidgets();
+			UpdateService.getInstance().getProfileWidgets();
 		}catch(Exception ignore){
 		}
 		
