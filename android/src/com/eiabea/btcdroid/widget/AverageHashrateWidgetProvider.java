@@ -49,8 +49,6 @@ public class AverageHashrateWidgetProvider extends AppWidgetProvider {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		super.onReceive(context, intent);
-
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 		try {
 
@@ -68,6 +66,8 @@ public class AverageHashrateWidgetProvider extends AppWidgetProvider {
 
 			} else if (intent.getAction().equals(LOADING_FAILED)) {
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+			} else{
+				super.onReceive(context, intent);
 			}
 			
 			ComponentName widget = new ComponentName(context, AverageHashrateWidgetProvider.class);
@@ -75,7 +75,8 @@ public class AverageHashrateWidgetProvider extends AppWidgetProvider {
 
 		} catch (NullPointerException e) {
 			remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
-		}
+			super.onReceive(context, intent);
+		} 
 
 	}
 
