@@ -22,6 +22,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
+import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
@@ -35,8 +36,11 @@ public class UpdateService extends Service{
 
 	private SharedPreferences pref;
 	
+	// TODO Price should be loaded here and not in httpworker
+	
 	private Profile profile;
 	private Stats stats;
+	private GenericPrice price;
 	
 	private static UpdateService me;
 
@@ -142,7 +146,7 @@ public class UpdateService extends Service{
 			    UpdateService.this.profile = profile;
 			    App.updateWidgets(getApplicationContext(), profile);
 			    
-			    HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
+			    HttpWorkerInterface interFace = HttpWorker.getHttpWorkerInterface();
 			    if(interFace != null){
 			    	interFace.onProfileLoaded(profile);
 			    }
@@ -155,7 +159,7 @@ public class UpdateService extends Service{
 				Log.d(getClass().getSimpleName(), " " + error.getCause());
 				Profile profile = null;
 				App.updateWidgets(getApplicationContext(), profile);
-				HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
+				HttpWorkerInterface interFace = HttpWorker.getHttpWorkerInterface();
 			    if(interFace != null){
 			    	interFace.onProfileError();
 			    }
@@ -179,7 +183,7 @@ public class UpdateService extends Service{
 				UpdateService.this.stats = stats;
 				App.updateWidgets(getApplicationContext(), stats);
 				
-				HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
+				HttpWorkerInterface interFace = HttpWorker.getHttpWorkerInterface();
 			    if(interFace != null){
 			    	interFace.onStatsLoaded(stats);
 			    }
@@ -192,7 +196,7 @@ public class UpdateService extends Service{
 				Log.d(getClass().getSimpleName(), " " + error.getCause());
 				Stats stats = null;
 				App.updateWidgets(getApplicationContext(), stats);
-				HttpWorkerInterface interFace = HttpWorker.getInstance().httpWorkerInterface;
+				HttpWorkerInterface interFace = HttpWorker.getHttpWorkerInterface();
 			    if(interFace != null){
 			    	interFace.onStatsError();
 			    }
@@ -307,6 +311,14 @@ public class UpdateService extends Service{
 
 	public void setStats(Stats stats) {
 		this.stats = stats;
+	}
+
+	public GenericPrice getPrice() {
+		return price;
+	}
+
+	public void setPrice(GenericPrice price) {
+		this.price = price;
 	}
 	
 }

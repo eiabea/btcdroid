@@ -36,6 +36,7 @@ import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;
+import com.eiabea.btcdroid.util.HttpWorker;
 import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
 
 public class MainActivity extends ActionBarActivity implements
@@ -58,8 +59,6 @@ public class MainActivity extends ActionBarActivity implements
 	private static final String STATE_PRICES_LOADED = "state_prices_loaded";
 	private static final String STATE_CURRENT_PAGE = "state_current_page";
 	private static final String STATE_PROGRESS_SHOWING = "state_progress_showing";
-
-	// TODO price into service
 
 	private MenuItem itemRefresh;
 
@@ -362,7 +361,7 @@ public class MainActivity extends ActionBarActivity implements
 
 		if (App.getInstance().isTokenSet()) {
 			pricesLoaded = profileLoaded = statsLoaded = false;
-			App.getInstance().httpWorker.setHttpWorkerInterface(this);
+			HttpWorker.setHttpWorkerInterface(this);
 			showInfos();
 			handleProgessIndicator();
 //			App.getInstance().httpWorker.getPrices();

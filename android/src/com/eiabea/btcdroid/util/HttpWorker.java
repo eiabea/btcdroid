@@ -45,7 +45,7 @@ public class HttpWorker {
 
 	public static RequestQueue mQueue;
 
-	public HttpWorkerInterface httpWorkerInterface;
+	private static HttpWorkerInterface httpWorkerInterface;
 
 	public HttpWorker() {
 	}
@@ -144,11 +144,13 @@ public class HttpWorker {
 
 						App.updateWidgets(context, price);
 
-						httpWorkerInterface.onPricesLoaded(price);
+						onPriceLoaded(price);
+//						httpWorkerInterface.onPricesLoaded(price);
 					} catch (NullPointerException ignore) {
 						GenericPrice price = null;
 						App.updateWidgets(context, price);
-						httpWorkerInterface.onPricesError();
+						onPriceError();
+//						httpWorkerInterface.onPricesError();
 					}
 
 				}
@@ -159,7 +161,8 @@ public class HttpWorker {
 				public void onErrorResponse(VolleyError error) {
 					GenericPrice price = null;
 					App.updateWidgets(context, price);
-					httpWorkerInterface.onPricesError();
+					onPriceError();
+//					httpWorkerInterface.onPricesError();
 
 				}
 			});
@@ -178,11 +181,13 @@ public class HttpWorker {
 						price.setSymbol("$");
 
 						App.updateWidgets(context, price);
-						httpWorkerInterface.onPricesLoaded(price);
+						onPriceLoaded(price);
+//						httpWorkerInterface.onPricesLoaded(price);
 					} catch (NullPointerException ignore) {
 						GenericPrice price = null;
 						App.updateWidgets(context, price);
-						httpWorkerInterface.onPricesError();
+						onPriceError();
+//						httpWorkerInterface.onPricesError();
 					}
 
 				}
@@ -193,7 +198,8 @@ public class HttpWorker {
 				public void onErrorResponse(VolleyError error) {
 					GenericPrice price = null;
 					App.updateWidgets(context, price);
-					httpWorkerInterface.onPricesError();
+					onPriceError();
+//					httpWorkerInterface.onPricesError();
 
 				}
 			});
@@ -214,11 +220,13 @@ public class HttpWorker {
 						price.setSymbol("€");
 
 						App.updateWidgets(context, price);
-						httpWorkerInterface.onPricesLoaded(price);
+						onPriceLoaded(price);
+//						httpWorkerInterface.onPricesLoaded(price);
 					} catch (NullPointerException ignore) {
 						GenericPrice price = null;
 						App.updateWidgets(context, price);
-						httpWorkerInterface.onPricesError();
+						onPriceError();
+//						httpWorkerInterface.onPricesError();
 					}
 				}
 
@@ -246,11 +254,13 @@ public class HttpWorker {
 						price.setSymbol("$");
 
 						App.updateWidgets(context, price);
-						httpWorkerInterface.onPricesLoaded(price);
+						onPriceLoaded(price);
+//						httpWorkerInterface.onPricesLoaded(price);
 					} catch (NullPointerException e) {
 						GenericPrice price = null;
 						App.updateWidgets(context, price);
-						httpWorkerInterface.onPricesError();
+						onPriceError();
+//						httpWorkerInterface.onPricesError();
 					}
 				}
 
@@ -260,7 +270,8 @@ public class HttpWorker {
 				public void onErrorResponse(VolleyError error) {
 					GenericPrice price = null;
 					App.updateWidgets(context, price);
-					httpWorkerInterface.onPricesError();
+					onPriceError();
+//					httpWorkerInterface.onPricesError();
 
 				}
 			});
@@ -279,11 +290,13 @@ public class HttpWorker {
 						price.setSymbol("€");
 
 						App.updateWidgets(context, price);
-						httpWorkerInterface.onPricesLoaded(price);
+						onPriceLoaded(price);
+//						httpWorkerInterface.onPricesLoaded(price);
 					} catch (NullPointerException e) {
 						GenericPrice price = null;
 						App.updateWidgets(context, price);
-						httpWorkerInterface.onPricesError();
+						onPriceError();
+//						httpWorkerInterface.onPricesError();
 					}
 				}
 
@@ -293,7 +306,8 @@ public class HttpWorker {
 				public void onErrorResponse(VolleyError error) {
 					GenericPrice price = null;
 					App.updateWidgets(context, price);
-					httpWorkerInterface.onPricesError();
+					onPriceError();
+//					httpWorkerInterface.onPricesError();
 
 				}
 			});
@@ -305,8 +319,24 @@ public class HttpWorker {
 
 	}
 
-	public void setHttpWorkerInterface(HttpWorkerInterface httpWorkerInterface) {
-		this.httpWorkerInterface = httpWorkerInterface;
+	public static void setHttpWorkerInterface(HttpWorkerInterface httpWorkerInterface) {
+		HttpWorker.httpWorkerInterface = httpWorkerInterface;
+	}
+	
+	public static HttpWorkerInterface getHttpWorkerInterface() {
+		return httpWorkerInterface;
+	}
+	
+	private void onPriceLoaded(GenericPrice price){
+		if(httpWorkerInterface != null){
+			httpWorkerInterface.onPricesLoaded(price);
+		}
+	}
+	
+	private void onPriceError(){
+		if(httpWorkerInterface != null){
+			httpWorkerInterface.onPricesError();
+		}
 	}
 
 	public interface HttpWorkerInterface {
