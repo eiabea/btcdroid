@@ -9,6 +9,7 @@
     <string name="action_add_pool">Pool toevoegen</string>
     <string name="action_settings">Instellingen</string>
 	<string name="action_customize">Customize</string>
+	<string name="action_donate">Donate</string>
     <string name="action_participants">Deelnemers</string>
     <string name="action_email">E-mail Ontwikkelaar</string>
     <string name="th_per_second">TH/s</string>
@@ -21,6 +22,9 @@
     <string name="mbtc_short">m</string>
     <string name="ubtc_short">µ</string>
     <string name="percent_sign">%</string>
+    <string name="BitStamp_short">BitStamp</string>
+    <string name="MtGox_short">MtGox</string>
+    <string name="BTCe_short">BTC-e</string>
     <string name="BitStamp">BitStamp (USD)</string>
     <string name="MtGoxUsd">MtGox (USD)</string>
     <string name="MtGoxEur">MtGox (EUR)</string>
@@ -138,6 +142,16 @@
     <!-- DashClock -->
     <string name="txt_dashclock_description">Displays the current total hashrate of your workers at slush\'s pool</string>
     <string name="txt_dashclock_expanded_body">total current hashrate</string>
+
+    <!-- Widget -->
+    <string name="txt_loading">loading</string>
+    <string name="txt_round_duration_widget">round duration</string>
+    
+    <!-- Donate -->
+    <string name="txt_donate_dialog_title">Donate</string>
+    <string name="txt_donate_copy_bitcoin_address">Copy Bitcoinaddress</string>
+    <string name="txt_donate_open_bitcoin_wallet">Open Bitcoinwallet</string>
+    <string name="toast_donate_no_bitcoin_wallet_found">No Bitcoinwallet found</string>
 
     <string-array name="price_source">
         <item>@string/BitStamp</item>

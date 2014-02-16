@@ -20,19 +20,49 @@ public class AverageHashrateWidgetProvider extends AppWidgetProvider {
 	private static final String ACTION_CLICK = "ACTION_CLICK";
 	public static final String LOADING_FAILED = "ACTION_FAILED";
 
+	private Intent intent;
+
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-		
-		try{
-			UpdateService.getInstance().getProfileWidgets();
-		}catch(Exception ignore){
-		}
+		super.onUpdate(context, appWidgetManager, appWidgetIds);
+
+//		try {
+//			UpdateService.getInstance().getProfileWidgets();
+//		} catch (Exception ignore) {
+//		}
 
 		// Get all ids
 		ComponentName thisWidget = new ComponentName(context, AverageHashrateWidgetProvider.class);
 		int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 		for (int widgetId : allWidgetIds) {
 			RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+
+			try {
+
+				if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
+					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
+					UpdateService.getInstance().getProfileWidgets();
+				} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
+					Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
+
+					remoteViews.setTextViewText(R.id.txt_widget_value, App.formatHashRate(profile.getHashrate()));
+					remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
+					remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_average_total_hashrate));
+
+					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+
+				} else if (intent.getAction().equals(LOADING_FAILED)) {
+					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+				} else {
+				}
+
+				ComponentName widget = new ComponentName(context, AverageHashrateWidgetProvider.class);
+				AppWidgetManager.getInstance(context).updateAppWidget(widget, remoteViews);
+
+			} catch (NullPointerException e) {
+				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+				super.onReceive(context, intent);
+			}
 
 			Intent intent = new Intent(context, AverageHashrateWidgetProvider.class);
 
@@ -47,36 +77,58 @@ public class AverageHashrateWidgetProvider extends AppWidgetProvider {
 
 	
 	
+	// @Override
+	// public void onReceive(Context context, Intent intent) {
+	// RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
+	// R.layout.widget_layout);
+	// try {
+	//
+	// if (intent.getAction().equals(ACTION_CLICK) ||
+	// intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
+	// remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
+	// UpdateService.getInstance().getProfileWidgets();
+	// } else if
+	// (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
+	// Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
+	//
+	// remoteViews.setTextViewText(R.id.txt_widget_value,
+	// App.formatHashRate(profile.getHashrate()));
+	// remoteViews.setTextColor(R.id.txt_widget_value,
+	// context.getResources().getColor(R.color.bd_dark_grey_text));
+	// remoteViews.setTextViewText(R.id.txt_widget_desc,
+	// context.getString(R.string.txt_average_total_hashrate));
+	//
+	// remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+	//
+	// } else if (intent.getAction().equals(LOADING_FAILED)) {
+	// remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+	// } else{
+	// super.onReceive(context, intent);
+	// }
+	//
+	// ComponentName widget = new ComponentName(context,
+	// AverageHashrateWidgetProvider.class);
+	// AppWidgetManager.getInstance(context).updateAppWidget(widget,
+	// remoteViews);
+	//
+	// } catch (NullPointerException e) {
+	// remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+	// super.onReceive(context, intent);
+	// }
+	//
+	// }
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-		try {
+		super.onReceive(context, intent);
+		this.intent = intent;
+		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
-			if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
-				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-				UpdateService.getInstance().getProfileWidgets();
-			} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-				Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
+		// Get all ids
+		ComponentName thisWidget = new ComponentName(context, AverageHashrateWidgetProvider.class);
+		int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
-				remoteViews.setTextViewText(R.id.txt_widget_value, App.formatHashRate(profile.getHashrate()));
-				remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
-				remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_average_total_hashrate));
-
-				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
-
-			} else if (intent.getAction().equals(LOADING_FAILED)) {
-				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
-			} else{
-				super.onReceive(context, intent);
-			}
-			
-			ComponentName widget = new ComponentName(context, AverageHashrateWidgetProvider.class);
-			AppWidgetManager.getInstance(context).updateAppWidget(widget, remoteViews);
-
-		} catch (NullPointerException e) {
-			remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
-			super.onReceive(context, intent);
-		} 
+		onUpdate(context, appWidgetManager, allWidgetIds);
 
 	}
 

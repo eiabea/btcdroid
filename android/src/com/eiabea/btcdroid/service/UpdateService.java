@@ -23,29 +23,36 @@ import com.android.volley.VolleyError;
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.GenericPrice;
+import com.eiabea.btcdroid.model.PricesBTCe;
+import com.eiabea.btcdroid.model.PricesBitStamp;
+import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.GsonRequest;
 import com.eiabea.btcdroid.util.HttpWorker;
-import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
 import com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider;
 
-public class UpdateService extends Service{
+public class UpdateService extends Service {
 
 	private SharedPreferences pref;
-	
-	// TODO Price should be loaded here and not in httpworker
-	
+
+	public static final int PRICE_SOURCE_BITSTAMP_USD = 0;
+	public static final int PRICE_SOURCE_MTGOX_USD = 1;
+	public static final int PRICE_SOURCE_MTGOX_EUR = 2;
+	public static final int PRICE_SOURCE_BTCE_USD = 3;
+	public static final int PRICE_SOURCE_BTCE_EUR = 4;
+
 	private Profile profile;
 	private Stats stats;
 	private GenericPrice price;
-	
+
 	private static UpdateService me;
+	private static UpdateInterface updateInterface;
 
 	private ScheduledExecutorService scheduleNotification, scheduleWidgets;
-	
+
 	@Override
 	public IBinder onBind(Intent arg0) {
 		return null;
@@ -63,7 +70,7 @@ public class UpdateService extends Service{
 
 		start();
 	}
-
+	
 	public static UpdateService getInstance() {
 		return me;
 	}
@@ -72,12 +79,12 @@ public class UpdateService extends Service{
 		startNotification();
 		startWidgets();
 	}
-	
+
 	public void startNotification() {
 		if (scheduleNotification != null) {
 			scheduleNotification.shutdownNow();
 		}
-		
+
 		int intervalNotificaion = Integer.valueOf(pref.getString("notification_interval", "60"));
 
 		scheduleNotification = Executors.newSingleThreadScheduledExecutor();
@@ -92,15 +99,15 @@ public class UpdateService extends Service{
 			}
 		}, intervalNotificaion, intervalNotificaion, TimeUnit.MINUTES);
 	}
-	
+
 	public void startWidgets() {
 		if (scheduleWidgets != null) {
 			scheduleWidgets.shutdownNow();
 		}
-		
+
 		int intervalWidget = Integer.valueOf(pref.getString("widget_interval", "30"));
 		scheduleWidgets = Executors.newSingleThreadScheduledExecutor();
-		
+
 		scheduleWidgets.scheduleAtFixedRate(new Runnable() {
 			public void run() {
 				if (App.getInstance().isTokenSet()) {
@@ -113,19 +120,19 @@ public class UpdateService extends Service{
 			}
 		}, 0, intervalWidget, TimeUnit.MINUTES);
 	}
-	
-	public void stop(){
+
+	public void stop() {
 		stopNotification();
 		stopWidgets();
 	}
-	
-	public void stopNotification(){
+
+	public void stopNotification() {
 		if (scheduleNotification != null) {
 			scheduleNotification.shutdownNow();
 		}
 	}
-	
-	public void stopWidgets(){
+
+	public void stopWidgets() {
 		if (scheduleWidgets != null) {
 			scheduleWidgets.shutdownNow();
 		}
@@ -142,81 +149,207 @@ public class UpdateService extends Service{
 
 			@Override
 			public void onResponse(Profile profile) {
-			    Log.d(getClass().getSimpleName(), "onResponse Profile Widgets");
-			    UpdateService.this.profile = profile;
-			    App.updateWidgets(getApplicationContext(), profile);
-			    
-			    HttpWorkerInterface interFace = HttpWorker.getHttpWorkerInterface();
-			    if(interFace != null){
-			    	interFace.onProfileLoaded(profile);
-			    }
+				Log.d(getClass().getSimpleName(), "onResponse Profile Widgets");
+				onProfileLoaded(profile);
 			}
+
 		}, new ErrorListener() {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				Log.d(getClass().getSimpleName(), "onErrorResponse Profile Widgets");
 				Log.d(getClass().getSimpleName(), " " + error.getCause());
-				Profile profile = null;
-				App.updateWidgets(getApplicationContext(), profile);
-				HttpWorkerInterface interFace = HttpWorker.getHttpWorkerInterface();
-			    if(interFace != null){
-			    	interFace.onProfileError();
-			    }
+				onProfileError();
 			}
 		}));
-		
+
 	}
-	
+
 	public void getStatsWidgets() {
 		Log.d(getClass().getSimpleName(), "get Stats Widgets");
-		
+
 		String url = HttpWorker.STATS_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
-		
+
 		System.out.println(HttpWorker.mQueue.toString());
-		
+
 		HttpWorker.mQueue.add(new GsonRequest<Stats>(url, Stats.class, null, new Listener<Stats>() {
-			
+
 			@Override
 			public void onResponse(Stats stats) {
 				Log.d(getClass().getSimpleName(), "onResponse Stats Widgets");
-				UpdateService.this.stats = stats;
-				App.updateWidgets(getApplicationContext(), stats);
-				
-				HttpWorkerInterface interFace = HttpWorker.getHttpWorkerInterface();
-			    if(interFace != null){
-			    	interFace.onStatsLoaded(stats);
-			    }
+				onStatsLoaded(stats);
 			}
 		}, new ErrorListener() {
-			
+
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				Log.d(getClass().getSimpleName(), "onErrorResponse Stats Widgets");
 				Log.d(getClass().getSimpleName(), " " + error.getCause());
-				Stats stats = null;
-				App.updateWidgets(getApplicationContext(), stats);
-				HttpWorkerInterface interFace = HttpWorker.getHttpWorkerInterface();
-			    if(interFace != null){
-			    	interFace.onStatsError();
-			    }
+				onStatsError();
 			}
 		}));
 	}
-	
+
 	public void getPriceWidgets() {
 		Log.d(getClass().getSimpleName(), "get Price Widgets");
-		
-		HttpWorker.getInstance().getPrices();
+
+		Log.d(getClass().getSimpleName(), "Getting Prices");
+
+		int source = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("price_source_preference", "0"));
+
+		switch (source) {
+		case PRICE_SOURCE_BITSTAMP_USD:
+			App.getInstance().httpWorker.getPricesBitStamp(new Listener<PricesBitStamp>() {
+
+				@Override
+				public void onResponse(PricesBitStamp prices) {
+
+					try {
+						GenericPrice price = new GenericPrice();
+						price.setValueFloat(Float.parseFloat(prices.getLast()));
+						price.setSource(getApplicationContext().getString(R.string.BitStamp_short));
+						price.setSymbol("$");
+
+						onPriceLoaded(price);
+					} catch (NullPointerException ignore) {
+						onPriceError();
+					}
+
+				}
+
+			}, new ErrorListener() {
+
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					onPriceError();
+
+				}
+			});
+			break;
+		case PRICE_SOURCE_MTGOX_USD:
+
+			App.getInstance().httpWorker.getPricesMtGox("USD", new Listener<PricesMtGox>() {
+
+				@Override
+				public void onResponse(PricesMtGox prices) {
+
+					try {
+						// Write jsonData to PricesMtGox Object
+						GenericPrice price = prices.getLastPrice();
+						price.setSource(getApplicationContext().getString(R.string.MtGox_short));
+						price.setSymbol("$");
+
+						onPriceLoaded(price);
+					} catch (NullPointerException ignore) {
+						onPriceError();
+					}
+
+				}
+
+			}, new ErrorListener() {
+
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					onPriceError();
+				}
+			});
+			break;
+		case PRICE_SOURCE_MTGOX_EUR:
+
+			App.getInstance().httpWorker.getPricesMtGox("EUR", new Listener<PricesMtGox>() {
+
+				@Override
+				public void onResponse(PricesMtGox prices) {
+
+					try {
+						// Write jsonData to PricesMtGox Object
+						prices = App.parsePrices(prices.getData());
+
+						GenericPrice price = prices.getLastPrice();
+						price.setSource(getApplicationContext().getString(R.string.MtGox_short));
+						price.setSymbol("€");
+
+						onPriceLoaded(price);
+					} catch (NullPointerException ignore) {
+						onPriceError();
+					}
+				}
+
+			}, new ErrorListener() {
+
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					onPriceError();
+
+				}
+			});
+			break;
+		case PRICE_SOURCE_BTCE_USD:
+
+			App.getInstance().httpWorker.getPricesBTCe("USD", new Listener<PricesBTCe>() {
+
+				@Override
+				public void onResponse(PricesBTCe prices) {
+					try {
+						GenericPrice price = new GenericPrice();
+						price.setValueFloat(prices.getTicker().getLast());
+						price.setSource(getApplicationContext().getString(R.string.BTCe_short));
+						price.setSymbol("$");
+
+						onPriceLoaded(price);
+					} catch (NullPointerException e) {
+						onPriceError();
+					}
+				}
+
+			}, new ErrorListener() {
+
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					onPriceError();
+				}
+			});
+			break;
+		case PRICE_SOURCE_BTCE_EUR:
+
+			App.getInstance().httpWorker.getPricesBTCe("EUR", new Listener<PricesBTCe>() {
+
+				@Override
+				public void onResponse(PricesBTCe prices) {
+
+					try {
+						GenericPrice price = new GenericPrice();
+						price.setValueFloat(prices.getTicker().getLast());
+						price.setSource(getApplicationContext().getString(R.string.BTCe_short));
+						price.setSymbol("€");
+
+						onPriceLoaded(price);
+					} catch (NullPointerException e) {
+						onPriceError();
+					}
+				}
+
+			}, new ErrorListener() {
+
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					onPriceError();
+				}
+			});
+			break;
+
+		default:
+			break;
+		}
 	}
-	
+
 	public void getProfileNotification() {
 		Log.d(getClass().getSimpleName(), "get Profile Notification");
-		
+
 		String url = HttpWorker.PROFILE_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
-		
+
 		System.out.println(HttpWorker.mQueue.toString());
-		
+
 		HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null, new Listener<Profile>() {
 
 			@Override
@@ -241,22 +374,18 @@ public class UpdateService extends Service{
 			public void onErrorResponse(VolleyError error) {
 				Log.d(getClass().getSimpleName(), "onErrorResponse Notification");
 				Log.d(getClass().getSimpleName(), " " + error.getCause());
-			    Intent i = new Intent(getApplicationContext(), TotalHashrateWidgetProvider.class);
-			    i.setAction(TotalHashrateWidgetProvider.LOADING_FAILED);
-			    getApplicationContext().sendBroadcast(i);	
+				Intent i = new Intent(getApplicationContext(), TotalHashrateWidgetProvider.class);
+				i.setAction(TotalHashrateWidgetProvider.LOADING_FAILED);
+				getApplicationContext().sendBroadcast(i);
 			}
 		}));
-		
+
 	}
 
 	public void createFirstDropNotification(int hashrate) {
 		// if (!alreadyShown) {
 
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-			.setSmallIcon(R.drawable.ic_launcher)
-			.setContentTitle(getString(R.string.txt_hashrate_dropped_title))
-			.setContentText(String.format(getString(R.string.txt_hashrate_dropped_message), App.formatHashRate(hashrate)))
-			.setAutoCancel(true);
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher).setContentTitle(getString(R.string.txt_hashrate_dropped_title)).setContentText(String.format(getString(R.string.txt_hashrate_dropped_message), App.formatHashRate(hashrate))).setAutoCancel(true);
 
 		Intent deleteIntent = new Intent(this, OnDeleteReceiver.class);
 		deleteIntent.setAction("delete");
@@ -320,5 +449,76 @@ public class UpdateService extends Service{
 	public void setPrice(GenericPrice price) {
 		this.price = price;
 	}
-	
+
+	public static UpdateInterface getUpdateInterface() {
+		return updateInterface;
+	}
+
+	public static void setUpdateInterface(UpdateInterface updateInterface) {
+		UpdateService.updateInterface = updateInterface;
+	}
+
+	private void onPriceLoaded(GenericPrice price) {
+		this.price = price;
+		App.updateWidgets(getApplicationContext(), price);
+
+		if (updateInterface != null) {
+			updateInterface.onPricesLoaded(price);
+		}
+	}
+
+	private void onPriceError() {
+		GenericPrice price = null;
+		App.updateWidgets(getApplicationContext(), price);
+		if (updateInterface != null) {
+			updateInterface.onPricesError();
+		}
+	}
+
+	private void onProfileLoaded(Profile profile) {
+		UpdateService.this.profile = profile;
+		App.updateWidgets(getApplicationContext(), profile);
+		if (updateInterface != null) {
+			updateInterface.onProfileLoaded(profile);
+		}
+	}
+
+	private void onProfileError() {
+		Profile profile = null;
+		App.updateWidgets(getApplicationContext(), profile);
+		if (updateInterface != null) {
+			updateInterface.onProfileError();
+		}
+	}
+
+	private void onStatsLoaded(Stats stats) {
+		UpdateService.this.stats = stats;
+		App.updateWidgets(getApplicationContext(), stats);
+		if (updateInterface != null) {
+			updateInterface.onStatsLoaded(stats);
+		}
+	}
+
+	private void onStatsError() {
+		Stats stats = null;
+		App.updateWidgets(getApplicationContext(), stats);
+		if (updateInterface != null) {
+			updateInterface.onStatsError();
+		}
+	}
+
+	public interface UpdateInterface {
+		public void onProfileLoaded(Profile profile);
+
+		public void onProfileError();
+
+		public void onStatsLoaded(Stats stats);
+
+		public void onStatsError();
+
+		public void onPricesLoaded(GenericPrice price);
+
+		public void onPricesError();
+	};
+
 }

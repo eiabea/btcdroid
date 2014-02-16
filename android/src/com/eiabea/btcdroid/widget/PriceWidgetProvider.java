@@ -20,19 +20,46 @@ public class PriceWidgetProvider extends AppWidgetProvider {
 	private static final String ACTION_CLICK = "ACTION_CLICK";
 	public static final String LOADING_FAILED = "ACTION_FAILED";
 
+	private Intent intent;
+
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-		
-		try{
-			UpdateService.getInstance().getPriceWidgets();
-		}catch(Exception ignore){
-		}
+
+//		try {
+//			UpdateService.getInstance().getPriceWidgets();
+//		} catch (Exception ignore) {
+//		}
 
 		// Get all ids
 		ComponentName thisWidget = new ComponentName(context, PriceWidgetProvider.class);
 		int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 		for (int widgetId : allWidgetIds) {
 			RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+
+			try {
+
+				if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
+					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
+					UpdateService.getInstance().getPriceWidgets();
+				} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
+					GenericPrice price = intent.getParcelableExtra(PARAM_PRICE);
+
+					remoteViews.setTextViewText(R.id.txt_widget_value, App.formatPrice(price.getSymbol(), price.getValueFloat()));
+					remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
+					remoteViews.setTextViewText(R.id.txt_widget_desc, price.getSource());
+
+					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+
+				} else if (intent.getAction().equals(LOADING_FAILED)) {
+					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+				}
+
+				ComponentName widget = new ComponentName(context, PriceWidgetProvider.class);
+				AppWidgetManager.getInstance(context).updateAppWidget(widget, remoteViews);
+
+			} catch (NullPointerException e) {
+				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+			}
 
 			Intent intent = new Intent(context, PriceWidgetProvider.class);
 
@@ -45,37 +72,27 @@ public class PriceWidgetProvider extends AppWidgetProvider {
 		}
 	}
 
-	
-	
+	// @Override
+	// public void onReceive(Context context, Intent intent) {
+	// super.onReceive(context, intent);
+	//
+	// RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
+	// R.layout.widget_layout);
+	//
+	//
+	// }
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
+		this.intent = intent;
+		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
-		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-		try {
+		// Get all ids
+		ComponentName thisWidget = new ComponentName(context, PriceWidgetProvider.class);
+		int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
-			if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
-				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-				UpdateService.getInstance().getPriceWidgets();
-			} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-				GenericPrice price = intent.getParcelableExtra(PARAM_PRICE);
-
-				remoteViews.setTextViewText(R.id.txt_widget_value, App.formatPrice(price.getSymbol(), price.getValueFloat()));
-				remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
-				remoteViews.setTextViewText(R.id.txt_widget_desc, price.getSource());
-
-				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
-
-			} else if (intent.getAction().equals(LOADING_FAILED)) {
-				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
-			}
-			
-			ComponentName widget = new ComponentName(context, PriceWidgetProvider.class);
-			AppWidgetManager.getInstance(context).updateAppWidget(widget, remoteViews);
-
-		} catch (NullPointerException e) {
-			remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
-		}
+		onUpdate(context, appWidgetManager, allWidgetIds);
 
 	}
 

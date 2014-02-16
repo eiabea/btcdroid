@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.eiabea.btcdroid"
-    android:versionCode="37"
-    android:versionName="1.0.3.4" >
+    android:versionCode="38"
+    android:versionName="1.0.3.5" >
 
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" >
-    </uses-permission>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name="com.eiabea.btcdroid.util.App"
@@ -44,7 +44,8 @@
             android:name=".service.OnDeleteReceiver"
             android:enabled="true" >
         </receiver>
-        <receiver android:name=".service.OnBootReceiver" >
+        <receiver android:name=".service.OnBootReceiver" 
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

@@ -9,6 +9,7 @@
     <string name="action_add_pool">Add Pool</string>
     <string name="action_settings">Settings</string>
     <string name="action_customize">Customize</string>
+    <string name="action_donate">Donate</string>
     <string name="action_participants">Participants</string>
     <string name="action_email">Email me</string>
     <string name="th_per_second">TH/s</string>
@@ -97,7 +98,7 @@
     <string name="txt_design">Design / Appicon</string>
     <string name="txt_bas_de_jong">Bas de Jong</string>
     <string name="txt_translate_dutch">Dutch Translator</string>
-    <string name="txt_donations">Donations</string>
+    <string name="txt_show_qr_code">Show QR-Code</string>
     <string name="txt_donations_address">14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1</string>
     <string name="txt_copied_to_clipboard">copied to clipboard</string>
 
@@ -145,6 +146,12 @@
     <!-- Widget -->
     <string name="txt_loading">loading</string>
     <string name="txt_round_duration_widget">round duration</string>
+    
+    <!-- Donate -->
+    <string name="txt_donate_dialog_title">Donate</string>
+    <string name="txt_donate_copy_bitcoin_address">Copy Bitcoinaddress</string>
+    <string name="txt_donate_open_bitcoin_wallet">Open Bitcoinwallet</string>
+    <string name="toast_donate_no_bitcoin_wallet_found">No Bitcoinwallet found</string>
 
     <string-array name="price_source">
         <item>@string/BitStamp</item>

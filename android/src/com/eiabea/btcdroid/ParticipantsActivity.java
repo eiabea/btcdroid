@@ -28,7 +28,7 @@ import com.jwetherell.quick_response_code.qrcode.QRCodeEncoder;
 
 public class ParticipantsActivity extends ActionBarActivity {
 
-	private ImageView imgQr;
+	private static ImageView imgQr;
 
 	private RelativeLayout rlQrCodeHolder;
 
@@ -72,10 +72,10 @@ public class ParticipantsActivity extends ActionBarActivity {
 			public void onClick(View v) {
 
 				final String address = getString(R.string.txt_donations_address);
-
+				
 				AlertDialog.Builder builder = new AlertDialog.Builder(ParticipantsActivity.this);
-				builder.setTitle("Donation");
-				builder.setItems(new CharSequence[] { "Copy Bitcoinadress", "Show QR-Code", "Open Bitcoinwallet" }, new DialogInterface.OnClickListener() {
+				builder.setTitle(getString(R.string.txt_donate_dialog_title));
+				builder.setItems(new CharSequence[] { getString(R.string.txt_donate_copy_bitcoin_address), getString(R.string.txt_show_qr_code), getString(R.string.txt_donate_open_bitcoin_wallet) }, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
 						case 0:
@@ -91,16 +91,15 @@ public class ParticipantsActivity extends ActionBarActivity {
 							break;
 						case 2:
 							try {
-								startActivity(makeBitcoinIntent());
+								startActivity(makeBitcoinIntent(address));
 							} catch (ActivityNotFoundException e) {
-								Toast.makeText(ParticipantsActivity.this, "No Bitcoin Wallet found", Toast.LENGTH_SHORT).show();
+								Toast.makeText(ParticipantsActivity.this, getString(R.string.toast_donate_no_bitcoin_wallet_found), Toast.LENGTH_SHORT).show();
 							}
 							break;
 						}
 					}
 				});
 				builder.create().show();
-
 			}
 		});
 
@@ -145,7 +144,7 @@ public class ParticipantsActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private class LoadQrCode extends AsyncTask<String, Void, Bitmap> {
+	public static class LoadQrCode extends AsyncTask<String, Void, Bitmap> {
 		@Override
 		protected Bitmap doInBackground(String... wallet) {
 			// Encode with a QR Code image
@@ -168,10 +167,8 @@ public class ParticipantsActivity extends ActionBarActivity {
 		}
 	}
 
-	private Intent makeBitcoinIntent() {
+	public static Intent makeBitcoinIntent(String address) {
 		// {bitcoin:<address>[?amount=<amount>][?label=<label>][?message=<message>]
-
-		String address = getString(R.string.txt_donations_address);
 
 		StringBuilder uri = new StringBuilder("bitcoin:");
 

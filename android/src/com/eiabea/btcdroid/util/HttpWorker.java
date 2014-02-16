@@ -3,17 +3,11 @@ package com.eiabea.btcdroid.util;
 import java.util.Locale;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.eiabea.btcdroid.R;
-import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
 import com.eiabea.btcdroid.model.PricesMtGox;
@@ -21,12 +15,6 @@ import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 
 public class HttpWorker {
-	public static final int PRICE_SOURCE_BITSTAMP_USD = 0;
-	public static final int PRICE_SOURCE_MTGOX_USD = 1;
-	public static final int PRICE_SOURCE_MTGOX_EUR = 2;
-	public static final int PRICE_SOURCE_BTCE_USD = 3;
-	public static final int PRICE_SOURCE_BTCE_EUR = 4;
-
 	public static final String BASEURL = "https://mining.bitcoin.cz/";
 	public static final String PRICES_URL_MTGOX_FRONT = "http://data.mtgox.com/api/2/BTC";
 	public static final String PRICES_URL_MTGOX_END = "/money/ticker_fast";
@@ -44,8 +32,6 @@ public class HttpWorker {
 	private String token;
 
 	public static RequestQueue mQueue;
-
-	private static HttpWorkerInterface httpWorkerInterface;
 
 	public HttpWorker() {
 	}
@@ -90,7 +76,7 @@ public class HttpWorker {
 
 	}
 
-	private void getPricesMtGox(String currency, Response.Listener<PricesMtGox> success, Response.ErrorListener error) {
+	public void getPricesMtGox(String currency, Response.Listener<PricesMtGox> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Prices MtGox");
 
 		String url = HttpWorker.PRICES_URL_MTGOX_FRONT + currency + HttpWorker.PRICES_URL_MTGOX_END;
@@ -101,7 +87,7 @@ public class HttpWorker {
 
 	}
 
-	private void getPricesBTCe(String currency, Response.Listener<PricesBTCe> success, Response.ErrorListener error) {
+	public void getPricesBTCe(String currency, Response.Listener<PricesBTCe> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Prices BTC-e");
 
 		String url = HttpWorker.PRICES_URL_BTCE_FRONT + currency.toLowerCase(Locale.ENGLISH) + HttpWorker.PRICES_URL_BTCE_END;
@@ -112,7 +98,7 @@ public class HttpWorker {
 
 	}
 
-	private void getPricesBitStamp(Response.Listener<PricesBitStamp> success, Response.ErrorListener error) {
+	public void getPricesBitStamp(Response.Listener<PricesBitStamp> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Prices BitStamp");
 
 		String url = HttpWorker.PRICES_URL_BITSTAMP;
@@ -122,235 +108,5 @@ public class HttpWorker {
 		HttpWorker.mQueue.add(new GsonRequest<PricesBitStamp>(url, PricesBitStamp.class, null, success, error));
 
 	}
-
-	public void getPrices() {
-
-		Log.d(getClass().getSimpleName(), "Getting Prices");
-
-		int source = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString("price_source_preference", "0"));
-
-		switch (source) {
-		case PRICE_SOURCE_BITSTAMP_USD:
-			getPricesBitStamp(new Listener<PricesBitStamp>() {
-
-				@Override
-				public void onResponse(PricesBitStamp prices) {
-
-					try {
-						GenericPrice price = new GenericPrice();
-						price.setValueFloat(Float.parseFloat(prices.getLast()));
-						price.setSource(context.getString(R.string.BitStamp_short));
-						price.setSymbol("$");
-
-						App.updateWidgets(context, price);
-
-						onPriceLoaded(price);
-//						httpWorkerInterface.onPricesLoaded(price);
-					} catch (NullPointerException ignore) {
-						GenericPrice price = null;
-						App.updateWidgets(context, price);
-						onPriceError();
-//						httpWorkerInterface.onPricesError();
-					}
-
-				}
-
-			}, new ErrorListener() {
-
-				@Override
-				public void onErrorResponse(VolleyError error) {
-					GenericPrice price = null;
-					App.updateWidgets(context, price);
-					onPriceError();
-//					httpWorkerInterface.onPricesError();
-
-				}
-			});
-			break;
-		case PRICE_SOURCE_MTGOX_USD:
-
-			getPricesMtGox("USD", new Listener<PricesMtGox>() {
-
-				@Override
-				public void onResponse(PricesMtGox prices) {
-
-					try {
-						// Write jsonData to PricesMtGox Object
-						GenericPrice price = prices.getLastPrice();
-						price.setSource(context.getString(R.string.MtGox_short));
-						price.setSymbol("$");
-
-						App.updateWidgets(context, price);
-						onPriceLoaded(price);
-//						httpWorkerInterface.onPricesLoaded(price);
-					} catch (NullPointerException ignore) {
-						GenericPrice price = null;
-						App.updateWidgets(context, price);
-						onPriceError();
-//						httpWorkerInterface.onPricesError();
-					}
-
-				}
-
-			}, new ErrorListener() {
-
-				@Override
-				public void onErrorResponse(VolleyError error) {
-					GenericPrice price = null;
-					App.updateWidgets(context, price);
-					onPriceError();
-//					httpWorkerInterface.onPricesError();
-
-				}
-			});
-			break;
-		case PRICE_SOURCE_MTGOX_EUR:
-
-			getPricesMtGox("EUR", new Listener<PricesMtGox>() {
-
-				@Override
-				public void onResponse(PricesMtGox prices) {
-
-					try {
-						// Write jsonData to PricesMtGox Object
-						prices = App.parsePrices(prices.getData());
-
-						GenericPrice price = prices.getLastPrice();
-						price.setSource(context.getString(R.string.MtGox_short));
-						price.setSymbol("€");
-
-						App.updateWidgets(context, price);
-						onPriceLoaded(price);
-//						httpWorkerInterface.onPricesLoaded(price);
-					} catch (NullPointerException ignore) {
-						GenericPrice price = null;
-						App.updateWidgets(context, price);
-						onPriceError();
-//						httpWorkerInterface.onPricesError();
-					}
-				}
-
-			}, new ErrorListener() {
-
-				@Override
-				public void onErrorResponse(VolleyError error) {
-					GenericPrice price = null;
-					App.updateWidgets(context, price);
-					httpWorkerInterface.onPricesError();
-
-				}
-			});
-			break;
-		case PRICE_SOURCE_BTCE_USD:
-
-			getPricesBTCe("USD", new Listener<PricesBTCe>() {
-
-				@Override
-				public void onResponse(PricesBTCe prices) {
-					try {
-						GenericPrice price = new GenericPrice();
-						price.setValueFloat(prices.getTicker().getLast());
-						price.setSource(context.getString(R.string.BTCe_short));
-						price.setSymbol("$");
-
-						App.updateWidgets(context, price);
-						onPriceLoaded(price);
-//						httpWorkerInterface.onPricesLoaded(price);
-					} catch (NullPointerException e) {
-						GenericPrice price = null;
-						App.updateWidgets(context, price);
-						onPriceError();
-//						httpWorkerInterface.onPricesError();
-					}
-				}
-
-			}, new ErrorListener() {
-
-				@Override
-				public void onErrorResponse(VolleyError error) {
-					GenericPrice price = null;
-					App.updateWidgets(context, price);
-					onPriceError();
-//					httpWorkerInterface.onPricesError();
-
-				}
-			});
-			break;
-		case PRICE_SOURCE_BTCE_EUR:
-
-			getPricesBTCe("EUR", new Listener<PricesBTCe>() {
-
-				@Override
-				public void onResponse(PricesBTCe prices) {
-
-					try {
-						GenericPrice price = new GenericPrice();
-						price.setValueFloat(prices.getTicker().getLast());
-						price.setSource(context.getString(R.string.BTCe_short));
-						price.setSymbol("€");
-
-						App.updateWidgets(context, price);
-						onPriceLoaded(price);
-//						httpWorkerInterface.onPricesLoaded(price);
-					} catch (NullPointerException e) {
-						GenericPrice price = null;
-						App.updateWidgets(context, price);
-						onPriceError();
-//						httpWorkerInterface.onPricesError();
-					}
-				}
-
-			}, new ErrorListener() {
-
-				@Override
-				public void onErrorResponse(VolleyError error) {
-					GenericPrice price = null;
-					App.updateWidgets(context, price);
-					onPriceError();
-//					httpWorkerInterface.onPricesError();
-
-				}
-			});
-			break;
-
-		default:
-			break;
-		}
-
-	}
-
-	public static void setHttpWorkerInterface(HttpWorkerInterface httpWorkerInterface) {
-		HttpWorker.httpWorkerInterface = httpWorkerInterface;
-	}
-	
-	public static HttpWorkerInterface getHttpWorkerInterface() {
-		return httpWorkerInterface;
-	}
-	
-	private void onPriceLoaded(GenericPrice price){
-		if(httpWorkerInterface != null){
-			httpWorkerInterface.onPricesLoaded(price);
-		}
-	}
-	
-	private void onPriceError(){
-		if(httpWorkerInterface != null){
-			httpWorkerInterface.onPricesError();
-		}
-	}
-
-	public interface HttpWorkerInterface {
-		public void onProfileLoaded(Profile profile);
-
-		public void onProfileError();
-
-		public void onStatsLoaded(Stats stats);
-
-		public void onStatsError();
-
-		public void onPricesLoaded(GenericPrice price);
-
-		public void onPricesError();
-	};
 
 }

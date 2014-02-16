@@ -143,7 +143,7 @@
                     style="@style/style_small_card_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/txt_donations"
+                    android:text="@string/txt_donate_dialog_title"
                     android:textColor="@color/bd_actionbar_background" />
 
                 <TextView

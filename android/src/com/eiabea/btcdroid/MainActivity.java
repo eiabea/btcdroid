@@ -1,6 +1,9 @@
 package com.eiabea.btcdroid;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,12 +38,11 @@ import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.service.UpdateService;
+import com.eiabea.btcdroid.service.UpdateService.UpdateInterface;
 import com.eiabea.btcdroid.util.App;
-import com.eiabea.btcdroid.util.HttpWorker;
-import com.eiabea.btcdroid.util.HttpWorker.HttpWorkerInterface;
 
 public class MainActivity extends ActionBarActivity implements
-		HttpWorkerInterface, OnPageChangeListener {
+		UpdateInterface, OnPageChangeListener {
 
 	private static final int INTENT_PREF = 0;
 	private static final int INTENT_CUSTOMIZE = 1;
@@ -81,7 +83,8 @@ public class MainActivity extends ActionBarActivity implements
 	private boolean isProgessShowing = false;
 
 	private SharedPreferences pref;
-
+	private ClipboardManager clipboard;
+	
 	private Profile profile = null;
 	private Stats stats = null;
 	private GenericPrice price = null;
@@ -92,18 +95,15 @@ public class MainActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
+		clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
 		currentPage = pref.getInt("userMainFragment", FRAGMENT_POOL);
 
 		initUi();
 		setListeners();
 
-		// if (savedInstanceState == null) {
-		// reloadData();
-		// }else{
-		// }
-		tryGettingDataFromService();
 		startService(new Intent(getApplicationContext(), UpdateService.class));
+		tryGettingDataFromService();
 
 	}
 
@@ -111,6 +111,7 @@ public class MainActivity extends ActionBarActivity implements
 		try {
 			this.profile = UpdateService.getInstance().getProfile();
 			this.stats = UpdateService.getInstance().getStats();
+			this.price = UpdateService.getInstance().getPrice();
 			profileLoaded = true;
 			statsLoaded = true;
 			pricesLoaded = true;
@@ -147,6 +148,7 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	protected void onResume() {
+		UpdateService.setUpdateInterface(this);
 		supportInvalidateOptionsMenu();
 		super.onResume();
 	}
@@ -292,13 +294,39 @@ public class MainActivity extends ActionBarActivity implements
 
 			startActivity(Intent.createChooser(emailIntent, App.getResString(R.string.mail_intent_title, MainActivity.this)));
 			break;
+			
+		case R.id.action_donate:
+			final String address = getString(R.string.txt_donations_address);
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+			builder.setTitle(getString(R.string.txt_donate_dialog_title));
+			builder.setItems(new CharSequence[] { getString(R.string.txt_donate_copy_bitcoin_address), getString(R.string.txt_donate_open_bitcoin_wallet) }, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					switch (which) {
+					case 0:
+						ClipData clipData = ClipData.newPlainText(getString(R.string.txt_donations), address);
+						clipboard.setPrimaryClip(clipData);
+						Toast.makeText(MainActivity.this, address + " " + getString(R.string.txt_copied_to_clipboard), Toast.LENGTH_SHORT).show();
+						break;
+					case 1:
+						try {
+							startActivity(ParticipantsActivity.makeBitcoinIntent(address));
+						} catch (ActivityNotFoundException e) {
+							Toast.makeText(MainActivity.this, getString(R.string.toast_donate_no_bitcoin_wallet_found), Toast.LENGTH_SHORT).show();
+						}
+						break;
+					}
+				}
+			});
+			builder.create().show();
+			break;
 
 		default:
 			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
 	@Override
 	protected void onActivityResult(int reqCode, int resCode, Intent intent) {
 		switch (reqCode) {
@@ -361,7 +389,6 @@ public class MainActivity extends ActionBarActivity implements
 
 		if (App.getInstance().isTokenSet()) {
 			pricesLoaded = profileLoaded = statsLoaded = false;
-			HttpWorker.setHttpWorkerInterface(this);
 			showInfos();
 			handleProgessIndicator();
 //			App.getInstance().httpWorker.getPrices();
@@ -562,21 +589,21 @@ public class MainActivity extends ActionBarActivity implements
 	public void onProfileError() {
 		profileLoaded = true;
 		handleProgessIndicator();
-		Toast.makeText(MainActivity.this, getString(R.string.toast_error_loading_profile), Toast.LENGTH_SHORT).show();
+//		Toast.makeText(MainActivity.this, getString(R.string.toast_error_loading_profile), Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onStatsError() {
 		statsLoaded = true;
 		handleProgessIndicator();
-		Toast.makeText(MainActivity.this, getString(R.string.toast_error_loading_stats), Toast.LENGTH_SHORT).show();
+//		Toast.makeText(MainActivity.this, getString(R.string.toast_error_loading_stats), Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onPricesError() {
 		pricesLoaded = true;
 		handleProgessIndicator();
-		Toast.makeText(MainActivity.this, getString(R.string.toast_error_loading_price), Toast.LENGTH_SHORT).show();
+//		Toast.makeText(MainActivity.this, getString(R.string.toast_error_loading_price), Toast.LENGTH_SHORT).show();
 	}
 
 }
