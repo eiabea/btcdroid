@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Date;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,7 +49,7 @@ public class BlockView extends LinearLayout {
 			found = App.dateStatsFormat.parse(block.getDate_found());
 			started = App.dateStatsFormat.parse(block.getDate_started());
 		} catch (ParseException e) {
-			e.printStackTrace();
+			Log.e(getClass().getSimpleName(), "Can't parse found or started Date (ParseExeception)");
 		}
 		
 		if(found != null){

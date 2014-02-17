@@ -180,7 +180,7 @@ public class PayoutFragment extends Fragment {
 			prgGauge.startAnimation(anim);
 
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			Log.e(getClass().getSimpleName(), "Can't set Gauge (NullPointer)");
 		}
 	}
 

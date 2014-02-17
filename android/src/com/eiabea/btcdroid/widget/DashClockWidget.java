@@ -32,8 +32,6 @@ public class DashClockWidget extends DashClockExtension {
 		}catch(Exception ignore){
 		}
 		
-//		updateWidget(null);
-	
 	}
 	
 
@@ -91,12 +89,5 @@ public class DashClockWidget extends DashClockExtension {
 			.expandedBody(getString(R.string.txt_dashclock_expanded_body))
 			.clickIntent(i));
 		}
-//		else{
-//			publishUpdate(new ExtensionData()
-//			.visible(true)
-//			.icon(R.drawable.ic_launcher_dashclock)
-//			.status("-"));
-//			
-//		}
 	}
 }

@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -24,11 +25,11 @@ public class EstimatedRewardWidgetProvider extends AppWidgetProvider {
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
-//		try {
-//			UpdateService.getInstance().getProfileWidgets();
-//		} catch (Exception ignore) {
-//		}
+		super.onUpdate(context, appWidgetManager, appWidgetIds);
+		if(UpdateService.getInstance() == null){
+			Intent serviceIntent = new Intent(context, UpdateService.class);
+			context.startService(serviceIntent);
+		}
 
 		// Get all ids
 		ComponentName thisWidget = new ComponentName(context, EstimatedRewardWidgetProvider.class);
@@ -40,7 +41,13 @@ public class EstimatedRewardWidgetProvider extends AppWidgetProvider {
 
 				if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
 					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-					UpdateService.getInstance().getProfileWidgets();
+					if(UpdateService.getInstance() == null){
+						Intent serviceIntent = new Intent(context, UpdateService.class);
+						serviceIntent.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PROFILE);
+						context.startService(serviceIntent);
+					}else{
+						UpdateService.getInstance().getProfileWidgets();
+					}
 				} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 					Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
 
@@ -60,28 +67,17 @@ public class EstimatedRewardWidgetProvider extends AppWidgetProvider {
 
 			} catch (NullPointerException e) {
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+				Log.e(getClass().getSimpleName(), "Something was null, damn! (NullPointer)");
 			}
 
 			Intent intent = new Intent(context, EstimatedRewardWidgetProvider.class);
-
 			intent.setAction(ACTION_CLICK);
-			intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
 
 			PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			remoteViews.setOnClickPendingIntent(R.id.rl_widget_holder, pendingIntent);
 			appWidgetManager.updateAppWidget(widgetId, remoteViews);
 		}
 	}
-
-	// @Override
-	// public void onReceive(Context context, Intent intent) {
-	// super.onReceive(context, intent);
-	//
-	// RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
-	// R.layout.widget_layout);
-	//
-	//
-	// }
 
 	@Override
 	public void onReceive(Context context, Intent intent) {

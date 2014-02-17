@@ -210,7 +210,7 @@ public class MainActivity extends ActionBarActivity implements
 			}
 
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			Log.e(getClass().getSimpleName(), "Something was null, damn! InitUi() (NullPointer)");
 		}
 
 		llNoPools = (LinearLayout) findViewById(R.id.ll_main_no_pools);
@@ -416,7 +416,7 @@ public class MainActivity extends ActionBarActivity implements
 				viewPager.setVisibility(View.VISIBLE);
 			}
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			Log.e(getClass().getSimpleName(), "showInfos --> TabletUi vs. PhoneUi (NullPointer)");
 		}
 	}
 
@@ -432,7 +432,7 @@ public class MainActivity extends ActionBarActivity implements
 				viewPager.setVisibility(View.INVISIBLE);
 			}
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			Log.e(getClass().getSimpleName(), "showInfos --> TabletUi vs. PhoneUi (NullPointer)");
 		}
 	}
 
@@ -458,7 +458,7 @@ public class MainActivity extends ActionBarActivity implements
 			((WorkerFragment) getFragment(FRAGMENT_WORKER)).setProfile(profile);
 
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			Log.e(getClass().getSimpleName(), "Can't get all Fragments to setProfile (NullPointer)");
 		}
 	}
 
@@ -469,7 +469,7 @@ public class MainActivity extends ActionBarActivity implements
 			((RoundsFragment) getFragment(FRAGMENT_ROUNDS)).setStats(stats);
 
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			Log.e(getClass().getSimpleName(), "Can't get all Fragments to setStats (NullPointer)");
 		}
 	}
 
@@ -479,7 +479,7 @@ public class MainActivity extends ActionBarActivity implements
 			((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setPrices(price);
 
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			Log.e(getClass().getSimpleName(), "Can't get all Fragments to setPrice (NullPointer)");
 		}
 	}
 

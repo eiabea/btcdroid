@@ -1,5 +1,6 @@
 package com.eiabea.btcdroid.widget;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import android.app.PendingIntent;
@@ -8,6 +9,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -26,11 +28,11 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
-//		try {
-//			UpdateService.getInstance().getStatsWidgets();
-//		} catch (Exception ignore) {
-//		}
+		super.onUpdate(context, appWidgetManager, appWidgetIds);
+		if(UpdateService.getInstance() == null){
+			Intent serviceIntent = new Intent(context, UpdateService.class);
+			context.startService(serviceIntent);
+		}
 
 		for (int widgetId : appWidgetIds) {
 			RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
@@ -39,7 +41,13 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
 
 				if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
 					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-					UpdateService.getInstance().getStatsWidgets();
+					if(UpdateService.getInstance() == null){
+						Intent serviceIntent = new Intent(context, UpdateService.class);
+						serviceIntent.putExtra(UpdateService.PARAM_GET, UpdateService.GET_STATS);
+						context.startService(serviceIntent);
+					}else{
+						UpdateService.getInstance().getProfileWidgets();
+					}
 				} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 					Stats stats = intent.getParcelableExtra(PARAM_STATS);
 
@@ -50,8 +58,8 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
 						remoteViews.setTextViewText(R.id.txt_widget_value, App.dateDurationFormat.format(duration));
 						remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_green));
 						remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_round_duration_widget));
-					} catch (java.text.ParseException e) {
-						e.printStackTrace();
+					} catch (ParseException e) {
+						Log.e(getClass().getSimpleName(), "Can't parse RoundDuration (ParseExeception)");
 					}
 
 					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
@@ -65,12 +73,11 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
 
 			} catch (NullPointerException e) {
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+				Log.e(getClass().getSimpleName(), "Something was null, damn! (NullPointer)");
 			}
 
 			Intent intent = new Intent(context, RoundDurationWidgetProvider.class);
-
 			intent.setAction(ACTION_CLICK);
-			intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
 
 			PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			remoteViews.setOnClickPendingIntent(R.id.rl_widget_holder, pendingIntent);

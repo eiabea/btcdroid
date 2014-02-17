@@ -38,6 +38,12 @@ public class UpdateService extends Service {
 
 	private SharedPreferences pref;
 
+	public static final String PARAM_GET = "param_get";
+
+	public static final int GET_PRICE = 0;
+	public static final int GET_STATS = 1;
+	public static final int GET_PROFILE = 2;
+
 	public static final int PRICE_SOURCE_BITSTAMP_USD = 0;
 	public static final int PRICE_SOURCE_MTGOX_USD = 1;
 	public static final int PRICE_SOURCE_MTGOX_EUR = 2;
@@ -61,7 +67,7 @@ public class UpdateService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
+		
 		me = this;
 
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -71,6 +77,35 @@ public class UpdateService extends Service {
 		start();
 	}
 	
+	
+	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		super.onStartCommand(intent, flags, startId);
+		try{
+			int get = intent.getIntExtra(PARAM_GET, -1);
+			
+			switch (get) {
+			case GET_PROFILE:
+				getPriceWidgets();
+				break;
+			case GET_STATS:
+				getStatsWidgets();
+				break;
+			case GET_PRICE:
+				getPriceWidgets();
+				break;
+
+			default:
+				break;
+			}
+			
+		}catch (NullPointerException e){
+			Log.d(getClass().getSimpleName(), "Start Service without data");
+		}
+		return START_STICKY;
+	}
+
 	public static UpdateService getInstance() {
 		return me;
 	}

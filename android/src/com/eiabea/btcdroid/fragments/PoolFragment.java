@@ -163,7 +163,7 @@ public class PoolFragment extends Fragment {
 				duration = App.dateDurationFormat.parse(tmpBlock.getMining_duration());
 				total += duration.getTime();
 			} catch (ParseException e) {
-				e.printStackTrace();
+				Log.e(getClass().getSimpleName(), "Can't get AverageRoundTime (NullPointer)");
 			}
 
 		}
@@ -228,19 +228,13 @@ public class PoolFragment extends Fragment {
 				started = App.dateStatsFormat.parse(stats.getRound_started());
 				txtRoundStarted.setText(App.dateFormat.format(started));
 			} catch (java.text.ParseException e) {
-				e.printStackTrace();
-			}
-			try {
-				started = App.dateStatsFormat.parse(stats.getRound_started());
-				txtRoundStarted.setText(App.dateFormat.format(started));
-			} catch (java.text.ParseException e) {
-				e.printStackTrace();
+				Log.e(getClass().getSimpleName(), "Can't get RoundStarted (NullPointer)");
 			}
 			try {
 				duration = App.dateDurationFormat.parse(stats.getRound_duration());
 				txtRoundDuration.setText(App.dateDurationFormat.format(duration));
 			} catch (java.text.ParseException e) {
-				e.printStackTrace();
+				Log.e(getClass().getSimpleName(), "Can't get RoundDuration (NullPointer)");
 			}
 
 			if (average != null && duration != null) {

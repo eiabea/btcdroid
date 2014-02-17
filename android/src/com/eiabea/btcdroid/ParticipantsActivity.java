@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -155,7 +156,7 @@ public class ParticipantsActivity extends ActionBarActivity {
 				return bitmap;
 
 			} catch (WriterException e) {
-				e.printStackTrace();
+				Log.e(getClass().getSimpleName(), "Can't encode QR-Code Bitmap (WriterException)");
 			}
 			return null;
 		}

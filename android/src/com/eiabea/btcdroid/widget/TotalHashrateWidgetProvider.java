@@ -8,6 +8,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -27,11 +28,11 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-		
-//		try{
-//			UpdateService.getInstance().getProfileWidgets();
-//		}catch(Exception ignore){
-//		}
+		super.onUpdate(context, appWidgetManager, appWidgetIds);
+		if(UpdateService.getInstance() == null){
+			Intent serviceIntent = new Intent(context, UpdateService.class);
+			context.startService(serviceIntent);
+		}
 
 		// Get all ids
 		ComponentName thisWidget = new ComponentName(context, TotalHashrateWidgetProvider.class);
@@ -43,7 +44,13 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
 
 				if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
 					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-					UpdateService.getInstance().getProfileWidgets();
+					if(UpdateService.getInstance() == null){
+						Intent serviceIntent = new Intent(context, UpdateService.class);
+						serviceIntent.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PROFILE);
+						context.startService(serviceIntent);
+					}else{
+						UpdateService.getInstance().getProfileWidgets();
+					}
 				} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 					Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
 
@@ -70,12 +77,11 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
 
 			} catch (NullPointerException e) {
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+				Log.e(getClass().getSimpleName(), "Something was null, damn! (NullPointer)");
 			}
 
 			Intent intent = new Intent(context, TotalHashrateWidgetProvider.class);
-
 			intent.setAction(ACTION_CLICK);
-			intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
 
 			PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			remoteViews.setOnClickPendingIntent(R.id.rl_widget_holder, pendingIntent);
@@ -83,48 +89,6 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
 		}
 	}
 
-	
-	
-//	@Override
-//	public void onReceive(Context context, Intent intent) {
-//		super.onReceive(context, intent);
-//
-//		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-//		try {
-//
-//			if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
-//				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-//				UpdateService.getInstance().getProfileWidgets();
-//			} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-//				Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
-//				
-//				ArrayList<Worker> list = profile.getWorkersList();
-//
-//				int totalHashrate = 0;
-//
-//				for (Worker tmp : list) {
-//					totalHashrate += tmp.getHashrate();
-//				}
-//
-//				remoteViews.setTextViewText(R.id.txt_widget_value, App.formatHashRate(totalHashrate));
-//				remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_green));
-//				remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_current_total_hashrate));
-//
-//				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
-//
-//			} else if (intent.getAction().equals(LOADING_FAILED)) {
-//				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
-//			}
-//			
-//			ComponentName widget = new ComponentName(context, TotalHashrateWidgetProvider.class);
-//			AppWidgetManager.getInstance(context).updateAppWidget(widget, remoteViews);
-//
-//		} catch (NullPointerException e) {
-//			remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
-//		}
-//
-//	}
-	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);

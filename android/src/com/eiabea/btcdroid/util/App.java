@@ -255,7 +255,7 @@ public class App extends Application {
 				if(timestampLhs > timestampRhs) return -1;
 				return 0;
 			} catch (ParseException e) {
-				e.printStackTrace();
+				Log.e(getClass().getSimpleName(), "Can't get sort blocks per DateFound (ParseExecption)");
 			}
 			
 			return 0;
