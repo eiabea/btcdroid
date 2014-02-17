@@ -35,6 +35,9 @@
     <string name="txt_hashrate_dropped_title">Hashrate has dropped!</string>
     <string name="txt_hashrate_dropped_message">Current Hashrate: %1$s</string>
 
+    <string name="txt_new_round_title">Success!</string>
+    <string name="txt_new_round_message">A new Round has begun</string>
+
     <!-- MainActivity -->
     <string name="txt_no_token">No valid Token found, please set one</string>
     <string name="txt_set_token">Set Token</string>
@@ -128,6 +131,8 @@
     <string name="txt_pref_notification_title">Notification</string>
     <string name="txt_pref_notification_show_notification_title">Notification</string>
     <string name="txt_pref_notification_show_notification_message">Notification if hashrate drops under a certain value</string>
+    <string name="txt_pref_notification_show_round_finished_notification_title">New Round Notification</string>
+    <string name="txt_pref_notification_show_round_finished_notification_message">Notification if a block has been found</string>
     <string name="txt_pref_notification_minimum_hashrate_title">Minimum Hashrate (MH/s)</string>
     <string name="txt_pref_notification_minimum_hashrate_message">Limit for low hashrate</string>
     <string name="txt_pref_notification_checking_interval_title">Checking Interval (minutes)</string>

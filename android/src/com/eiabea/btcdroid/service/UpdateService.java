@@ -1,5 +1,6 @@
 package com.eiabea.btcdroid.service;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,6 +13,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -67,7 +69,7 @@ public class UpdateService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		
+
 		me = this;
 
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -76,15 +78,13 @@ public class UpdateService extends Service {
 
 		start();
 	}
-	
-	
-	
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
-		try{
+		try {
 			int get = intent.getIntExtra(PARAM_GET, -1);
-			
+
 			switch (get) {
 			case GET_PROFILE:
 				getPriceWidgets();
@@ -99,8 +99,8 @@ public class UpdateService extends Service {
 			default:
 				break;
 			}
-			
-		}catch (NullPointerException e){
+
+		} catch (NullPointerException e) {
 			Log.d(getClass().getSimpleName(), "Start Service without data");
 		}
 		return START_STICKY;
@@ -212,8 +212,10 @@ public class UpdateService extends Service {
 			@Override
 			public void onResponse(Stats stats) {
 				Log.d(getClass().getSimpleName(), "onResponse Stats Widgets");
+				handleRoundFinishedNotification(stats);
 				onStatsLoaded(stats);
 			}
+
 		}, new ErrorListener() {
 
 			@Override
@@ -398,7 +400,8 @@ public class UpdateService extends Service {
 					totalHashrate += tmp.getHashrate();
 				}
 
-				if (limit > 0 && totalHashrate < limit) {
+				boolean enabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled", false);
+				if (limit > 0 && totalHashrate < limit && enabled) {
 					createFirstDropNotification(totalHashrate);
 				}
 				Log.d(getClass().getSimpleName(), "onResponse Notification");
@@ -414,6 +417,41 @@ public class UpdateService extends Service {
 				getApplicationContext().sendBroadcast(i);
 			}
 		}));
+
+	}
+
+	private void handleRoundFinishedNotification(Stats stats) {
+		boolean globalEnabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled", false);
+		boolean enabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("round_finished_notification_enabled", false);
+		if(enabled && globalEnabled){
+			try {
+				SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+				long lastDuration = pref.getLong("lastDuration", 0);
+				long duration = App.dateDurationFormat.parse(stats.getRound_duration()).getTime();
+				if (lastDuration > duration) {
+					createRoundFinishedNotification();
+				} 
+				pref.edit().putLong("lastDuration", duration).commit();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	private void createRoundFinishedNotification() {
+		// if (!alreadyShown) {
+
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_round_finished).setContentTitle(getString(R.string.txt_new_round_title)).setContentText(getString(R.string.txt_new_round_message)).setAutoCancel(true);
+
+		Intent intent = new Intent(this, MainActivity.class);
+		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+
+		mBuilder.setContentIntent(pi);
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		Notification notif = setFinishParameters(mBuilder.build());
+
+		mNotificationManager.notify(0, notif);
 
 	}
 
@@ -451,6 +489,28 @@ public class UpdateService extends Service {
 			notification.defaults |= Notification.DEFAULT_VIBRATE;
 		}
 
+		if (led) {
+			notification.ledARGB = 0xffff8b00;
+			notification.ledOnMS = 300;
+			notification.ledOffMS = 1000;
+			notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+		}
+
+		return notification;
+	}
+
+	private Notification setFinishParameters(Notification notification) {
+		boolean sound = pref.getBoolean("notification_sound", true);
+		boolean vibrate = pref.getBoolean("notification_vibrate", false);
+		boolean led = pref.getBoolean("notification_led", false);
+
+		if (sound) {
+			notification.sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.tada);
+		}
+
+		if (vibrate) {
+			notification.defaults |= Notification.DEFAULT_VIBRATE;
+		}
 		if (led) {
 			notification.ledARGB = 0xffff8b00;
 			notification.ledOnMS = 300;

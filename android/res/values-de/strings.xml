@@ -35,6 +35,9 @@
     <string name="txt_hashrate_dropped_title">Hashrate gefallen!</string>
     <string name="txt_hashrate_dropped_message">Derzeitige Hashrate: %1$s</string>
 
+	<string name="txt_new_round_title">Erfolg!</string>
+    <string name="txt_new_round_message">Eine neue Runde hat begonnen</string>
+
     <!-- MainActivity -->
     <string name="txt_no_token">Es wurde kein gültiger API-Token gefunden, bitte füge einen hinzu</string>
     <string name="txt_set_token">Token setzen</string>
@@ -134,14 +137,14 @@
     <string name="txt_pref_notification_checking_interval_message">Wie oft soll die Hashrate überprüft werden</string>
     <string name="txt_pref_notification_sound_title">Ton</string>
     <string name="txt_pref_notification_sound_message">Benachrichtigungston abspielen</string>
-    <string name="txt_pref_notification_vibrate_title">Vibrate</string>
-    <string name="txt_pref_notification_vibrate_message">Vibrate on Notification</string>
+    <string name="txt_pref_notification_vibrate_title">Vibration</string>
+    <string name="txt_pref_notification_vibrate_message">Vibrieren bei einer Benachrichtigung</string>
     <string name="txt_pref_notification_led_title">LED</string>
-    <string name="txt_pref_notification_led_message">Flash LED on Notification</string>
+    <string name="txt_pref_notification_led_message">Blinkende LED bei einer Benachrichtigung</string>
 
     <!-- DashClock -->
-    <string name="txt_dashclock_description">Displays the current total hashrate of your workers at slush\'s pool</string>
-    <string name="txt_dashclock_expanded_body">total current hashrate</string>
+    <string name="txt_dashclock_description">Zeigt die gesamte derzeitige Hashrate aller deiner Arbeiter bei Slush\'s Pool</string>
+    <string name="txt_dashclock_expanded_body">gesamte derzeitige Hashrate</string>
     
     <!-- Widget -->
     <string name="txt_loading">lade</string>

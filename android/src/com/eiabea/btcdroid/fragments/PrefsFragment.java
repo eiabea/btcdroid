@@ -81,6 +81,7 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 	
 	private void setNotification(){
 		boolean notificationEnabled = getPreferenceManager().getSharedPreferences().getBoolean("notification_enabled", false);
+		getPreferenceScreen().findPreference("round_finished_notification_enabled").setEnabled(notificationEnabled);
 		getPreferenceScreen().findPreference("notification_hashrate").setEnabled(notificationEnabled);
 		getPreferenceScreen().findPreference("notification_interval").setEnabled(notificationEnabled);
 		getPreferenceScreen().findPreference("notification_sound").setEnabled(notificationEnabled);

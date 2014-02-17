@@ -5,11 +5,11 @@
     <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
     <string name="action_refresh">Vernieuwen</string>
     <string name="action_reset">Reset</string>
-    <string name="action_accept">Accept</string>
+    <string name="action_accept">Accepteren</string>
     <string name="action_add_pool">Pool toevoegen</string>
     <string name="action_settings">Instellingen</string>
-	<string name="action_customize">Customize</string>
-	<string name="action_donate">Donate</string>
+	<string name="action_customize">Aanpassen</string>
+	<string name="action_donate">Doneren</string>
     <string name="action_participants">Deelnemers</string>
     <string name="action_email">E-mail Ontwikkelaar</string>
     <string name="th_per_second">TH/s</string>
@@ -34,6 +34,9 @@
     <!-- Notification -->
     <string name="txt_hashrate_dropped_title">Hash snelheid is weggevallen!</string>
     <string name="txt_hashrate_dropped_message">Huidige hash snelheid: %1$s</string>
+
+    <string name="txt_new_round_title">Success!</string>
+    <string name="txt_new_round_message">A new Round has begun</string>
 
     <!-- MainActivity -->
     <string name="txt_no_token">Geen correcte Token gevonden, stel er in</string>
@@ -123,12 +126,14 @@
     <string name="txt_pref_style_btc_style_title">BTC Stijl</string>
     <string name="txt_pref_style_btc_style_message">De stijl waarop Bitcoins worden weergeven</string>
     <string name="txt_pref_widgets_title">Widgets</string>
-    <string name="txt_pref_widgets_checking_interval_title">Checking Interval (minutes)</string>
-    <string name="txt_pref_widgets_checking_interval_message">How often should the widgets be updated</string>
+    <string name="txt_pref_widgets_checking_interval_title">Controle interval (minutes)</string>
+    <string name="txt_pref_widgets_checking_interval_message">Hoe vaak moeten de widgets geupdate worden</string>
     <string name="txt_pref_notification_title">Meldingen</string>
     <string name="txt_pref_notification_show_notification_title">Meldingen</string>
     <string name="txt_pref_notification_show_notification_message">Melding als de Hashsnelheid onder een bepaalde waarde komt</string>
-    <string name="txt_pref_notification_minimum_hashrate_title">Minimale Hashsnelheid (MH/s)</string>
+    <string name="txt_pref_notification_show_round_finished_notification_title">New Round Notification</string>
+    <string name="txt_pref_notification_show_round_finished_notification_message">Notification if a block has been found</string>    
+	<string name="txt_pref_notification_minimum_hashrate_title">Minimale Hashsnelheid (MH/s)</string>
     <string name="txt_pref_notification_minimum_hashrate_message">Melding als Hashsnelheid onder deze waarde komt</string>
     <string name="txt_pref_notification_checking_interval_title">Controle interval (Minuten)</string>
     <string name="txt_pref_notification_checking_interval_message">Hoe vaak moet de Hashsnelheid worden gecontroleerd</string>
@@ -140,18 +145,18 @@
     <string name="txt_pref_notification_led_message">Laat LED-lampjes knipperen bij een Melding</string>
 
     <!-- DashClock -->
-    <string name="txt_dashclock_description">Displays the current total hashrate of your workers at slush\'s pool</string>
-    <string name="txt_dashclock_expanded_body">total current hashrate</string>
+    <string name="txt_dashclock_description">laat de huidige totale hashrate zien van je werkers bij slush\'s pool</string>
+    <string name="txt_dashclock_expanded_body">huidige totale hashrate</string>
 
     <!-- Widget -->
-    <string name="txt_loading">loading</string>
-    <string name="txt_round_duration_widget">round duration</string>
+    <string name="txt_loading">Laden</string>
+    <string name="txt_round_duration_widget">Ronde tijd</string>
     
     <!-- Donate -->
-    <string name="txt_donate_dialog_title">Donate</string>
-    <string name="txt_donate_copy_bitcoin_address">Copy Bitcoinaddress</string>
+    <string name="txt_donate_dialog_title">Doneren</string>
+    <string name="txt_donate_copy_bitcoin_address">Kopieer Bitcoinaddres</string>
     <string name="txt_donate_open_bitcoin_wallet">Open Bitcoinwallet</string>
-    <string name="toast_donate_no_bitcoin_wallet_found">No Bitcoinwallet found</string>
+    <string name="toast_donate_no_bitcoin_wallet_found">Geen  Bitcoinwallet gevonden</string>
 
     <string-array name="price_source">
         <item>@string/BitStamp</item>
@@ -190,8 +195,8 @@
         <item>10800</item>
     </string-array>
 
-    <string name="toast_error_loading_profile">Error loading Profile</string>
-    <string name="toast_error_loading_stats">Error loading Stats</string>
-    <string name="toast_error_loading_price">Error loading Price</string>
+    <string name="toast_error_loading_profile">Error bij laden van het Profiel</string>
+    <string name="toast_error_loading_stats">Error bij het laden van de statestieken</string>
+    <string name="toast_error_loading_price">Error bij het laden van de prijzen</string>
 
 </resources>

@@ -67,6 +67,12 @@
             android:key="notification_enabled"
             android:summary="@string/txt_pref_notification_show_notification_message"
             android:title="@string/txt_pref_notification_show_notification_title" />
+        
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="round_finished_notification_enabled"
+            android:summary="@string/txt_pref_notification_show_round_finished_notification_message"
+            android:title="@string/txt_pref_notification_show_round_finished_notification_title" />
 
         <EditTextPreference
             android:defaultValue="0"
