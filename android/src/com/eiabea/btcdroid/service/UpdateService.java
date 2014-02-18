@@ -2,9 +2,6 @@ package com.eiabea.btcdroid.service;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -34,7 +31,6 @@ import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.GsonRequest;
 import com.eiabea.btcdroid.util.HttpWorker;
-import com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider;
 
 public class UpdateService extends Service {
 
@@ -59,7 +55,7 @@ public class UpdateService extends Service {
 	private static UpdateService me;
 	private static UpdateInterface updateInterface;
 
-	private ScheduledExecutorService scheduleNotification, scheduleWidgets;
+	// private ScheduledExecutorService scheduleWidgets;
 
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -76,7 +72,6 @@ public class UpdateService extends Service {
 
 		Log.d(getClass().getSimpleName(), "onCreate");
 
-		start();
 	}
 
 	@Override
@@ -87,7 +82,7 @@ public class UpdateService extends Service {
 
 			switch (get) {
 			case GET_PROFILE:
-				getPriceWidgets();
+				getProfileWidgets();
 				break;
 			case GET_STATS:
 				getStatsWidgets();
@@ -97,83 +92,88 @@ public class UpdateService extends Service {
 				break;
 
 			default:
+				getProfileWidgets();
+				getPriceWidgets();
+				getStatsWidgets();
 				break;
 			}
 
 		} catch (NullPointerException e) {
 			Log.d(getClass().getSimpleName(), "Start Service without data");
 		}
-		return START_STICKY;
+		return START_NOT_STICKY;
 	}
 
 	public static UpdateService getInstance() {
 		return me;
 	}
 
-	public void start() {
-		startNotification();
-		startWidgets();
-	}
+	// public void start() {
+	// startNotification();
+	// startWidgets();
+	// }
+	//
+	// public void startNotification() {
+	// if (scheduleNotification != null) {
+	// scheduleNotification.shutdownNow();
+	// }
+	//
+	// int intervalNotificaion =
+	// Integer.valueOf(pref.getString("notification_interval", "60"));
+	//
+	// scheduleNotification = Executors.newSingleThreadScheduledExecutor();
+	//
+	// scheduleNotification.scheduleAtFixedRate(new Runnable() {
+	// public void run() {
+	// if (App.getInstance().isTokenSet()) {
+	// getProfileNotification();
+	// } else {
+	// Log.d(getClass().getSimpleName(), "No Token set");
+	// }
+	// }
+	// }, intervalNotificaion, intervalNotificaion, TimeUnit.MINUTES);
+	// }
+	//
+	// public void startWidgets() {
+	// if (scheduleWidgets != null) {
+	// scheduleWidgets.shutdownNow();
+	// }
+	//
+	// int intervalWidget = Integer.valueOf(pref.getString("widget_interval",
+	// "30"));
+	// scheduleWidgets = Executors.newSingleThreadScheduledExecutor();
+	//
+	// scheduleWidgets.scheduleAtFixedRate(new Runnable() {
+	// public void run() {
+	// if (App.getInstance().isTokenSet()) {
+	// getProfileWidgets();
+	// getStatsWidgets();
+	// getPriceWidgets();
+	// } else {
+	// Log.d(getClass().getSimpleName(), "No Token set");
+	// }
+	// }
+	// }, 0, intervalWidget, TimeUnit.MINUTES);
+	// }
+	//
+	// public void stop() {
+	// stopNotification();
+	// stopWidgets();
+	// }
+	//
+	// public void stopNotification() {
+	// if (scheduleNotification != null) {
+	// scheduleNotification.shutdownNow();
+	// }
+	// }
+	//
+	// public void stopWidgets() {
+	// if (scheduleWidgets != null) {
+	// scheduleWidgets.shutdownNow();
+	// }
+	// }
 
-	public void startNotification() {
-		if (scheduleNotification != null) {
-			scheduleNotification.shutdownNow();
-		}
-
-		int intervalNotificaion = Integer.valueOf(pref.getString("notification_interval", "60"));
-
-		scheduleNotification = Executors.newSingleThreadScheduledExecutor();
-
-		scheduleNotification.scheduleAtFixedRate(new Runnable() {
-			public void run() {
-				if (App.getInstance().isTokenSet()) {
-					getProfileNotification();
-				} else {
-					Log.d(getClass().getSimpleName(), "No Token set");
-				}
-			}
-		}, intervalNotificaion, intervalNotificaion, TimeUnit.MINUTES);
-	}
-
-	public void startWidgets() {
-		if (scheduleWidgets != null) {
-			scheduleWidgets.shutdownNow();
-		}
-
-		int intervalWidget = Integer.valueOf(pref.getString("widget_interval", "30"));
-		scheduleWidgets = Executors.newSingleThreadScheduledExecutor();
-
-		scheduleWidgets.scheduleAtFixedRate(new Runnable() {
-			public void run() {
-				if (App.getInstance().isTokenSet()) {
-					getProfileWidgets();
-					getStatsWidgets();
-					getPriceWidgets();
-				} else {
-					Log.d(getClass().getSimpleName(), "No Token set");
-				}
-			}
-		}, 0, intervalWidget, TimeUnit.MINUTES);
-	}
-
-	public void stop() {
-		stopNotification();
-		stopWidgets();
-	}
-
-	public void stopNotification() {
-		if (scheduleNotification != null) {
-			scheduleNotification.shutdownNow();
-		}
-	}
-
-	public void stopWidgets() {
-		if (scheduleWidgets != null) {
-			scheduleWidgets.shutdownNow();
-		}
-	}
-
-	public void getProfileWidgets() {
+	private void getProfileWidgets() {
 		Log.d(getClass().getSimpleName(), "get Profile Widgets");
 
 		String url = HttpWorker.PROFILE_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
@@ -185,6 +185,7 @@ public class UpdateService extends Service {
 			@Override
 			public void onResponse(Profile profile) {
 				Log.d(getClass().getSimpleName(), "onResponse Profile Widgets");
+				handleDropNotification(profile);
 				onProfileLoaded(profile);
 			}
 
@@ -200,7 +201,7 @@ public class UpdateService extends Service {
 
 	}
 
-	public void getStatsWidgets() {
+	private void getStatsWidgets() {
 		Log.d(getClass().getSimpleName(), "get Stats Widgets");
 
 		String url = HttpWorker.STATS_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
@@ -227,7 +228,7 @@ public class UpdateService extends Service {
 		}));
 	}
 
-	public void getPriceWidgets() {
+	private void getPriceWidgets() {
 		Log.d(getClass().getSimpleName(), "get Price Widgets");
 
 		Log.d(getClass().getSimpleName(), "Getting Prices");
@@ -380,57 +381,64 @@ public class UpdateService extends Service {
 		}
 	}
 
-	public void getProfileNotification() {
-		Log.d(getClass().getSimpleName(), "get Profile Notification");
-
-		String url = HttpWorker.PROFILE_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
-
-		System.out.println(HttpWorker.mQueue.toString());
-
-		HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null, new Listener<Profile>() {
-
-			@Override
-			public void onResponse(Profile response) {
-				List<Worker> workers = response.getWorkersList();
-
-				int totalHashrate = 0;
-				int limit = Integer.valueOf(pref.getString("notification_hashrate", "0"));
-
-				for (Worker tmp : workers) {
-					totalHashrate += tmp.getHashrate();
-				}
-
-				boolean enabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled", false);
-				if (limit > 0 && totalHashrate < limit && enabled) {
-					createFirstDropNotification(totalHashrate);
-				}
-				Log.d(getClass().getSimpleName(), "onResponse Notification");
-			}
-		}, new ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				Log.d(getClass().getSimpleName(), "onErrorResponse Notification");
-				Log.d(getClass().getSimpleName(), " " + error.getCause());
-				Intent i = new Intent(getApplicationContext(), TotalHashrateWidgetProvider.class);
-				i.setAction(TotalHashrateWidgetProvider.LOADING_FAILED);
-				getApplicationContext().sendBroadcast(i);
-			}
-		}));
-
-	}
+	// public void getProfileNotification() {
+	// Log.d(getClass().getSimpleName(), "get Profile Notification");
+	//
+	// String url = HttpWorker.PROFILE_URL +
+	// PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN,
+	// "");
+	//
+	// System.out.println(HttpWorker.mQueue.toString());
+	//
+	// HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null,
+	// new Listener<Profile>() {
+	//
+	// @Override
+	// public void onResponse(Profile response) {
+	// List<Worker> workers = response.getWorkersList();
+	//
+	// int totalHashrate = 0;
+	// int limit = Integer.valueOf(pref.getString("notification_hashrate",
+	// "0"));
+	//
+	// for (Worker tmp : workers) {
+	// totalHashrate += tmp.getHashrate();
+	// }
+	//
+	// boolean enabled =
+	// PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled",
+	// false);
+	// if (limit > 0 && totalHashrate < limit && enabled) {
+	// createFirstDropNotification(totalHashrate);
+	// }
+	// Log.d(getClass().getSimpleName(), "onResponse Notification");
+	// }
+	// }, new ErrorListener() {
+	//
+	// @Override
+	// public void onErrorResponse(VolleyError error) {
+	// Log.d(getClass().getSimpleName(), "onErrorResponse Notification");
+	// Log.d(getClass().getSimpleName(), " " + error.getCause());
+	// Intent i = new Intent(getApplicationContext(),
+	// TotalHashrateWidgetProvider.class);
+	// i.setAction(TotalHashrateWidgetProvider.LOADING_FAILED);
+	// getApplicationContext().sendBroadcast(i);
+	// }
+	// }));
+	//
+	// }
 
 	private void handleRoundFinishedNotification(Stats stats) {
 		boolean globalEnabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled", false);
 		boolean enabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("round_finished_notification_enabled", false);
-		if(enabled && globalEnabled){
+		if (enabled && globalEnabled) {
 			try {
 				SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 				long lastDuration = pref.getLong("lastDuration", 0);
 				long duration = App.dateDurationFormat.parse(stats.getRound_duration()).getTime();
 				if (lastDuration > duration) {
 					createRoundFinishedNotification();
-				} 
+				}
 				pref.edit().putLong("lastDuration", duration).commit();
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -455,24 +463,43 @@ public class UpdateService extends Service {
 
 	}
 
-	public void createFirstDropNotification(int hashrate) {
-		// if (!alreadyShown) {
+	private void handleDropNotification(Profile profile) {
+		boolean enabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled", false);
+		try {
 
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher).setContentTitle(getString(R.string.txt_hashrate_dropped_title)).setContentText(String.format(getString(R.string.txt_hashrate_dropped_message), App.formatHashRate(hashrate))).setAutoCancel(true);
+			if (enabled) {
 
-		Intent deleteIntent = new Intent(this, OnDeleteReceiver.class);
-		deleteIntent.setAction("delete");
-		PendingIntent pendingDeleteIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, deleteIntent, 0);
+				List<Worker> workers = profile.getWorkersList();
 
-		Intent intent = new Intent(this, MainActivity.class);
-		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+				int totalHashrate = 0;
+				int limit = Integer.valueOf(pref.getString("notification_hashrate", "0"));
 
-		mBuilder.setContentIntent(pi);
-		mBuilder.setDeleteIntent(pendingDeleteIntent);
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notif = setDefaults(mBuilder.build());
+				for (Worker tmp : workers) {
+					totalHashrate += tmp.getHashrate();
+				}
 
-		mNotificationManager.notify(0, notif);
+				if (limit > 0 && totalHashrate < limit) {
+
+					NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher).setContentTitle(getString(R.string.txt_hashrate_dropped_title)).setContentText(String.format(getString(R.string.txt_hashrate_dropped_message), App.formatHashRate(totalHashrate))).setAutoCancel(true);
+
+					Intent deleteIntent = new Intent(this, OnDeleteReceiver.class);
+					deleteIntent.setAction("delete");
+					PendingIntent pendingDeleteIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, deleteIntent, 0);
+
+					Intent intent = new Intent(this, MainActivity.class);
+					PendingIntent pi = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+
+					mBuilder.setContentIntent(pi);
+					mBuilder.setDeleteIntent(pendingDeleteIntent);
+					NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+					Notification notif = setDefaults(mBuilder.build());
+
+					mNotificationManager.notify(0, notif);
+				}
+			}
+		} catch (NullPointerException e) {
+			Log.e(getClass().getSimpleName(), "Something was null, damn! (NullPointer)");
+		}
 
 	}
 

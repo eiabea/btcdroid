@@ -1,5 +1,6 @@
 package com.eiabea.btcdroid;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
@@ -41,8 +42,9 @@ import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.service.UpdateService.UpdateInterface;
 import com.eiabea.btcdroid.util.App;
 
-public class MainActivity extends ActionBarActivity implements
-		UpdateInterface, OnPageChangeListener {
+@SuppressLint("InlinedApi")
+public class MainActivity extends ActionBarActivity implements UpdateInterface,
+		OnPageChangeListener {
 
 	private static final int INTENT_PREF = 0;
 	private static final int INTENT_CUSTOMIZE = 1;
@@ -84,7 +86,7 @@ public class MainActivity extends ActionBarActivity implements
 
 	private SharedPreferences pref;
 	private ClipboardManager clipboard;
-	
+
 	private Profile profile = null;
 	private Stats stats = null;
 	private GenericPrice price = null;
@@ -102,7 +104,7 @@ public class MainActivity extends ActionBarActivity implements
 		initUi();
 		setListeners();
 
-		startService(new Intent(getApplicationContext(), UpdateService.class));
+		App.resetUpdateManager(this);
 		tryGettingDataFromService();
 
 	}
@@ -294,10 +296,10 @@ public class MainActivity extends ActionBarActivity implements
 
 			startActivity(Intent.createChooser(emailIntent, App.getResString(R.string.mail_intent_title, MainActivity.this)));
 			break;
-			
+
 		case R.id.action_donate:
 			final String address = getString(R.string.txt_donations_address);
-			
+
 			AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 			builder.setTitle(getString(R.string.txt_donate_dialog_title));
 			builder.setItems(new CharSequence[] { getString(R.string.txt_donate_copy_bitcoin_address), getString(R.string.txt_donate_open_bitcoin_wallet) }, new DialogInterface.OnClickListener() {
@@ -326,7 +328,7 @@ public class MainActivity extends ActionBarActivity implements
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int reqCode, int resCode, Intent intent) {
 		switch (reqCode) {
@@ -352,20 +354,18 @@ public class MainActivity extends ActionBarActivity implements
 				App.getInstance().resetLuckThreshold();
 				// }
 
-				boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notification_enabled", false);
-
-				if (enabled) {
-					UpdateService.getInstance().startNotification();
-				} else {
-					UpdateService.getInstance().stopNotification();
-				}
-
-//				UpdateService.getInstance().startWidgets();
+//				if (enabled) {
+//					UpdateService.getInstance().startNotification();
+//				} else {
+//					UpdateService.getInstance().stopNotification();
+//				}
+				App.resetUpdateManager(this);
+				// UpdateService.getInstance().startWidgets();
 				// ProfileUpdateService.getInstance().getProfileWidgets();
 				// ProfileUpdateService.getInstance().getStatsWidgets();
 
 				// TODO Split
-				 reloadData();
+				reloadData();
 
 			}
 			break;
@@ -391,12 +391,7 @@ public class MainActivity extends ActionBarActivity implements
 			pricesLoaded = profileLoaded = statsLoaded = false;
 			showInfos();
 			handleProgessIndicator();
-//			App.getInstance().httpWorker.getPrices();
-
-			try {
-				UpdateService.getInstance().startWidgets();
-			} catch (NullPointerException ignore) {
-			}
+			// App.getInstance().httpWorker.getPrices();
 		} else {
 			hideInfos();
 		}
@@ -589,21 +584,27 @@ public class MainActivity extends ActionBarActivity implements
 	public void onProfileError() {
 		profileLoaded = true;
 		handleProgessIndicator();
-//		Toast.makeText(MainActivity.this, getString(R.string.toast_error_loading_profile), Toast.LENGTH_SHORT).show();
+		// Toast.makeText(MainActivity.this,
+		// getString(R.string.toast_error_loading_profile),
+		// Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onStatsError() {
 		statsLoaded = true;
 		handleProgessIndicator();
-//		Toast.makeText(MainActivity.this, getString(R.string.toast_error_loading_stats), Toast.LENGTH_SHORT).show();
+		// Toast.makeText(MainActivity.this,
+		// getString(R.string.toast_error_loading_stats),
+		// Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onPricesError() {
 		pricesLoaded = true;
 		handleProgessIndicator();
-//		Toast.makeText(MainActivity.this, getString(R.string.toast_error_loading_price), Toast.LENGTH_SHORT).show();
+		// Toast.makeText(MainActivity.this,
+		// getString(R.string.toast_error_loading_price),
+		// Toast.LENGTH_SHORT).show();
 	}
 
 }

@@ -29,10 +29,6 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
-		if(UpdateService.getInstance() == null){
-			Intent serviceIntent = new Intent(context, UpdateService.class);
-			context.startService(serviceIntent);
-		}
 
 		for (int widgetId : appWidgetIds) {
 			RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
@@ -41,13 +37,9 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
 
 				if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
 					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-					if(UpdateService.getInstance() == null){
-						Intent serviceIntent = new Intent(context, UpdateService.class);
-						serviceIntent.putExtra(UpdateService.PARAM_GET, UpdateService.GET_STATS);
-						context.startService(serviceIntent);
-					}else{
-						UpdateService.getInstance().getStatsWidgets();
-					}
+					Intent i = new Intent(context, UpdateService.class);
+					i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_STATS);
+					context.startService(i);
 				} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 					Stats stats = intent.getParcelableExtra(PARAM_STATS);
 

@@ -29,10 +29,6 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
-		if(UpdateService.getInstance() == null){
-			Intent serviceIntent = new Intent(context, UpdateService.class);
-			context.startService(serviceIntent);
-		}
 
 		// Get all ids
 		ComponentName thisWidget = new ComponentName(context, TotalHashrateWidgetProvider.class);
@@ -44,13 +40,9 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
 
 				if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
 					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-					if(UpdateService.getInstance() == null){
-						Intent serviceIntent = new Intent(context, UpdateService.class);
-						serviceIntent.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PROFILE);
-						context.startService(serviceIntent);
-					}else{
-						UpdateService.getInstance().getProfileWidgets();
-					}
+					Intent i = new Intent(context, UpdateService.class);
+					i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PROFILE);
+					context.startService(i);
 				} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 					Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
 

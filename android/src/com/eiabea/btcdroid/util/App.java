@@ -10,11 +10,14 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -26,6 +29,7 @@ import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
+import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.widget.AverageHashrateWidgetProvider;
 import com.eiabea.btcdroid.widget.ConfirmedRewardWidgetProvider;
 import com.eiabea.btcdroid.widget.DashClockWidget;
@@ -306,5 +310,17 @@ public class App extends Application {
 		priceIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 		priceIntent.putExtra(PriceWidgetProvider.PARAM_PRICE, price);
 		context.sendBroadcast(priceIntent);
+	}
+
+	public static void resetUpdateManager(Context context) {
+		int intervalWidget = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString("update_interval", "30"));
+		int intervalMilli = intervalWidget * 60 * 1000;
+		Log.w("BTCDroid", "reseting UpdateManager!");
+		Log.w("BTCDroid", "Interval: " + intervalWidget + "min");
+		Intent i = new Intent(context, UpdateService.class);
+		PendingIntent pi = PendingIntent.getService(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+		AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+		am.cancel(pi); // cancel any existing alarms
+		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), intervalMilli, pi);
 	}
 }

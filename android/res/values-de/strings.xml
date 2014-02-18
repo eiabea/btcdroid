@@ -125,9 +125,9 @@
     <string name="txt_pref_style_title">Aussehen</string>
     <string name="txt_pref_style_btc_style_title">BTC Aussehen</string>
     <string name="txt_pref_style_btc_style_message">Wechlse das Aussehen der BTC Werte</string>
-    <string name="txt_pref_widgets_title">Widgets</string>
-    <string name="txt_pref_widgets_checking_interval_title">Aktualisierungsinterval (Minuten)</string>
-    <string name="txt_pref_widgets_checking_interval_message">Wie oft sollen die Wigets aktualisiert werden</string>
+    <string name="txt_pref_update_title">Updates</string>
+    <string name="txt_pref_update_checking_interval_title">Aktualisierungsinterval (Minuten)</string>
+    <string name="txt_pref_update_checking_interval_message">Wie oft sollen die Daten aktualisiert werden (Widgets, Notifications,&#8230;)</string>
     <string name="txt_pref_notification_title">Benachrichtigung</string>
     <string name="txt_pref_notification_show_notification_title">Benachrichtigung</string>
     <string name="txt_pref_notification_show_notification_message">Benachrichtigung falls die Hashrate unter einen bestimmten Wert fällt</string>

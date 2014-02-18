@@ -51,15 +51,15 @@
             android:summary="@string/txt_pref_style_btc_style_message"
             android:title="@string/txt_pref_style_btc_style_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/txt_pref_widgets_title" >
+    <PreferenceCategory android:title="@string/txt_pref_update_title" >
         <EditTextPreference
             android:defaultValue="30"
-            android:dialogTitle="@string/txt_pref_widgets_checking_interval_title"
+            android:dialogTitle="@string/txt_pref_update_checking_interval_title"
             android:enabled="true"
-            android:key="widget_interval"
+            android:key="update_interval"
             android:numeric="integer"
-            android:summary="@string/txt_pref_widgets_checking_interval_message"
-            android:title="@string/txt_pref_widgets_checking_interval_title" />
+            android:summary="@string/txt_pref_update_checking_interval_message"
+            android:title="@string/txt_pref_update_checking_interval_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/txt_pref_notification_title" >
         <CheckBoxPreference
@@ -82,6 +82,8 @@
             android:numeric="integer"
             android:summary="@string/txt_pref_notification_minimum_hashrate_message"
             android:title="@string/txt_pref_notification_minimum_hashrate_title" />
+        
+        <!-- 
         <EditTextPreference
             android:defaultValue="60"
             android:dialogTitle="@string/txt_pref_notification_checking_interval_title"
@@ -89,7 +91,7 @@
             android:key="notification_interval"
             android:numeric="integer"
             android:summary="@string/txt_pref_notification_checking_interval_message"
-            android:title="@string/txt_pref_notification_checking_interval_title" />
+            android:title="@string/txt_pref_notification_checking_interval_title" />  -->
 
         <CheckBoxPreference
             android:defaultValue="true"

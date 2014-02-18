@@ -26,12 +26,9 @@ public class DashClockWidget extends DashClockExtension {
 	
 	@Override
 	protected void onUpdateData(int reason) {
-		
-		try{
-			UpdateService.getInstance().getProfileWidgets();
-		}catch(Exception ignore){
-		}
-		
+		Intent i = new Intent(getApplicationContext(), UpdateService.class);
+		i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PROFILE);
+		getApplicationContext().startService(i);
 	}
 	
 
