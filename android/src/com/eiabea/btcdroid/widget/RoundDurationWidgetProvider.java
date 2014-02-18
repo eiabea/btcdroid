@@ -46,7 +46,7 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
 						serviceIntent.putExtra(UpdateService.PARAM_GET, UpdateService.GET_STATS);
 						context.startService(serviceIntent);
 					}else{
-						UpdateService.getInstance().getProfileWidgets();
+						UpdateService.getInstance().getStatsWidgets();
 					}
 				} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 					Stats stats = intent.getParcelableExtra(PARAM_STATS);

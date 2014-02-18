@@ -46,7 +46,7 @@ public class PriceWidgetProvider extends AppWidgetProvider {
 						serviceIntent.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PRICE);
 						context.startService(serviceIntent);
 					}else{
-						UpdateService.getInstance().getProfileWidgets();
+						UpdateService.getInstance().getPriceWidgets();
 					}
 				} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 					GenericPrice price = intent.getParcelableExtra(PARAM_PRICE);
