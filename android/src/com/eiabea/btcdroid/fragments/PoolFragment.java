@@ -146,6 +146,8 @@ public class PoolFragment extends Fragment {
 				arg0.setRating(ratingToSet);
 			}
 		});
+		
+		ratRating.setStepSize(0.5f);
 
 		ratRating.setRating(ratingToSet);
 		Log.d(getClass().getSimpleName(), "Rating set: " + ratRating.getRating());

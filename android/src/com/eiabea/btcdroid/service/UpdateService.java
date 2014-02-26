@@ -111,71 +111,6 @@ public class UpdateService extends Service {
 		return me;
 	}
 
-	// public void start() {
-	// startNotification();
-	// startWidgets();
-	// }
-	//
-	// public void startNotification() {
-	// if (scheduleNotification != null) {
-	// scheduleNotification.shutdownNow();
-	// }
-	//
-	// int intervalNotificaion =
-	// Integer.valueOf(pref.getString("notification_interval", "60"));
-	//
-	// scheduleNotification = Executors.newSingleThreadScheduledExecutor();
-	//
-	// scheduleNotification.scheduleAtFixedRate(new Runnable() {
-	// public void run() {
-	// if (App.getInstance().isTokenSet()) {
-	// getProfileNotification();
-	// } else {
-	// Log.d(getClass().getSimpleName(), "No Token set");
-	// }
-	// }
-	// }, intervalNotificaion, intervalNotificaion, TimeUnit.MINUTES);
-	// }
-	//
-	// public void startWidgets() {
-	// if (scheduleWidgets != null) {
-	// scheduleWidgets.shutdownNow();
-	// }
-	//
-	// int intervalWidget = Integer.valueOf(pref.getString("widget_interval",
-	// "30"));
-	// scheduleWidgets = Executors.newSingleThreadScheduledExecutor();
-	//
-	// scheduleWidgets.scheduleAtFixedRate(new Runnable() {
-	// public void run() {
-	// if (App.getInstance().isTokenSet()) {
-	// getProfileWidgets();
-	// getStatsWidgets();
-	// getPriceWidgets();
-	// } else {
-	// Log.d(getClass().getSimpleName(), "No Token set");
-	// }
-	// }
-	// }, 0, intervalWidget, TimeUnit.MINUTES);
-	// }
-	//
-	// public void stop() {
-	// stopNotification();
-	// stopWidgets();
-	// }
-	//
-	// public void stopNotification() {
-	// if (scheduleNotification != null) {
-	// scheduleNotification.shutdownNow();
-	// }
-	// }
-	//
-	// public void stopWidgets() {
-	// if (scheduleWidgets != null) {
-	// scheduleWidgets.shutdownNow();
-	// }
-	// }
-
 	private void getProfileWidgets() {
 		Log.d(getClass().getSimpleName(), "get Profile Widgets");
 
@@ -440,56 +375,13 @@ public class UpdateService extends Service {
 		}
 	}
 
-	// public void getProfileNotification() {
-	// Log.d(getClass().getSimpleName(), "get Profile Notification");
-	//
-	// String url = HttpWorker.PROFILE_URL +
-	// PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN,
-	// "");
-	//
-	// System.out.println(HttpWorker.mQueue.toString());
-	//
-	// HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null,
-	// new Listener<Profile>() {
-	//
-	// @Override
-	// public void onResponse(Profile response) {
-	// List<Worker> workers = response.getWorkersList();
-	//
-	// int totalHashrate = 0;
-	// int limit = Integer.valueOf(pref.getString("notification_hashrate",
-	// "0"));
-	//
-	// for (Worker tmp : workers) {
-	// totalHashrate += tmp.getHashrate();
-	// }
-	//
-	// boolean enabled =
-	// PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled",
-	// false);
-	// if (limit > 0 && totalHashrate < limit && enabled) {
-	// createFirstDropNotification(totalHashrate);
-	// }
-	// Log.d(getClass().getSimpleName(), "onResponse Notification");
-	// }
-	// }, new ErrorListener() {
-	//
-	// @Override
-	// public void onErrorResponse(VolleyError error) {
-	// Log.d(getClass().getSimpleName(), "onErrorResponse Notification");
-	// Log.d(getClass().getSimpleName(), " " + error.getCause());
-	// Intent i = new Intent(getApplicationContext(),
-	// TotalHashrateWidgetProvider.class);
-	// i.setAction(TotalHashrateWidgetProvider.LOADING_FAILED);
-	// getApplicationContext().sendBroadcast(i);
-	// }
-	// }));
-	//
-	// }
-
 	private void handleRoundFinishedNotification(Stats stats) {
 		boolean globalEnabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled", false);
 		boolean enabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("round_finished_notification_enabled", false);
+		
+		// Debug
+//		createRoundFinishedNotification();
+		
 		if (enabled && globalEnabled) {
 			try {
 				SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
