@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
+import com.eiabea.btcdroid.model.PricesCoinDesk;
 import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
@@ -20,6 +21,8 @@ public class HttpWorker {
 	public static final String PRICES_URL_MTGOX_END = "/money/ticker_fast";
 	public static final String PRICES_URL_BTCE_FRONT = "https://btc-e.com/api/2/btc_";
 	public static final String PRICES_URL_BTCE_END = "/ticker";
+	public static final String PRICES_URL_COINDESK_FRONT = "https://api.coindesk.com/v1/bpi/currentprice/";
+	public static final String PRICES_URL_COINDESK_END = ".json";
 	public static final String PRICES_URL_BITSTAMP = "https://www.bitstamp.net/api/ticker/";
 
 	public static final String STATS_URL = BASEURL + "stats/json/";
@@ -96,6 +99,17 @@ public class HttpWorker {
 
 		HttpWorker.mQueue.add(new GsonRequest<PricesBTCe>(url, PricesBTCe.class, null, success, error));
 
+	}
+	
+	public void getPricesCoinDesk(String currency, Response.Listener<PricesCoinDesk> success, Response.ErrorListener error) {
+		Log.d(getClass().getSimpleName(), "get Prices CoinDesk");
+		
+		String url = HttpWorker.PRICES_URL_COINDESK_FRONT + currency.toLowerCase(Locale.ENGLISH) + HttpWorker.PRICES_URL_COINDESK_END;
+		
+		System.out.println(HttpWorker.mQueue.toString());
+		
+		HttpWorker.mQueue.add(new GsonRequest<PricesCoinDesk>(url, PricesCoinDesk.class, null, success, error));
+		
 	}
 
 	public void getPricesBitStamp(Response.Listener<PricesBitStamp> success, Response.ErrorListener error) {

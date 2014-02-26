@@ -1,4 +1,4 @@
-package com.eiabea.btcdroid.model;
+package com.eiabea.btcdroid.model.btce;
 
 import android.os.Parcel;
 import android.os.Parcelable;

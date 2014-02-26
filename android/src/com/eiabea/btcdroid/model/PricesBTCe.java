@@ -1,5 +1,7 @@
 package com.eiabea.btcdroid.model;
 
+import com.eiabea.btcdroid.model.btce.BTCeTicker;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 

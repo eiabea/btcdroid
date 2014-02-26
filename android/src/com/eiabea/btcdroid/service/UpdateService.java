@@ -24,6 +24,7 @@ import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
+import com.eiabea.btcdroid.model.PricesCoinDesk;
 import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
@@ -47,6 +48,8 @@ public class UpdateService extends Service {
 	public static final int PRICE_SOURCE_MTGOX_EUR = 2;
 	public static final int PRICE_SOURCE_BTCE_USD = 3;
 	public static final int PRICE_SOURCE_BTCE_EUR = 4;
+	public static final int PRICE_SOURCE_COINDESK_USD = 5;
+	public static final int PRICE_SOURCE_COINDESK_EUR = 6;
 
 	private Profile profile;
 	private Stats stats;
@@ -371,6 +374,60 @@ public class UpdateService extends Service {
 
 			}, new ErrorListener() {
 
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					onPriceError();
+				}
+			});
+			break;
+		case PRICE_SOURCE_COINDESK_EUR:
+			
+			App.getInstance().httpWorker.getPricesCoinDesk("EUR", new Listener<PricesCoinDesk>() {
+				
+				@Override
+				public void onResponse(PricesCoinDesk prices) {
+					
+					try {
+						GenericPrice price = new GenericPrice();
+						price.setValueFloat(prices.getBpi().getEUR().getRate_float());
+						price.setSource(getApplicationContext().getString(R.string.CoinDesk_short));
+						price.setSymbol("€");
+						
+						onPriceLoaded(price);
+					} catch (NullPointerException e) {
+						onPriceError();
+					}
+				}
+				
+			}, new ErrorListener() {
+				
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					onPriceError();
+				}
+			});
+			break;
+		case PRICE_SOURCE_COINDESK_USD:
+			
+			App.getInstance().httpWorker.getPricesCoinDesk("USD", new Listener<PricesCoinDesk>() {
+				
+				@Override
+				public void onResponse(PricesCoinDesk prices) {
+					
+					try {
+						GenericPrice price = new GenericPrice();
+						price.setValueFloat(prices.getBpi().getUSD().getRate_float());
+						price.setSource(getApplicationContext().getString(R.string.CoinDesk_short));
+						price.setSymbol("$");
+						
+						onPriceLoaded(price);
+					} catch (NullPointerException e) {
+						onPriceError();
+					}
+				}
+				
+			}, new ErrorListener() {
+				
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					onPriceError();
