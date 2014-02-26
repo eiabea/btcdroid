@@ -30,7 +30,7 @@ public class PayoutFragment extends Fragment {
 	private Profile profile;
 
 	private View rootView;
-	private TextView txtCurrentValue, txtEstimatedReward, txtConfirmedReward,
+	private TextView txtCurrentSource, txtCurrentValue, txtEstimatedReward, txtConfirmedReward,
 			txtTotalReward, txtSendThreshold;
 	private ProgressBar prgGauge;
 
@@ -59,6 +59,7 @@ public class PayoutFragment extends Fragment {
 
 	private void initUi() {
 		llPriceHolder = (LinearLayout) rootView.findViewById(R.id.ll_main_info_price_holder);
+		txtCurrentSource = (TextView) rootView.findViewById(R.id.txt_main_info_current_source);
 		txtCurrentValue = (TextView) rootView.findViewById(R.id.txt_main_info_current_value);
 
 		txtEstimatedReward = (TextView) rootView.findViewById(R.id.txt_main_info_estimated_reward);
@@ -137,6 +138,7 @@ public class PayoutFragment extends Fragment {
 			}
 
 			txtCurrentValue.setText(App.formatPrice(current.getSymbol(), current.getValueFloat()));
+			txtCurrentSource.setText(current.getSource() + ":");
 		}
 	}
 
