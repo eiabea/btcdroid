@@ -8,8 +8,8 @@
     <string name="action_accept">Akzeptieren</string>
     <string name="action_add_pool">Pool hinzufügen</string>
     <string name="action_settings">Einstellungen</string>
-	<string name="action_customize">Personalisieren</string>
-	<string name="action_donate">Spenden</string>
+    <string name="action_customize">Personalisieren</string>
+    <string name="action_donate">Spenden</string>
     <string name="action_participants">Mitwirkende</string>
     <string name="action_email">Schreibe mir</string>
     <string name="th_per_second">TH/s</string>
@@ -34,8 +34,7 @@
     <!-- Notification -->
     <string name="txt_hashrate_dropped_title">Hashrate gefallen!</string>
     <string name="txt_hashrate_dropped_message">Derzeitige Hashrate: %1$s</string>
-
-	<string name="txt_new_round_title">Erfolg!</string>
+    <string name="txt_new_round_title">Erfolg!</string>
     <string name="txt_new_round_message">Eine neue Runde hat begonnen</string>
 
     <!-- MainActivity -->
@@ -101,6 +100,7 @@
     <string name="txt_design">Design / Appicon</string>
     <string name="txt_bas_de_jong">Bas de Jong</string>
     <string name="txt_translate_dutch">Dänische Übersetzung</string>
+    <string name="txt_show_qr_code">Show QR-Code</string>
     <string name="txt_donations">Spenden</string>
     <string name="txt_donations_address">14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1</string>
     <string name="txt_copied_to_clipboard">in Zwischenablage kopiert</string>
@@ -145,11 +145,11 @@
     <!-- DashClock -->
     <string name="txt_dashclock_description">Zeigt die gesamte derzeitige Hashrate aller deiner Arbeiter bei Slush\'s Pool</string>
     <string name="txt_dashclock_expanded_body">gesamte derzeitige Hashrate</string>
-    
+
     <!-- Widget -->
     <string name="txt_loading">lade</string>
     <string name="txt_round_duration_widget">Rundenlänge</string>
-    
+
     <!-- Donate -->
     <string name="txt_donate_dialog_title">Spenden</string>
     <string name="txt_donate_copy_bitcoin_address">Bitcoinadresse kopieren</string>

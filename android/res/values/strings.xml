@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="app_name">BTCDroid</string>
+    <string name="app_name">BTCDroid</string>
     <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_reset">Reset</string>
@@ -34,7 +34,6 @@
     <!-- Notification -->
     <string name="txt_hashrate_dropped_title">Hashrate has dropped!</string>
     <string name="txt_hashrate_dropped_message">Current Hashrate: %1$s</string>
-
     <string name="txt_new_round_title">Success!</string>
     <string name="txt_new_round_message">A new Round has begun</string>
 
@@ -102,6 +101,7 @@
     <string name="txt_bas_de_jong">Bas de Jong</string>
     <string name="txt_translate_dutch">Dutch Translator</string>
     <string name="txt_show_qr_code">Show QR-Code</string>
+    <string name="txt_donations">Donations</string>
     <string name="txt_donations_address">14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1</string>
     <string name="txt_copied_to_clipboard">copied to clipboard</string>
 
@@ -147,11 +147,11 @@
     <!-- DashClock -->
     <string name="txt_dashclock_description">Displays the current total hashrate of your workers at slush\'s pool</string>
     <string name="txt_dashclock_expanded_body">total current hashrate</string>
-    
+
     <!-- Widget -->
     <string name="txt_loading">loading</string>
     <string name="txt_round_duration_widget">round duration</string>
-    
+
     <!-- Donate -->
     <string name="txt_donate_dialog_title">Donate</string>
     <string name="txt_donate_copy_bitcoin_address">Copy Bitcoinaddress</string>

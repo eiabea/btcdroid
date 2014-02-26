@@ -8,8 +8,8 @@
     <string name="action_accept">Accepteren</string>
     <string name="action_add_pool">Pool toevoegen</string>
     <string name="action_settings">Instellingen</string>
-	<string name="action_customize">Aanpassen</string>
-	<string name="action_donate">Doneren</string>
+    <string name="action_customize">Aanpassen</string>
+    <string name="action_donate">Doneren</string>
     <string name="action_participants">Deelnemers</string>
     <string name="action_email">E-mail Ontwikkelaar</string>
     <string name="th_per_second">TH/s</string>
@@ -34,7 +34,6 @@
     <!-- Notification -->
     <string name="txt_hashrate_dropped_title">Hash snelheid is weggevallen!</string>
     <string name="txt_hashrate_dropped_message">Huidige hash snelheid: %1$s</string>
-
     <string name="txt_new_round_title">Success!</string>
     <string name="txt_new_round_message">A new Round has begun</string>
 
@@ -98,9 +97,10 @@
     <string name="txt_manuel_zangl">Manuel Zangl</string>
     <string name="txt_development">Development</string>
     <string name="txt_florian_grau">Florian Grau</string>
-	<string name="txt_design">Design / Appicon</string>
+    <string name="txt_design">Design / Appicon</string>
     <string name="txt_bas_de_jong">Bas de Jong</string>
     <string name="txt_translate_dutch">Dutch Translator</string>
+    <string name="txt_show_qr_code">Show QR-Code</string>
     <string name="txt_donations">Donations</string>
     <string name="txt_donations_address">14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1</string>
     <string name="txt_copied_to_clipboard">Gekopieerd naar Klembord</string>
@@ -125,15 +125,15 @@
     <string name="txt_pref_style_title">Stijl</string>
     <string name="txt_pref_style_btc_style_title">BTC Stijl</string>
     <string name="txt_pref_style_btc_style_message">De stijl waarop Bitcoins worden weergeven</string>
-        <string name="txt_pref_update_title">Updates</string>
+    <string name="txt_pref_update_title">Updates</string>
     <string name="txt_pref_update_checking_interval_title">Checking Interval (minutes)</string>
     <string name="txt_pref_update_checking_interval_message">How often should the data be updated (Widgets, Notifications,&#8230;)</string>
     <string name="txt_pref_notification_title">Meldingen</string>
     <string name="txt_pref_notification_show_notification_title">Meldingen</string>
     <string name="txt_pref_notification_show_notification_message">Melding als de Hashsnelheid onder een bepaalde waarde komt</string>
     <string name="txt_pref_notification_show_round_finished_notification_title">New Round Notification</string>
-    <string name="txt_pref_notification_show_round_finished_notification_message">Notification if a block has been found</string>    
-	<string name="txt_pref_notification_minimum_hashrate_title">Minimale Hashsnelheid (MH/s)</string>
+    <string name="txt_pref_notification_show_round_finished_notification_message">Notification if a block has been found</string>
+    <string name="txt_pref_notification_minimum_hashrate_title">Minimale Hashsnelheid (MH/s)</string>
     <string name="txt_pref_notification_minimum_hashrate_message">Melding als Hashsnelheid onder deze waarde komt</string>
     <string name="txt_pref_notification_checking_interval_title">Controle interval (Minuten)</string>
     <string name="txt_pref_notification_checking_interval_message">Hoe vaak moet de Hashsnelheid worden gecontroleerd</string>
@@ -151,7 +151,7 @@
     <!-- Widget -->
     <string name="txt_loading">Laden</string>
     <string name="txt_round_duration_widget">Ronde tijd</string>
-    
+
     <!-- Donate -->
     <string name="txt_donate_dialog_title">Doneren</string>
     <string name="txt_donate_copy_bitcoin_address">Kopieer Bitcoinaddres</string>

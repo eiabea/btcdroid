@@ -62,27 +62,6 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-//		
-//		if(fragmentOrder[position] == MainActivity.FRAGMENT_PAYOUT){
-//			PayoutFragment payoutFragment = PayoutFragment.create(price, profile);
-//			return payoutFragment;
-//		}
-//
-//		Log.i(getClass().getSimpleName(), "getItem: " + position);
-//		switch (position) {
-//		case MainActivity.FRAGMENT_PAYOUT:
-//			PayoutFragment payoutFragment = PayoutFragment.create(price, profile);
-//			return payoutFragment;
-//		case MainActivity.FRAGMENT_POOL:
-//			PoolFragment poolFragment = PoolFragment.create(profile, stats);
-//			return poolFragment;
-//		case MainActivity.FRAGMENT_WORKER:
-//			WorkerFragment workerFragment = WorkerFragment.create(profile);
-//			return workerFragment;
-//		case MainActivity.FRAGMENT_ROUNDS:
-//			RoundsFragment roundsFragment = RoundsFragment.create(stats);
-//			return roundsFragment;
-//		}
 		position = positionToCustomPosition(position);
 		
 		if (position == MainActivity.FRAGMENT_PAYOUT) {
@@ -114,16 +93,6 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-//		switch (position) {
-//		case MainActivity.FRAGMENT_PAYOUT:
-//			return context.getResources().getString(R.string.txt_viewpager_payout_fragment);
-//		case MainActivity.FRAGMENT_POOL:
-//			return context.getResources().getString(R.string.txt_viewpager_pool_fragment);
-//		case MainActivity.FRAGMENT_WORKER:
-//			return context.getResources().getString(R.string.txt_viewpager_worker_fragment);
-//		case MainActivity.FRAGMENT_ROUNDS:
-//			return context.getResources().getString(R.string.txt_viewpager_round_fragment);
-//		}
 		position = positionToCustomPosition(position);
 		
 		return getNameOfFragment(position, context);

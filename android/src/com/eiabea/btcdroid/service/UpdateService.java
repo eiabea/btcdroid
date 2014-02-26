@@ -273,6 +273,8 @@ public class UpdateService extends Service {
 
 					try {
 						// Write jsonData to PricesMtGox Object
+						prices = App.parsePrices(prices.getData());
+						
 						GenericPrice price = prices.getLastPrice();
 						price.setSource(getApplicationContext().getString(R.string.MtGox_short));
 						price.setSymbol("$");

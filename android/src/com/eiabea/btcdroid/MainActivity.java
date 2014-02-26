@@ -103,9 +103,12 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
 		initUi();
 		setListeners();
+		
+		if (App.getInstance().isTokenSet()) {
+			App.resetUpdateManager(this);
+			tryGettingDataFromService();
+		}
 
-		App.resetUpdateManager(this);
-		tryGettingDataFromService();
 
 	}
 
@@ -241,7 +244,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 						pref.edit().putString(App.PREF_TOKEN, value.toString()).commit();
 
 						App.getInstance().resetToken();
-
+						
 						reloadData();
 					}
 				}).setNegativeButton(getString(R.string.alert_set_token_cancel), new DialogInterface.OnClickListener() {
@@ -359,7 +362,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 //				} else {
 //					UpdateService.getInstance().stopNotification();
 //				}
-				App.resetUpdateManager(this);
+				
 				// UpdateService.getInstance().startWidgets();
 				// ProfileUpdateService.getInstance().getProfileWidgets();
 				// ProfileUpdateService.getInstance().getStatsWidgets();
@@ -389,6 +392,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
 		if (App.getInstance().isTokenSet()) {
 			pricesLoaded = profileLoaded = statsLoaded = false;
+			App.resetUpdateManager(this);
 			showInfos();
 			handleProgessIndicator();
 			// App.getInstance().httpWorker.getPrices();
