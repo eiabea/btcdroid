@@ -30,9 +30,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ParticipantsActivity" >
+        <activity android:name="ParticipantsActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" >
         </activity>
-        <activity android:name="PrefsActivity" >
+        <activity android:name="PrefsActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" >
         </activity>
         <activity android:name="CustomizeActivity" >
         </activity>
