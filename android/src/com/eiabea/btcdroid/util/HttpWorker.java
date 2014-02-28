@@ -11,7 +11,6 @@ import com.android.volley.toolbox.Volley;
 import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
 import com.eiabea.btcdroid.model.PricesCoinDesk;
-import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 
@@ -79,16 +78,16 @@ public class HttpWorker {
 
 	}
 
-	public void getPricesMtGox(String currency, Response.Listener<PricesMtGox> success, Response.ErrorListener error) {
-		Log.d(getClass().getSimpleName(), "get Prices MtGox");
-
-		String url = HttpWorker.PRICES_URL_MTGOX_FRONT + currency + HttpWorker.PRICES_URL_MTGOX_END;
-
-		System.out.println(HttpWorker.mQueue.toString());
-
-		HttpWorker.mQueue.add(new GsonRequest<PricesMtGox>(url, PricesMtGox.class, null, success, error));
-
-	}
+//	public void getPricesMtGox(String currency, Response.Listener<PricesMtGox> success, Response.ErrorListener error) {
+//		Log.d(getClass().getSimpleName(), "get Prices MtGox");
+//
+//		String url = HttpWorker.PRICES_URL_MTGOX_FRONT + currency + HttpWorker.PRICES_URL_MTGOX_END;
+//
+//		System.out.println(HttpWorker.mQueue.toString());
+//
+//		HttpWorker.mQueue.add(new GsonRequest<PricesMtGox>(url, PricesMtGox.class, null, success, error));
+//
+//	}
 
 	public void getPricesBTCe(String currency, Response.Listener<PricesBTCe> success, Response.ErrorListener error) {
 		Log.d(getClass().getSimpleName(), "get Prices BTC-e");

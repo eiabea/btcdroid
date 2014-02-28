@@ -134,7 +134,9 @@
     <string name="txt_pref_notification_title">Benachrichtigung</string>
     <string name="txt_pref_notification_show_notification_title">Benachrichtigung</string>
     <string name="txt_pref_notification_show_notification_message">Benachrichtigung falls die Hashrate unter einen bestimmten Wert fällt</string>
-    <string name="txt_pref_notification_minimum_hashrate_title">Minimale Hashrate (MH/s)</string>
+	<string name="txt_pref_notification_show_round_finished_notification_title">Neue Runde Benachrichtigung</string>
+    <string name="txt_pref_notification_show_round_finished_notification_message">Benachrichtigung wenn ein Block gefunden wurde</string>    
+	<string name="txt_pref_notification_minimum_hashrate_title">Minimale Hashrate (MH/s)</string>
     <string name="txt_pref_notification_minimum_hashrate_message">Limit für minimale Hashrate</string>
     <string name="txt_pref_notification_checking_interval_title">Nachfrageinterval (Minuten)</string>
     <string name="txt_pref_notification_checking_interval_message">Wie oft soll die Hashrate überprüft werden</string>
@@ -161,8 +163,6 @@
 
     <string-array name="price_source">
         <item>@string/BitStamp</item>
-        <item>@string/MtGoxUsd</item>
-        <item>@string/MtGoxEur</item>
         <item>@string/BTCeUsd</item>
         <item>@string/BTCeEur</item>
         <item>@string/CoinDeskUsd</item>
@@ -170,8 +170,6 @@
     </string-array>
     <string-array name="price_source_values">
         <item>0</item>
-        <item>1</item>
-        <item>2</item>
         <item>3</item>
         <item>4</item>
         <item>5</item>

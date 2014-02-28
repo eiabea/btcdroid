@@ -163,8 +163,6 @@
 
     <string-array name="price_source">
         <item>@string/BitStamp</item>
-        <item>@string/MtGoxUsd</item>
-        <item>@string/MtGoxEur</item>
         <item>@string/BTCeUsd</item>
         <item>@string/BTCeEur</item>
         <item>@string/CoinDeskUsd</item>
@@ -172,8 +170,6 @@
     </string-array>
     <string-array name="price_source_values">
         <item>0</item>
-        <item>1</item>
-        <item>2</item>
         <item>3</item>
         <item>4</item>
         <item>5</item>

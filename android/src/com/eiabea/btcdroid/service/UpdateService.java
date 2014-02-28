@@ -25,7 +25,6 @@ import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
 import com.eiabea.btcdroid.model.PricesCoinDesk;
-import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
@@ -44,8 +43,8 @@ public class UpdateService extends Service {
 	public static final int GET_PROFILE = 2;
 
 	public static final int PRICE_SOURCE_BITSTAMP_USD = 0;
-	public static final int PRICE_SOURCE_MTGOX_USD = 1;
-	public static final int PRICE_SOURCE_MTGOX_EUR = 2;
+//	public static final int PRICE_SOURCE_MTGOX_USD = 1;
+//	public static final int PRICE_SOURCE_MTGOX_EUR = 2;
 	public static final int PRICE_SOURCE_BTCE_USD = 3;
 	public static final int PRICE_SOURCE_BTCE_EUR = 4;
 	public static final int PRICE_SOURCE_COINDESK_USD = 5;
@@ -202,66 +201,66 @@ public class UpdateService extends Service {
 				}
 			});
 			break;
-		case PRICE_SOURCE_MTGOX_USD:
-
-			App.getInstance().httpWorker.getPricesMtGox("USD", new Listener<PricesMtGox>() {
-
-				@Override
-				public void onResponse(PricesMtGox prices) {
-
-					try {
-						// Write jsonData to PricesMtGox Object
-						prices = App.parsePrices(prices.getData());
-						
-						GenericPrice price = prices.getLastPrice();
-						price.setSource(getApplicationContext().getString(R.string.MtGox_short));
-						price.setSymbol("$");
-
-						onPriceLoaded(price);
-					} catch (NullPointerException ignore) {
-						onPriceError();
-					}
-
-				}
-
-			}, new ErrorListener() {
-
-				@Override
-				public void onErrorResponse(VolleyError error) {
-					onPriceError();
-				}
-			});
-			break;
-		case PRICE_SOURCE_MTGOX_EUR:
-
-			App.getInstance().httpWorker.getPricesMtGox("EUR", new Listener<PricesMtGox>() {
-
-				@Override
-				public void onResponse(PricesMtGox prices) {
-
-					try {
-						// Write jsonData to PricesMtGox Object
-						prices = App.parsePrices(prices.getData());
-
-						GenericPrice price = prices.getLastPrice();
-						price.setSource(getApplicationContext().getString(R.string.MtGox_short));
-						price.setSymbol("€");
-
-						onPriceLoaded(price);
-					} catch (NullPointerException ignore) {
-						onPriceError();
-					}
-				}
-
-			}, new ErrorListener() {
-
-				@Override
-				public void onErrorResponse(VolleyError error) {
-					onPriceError();
-
-				}
-			});
-			break;
+//		case PRICE_SOURCE_MTGOX_USD:
+//
+//			App.getInstance().httpWorker.getPricesMtGox("USD", new Listener<PricesMtGox>() {
+//
+//				@Override
+//				public void onResponse(PricesMtGox prices) {
+//
+//					try {
+//						// Write jsonData to PricesMtGox Object
+//						prices = App.parsePrices(prices.getData());
+//						
+//						GenericPrice price = prices.getLastPrice();
+//						price.setSource(getApplicationContext().getString(R.string.MtGox_short));
+//						price.setSymbol("$");
+//
+//						onPriceLoaded(price);
+//					} catch (NullPointerException ignore) {
+//						onPriceError();
+//					}
+//
+//				}
+//
+//			}, new ErrorListener() {
+//
+//				@Override
+//				public void onErrorResponse(VolleyError error) {
+//					onPriceError();
+//				}
+//			});
+//			break;
+//		case PRICE_SOURCE_MTGOX_EUR:
+//
+//			App.getInstance().httpWorker.getPricesMtGox("EUR", new Listener<PricesMtGox>() {
+//
+//				@Override
+//				public void onResponse(PricesMtGox prices) {
+//
+//					try {
+//						// Write jsonData to PricesMtGox Object
+//						prices = App.parsePrices(prices.getData());
+//
+//						GenericPrice price = prices.getLastPrice();
+//						price.setSource(getApplicationContext().getString(R.string.MtGox_short));
+//						price.setSymbol("€");
+//
+//						onPriceLoaded(price);
+//					} catch (NullPointerException ignore) {
+//						onPriceError();
+//					}
+//				}
+//
+//			}, new ErrorListener() {
+//
+//				@Override
+//				public void onErrorResponse(VolleyError error) {
+//					onPriceError();
+//
+//				}
+//			});
+//			break;
 		case PRICE_SOURCE_BTCE_USD:
 
 			App.getInstance().httpWorker.getPricesBTCe("USD", new Listener<PricesBTCe>() {
