@@ -86,18 +86,26 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
 	private SharedPreferences pref;
 	private ClipboardManager clipboard;
+	@SuppressWarnings("deprecation")
+	private android.text.ClipboardManager clipboardold;
 
 	private Profile profile = null;
 	private Stats stats = null;
 	private GenericPrice price = null;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
-		clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+			clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+		} else {
+			clipboardold = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+		}
 
 		currentPage = pref.getInt("userMainFragment", FRAGMENT_POOL);
 
@@ -302,11 +310,17 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 			AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 			builder.setTitle(getString(R.string.txt_donate_dialog_title));
 			builder.setItems(new CharSequence[] { getString(R.string.txt_donate_copy_bitcoin_address), getString(R.string.txt_donate_open_bitcoin_wallet) }, new DialogInterface.OnClickListener() {
+				@SuppressWarnings("deprecation")
+				@SuppressLint("NewApi")
 				public void onClick(DialogInterface dialog, int which) {
 					switch (which) {
 					case 0:
-						ClipData clipData = ClipData.newPlainText(getString(R.string.txt_donations), address);
-						clipboard.setPrimaryClip(clipData);
+						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+							ClipData clipData = ClipData.newPlainText(getString(R.string.txt_donations), address);
+							clipboard.setPrimaryClip(clipData);
+						} else {
+							clipboardold.setText(address);
+						}
 						Toast.makeText(MainActivity.this, address + " " + getString(R.string.txt_copied_to_clipboard), Toast.LENGTH_SHORT).show();
 						break;
 					case 1:

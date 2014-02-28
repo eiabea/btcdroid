@@ -1,5 +1,6 @@
 package com.eiabea.btcdroid;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
@@ -34,15 +35,24 @@ public class ParticipantsActivity extends ActionBarActivity {
 	private RelativeLayout rlQrCodeHolder;
 
 	private ClipboardManager clipboard;
+	@SuppressWarnings("deprecation")
+	private android.text.ClipboardManager clipboardold;
 
 	private LinearLayout llDonationAddress;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_participants);
+		
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+			clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+		} else {
+			clipboardold = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+		}
 
-		clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+//		clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
 		initUi();
 
@@ -77,11 +87,19 @@ public class ParticipantsActivity extends ActionBarActivity {
 				AlertDialog.Builder builder = new AlertDialog.Builder(ParticipantsActivity.this);
 				builder.setTitle(getString(R.string.txt_donate_dialog_title));
 				builder.setItems(new CharSequence[] { getString(R.string.txt_donate_copy_bitcoin_address), getString(R.string.txt_show_qr_code), getString(R.string.txt_donate_open_bitcoin_wallet) }, new DialogInterface.OnClickListener() {
+					@SuppressWarnings("deprecation")
+					@SuppressLint("NewApi")
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
 						case 0:
-							ClipData clipData = ClipData.newPlainText(getString(R.string.txt_donations), address);
-							clipboard.setPrimaryClip(clipData);
+							if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+								ClipData clipData = ClipData.newPlainText(getString(R.string.txt_donations), address);
+								clipboard.setPrimaryClip(clipData);
+							} else {
+								clipboardold.setText(address);
+							}
+//							ClipData clipData = ClipData.newPlainText(getString(R.string.txt_donations), address);
+//							clipboard.setPrimaryClip(clipData);
 							Toast.makeText(ParticipantsActivity.this, address + " " + getString(R.string.txt_copied_to_clipboard), Toast.LENGTH_SHORT).show();
 							break;
 						case 1:

@@ -3,6 +3,7 @@ package com.eiabea.btcdroid.fragments;
 import java.util.Calendar;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -82,10 +85,38 @@ public class PayoutFragment extends Fragment {
 		return fragment;
 	}
 
-	public void setProfile(Profile profile) {
+	public void setProfile(final Profile profile) {
 		this.profile = profile;
+		
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+			Log.d(getClass().getSimpleName(), "Under Honeycomb");
+			Animation rotate = AnimationUtils.loadAnimation(getActivity(),R.anim.rotate);
+			rotate.setAnimationListener(new AnimationListener() {
+				
+				@Override
+				public void onAnimationStart(Animation animation) {
+					prgGauge.setVisibility(View.INVISIBLE);
+					
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					Log.d(getClass().getSimpleName(), "End rotate animation");
+					prgGauge.setVisibility(View.VISIBLE);
+					setGauge(profile, true);
+				}
+			});
+			prgGauge.setAnimation(rotate);
+		}else{
+			setGauge(profile, false);
+		}
 
-		setGauge(profile);
 
 	}
 
@@ -142,7 +173,7 @@ public class PayoutFragment extends Fragment {
 		}
 	}
 
-	private void setGauge(Profile profile) {
+	private void setGauge(Profile profile, boolean preHoneyComb) {
 		try {
 			int max = 1000;
 			int offset = 48;
@@ -177,9 +208,15 @@ public class PayoutFragment extends Fragment {
 			prgGauge.setProgress(0);
 			prgGauge.setSecondaryProgress(0);
 
-			ProgressBarAnimation anim = new ProgressBarAnimation(prgGauge, offset, total, -50, confirmedProgress);
-			anim.setDuration(1000);
-			prgGauge.startAnimation(anim);
+			
+			if(preHoneyComb){
+				new TotalAnimator().execute(total);
+				new ConfirmedAnimator().execute(confirmedProgress);
+			}else{
+				ProgressBarAnimation anim = new ProgressBarAnimation(prgGauge, offset, total, -50, confirmedProgress);
+				anim.setDuration(1000);
+				prgGauge.startAnimation(anim);
+			}
 
 		} catch (NullPointerException e) {
 			Log.e(getClass().getSimpleName(), "Can't set Gauge (NullPointer)");
@@ -218,5 +255,49 @@ public class PayoutFragment extends Fragment {
 		}
 
 	}
+	
+	public class TotalAnimator extends AsyncTask<Integer, Void, Void> {
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			prgGauge.incrementProgressBy(10);
+		}
+
+		@Override
+		protected Void doInBackground(Integer... params) {
+			while (prgGauge.getProgress() < params[0]) {
+				publishProgress();
+				try {
+					Thread.sleep(7);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			return null;
+		}
+	}
+	
+	public class ConfirmedAnimator extends AsyncTask<Integer, Void, Void> {
+		
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			prgGauge.incrementSecondaryProgressBy(10);
+		}
+		
+		@Override
+		protected Void doInBackground(Integer... params) {
+			while (prgGauge.getSecondaryProgress() < params[0]) {
+				publishProgress();
+				try {
+					Thread.sleep(7);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			return null;
+		}
+	}
+	
+
 
 }

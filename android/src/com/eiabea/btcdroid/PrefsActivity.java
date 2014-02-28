@@ -11,8 +11,14 @@ public class PrefsActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		getFragmentManager().beginTransaction().replace(android.R.id.content, new PrefsFragment()).commit();
+		
+		getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new PrefsFragment()).commit();
+		
+//	    android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+//	    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//	    PrefsFragment fragment = new PrefsFragment();
+//	    fragmentTransaction.replace(android.R.id.content fragment);
+//	    fragmentTransaction.commit();
 		
 		initUi();
 		
