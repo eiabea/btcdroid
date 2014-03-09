@@ -1,6 +1,7 @@
 package com.eiabea.btcdroid.service;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Notification;
@@ -37,22 +38,26 @@ public class UpdateService extends Service {
 	private SharedPreferences pref;
 
 	public static final String PARAM_GET = "param_get";
+	
+	public static final int DROP_NOTIFICATION_ID = 1566789123;
 
 	public static final int GET_PRICE = 0;
 	public static final int GET_STATS = 1;
 	public static final int GET_PROFILE = 2;
 
 	public static final int PRICE_SOURCE_BITSTAMP_USD = 0;
-//	public static final int PRICE_SOURCE_MTGOX_USD = 1;
-//	public static final int PRICE_SOURCE_MTGOX_EUR = 2;
 	public static final int PRICE_SOURCE_BTCE_USD = 3;
 	public static final int PRICE_SOURCE_BTCE_EUR = 4;
 	public static final int PRICE_SOURCE_COINDESK_USD = 5;
 	public static final int PRICE_SOURCE_COINDESK_EUR = 6;
+	public static final int PRICE_SOURCE_COINDESK_GBP = 7;
 
 	private Profile profile;
 	private Stats stats;
 	private GenericPrice price;
+	
+	// TODO reset and also add to success notification
+	private int dropNotificationCount = 0;
 
 	private static UpdateService me;
 	private static UpdateInterface updateInterface;
@@ -201,66 +206,6 @@ public class UpdateService extends Service {
 				}
 			});
 			break;
-//		case PRICE_SOURCE_MTGOX_USD:
-//
-//			App.getInstance().httpWorker.getPricesMtGox("USD", new Listener<PricesMtGox>() {
-//
-//				@Override
-//				public void onResponse(PricesMtGox prices) {
-//
-//					try {
-//						// Write jsonData to PricesMtGox Object
-//						prices = App.parsePrices(prices.getData());
-//						
-//						GenericPrice price = prices.getLastPrice();
-//						price.setSource(getApplicationContext().getString(R.string.MtGox_short));
-//						price.setSymbol("$");
-//
-//						onPriceLoaded(price);
-//					} catch (NullPointerException ignore) {
-//						onPriceError();
-//					}
-//
-//				}
-//
-//			}, new ErrorListener() {
-//
-//				@Override
-//				public void onErrorResponse(VolleyError error) {
-//					onPriceError();
-//				}
-//			});
-//			break;
-//		case PRICE_SOURCE_MTGOX_EUR:
-//
-//			App.getInstance().httpWorker.getPricesMtGox("EUR", new Listener<PricesMtGox>() {
-//
-//				@Override
-//				public void onResponse(PricesMtGox prices) {
-//
-//					try {
-//						// Write jsonData to PricesMtGox Object
-//						prices = App.parsePrices(prices.getData());
-//
-//						GenericPrice price = prices.getLastPrice();
-//						price.setSource(getApplicationContext().getString(R.string.MtGox_short));
-//						price.setSymbol("€");
-//
-//						onPriceLoaded(price);
-//					} catch (NullPointerException ignore) {
-//						onPriceError();
-//					}
-//				}
-//
-//			}, new ErrorListener() {
-//
-//				@Override
-//				public void onErrorResponse(VolleyError error) {
-//					onPriceError();
-//
-//				}
-//			});
-//			break;
 		case PRICE_SOURCE_BTCE_USD:
 
 			App.getInstance().httpWorker.getPricesBTCe("USD", new Listener<PricesBTCe>() {
@@ -368,6 +313,33 @@ public class UpdateService extends Service {
 				}
 			});
 			break;
+		case PRICE_SOURCE_COINDESK_GBP:
+			
+			App.getInstance().httpWorker.getPricesCoinDesk("GBP", new Listener<PricesCoinDesk>() {
+				
+				@Override
+				public void onResponse(PricesCoinDesk prices) {
+					
+					try {
+						GenericPrice price = new GenericPrice();
+						price.setValueFloat(prices.getBpi().getGBP().getRate_float());
+						price.setSource(getApplicationContext().getString(R.string.CoinDesk_short));
+						price.setSymbol("£");
+						
+						onPriceLoaded(price);
+					} catch (NullPointerException e) {
+						onPriceError();
+					}
+				}
+				
+			}, new ErrorListener() {
+				
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					onPriceError();
+				}
+			});
+			break;
 
 		default:
 			break;
@@ -439,12 +411,14 @@ public class UpdateService extends Service {
 					Intent intent = new Intent(this, MainActivity.class);
 					PendingIntent pi = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
+					mBuilder.setWhen(Calendar.getInstance().getTimeInMillis());
+					mBuilder.setNumber(++dropNotificationCount);
 					mBuilder.setContentIntent(pi);
 					mBuilder.setDeleteIntent(pendingDeleteIntent);
 					NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 					Notification notif = setDefaults(mBuilder.build());
 
-					mNotificationManager.notify(0, notif);
+					mNotificationManager.notify(DROP_NOTIFICATION_ID, notif);
 				}
 			}
 		} catch (NullPointerException e) {

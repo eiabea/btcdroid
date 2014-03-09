@@ -247,10 +247,12 @@ public class PoolFragment extends Fragment {
 
 			if (duration != null) {
 				float cdf = Float.valueOf(stats.getShares_cdf());
-				System.out.println(cdf);
+				Log.i(getClass().getSimpleName(), "cdf: " + cdf);
 				float estimated = (duration.getTime() / (cdf / 100));
+				Log.i(getClass().getSimpleName(), "estimated: " + (long) estimated);
+				Log.i(getClass().getSimpleName(), "duration: " + duration.getTime());
 
-				txtEstimatedDuration.setText(App.dateDurationFormat.format(new Date((long) estimated)));
+				txtEstimatedDuration.setText(App.dateDurationFormat.format(new Date((long) (estimated/* + duration.getTime()*/))));
 			}
 
 			float currentLuck24 = Float.parseFloat(stats.getLuck_1());

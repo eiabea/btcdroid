@@ -33,6 +33,7 @@
     <string name="BTCeEur">BTC-e (EUR)</string>
     <string name="CoinDeskUsd">CoinDesk (USD)</string>
     <string name="CoinDeskEur">CoinDesk (EUR)</string>
+    <string name="CoinDeskGbp">CoinDesk (GBP)</string>
 
     <!-- Notification -->
     <string name="txt_hashrate_dropped_title">Hashrate has dropped!</string>
@@ -167,6 +168,7 @@
         <item>@string/BTCeEur</item>
         <item>@string/CoinDeskUsd</item>
         <item>@string/CoinDeskEur</item>
+        <item>@string/CoinDeskGbp</item>
     </string-array>
     <string-array name="price_source_values">
         <item>0</item>
@@ -174,6 +176,7 @@
         <item>4</item>
         <item>5</item>
         <item>6</item>
+        <item>7</item>
     </string-array>
     <string-array name="btc_style">
         <item>@string/btc</item>
