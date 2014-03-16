@@ -46,14 +46,17 @@ import com.eiabea.btcdroid.util.App;
 public class MainActivity extends ActionBarActivity implements UpdateInterface,
 		OnPageChangeListener {
 
-	private static final int INTENT_PREF = 0;
-	private static final int INTENT_CUSTOMIZE = 1;
-	private static final int INTENT_PARTICIPANTS = 2;
+	public static final String ACTION_NEW_ROUND_NOTIFICATION = "action_new_round_notification";
+	public static final String ACTION_DROP_NOTIFICATION = "action_drop_notification";
 
 	public static final int FRAGMENT_PAYOUT = 0;
 	public static final int FRAGMENT_POOL = 1;
 	public static final int FRAGMENT_WORKER = 2;
 	public static final int FRAGMENT_ROUNDS = 3;
+
+	private static final int INTENT_PREF = 0;
+	private static final int INTENT_CUSTOMIZE = 1;
+	private static final int INTENT_PARTICIPANTS = 2;
 
 	private static final String STATE_PROFILE = "state_profile";
 	private static final String STATE_STATS = "state_stats";
@@ -179,7 +182,15 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		// NotificationService.getInstance().clearShown();
+		Log.d(getClass().getSimpleName(), "onNewIntent");
+		if(intent != null && intent.getAction() != null){
+			Log.d(getClass().getSimpleName(), "action = " + intent.getAction());
+			if(intent.getAction().equalsIgnoreCase(ACTION_DROP_NOTIFICATION)){
+				UpdateService.resetDropNotificationCount();
+			}else if(intent.getAction().equalsIgnoreCase(ACTION_NEW_ROUND_NOTIFICATION)){
+				UpdateService.resetNewRoundNotificationCount();
+			}
+		}
 	}
 
 	private void initUi() {

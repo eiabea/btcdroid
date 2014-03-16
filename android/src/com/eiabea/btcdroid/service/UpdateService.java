@@ -39,7 +39,8 @@ public class UpdateService extends Service {
 
 	public static final String PARAM_GET = "param_get";
 	
-	public static final int DROP_NOTIFICATION_ID = 1566789123;
+	public static final int DROP_NOTIFICATION_ID = 1566789;
+	public static final int NEW_ROUND_NOTIFICATION_ID = 3219876;
 
 	public static final int GET_PRICE = 0;
 	public static final int GET_STATS = 1;
@@ -56,13 +57,11 @@ public class UpdateService extends Service {
 	private Stats stats;
 	private GenericPrice price;
 	
-	// TODO reset and also add to success notification
-	private int dropNotificationCount = 0;
+	private static int dropNotificationCount = 0;
+	private static int newRoundNotificationCount = 0;
 
 	private static UpdateService me;
 	private static UpdateInterface updateInterface;
-
-	// private ScheduledExecutorService scheduleWidgets;
 
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -370,18 +369,21 @@ public class UpdateService extends Service {
 	}
 
 	private void createRoundFinishedNotification() {
-		// if (!alreadyShown) {
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.setAction(MainActivity.ACTION_NEW_ROUND_NOTIFICATION);
+		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_round_finished).setContentTitle(getString(R.string.txt_new_round_title)).setContentText(getString(R.string.txt_new_round_message)).setAutoCancel(true);
 
-		Intent intent = new Intent(this, MainActivity.class);
-		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-
+		mBuilder.setDeleteIntent(getDeleteIntent(OnDeleteReceiver.ACTION_DELETE_NEW_ROUND));
+		mBuilder.setWhen(Calendar.getInstance().getTimeInMillis());
+		mBuilder.setNumber(++newRoundNotificationCount);
 		mBuilder.setContentIntent(pi);
+
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		Notification notif = setFinishParameters(mBuilder.build());
 
-		mNotificationManager.notify(0, notif);
+		mNotificationManager.notify(NEW_ROUND_NOTIFICATION_ID, notif);
 
 	}
 
@@ -402,19 +404,19 @@ public class UpdateService extends Service {
 
 				if (limit > 0 && totalHashrate < limit) {
 
-					NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher).setContentTitle(getString(R.string.txt_hashrate_dropped_title)).setContentText(String.format(getString(R.string.txt_hashrate_dropped_message), App.formatHashRate(totalHashrate))).setAutoCancel(true);
-
-					Intent deleteIntent = new Intent(this, OnDeleteReceiver.class);
-					deleteIntent.setAction("delete");
-					PendingIntent pendingDeleteIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, deleteIntent, 0);
-
 					Intent intent = new Intent(this, MainActivity.class);
+					intent.setAction(MainActivity.ACTION_DROP_NOTIFICATION);
 					PendingIntent pi = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
+					NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+					mBuilder.setContentTitle(getString(R.string.txt_hashrate_dropped_title));
+					mBuilder.setSmallIcon(R.drawable.ic_launcher);
+					mBuilder.setContentText(String.format(getString(R.string.txt_hashrate_dropped_message), App.formatHashRate(totalHashrate)));
+					mBuilder.setAutoCancel(true);
 					mBuilder.setWhen(Calendar.getInstance().getTimeInMillis());
 					mBuilder.setNumber(++dropNotificationCount);
 					mBuilder.setContentIntent(pi);
-					mBuilder.setDeleteIntent(pendingDeleteIntent);
+					mBuilder.setDeleteIntent(getDeleteIntent(OnDeleteReceiver.ACTION_DELETE_DROP));
 					NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 					Notification notif = setDefaults(mBuilder.build());
 
@@ -425,6 +427,12 @@ public class UpdateService extends Service {
 			Log.e(getClass().getSimpleName(), "Something was null, damn! (NullPointer)");
 		}
 
+	}
+	
+	private PendingIntent getDeleteIntent(String action){
+		Intent deleteIntent = new Intent(this, OnDeleteReceiver.class);
+		deleteIntent.setAction(action);
+		return PendingIntent.getBroadcast(this.getApplicationContext(), 0, deleteIntent, 0);
 	}
 
 	private Notification setDefaults(Notification notification) {
@@ -502,6 +510,14 @@ public class UpdateService extends Service {
 
 	public static void setUpdateInterface(UpdateInterface updateInterface) {
 		UpdateService.updateInterface = updateInterface;
+	}
+	
+	public static void resetDropNotificationCount(){
+		dropNotificationCount = 0;
+	}
+	
+	public static void resetNewRoundNotificationCount(){
+		newRoundNotificationCount = 0;
 	}
 
 	private void onPriceLoaded(GenericPrice price) {
