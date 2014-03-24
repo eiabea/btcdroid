@@ -34,6 +34,7 @@ import com.eiabea.btcdroid.widget.AverageHashrateWidgetProvider;
 import com.eiabea.btcdroid.widget.ConfirmedRewardWidgetProvider;
 import com.eiabea.btcdroid.widget.DashClockWidget;
 import com.eiabea.btcdroid.widget.EstimatedRewardWidgetProvider;
+import com.eiabea.btcdroid.widget.MultiWidgetProvider;
 import com.eiabea.btcdroid.widget.PriceWidgetProvider;
 import com.eiabea.btcdroid.widget.RoundDurationWidgetProvider;
 import com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider;
@@ -288,6 +289,11 @@ public class App extends Application {
 		estimatedIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 		estimatedIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
 		context.sendBroadcast(estimatedIntent);
+		// Update Multi Widget
+		Intent multiIntent = new Intent(context, MultiWidgetProvider.class);
+		multiIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		multiIntent.putExtra(MultiWidgetProvider.PARAM_PROFILE, profile);
+		context.sendBroadcast(multiIntent);
 		
 		// Update Dashclock
 	    Intent dashclockIntent = new Intent(DashClockWidget.UPDATE_DASHCLOCK);
@@ -302,6 +308,11 @@ public class App extends Application {
 		roundIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 		roundIntent.putExtra(RoundDurationWidgetProvider.PARAM_STATS, stats);
 		context.sendBroadcast(roundIntent);
+		// Update Multi Widget
+		Intent multiIntent = new Intent(context, MultiWidgetProvider.class);
+		multiIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		multiIntent.putExtra(MultiWidgetProvider.PARAM_STATS, stats);
+		context.sendBroadcast(multiIntent);
 	}
 	
 	public static void updateWidgets(Context context, GenericPrice price) {

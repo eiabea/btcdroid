@@ -115,6 +115,18 @@
                 android:resource="@xml/widget_info" />
         </receiver>
         <receiver
+            android:name=".widget.MultiWidgetProvider"
+            android:icon="@drawable/ic_launcher"
+            android:label="BTCDroid Multi" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/multi_widget_info" />
+        </receiver>
+        <receiver
             android:name=".widget.PriceWidgetProvider"
             android:icon="@drawable/ic_launcher"
             android:label="BTCDroid Price" >

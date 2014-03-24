@@ -12,16 +12,20 @@ import android.widget.RemoteViews;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Profile;
+import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;
 
 public class MultiWidgetProvider extends AppWidgetProvider {
 	public static final String PARAM_PROFILE = "param_profile";
+	public static final String PARAM_STATS = "param_stats";
 
 	private static final String ACTION_CLICK = "ACTION_CLICK";
 	public static final String LOADING_FAILED = "ACTION_FAILED";
 
 	private Intent intent;
+	
+	private boolean profileLoaded = false, statsLoaded = false;
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -31,22 +35,34 @@ public class MultiWidgetProvider extends AppWidgetProvider {
 		ComponentName thisWidget = new ComponentName(context, MultiWidgetProvider.class);
 		int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 		for (int widgetId : allWidgetIds) {
-			RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+			RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_multi_layout);
 			try {
 
 				if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
 					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
 					Intent i = new Intent(context, UpdateService.class);
-					i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PROFILE);
 					context.startService(i);
 				} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 					Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
+					Stats stats = intent.getParcelableExtra(PARAM_STATS);
 
-					remoteViews.setTextViewText(R.id.txt_widget_value, App.formatHashRate(profile.getHashrate()));
-					remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
-					remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_average_total_hashrate));
+					if(profile != null){
+						remoteViews.setTextViewText(R.id.txt_widget_current_hashrate, App.formatHashRate(profile.getHashrate()));
+						
+						float estimated = Float.valueOf(profile.getEstimated_reward());
+						remoteViews.setTextViewText(R.id.txt_widget_estimated_reward, App.formatReward(estimated));
+						profileLoaded = true;
+					}
+					
+					if(stats != null){
+						remoteViews.setTextViewText(R.id.txt_widget_current_round_duration, stats.getRound_duration());
+						statsLoaded = true;
+					}
 
-					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+					if(profileLoaded && statsLoaded){
+						remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+						profileLoaded = statsLoaded = false;
+					}
 
 				} else if (intent.getAction().equals(LOADING_FAILED)) {
 					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
@@ -59,7 +75,7 @@ public class MultiWidgetProvider extends AppWidgetProvider {
 				remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
 				Log.e(getClass().getSimpleName(), "Something was null, damn! (NullPointer)");
 			}
-
+			
 			Intent intent = new Intent(context, MultiWidgetProvider.class);
 			intent.setAction(ACTION_CLICK);
 
