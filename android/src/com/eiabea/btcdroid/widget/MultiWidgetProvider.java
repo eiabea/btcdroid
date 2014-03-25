@@ -25,7 +25,7 @@ public class MultiWidgetProvider extends AppWidgetProvider {
 
 	private Intent intent;
 	
-	private boolean profileLoaded = false, statsLoaded = false;
+	private static boolean profileLoaded = false, statsLoaded = false;
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -66,6 +66,7 @@ public class MultiWidgetProvider extends AppWidgetProvider {
 
 				} else if (intent.getAction().equals(LOADING_FAILED)) {
 					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+					profileLoaded = statsLoaded = false;
 				} 
 
 				ComponentName widget = new ComponentName(context, MultiWidgetProvider.class);

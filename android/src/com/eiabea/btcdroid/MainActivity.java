@@ -561,7 +561,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 	@Override
 	public void onProfileLoaded(Profile profile) {
 		profileLoaded = true;
-		App.updateWidgets(MainActivity.this, profile);
+//		App.updateWidgets(MainActivity.this, profile);
 		setProfile(profile);
 		handleProgessIndicator();
 	}
