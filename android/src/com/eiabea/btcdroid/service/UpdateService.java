@@ -11,9 +11,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.preview.support.v4.app.NotificationManagerCompat;
+import android.preview.support.wearable.notifications.WearableNotifications;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -38,7 +41,7 @@ public class UpdateService extends Service {
 	private SharedPreferences pref;
 
 	public static final String PARAM_GET = "param_get";
-	
+
 	public static final int DROP_NOTIFICATION_ID = 1566789;
 	public static final int NEW_ROUND_NOTIFICATION_ID = 3219876;
 
@@ -56,7 +59,7 @@ public class UpdateService extends Service {
 	private Profile profile;
 	private Stats stats;
 	private GenericPrice price;
-	
+
 	private static int dropNotificationCount = 0;
 	private static int newRoundNotificationCount = 0;
 
@@ -259,26 +262,26 @@ public class UpdateService extends Service {
 			});
 			break;
 		case PRICE_SOURCE_COINDESK_EUR:
-			
+
 			App.getInstance().httpWorker.getPricesCoinDesk("EUR", new Listener<PricesCoinDesk>() {
-				
+
 				@Override
 				public void onResponse(PricesCoinDesk prices) {
-					
+
 					try {
 						GenericPrice price = new GenericPrice();
 						price.setValueFloat(prices.getBpi().getEUR().getRate_float());
 						price.setSource(getApplicationContext().getString(R.string.CoinDesk_short));
 						price.setSymbol("€");
-						
+
 						onPriceLoaded(price);
 					} catch (NullPointerException e) {
 						onPriceError();
 					}
 				}
-				
+
 			}, new ErrorListener() {
-				
+
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					onPriceError();
@@ -286,26 +289,26 @@ public class UpdateService extends Service {
 			});
 			break;
 		case PRICE_SOURCE_COINDESK_USD:
-			
+
 			App.getInstance().httpWorker.getPricesCoinDesk("USD", new Listener<PricesCoinDesk>() {
-				
+
 				@Override
 				public void onResponse(PricesCoinDesk prices) {
-					
+
 					try {
 						GenericPrice price = new GenericPrice();
 						price.setValueFloat(prices.getBpi().getUSD().getRate_float());
 						price.setSource(getApplicationContext().getString(R.string.CoinDesk_short));
 						price.setSymbol("$");
-						
+
 						onPriceLoaded(price);
 					} catch (NullPointerException e) {
 						onPriceError();
 					}
 				}
-				
+
 			}, new ErrorListener() {
-				
+
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					onPriceError();
@@ -313,26 +316,26 @@ public class UpdateService extends Service {
 			});
 			break;
 		case PRICE_SOURCE_COINDESK_GBP:
-			
+
 			App.getInstance().httpWorker.getPricesCoinDesk("GBP", new Listener<PricesCoinDesk>() {
-				
+
 				@Override
 				public void onResponse(PricesCoinDesk prices) {
-					
+
 					try {
 						GenericPrice price = new GenericPrice();
 						price.setValueFloat(prices.getBpi().getGBP().getRate_float());
 						price.setSource(getApplicationContext().getString(R.string.CoinDesk_short));
 						price.setSymbol("£");
-						
+
 						onPriceLoaded(price);
 					} catch (NullPointerException e) {
 						onPriceError();
 					}
 				}
-				
+
 			}, new ErrorListener() {
-				
+
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					onPriceError();
@@ -348,10 +351,10 @@ public class UpdateService extends Service {
 	private void handleRoundFinishedNotification(Stats stats) {
 		boolean globalEnabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled", false);
 		boolean enabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("round_finished_notification_enabled", false);
-		
+
 		// Debug
 //		createRoundFinishedNotification();
-		
+
 		if (enabled && globalEnabled) {
 			try {
 				SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -384,6 +387,11 @@ public class UpdateService extends Service {
 		Notification notif = setFinishParameters(mBuilder.build());
 
 		mNotificationManager.notify(NEW_ROUND_NOTIFICATION_ID, notif);
+		
+		mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_round_finished));
+
+		Notification notification = new WearableNotifications.Builder(mBuilder).setMinPriority().build();
+		NotificationManagerCompat.from(this).notify(NEW_ROUND_NOTIFICATION_ID, notification);
 
 	}
 
@@ -428,8 +436,8 @@ public class UpdateService extends Service {
 		}
 
 	}
-	
-	private PendingIntent getDeleteIntent(String action){
+
+	private PendingIntent getDeleteIntent(String action) {
 		Intent deleteIntent = new Intent(this, OnDeleteReceiver.class);
 		deleteIntent.setAction(action);
 		return PendingIntent.getBroadcast(this.getApplicationContext(), 0, deleteIntent, 0);
@@ -511,12 +519,12 @@ public class UpdateService extends Service {
 	public static void setUpdateInterface(UpdateInterface updateInterface) {
 		UpdateService.updateInterface = updateInterface;
 	}
-	
-	public static void resetDropNotificationCount(){
+
+	public static void resetDropNotificationCount() {
 		dropNotificationCount = 0;
 	}
-	
-	public static void resetNewRoundNotificationCount(){
+
+	public static void resetNewRoundNotificationCount() {
 		newRoundNotificationCount = 0;
 	}
 
