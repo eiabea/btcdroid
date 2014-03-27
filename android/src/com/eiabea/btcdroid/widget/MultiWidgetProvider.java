@@ -45,9 +45,9 @@ public class MultiWidgetProvider extends AppWidgetProvider {
 				} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 					Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
 					Stats stats = intent.getParcelableExtra(PARAM_STATS);
-
+					
 					if(profile != null){
-						remoteViews.setTextViewText(R.id.txt_widget_current_hashrate, App.formatHashRate(profile.getHashrate()));
+						remoteViews.setTextViewText(R.id.txt_widget_current_hashrate, App.formatHashRate(App.getTotalHashrate(profile)));
 						
 						float estimated = Float.valueOf(profile.getEstimated_reward());
 						remoteViews.setTextViewText(R.id.txt_widget_estimated_reward, App.formatReward(estimated));

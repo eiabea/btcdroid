@@ -238,6 +238,17 @@ public class App extends Application {
 	public static String getResString(int id, Context ctx){
 		return ctx.getResources().getString(id);
 	}
+	
+	public static int getTotalHashrate(Profile profile){
+		ArrayList<Worker> list = profile.getWorkersList();
+
+		int totalHashrate = 0;
+
+		for (Worker tmp : list) {
+			totalHashrate += tmp.getHashrate();
+		}
+		return totalHashrate;
+	}
 
 	public static class WorkerSorter implements Comparator<Worker> {
 

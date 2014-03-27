@@ -1,7 +1,6 @@
 package com.eiabea.btcdroid.fragments;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +21,6 @@ import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
-import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 
 public class PoolFragment extends Fragment {
@@ -202,15 +200,7 @@ public class PoolFragment extends Fragment {
 	private void fillUpProfile() {
 
 		try {
-			ArrayList<Worker> list = profile.getWorkersList();
-
-			int totalHashrate = 0;
-
-			for (Worker tmp : list) {
-				totalHashrate += tmp.getHashrate();
-			}
-
-			txtTotalHashrate.setText(App.formatHashRate(totalHashrate));
+			txtTotalHashrate.setText(App.formatHashRate(App.getTotalHashrate(profile)));
 			txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
 		} catch (NullPointerException ignore) {
 		}

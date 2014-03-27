@@ -1,7 +1,5 @@
 package com.eiabea.btcdroid.widget;
 
-import java.util.ArrayList;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -14,7 +12,6 @@ import android.widget.RemoteViews;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Profile;
-import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;
 
@@ -46,15 +43,7 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
 				} else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 					Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
 
-					ArrayList<Worker> list = profile.getWorkersList();
-
-					int totalHashrate = 0;
-
-					for (Worker tmp : list) {
-						totalHashrate += tmp.getHashrate();
-					}
-
-					remoteViews.setTextViewText(R.id.txt_widget_value, App.formatHashRate(totalHashrate));
+					remoteViews.setTextViewText(R.id.txt_widget_value, App.formatHashRate(App.getTotalHashrate(profile)));
 					remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_green));
 					remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_current_total_hashrate));
 
