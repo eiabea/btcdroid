@@ -52,6 +52,9 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
 						remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_round_duration_widget));
 					} catch (ParseException e) {
 						Log.e(getClass().getSimpleName(), "Can't parse RoundDuration (ParseExeception)");
+						remoteViews.setTextViewText(R.id.txt_widget_value, context.getString(R.string.txt_greater_one_day));
+						remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_green));
+						remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_round_duration_widget));
 					}
 
 					remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);

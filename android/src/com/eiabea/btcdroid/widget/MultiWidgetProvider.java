@@ -1,5 +1,8 @@
 package com.eiabea.btcdroid.widget;
 
+import java.text.ParseException;
+import java.util.Date;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -55,7 +58,14 @@ public class MultiWidgetProvider extends AppWidgetProvider {
 					}
 					
 					if(stats != null){
-						remoteViews.setTextViewText(R.id.txt_widget_current_round_duration, stats.getRound_duration());
+						
+						try {
+							Date duration = App.dateDurationFormat.parse(stats.getRound_duration());
+							remoteViews.setTextViewText(R.id.txt_widget_current_round_duration, App.dateDurationFormat.format(duration));
+						} catch (ParseException e) {
+							remoteViews.setTextViewText(R.id.txt_widget_current_round_duration, context.getString(R.string.txt_greater_one_day));
+						}
+						
 						statsLoaded = true;
 					}
 

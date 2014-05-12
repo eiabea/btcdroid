@@ -226,6 +226,7 @@ public class PoolFragment extends Fragment {
 				duration = App.dateDurationFormat.parse(stats.getRound_duration());
 				txtRoundDuration.setText(App.dateDurationFormat.format(duration));
 			} catch (java.text.ParseException e) {
+				txtRoundDuration.setText(getString(R.string.txt_greater_one_day));
 				Log.e(getClass().getSimpleName(), "Can't get RoundDuration (NullPointer)");
 			}
 
@@ -243,6 +244,8 @@ public class PoolFragment extends Fragment {
 				Log.i(getClass().getSimpleName(), "duration: " + duration.getTime());
 
 				txtEstimatedDuration.setText(App.dateDurationFormat.format(new Date((long) (estimated/* + duration.getTime()*/))));
+			}else{
+				txtEstimatedDuration.setText(getString(R.string.txt_infinite_symbol));
 			}
 
 			float currentLuck24 = Float.parseFloat(stats.getLuck_1());

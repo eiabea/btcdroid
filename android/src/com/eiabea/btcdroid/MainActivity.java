@@ -8,7 +8,6 @@ import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -118,14 +117,14 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
 		tryGettingDataFromService();
 		
-		PackageManager pm = getPackageManager();
-		String installationSource = pm.getInstallerPackageName(getPackageName());
-		
-		if(installationSource == null){
-			Toast.makeText(MainActivity.this, "Not from PlayStore", Toast.LENGTH_LONG).show();
-		}else{
-			Toast.makeText(MainActivity.this, "Installed from PlayStore", Toast.LENGTH_LONG).show();
-		}
+//		PackageManager pm = getPackageManager();
+//		String installationSource = pm.getInstallerPackageName(getPackageName());
+//		
+//		if(installationSource == null){
+//			Toast.makeText(MainActivity.this, "Not from PlayStore", Toast.LENGTH_LONG).show();
+//		}else{
+//			Toast.makeText(MainActivity.this, "Installed from PlayStore", Toast.LENGTH_LONG).show();
+//		}
 
 	}
 

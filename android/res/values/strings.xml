@@ -80,6 +80,8 @@
     <string name="txt_luck_24h">24h</string>
     <string name="txt_luck_7d">7d</string>
     <string name="txt_luck_30d">30d</string>
+    <string name="txt_greater_one_day">> 1 day</string>
+    <string name="txt_infinite_symbol">∞</string>
 
     <!-- RoundFragment | BlockView -->
     <string name="txt_confirmations_left">Confirmations left:</string>
