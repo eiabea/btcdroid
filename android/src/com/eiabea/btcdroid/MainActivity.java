@@ -35,6 +35,7 @@ import com.eiabea.btcdroid.fragments.PayoutFragment;
 import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
+import com.eiabea.btcdroid.model.AvgLuck;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
@@ -61,6 +62,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 	private static final String STATE_PROFILE = "state_profile";
 	private static final String STATE_STATS = "state_stats";
 	private static final String STATE_PRICES = "state_prices";
+	private static final String STATE_AVG_LUCK = "state_avg_luck";
 	private static final String STATE_PROFILE_LOADED = "state_profile_loaded";
 	private static final String STATE_STATS_LOADED = "state_stats_loaded";
 	private static final String STATE_PRICES_LOADED = "state_prices_loaded";
@@ -81,6 +83,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 	private boolean statsLoaded = false;
 	private boolean profileLoaded = false;
 	private boolean pricesLoaded = false;
+	private boolean avgLuckLoaded = false;
 
 	private LinearLayout llNoPools;;
 	private Button btnSetToken;
@@ -95,6 +98,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 	private Profile profile = null;
 	private Stats stats = null;
 	private GenericPrice price = null;
+	private AvgLuck avgLuck = null;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -133,9 +137,11 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 			this.profile = UpdateService.getInstance().getProfile();
 			this.stats = UpdateService.getInstance().getStats();
 			this.price = UpdateService.getInstance().getPrice();
+			this.avgLuck = UpdateService.getInstance().getAvgLuck();
 			profileLoaded = true;
 			statsLoaded = true;
 			pricesLoaded = true;
+			avgLuckLoaded = true;
 			setSavedValues();
 
 		} catch (NullPointerException e) {
@@ -149,6 +155,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 		this.profile = savedInstanceState.getParcelable(STATE_PROFILE);
 		this.stats = savedInstanceState.getParcelable(STATE_STATS);
 		this.price = savedInstanceState.getParcelable(STATE_PRICES);
+		this.avgLuck = savedInstanceState.getParcelable(STATE_AVG_LUCK);
 		this.currentPage = savedInstanceState.getInt(STATE_CURRENT_PAGE);
 		this.isProgessShowing = savedInstanceState.getBoolean(STATE_PROGRESS_SHOWING);
 		this.profileLoaded = savedInstanceState.getBoolean(STATE_PROFILE_LOADED);
@@ -162,6 +169,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 		setPrices(this.price);
 		setProfile(this.profile);
 		setStats(this.stats);
+		setAvgLuck(this.avgLuck);
 
 		handleProgessIndicator();
 
@@ -181,6 +189,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 		savedInstanceState.putParcelable(STATE_PROFILE, this.profile);
 		savedInstanceState.putParcelable(STATE_STATS, this.stats);
 		savedInstanceState.putParcelable(STATE_PRICES, this.price);
+		savedInstanceState.putParcelable(STATE_AVG_LUCK, this.avgLuck);
 		savedInstanceState.putInt(STATE_CURRENT_PAGE, this.currentPage);
 		savedInstanceState.putBoolean(STATE_PROGRESS_SHOWING, this.isProgessShowing);
 		savedInstanceState.putBoolean(STATE_PROFILE_LOADED, this.profileLoaded);
@@ -211,7 +220,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
 		getSupportActionBar().setSubtitle(R.string.app_name_subtitle);
 
-		adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price);
+		adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price, this.avgLuck);
 		try {
 			if (isTablet && isLand) {
 
@@ -510,6 +519,16 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 			Log.e(getClass().getSimpleName(), "Can't get all Fragments to setPrice (NullPointer)");
 		}
 	}
+	
+	public void setAvgLuck(AvgLuck avgLuck) {
+		this.avgLuck = avgLuck;
+		try {
+			((PoolFragment) getFragment(FRAGMENT_POOL)).setAvgLuck(avgLuck);
+			
+		} catch (NullPointerException e) {
+			Log.e(getClass().getSimpleName(), "Can't get all Fragments to setAvgLuck (NullPointer)");
+		}
+	}
 
 	private Fragment getFragment(int which) {
 		Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + which));
@@ -541,13 +560,15 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 		Log.w(getClass().getSimpleName(), "price: " + pricesLoaded);
 		Log.w(getClass().getSimpleName(), "profile: " + profileLoaded);
 		Log.w(getClass().getSimpleName(), "stats: " + statsLoaded);
+		Log.w(getClass().getSimpleName(), "avgLuck: " + avgLuckLoaded);
 
 		if (adapter == null) {
-			adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price);
+			adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price, this.avgLuck);
 		} else {
 			adapter.setProfile(profile);
 			adapter.setStats(stats);
 			adapter.setPrice(price);
+			adapter.setAvgLuck(avgLuck);
 		}
 
 		try {
@@ -586,6 +607,13 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 	public void onPricesLoaded(GenericPrice price) {
 		pricesLoaded = true;
 		setPrices(price);
+		handleProgessIndicator();
+	}
+	
+	@Override
+	public void onAvgLuckLoaded(AvgLuck avgLuck) {
+		avgLuckLoaded = true;
+		setAvgLuck(avgLuck);
 		handleProgessIndicator();
 	}
 
@@ -638,6 +666,12 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 		// Toast.makeText(MainActivity.this,
 		// getString(R.string.toast_error_loading_price),
 		// Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onAvgLuckError() {
+		avgLuckLoaded = true;
+		handleProgessIndicator();
 	}
 
 }

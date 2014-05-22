@@ -13,6 +13,7 @@ import com.eiabea.btcdroid.fragments.PayoutFragment;
 import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
+import com.eiabea.btcdroid.model.AvgLuck;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
@@ -24,18 +25,20 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 	private Profile profile;
 	private Stats stats;
 	private GenericPrice price;
+	private AvgLuck avgLuck;
 
 	private Context context;
 	
 	private static int[] fragmentOrder;
 
-	public MainViewAdapter(Context context, FragmentManager fm, Profile profile, Stats stats, GenericPrice price) {
+	public MainViewAdapter(Context context, FragmentManager fm, Profile profile, Stats stats, GenericPrice price, AvgLuck avgLuck) {
 		super(fm);
 
 		this.context = context;
 		this.profile = profile;
 		this.stats = stats;
 		this.price = price;
+		this.avgLuck = avgLuck;
 		
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
 		
@@ -68,7 +71,7 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 			PayoutFragment payoutFragment = PayoutFragment.create(price, profile);
 			return payoutFragment;
 		} else if (position == MainActivity.FRAGMENT_POOL) {
-			PoolFragment poolFragment = PoolFragment.create(profile, stats);
+			PoolFragment poolFragment = PoolFragment.create(profile, stats, avgLuck);
 			return poolFragment;
 		} else if (position == MainActivity.FRAGMENT_WORKER) {
 			WorkerFragment workerFragment = WorkerFragment.create(profile);
@@ -134,6 +137,10 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 
 	public void setPrice(GenericPrice price) {
 		this.price = price;
+	}
+	
+	public void setAvgLuck(AvgLuck avgLuck) {
+		this.avgLuck = avgLuck;
 	}
 
 }

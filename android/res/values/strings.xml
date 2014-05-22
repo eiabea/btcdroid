@@ -77,6 +77,7 @@
     <string name="txt_round_duration">current</string>
     <string name="txt_round_estimated">worst case</string>
     <string name="txt_round_average">average</string>
+    <string name="txt_avg_luck">Ø</string>
     <string name="txt_luck_24h">24h</string>
     <string name="txt_luck_7d">7d</string>
     <string name="txt_luck_30d">30d</string>

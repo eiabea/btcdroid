@@ -25,6 +25,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
+import com.eiabea.btcdroid.model.AvgLuck;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
@@ -59,6 +60,7 @@ public class UpdateService extends Service {
 	private Profile profile;
 	private Stats stats;
 	private GenericPrice price;
+	private AvgLuck avgLuck;
 
 	private static int dropNotificationCount = 0;
 	private static int newRoundNotificationCount = 0;
@@ -104,6 +106,7 @@ public class UpdateService extends Service {
 				getProfileWidgets();
 				getPriceWidgets();
 				getStatsWidgets();
+				getAvgLuckWidgets();
 				break;
 			}
 
@@ -168,6 +171,32 @@ public class UpdateService extends Service {
 				Log.d(getClass().getSimpleName(), "onErrorResponse Stats Widgets");
 				Log.d(getClass().getSimpleName(), " " + error.getCause());
 				onStatsError();
+			}
+		}));
+	}
+	
+	private void getAvgLuckWidgets() {
+		Log.d(getClass().getSimpleName(), "get AvgLuck");
+		
+		String url = "http://slush-eiabea.rhcloud.com/";
+		
+		System.out.println(HttpWorker.mQueue.toString());
+		
+		HttpWorker.mQueue.add(new GsonRequest<AvgLuck>(url, AvgLuck.class, null, new Listener<AvgLuck>() {
+			
+			@Override
+			public void onResponse(AvgLuck avgLuck) {
+				Log.d(getClass().getSimpleName(), "onResponse AvgLuck");
+				onAvgLuckLoaded(avgLuck);
+			}
+			
+		}, new ErrorListener() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.d(getClass().getSimpleName(), "onErrorResponse AvgLuck");
+				Log.d(getClass().getSimpleName(), " " + error.getCause());
+				onAvgLuckError();
 			}
 		}));
 	}
@@ -511,6 +540,14 @@ public class UpdateService extends Service {
 	public void setPrice(GenericPrice price) {
 		this.price = price;
 	}
+	
+	public AvgLuck getAvgLuck() {
+		return avgLuck;
+	}
+
+	public void setAvgLuck(AvgLuck avgLuck) {
+		this.avgLuck = avgLuck;
+	}
 
 	public static UpdateInterface getUpdateInterface() {
 		return updateInterface;
@@ -576,6 +613,19 @@ public class UpdateService extends Service {
 			updateInterface.onStatsError();
 		}
 	}
+	
+	private void onAvgLuckLoaded(AvgLuck avgLuck) {
+		UpdateService.this.avgLuck = avgLuck;
+		if (updateInterface != null) {
+			updateInterface.onAvgLuckLoaded(avgLuck);
+		}
+	}
+	
+	private void onAvgLuckError() {
+		if (updateInterface != null) {
+			updateInterface.onAvgLuckError();
+		}
+	}
 
 	public interface UpdateInterface {
 		public void onProfileLoaded(Profile profile);
@@ -583,6 +633,10 @@ public class UpdateService extends Service {
 		public void onProfileError();
 
 		public void onStatsLoaded(Stats stats);
+
+		public void onAvgLuckLoaded(AvgLuck avgLuck);
+
+		public void onAvgLuckError();
 
 		public void onStatsError();
 

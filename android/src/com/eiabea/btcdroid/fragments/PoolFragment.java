@@ -18,6 +18,7 @@ import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
+import com.eiabea.btcdroid.model.AvgLuck;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
@@ -27,24 +28,27 @@ public class PoolFragment extends Fragment {
 
 	public static final String PARAM_PROFILE = "param_profile";
 	public static final String PARAM_STATS = "param_stats";
+	public static final String PARAM_AVG_LUCK = "param_avg_luck";
 
 	private ViewGroup rootView;
 
 	private Profile profile;
 	private Stats stats;
+	private AvgLuck avgLuck;
 
 	private SharedPreferences pref;
 
 	private TextView txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
 			txtRoundDuration, txtEstimatedDuration, txtAverageDuration,
-			txtLuck24h, txtLuck7d, txtLuck30d;
+			txtLuck24h, txtLuck7d, txtLuck30d, txtAvgLuck;
 	private RatingBar ratRating;
 
-	public static PoolFragment create(Profile profile, Stats stats) {
+	public static PoolFragment create(Profile profile, Stats stats, AvgLuck avgLuck) {
 		PoolFragment fragment = new PoolFragment();
 		Bundle b = new Bundle();
 		b.putParcelable(PARAM_PROFILE, profile);
 		b.putParcelable(PARAM_STATS, stats);
+		b.putParcelable(PARAM_AVG_LUCK, avgLuck);
 		fragment.setArguments(b);
 		return fragment;
 	}
@@ -60,12 +64,15 @@ public class PoolFragment extends Fragment {
 
 		this.profile = getArguments().getParcelable(PARAM_PROFILE);
 		this.stats = getArguments().getParcelable(PARAM_STATS);
+		this.avgLuck = getArguments().getParcelable(PARAM_AVG_LUCK);
 
 		initUi();
 
 		setProfile(profile);
 
 		setStats(stats);
+		
+		setAvgLuck(avgLuck);
 
 		return rootView;
 	}
@@ -81,6 +88,7 @@ public class PoolFragment extends Fragment {
 		txtLuck24h = (TextView) rootView.findViewById(R.id.txt_main_info_luck_24h);
 		txtLuck7d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_7d);
 		txtLuck30d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_30d);
+		txtAvgLuck = (TextView) rootView.findViewById(R.id.txt_main_info_avg_luck);
 	}
 
 	private void setLuck(TextView txt, float current) {
@@ -196,6 +204,12 @@ public class PoolFragment extends Fragment {
 		this.stats = stats;
 		fillUpStats();
 	}
+	
+	public void setAvgLuck(AvgLuck avgLuck) {
+		this.avgLuck = avgLuck;
+		fillUpAvgLuck();
+		
+	}
 
 	private void fillUpProfile() {
 
@@ -258,6 +272,12 @@ public class PoolFragment extends Fragment {
 		} catch (NullPointerException ignore) {
 		}
 
+	}
+	
+	private void fillUpAvgLuck(){
+		if(avgLuck != null){
+			setLuck(txtAvgLuck, avgLuck.getAvg_luck_1());
+		}
 	}
 
 }
