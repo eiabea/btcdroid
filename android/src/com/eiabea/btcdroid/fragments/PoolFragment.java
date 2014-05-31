@@ -276,7 +276,7 @@ public class PoolFragment extends Fragment {
 	
 	private void fillUpAvgLuck(){
 		if(avgLuck != null){
-			setLuck(txtAvgLuck, avgLuck.getAvg_luck_1());
+			setLuck(txtAvgLuck, avgLuck.getAvg_luck());
 		}
 	}
 

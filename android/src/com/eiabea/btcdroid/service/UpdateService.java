@@ -178,7 +178,7 @@ public class UpdateService extends Service {
 	private void getAvgLuckWidgets() {
 		Log.d(getClass().getSimpleName(), "get AvgLuck");
 		
-		String url = "http://slush-eiabea.rhcloud.com/";
+		String url = "http://slush-eiabea.rhcloud.com/avg_luck";
 		
 		System.out.println(HttpWorker.mQueue.toString());
 		
