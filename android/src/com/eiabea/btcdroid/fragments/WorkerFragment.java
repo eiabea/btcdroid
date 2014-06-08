@@ -93,14 +93,14 @@ public class WorkerFragment extends Fragment {
 
 			exlvWOrkerHolder.setAdapter(adapter);
 
-			expandAllActiveWorker();
+			expandActiveWorker();
 
 		} catch (NullPointerException ignore) {
 
 		}
 	}
 
-	private void expandAllActiveWorker() {
+	private void expandActiveWorker() {
 		for (int i = 0; i < adapter.getGroupCount(); i++) {
 			Holder holder = (Holder) adapter.getGroup(i);
 			if (holder.getWorker().isAlive()) {

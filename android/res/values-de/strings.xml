@@ -131,6 +131,8 @@
     <string name="txt_pref_style_title">Aussehen</string>
     <string name="txt_pref_style_btc_style_title">BTC Aussehen</string>
     <string name="txt_pref_style_btc_style_message">Wechlse das Aussehen der BTC Werte</string>
+    <string name="txt_pref_style_worker_username_title">Arbeiter Aussehen</string>
+    <string name="txt_pref_style_worker_username_message">Benutzernamen vor Arbeitername anzeigen</string>
     <string name="txt_pref_update_title">Updates</string>
     <string name="txt_pref_update_checking_interval_title">Aktualisierungsinterval (Minuten)</string>
     <string name="txt_pref_update_checking_interval_message">Wie oft sollen die Daten aktualisiert werden (Widgets, Notifications,&#8230;)</string>

@@ -175,8 +175,8 @@ public class PayoutFragment extends Fragment {
 
 	private void setGauge(Profile profile, boolean preHoneyComb) {
 		try {
-			int max = 1000;
 			int offset = 48;
+			int max = 1000;
 
 			float sendThreshold = Float.valueOf(profile.getSend_threshold());
 			float estimated = Float.valueOf(profile.getEstimated_reward());
@@ -187,24 +187,15 @@ public class PayoutFragment extends Fragment {
 			txtConfirmedReward.setText(App.formatReward(confirmed));
 			txtTotalReward.setText(App.formatReward(confirmed + unconfirmed));
 			txtSendThreshold.setText(App.formatReward(sendThreshold));
-
+			
 			// Gauge only
-			int confirmedProgress = (int) ((confirmed / sendThreshold) * max);
-			int unconfirmedProgress = (int) ((unconfirmed / sendThreshold) * max);
+			int confirmedProgress = (int) ((confirmed / sendThreshold) * (max - (2 * offset)));
+			int unconfirmedProgress = (int) ((unconfirmed / sendThreshold) * (max - (2 * offset)));
 			int total = unconfirmedProgress + confirmedProgress;
-
+			
 			confirmedProgress += offset;
 			total += offset;
 
-			if (confirmedProgress > max) {
-				confirmedProgress = max + offset;
-			}
-
-			if (total > max) {
-				total = max + offset;
-			}
-
-			prgGauge.setMax(max + (2 * offset));
 			prgGauge.setProgress(0);
 			prgGauge.setSecondaryProgress(0);
 

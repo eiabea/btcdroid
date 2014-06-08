@@ -131,6 +131,8 @@
     <string name="txt_pref_style_title">Stijl</string>
     <string name="txt_pref_style_btc_style_title">BTC Stijl</string>
     <string name="txt_pref_style_btc_style_message">De stijl waarop Bitcoins worden weergeven</string>
+    <string name="txt_pref_style_worker_username_title">Worker Name Stijl</string>
+    <string name="txt_pref_style_worker_username_message">Show username in front of workername</string>
     <string name="txt_pref_update_title">Updates</string>
     <string name="txt_pref_update_checking_interval_title">Checking Interval (minutes)</string>
     <string name="txt_pref_update_checking_interval_message">How often should the data be updated (Widgets, Notifications,&#8230;)</string>

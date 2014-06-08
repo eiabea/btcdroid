@@ -2,6 +2,7 @@ package com.eiabea.btcdroid.views;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,18 +17,18 @@ import com.eiabea.btcdroid.util.App;
 public class WorkerViewHeader extends LinearLayout {
 
 	private Context context;
-	
+
 	private Worker worker;
 
 	private TextView txtName, txtStatus;
-	
+
 	private ImageView imgCircle;
-	
+
 	private FrameLayout flBottomSpacerWhite, flBottomSpacerGrey, flDivider;
 
 	public WorkerViewHeader(Context context) {
 		super(context);
-		
+
 		this.context = context;
 
 		initUi();
@@ -38,7 +39,7 @@ public class WorkerViewHeader extends LinearLayout {
 		inflater.inflate(R.layout.view_worker_header, this, true);
 
 		imgCircle = (ImageView) findViewById(R.id.img_worker_header_cirlce);
-		
+
 		txtName = (TextView) findViewById(R.id.txt_worker_name);
 		txtStatus = (TextView) findViewById(R.id.txt_worker_status);
 
@@ -49,14 +50,38 @@ public class WorkerViewHeader extends LinearLayout {
 
 	public void setData(Worker worker, boolean isExpanded) {
 		this.setWorker(worker);
-		
+
 		handleExpand(isExpanded);
 
 		if (worker != null) {
 			Typeface tfRegular = Typeface.createFromAsset(context.getAssets(), "RobotoCondensed-Regular.ttf");
 			Typeface tfItalic = Typeface.createFromAsset(context.getAssets(), "RobotoCondensed-Italic.ttf");
 
-			txtName.setText(worker.getName());
+			boolean showUsername = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("username_workers", true);
+
+			if (showUsername) {
+				txtName.setText(worker.getName());
+			} else {
+
+				try {
+
+					String fullString = worker.getName();
+					String workerName = "";
+					int dotIndex = fullString.indexOf(".");
+					if (dotIndex > -1) {
+						// Increase index to cut out the dot
+						dotIndex++;
+						workerName = fullString.substring(dotIndex);
+						txtName.setText(workerName);
+					} else {
+						throw new NullPointerException("no Dot");
+					}
+				} catch (NullPointerException e) {
+
+					txtName.setText(worker.getName());
+				}
+			}
+
 			if (worker.isAlive()) {
 				imgCircle.setImageResource(R.drawable.shape_circle_green);
 				txtStatus.setText(App.formatHashRate(worker.getHashrate()));
@@ -68,7 +93,7 @@ public class WorkerViewHeader extends LinearLayout {
 				txtStatus.setTypeface(tfItalic);
 				txtStatus.setTextColor(context.getResources().getColor(R.color.bd_circle_red_solid));
 			}
-			
+
 		}
 	}
 
@@ -79,13 +104,13 @@ public class WorkerViewHeader extends LinearLayout {
 	public void setWorker(Worker worker) {
 		this.worker = worker;
 	}
-	
-	private void handleExpand(boolean expanded){
-		if(expanded){
+
+	private void handleExpand(boolean expanded) {
+		if (expanded) {
 			flBottomSpacerWhite.setVisibility(View.VISIBLE);
 			flBottomSpacerGrey.setVisibility(View.GONE);
 			flDivider.setVisibility(View.VISIBLE);
-		}else{
+		} else {
 			flBottomSpacerWhite.setVisibility(View.GONE);
 			flBottomSpacerGrey.setVisibility(View.VISIBLE);
 			flDivider.setVisibility(View.GONE);
