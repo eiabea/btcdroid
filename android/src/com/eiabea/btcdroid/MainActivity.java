@@ -116,19 +116,10 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
 		currentPage = pref.getInt("userMainFragment", FRAGMENT_POOL);
 
-		initUi();
-		setListeners();
+//		initUi();
+//		setListeners();
 
 		tryGettingDataFromService();
-		
-//		PackageManager pm = getPackageManager();
-//		String installationSource = pm.getInstallerPackageName(getPackageName());
-//		
-//		if(installationSource == null){
-//			Toast.makeText(MainActivity.this, "Not from PlayStore", Toast.LENGTH_LONG).show();
-//		}else{
-//			Toast.makeText(MainActivity.this, "Installed from PlayStore", Toast.LENGTH_LONG).show();
-//		}
 
 	}
 
@@ -177,6 +168,10 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
 	@Override
 	protected void onResume() {
+		
+		initUi();
+		setListeners();
+		
 		UpdateService.setUpdateInterface(this);
 		supportInvalidateOptionsMenu();
 		super.onResume();

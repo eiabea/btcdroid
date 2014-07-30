@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.eiabea.btcdroid"
-    android:versionCode="56"
-    android:versionName="1.2.7" >
+    android:versionCode="57"
+    android:versionName="1.2.8" >
 
     <uses-sdk
         android:minSdkVersion="10"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="20" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -155,13 +155,6 @@
                 android:name="description"
                 android:value="@string/txt_dashclock_description" />
 
-            <!--
-            A settings activity is optional 
-            <meta-data
-                android:name="settingsActivity"
-                android:value="com.eiabea.btcdroid.PrefsActivity"
-                 />
-            -->
         </service>
     </application>
 

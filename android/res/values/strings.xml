@@ -52,7 +52,7 @@
     <string name="txt_viewpager_pool_fragment">Pool Data</string>
     <string name="txt_viewpager_worker_fragment">Worker</string>
     <string name="txt_viewpager_round_fragment">Rounds</string>
-    <string name="mail_address">eiabea1989@gmail.com</string>
+    <string name="mail_address">developer@eiabea.com</string>
     <string name="mail_subject">BTCDroid</string>
     <string name="mail_intent_title">Send Email&#8230;</string>
 
