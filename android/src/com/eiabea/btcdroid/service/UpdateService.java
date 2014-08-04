@@ -15,9 +15,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.preview.support.v4.app.NotificationManagerCompat;
-import android.preview.support.wearable.notifications.WearableNotifications;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.android.volley.Response.ErrorListener;
@@ -418,9 +417,8 @@ public class UpdateService extends Service {
 		mNotificationManager.notify(NEW_ROUND_NOTIFICATION_ID, notif);
 		
 		mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_round_finished));
-
-		Notification notification = new WearableNotifications.Builder(mBuilder).setMinPriority().build();
-		NotificationManagerCompat.from(this).notify(NEW_ROUND_NOTIFICATION_ID, notification);
+		
+		NotificationManagerCompat.from(this).notify(NEW_ROUND_NOTIFICATION_ID, mBuilder.build());
 
 	}
 
@@ -458,6 +456,7 @@ public class UpdateService extends Service {
 					Notification notif = setDefaults(mBuilder.build());
 
 					mNotificationManager.notify(DROP_NOTIFICATION_ID, notif);
+					
 				}
 			}
 		} catch (NullPointerException e) {
