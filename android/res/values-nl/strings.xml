@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BTCDroid</string>
+    <string name="app_name">BTCDroid Free</string>
     <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
     <string name="action_refresh">Vernieuwen</string>
     <string name="action_reset">Reset</string>

@@ -2,6 +2,7 @@ package com.eiabea.btcdroid;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -9,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -46,6 +48,10 @@ import com.eiabea.btcdroid.util.App;
 @SuppressLint("InlinedApi")
 public class MainActivity extends ActionBarActivity implements UpdateInterface,
 		OnPageChangeListener {
+
+	public static final String PAID_APP_PACKAGE = "com.eiabea.paid.btcdroid";
+	public static final boolean PAID = false;
+	private static final int BEER_POPUP_THRESHOLD = 3;
 
 	public static final String ACTION_NEW_ROUND_NOTIFICATION = "action_new_round_notification";
 	public static final String ACTION_DROP_NOTIFICATION = "action_drop_notification";
@@ -116,11 +122,47 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
 		currentPage = pref.getInt("userMainFragment", FRAGMENT_POOL);
 
-//		initUi();
-//		setListeners();
+		// initUi();
+		// setListeners();
+
+		if (!PAID) {
+			int appStarts = pref.getInt("appStarts", 0);
+			boolean beerDialogShown = pref.getBoolean("beerDialogShown", false);
+
+			if (appStarts == BEER_POPUP_THRESHOLD && !beerDialogShown) {
+				showBeerDialog();
+				pref.edit().putBoolean("beerDialogShown", true).commit();
+			} else {
+				if (!beerDialogShown) {
+					pref.edit().putInt("appStarts", ++appStarts).commit();
+				}
+			}
+		}
 
 		tryGettingDataFromService();
 
+	}
+
+	private void showBeerDialog() {
+		AlertDialog.Builder builder = new Builder(this);
+		builder.setTitle("Buy me a beer!");
+		builder.setMessage("If you like this app, i would very much appreciate if you buy me a beer by purchasing this app");
+		builder.setPositiveButton("PlayStore", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				openPlayStore();
+			}
+
+		});
+		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+			}
+		});
+
+		builder.create().show();
 	}
 
 	private void tryGettingDataFromService() {
@@ -168,10 +210,10 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
 	@Override
 	protected void onResume() {
-		
+
 		initUi();
 		setListeners();
-		
+
 		UpdateService.setUpdateInterface(this);
 		supportInvalidateOptionsMenu();
 		super.onResume();
@@ -196,11 +238,11 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		Log.d(getClass().getSimpleName(), "onNewIntent");
-		if(intent != null && intent.getAction() != null){
+		if (intent != null && intent.getAction() != null) {
 			Log.d(getClass().getSimpleName(), "action = " + intent.getAction());
-			if(intent.getAction().equalsIgnoreCase(ACTION_DROP_NOTIFICATION)){
+			if (intent.getAction().equalsIgnoreCase(ACTION_DROP_NOTIFICATION)) {
 				UpdateService.resetDropNotificationCount();
-			}else if(intent.getAction().equalsIgnoreCase(ACTION_NEW_ROUND_NOTIFICATION)){
+			} else if (intent.getAction().equalsIgnoreCase(ACTION_NEW_ROUND_NOTIFICATION)) {
 				UpdateService.resetNewRoundNotificationCount();
 			}
 		}
@@ -358,12 +400,23 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 				}
 			});
 			builder.create().show();
+
+		case R.id.action_buy:
+			openPlayStore();
 			break;
 
 		default:
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void openPlayStore() {
+		try {
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + PAID_APP_PACKAGE)));
+		} catch (android.content.ActivityNotFoundException anfe) {
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + PAID_APP_PACKAGE)));
+		}
 	}
 
 	@Override
@@ -514,12 +567,12 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 			Log.e(getClass().getSimpleName(), "Can't get all Fragments to setPrice (NullPointer)");
 		}
 	}
-	
+
 	public void setAvgLuck(AvgLuck avgLuck) {
 		this.avgLuck = avgLuck;
 		try {
 			((PoolFragment) getFragment(FRAGMENT_POOL)).setAvgLuck(avgLuck);
-			
+
 		} catch (NullPointerException e) {
 			Log.e(getClass().getSimpleName(), "Can't get all Fragments to setAvgLuck (NullPointer)");
 		}
@@ -586,7 +639,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 	@Override
 	public void onProfileLoaded(Profile profile) {
 		profileLoaded = true;
-//		App.updateWidgets(MainActivity.this, profile);
+		// App.updateWidgets(MainActivity.this, profile);
 		setProfile(profile);
 		handleProgessIndicator();
 	}
@@ -604,7 +657,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 		setPrices(price);
 		handleProgessIndicator();
 	}
-	
+
 	@Override
 	public void onAvgLuckLoaded(AvgLuck avgLuck) {
 		avgLuckLoaded = true;
