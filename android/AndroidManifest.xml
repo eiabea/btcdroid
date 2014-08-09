@@ -29,33 +29,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ParticipantsActivity"
+        <activity android:name="com.eiabea.btcdroid.ParticipantsActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize" >
         </activity>
-        <activity android:name="PrefsActivity"
+        <activity android:name="com.eiabea.btcdroid.PrefsActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize" >
         </activity>
-        <activity android:name="CustomizeActivity" >
+        <activity android:name="com.eiabea.btcdroid.CustomizeActivity" >
         </activity>
 
         <service
-            android:name=".service.UpdateService"
+            android:name="com.eiabea.btcdroid.service.UpdateService"
             android:enabled="true" >
         </service>
 
         <receiver
-            android:name=".service.OnDeleteReceiver"
+            android:name="com.eiabea.btcdroid.service.OnDeleteReceiver"
             android:enabled="true" >
         </receiver>
         <receiver
-            android:name=".service.OnBootReceiver"
+            android:name="com.eiabea.btcdroid.service.OnBootReceiver"
             android:enabled="true" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".widget.TotalHashrateWidgetProvider"
+            android:name="com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider"
             android:icon="@drawable/ic_launcher"
             android:label="BTCDroid Total Hashrate" >
             <intent-filter>
@@ -67,7 +67,7 @@
                 android:resource="@xml/widget_info" />
         </receiver>
         <receiver
-            android:name=".widget.AverageHashrateWidgetProvider"
+            android:name="com.eiabea.btcdroid.widget.AverageHashrateWidgetProvider"
             android:icon="@drawable/ic_launcher"
             android:label="BTCDroid Average Hashrate" >
             <intent-filter>
@@ -79,7 +79,7 @@
                 android:resource="@xml/widget_info" />
         </receiver>
         <receiver
-            android:name=".widget.ConfirmedRewardWidgetProvider"
+            android:name="com.eiabea.btcdroid.widget.ConfirmedRewardWidgetProvider"
             android:icon="@drawable/ic_launcher"
             android:label="BTCDroid Confirmed Reward" >
             <intent-filter>
@@ -91,7 +91,7 @@
                 android:resource="@xml/widget_info" />
         </receiver>
         <receiver
-            android:name=".widget.RoundDurationWidgetProvider"
+            android:name="com.eiabea.btcdroid.widget.RoundDurationWidgetProvider"
             android:icon="@drawable/ic_launcher"
             android:label="BTCDroid Round Duration" >
             <intent-filter>
@@ -103,7 +103,7 @@
                 android:resource="@xml/widget_info" />
         </receiver>
         <receiver
-            android:name=".widget.EstimatedRewardWidgetProvider"
+            android:name="com.eiabea.btcdroid.widget.EstimatedRewardWidgetProvider"
             android:icon="@drawable/ic_launcher"
             android:label="BTCDroid Estimated Reward" >
             <intent-filter>
@@ -115,7 +115,7 @@
                 android:resource="@xml/widget_info" />
         </receiver>
         <receiver
-            android:name=".widget.MultiWidgetProvider"
+            android:name="com.eiabea.btcdroid.widget.MultiWidgetProvider"
             android:icon="@drawable/ic_launcher"
             android:label="BTCDroid Multi" >
             <intent-filter>
@@ -127,7 +127,7 @@
                 android:resource="@xml/multi_widget_info" />
         </receiver>
         <receiver
-            android:name=".widget.PriceWidgetProvider"
+            android:name="com.eiabea.btcdroid.widget.PriceWidgetProvider"
             android:icon="@drawable/ic_launcher"
             android:label="BTCDroid Price" >
             <intent-filter>
@@ -140,7 +140,7 @@
         </receiver>
 
         <service
-            android:name=".widget.DashClockWidget"
+            android:name="com.eiabea.btcdroid.widget.DashClockWidget"
             android:icon="@drawable/ic_launcher_dashclock"
             android:label="@string/app_name"
             android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA" >

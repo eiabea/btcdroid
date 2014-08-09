@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
-
 import com.eiabea.btcdroid.fragments.PrefsFragment;
+import com.eiabea.btcdroid.R;
 
 public class PrefsActivity extends ActionBarActivity {
 	@Override

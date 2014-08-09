@@ -1,3 +1,4 @@
 Appname
 PAID Constant in MainActivity
 MenuItem in main menu.xml
+rename packagename 

@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-
 import com.eiabea.btcdroid.fragments.CustomizeFragment;
+import com.eiabea.btcdroid.R;
 
 public class CustomizeActivity extends ActionBarActivity {
 

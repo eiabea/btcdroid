@@ -31,7 +31,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.eiabea.btcdroid.adapter.MainViewAdapter;
 import com.eiabea.btcdroid.fragments.PayoutFragment;
 import com.eiabea.btcdroid.fragments.PoolFragment;
@@ -44,6 +43,7 @@ import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.service.UpdateService.UpdateInterface;
 import com.eiabea.btcdroid.util.App;
+import com.eiabea.btcdroid.R;
 
 @SuppressLint("InlinedApi")
 public class MainActivity extends ActionBarActivity implements UpdateInterface,
@@ -51,7 +51,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
 	public static final String PAID_APP_PACKAGE = "com.eiabea.paid.btcdroid";
 	public static final boolean PAID = false;
-	private static final int BEER_POPUP_THRESHOLD = 3;
+	private static final int BEER_POPUP_THRESHOLD = 1;
 
 	public static final String ACTION_NEW_ROUND_NOTIFICATION = "action_new_round_notification";
 	public static final String ACTION_DROP_NOTIFICATION = "action_drop_notification";
@@ -125,6 +125,11 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 		// initUi();
 		// setListeners();
 
+		tryGettingDataFromService();
+
+	}
+	
+	private void handleBeerDialog(){
 		if (!PAID) {
 			int appStarts = pref.getInt("appStarts", 0);
 			boolean beerDialogShown = pref.getBoolean("beerDialogShown", false);
@@ -138,9 +143,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 				}
 			}
 		}
-
-		tryGettingDataFromService();
-
 	}
 
 	private void showBeerDialog() {
@@ -213,6 +215,8 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
 		initUi();
 		setListeners();
+		
+		handleBeerDialog();
 
 		UpdateService.setUpdateInterface(this);
 		supportInvalidateOptionsMenu();
