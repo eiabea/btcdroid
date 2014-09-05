@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:btcdroid="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_accept"
+        android:icon="@drawable/ic_action_navigation_accept"
+        android:title="@string/action_accept"
+        android:visible="true"
+        btcdroid:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_reset"
+        android:icon="@drawable/ic_action_content_undo"
+        android:title="@string/action_reset"
+        android:visible="true"
+        btcdroid:showAsAction="always" />
+
+</menu>

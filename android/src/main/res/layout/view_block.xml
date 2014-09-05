@@ -1,0 +1,95 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/card_content_padding_bottom"
+        android:paddingLeft="@dimen/card_content_padding_left"
+        android:paddingRight="@dimen/card_content_padding_right"
+        android:paddingTop="@dimen/card_content_padding_top">
+
+        <RelativeLayout
+            style="@style/style_card_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/style_card_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/txt_block_confirmations"
+                android:gravity="left"
+                android:text="@string/txt_confirmations_left" />
+
+            <com.eiabea.btcdroid.fonts.RobotoBold
+                android:id="@+id/txt_block_confirmations"
+                style="@style/style_card_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/style_card_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/style_card_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/txt_block_found"
+                android:gravity="left"
+                android:text="@string/txt_block_found" />
+
+            <com.eiabea.btcdroid.fonts.RobotoBold
+                android:id="@+id/txt_block_found"
+                style="@style/style_card_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/style_card_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/style_card_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/txt_block_started"
+                android:gravity="left"
+                android:text="@string/txt_block_started" />
+
+            <com.eiabea.btcdroid.fonts.RobotoBold
+                android:id="@+id/txt_block_started"
+                style="@style/style_card_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/card_spacing_half"
+        android:background="@color/bd_background">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/small_card_bottom_line_height"
+            android:background="@color/bd_card_bottom_line"></FrameLayout>
+    </FrameLayout>
+
+</LinearLayout>

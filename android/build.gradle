@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion '20.0.0'
+    defaultConfig {
+        versionCode 60
+        versionName "1.3.1"
+        minSdkVersion 10
+        targetSdkVersion 19
+
+        buildConfigField "String", "APP_STARTS", "\"appStarts\""
+        buildConfigField "String", "BEER_DIALOG_SHOWN", "\"beerDialogShown\""
+
+    }
+
+    signingConfigs {
+        release
+    }
+
+    buildTypes {
+        release {
+            runProguard false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            applicationVariants.all { variant ->
+                def file = variant.outputFile
+                variant.outputFile = new File(file.parent, file.name.replace(".apk", "_v" + defaultConfig.versionName + ".apk"))
+            }
+        }
+
+    }
+
+    productFlavors {
+        paid {
+            applicationId = 'com.eiabea.paid.btcdroid'
+            buildConfigField "boolean", "PAID", "true"
+            resValue "string", "app_name", "BTCDroid"
+        }
+        free {
+            applicationId = 'com.eiabea.btcdroid'
+            buildConfigField "boolean", "PAID", "false"
+            resValue "string", "app_name", "BTCDroid Free"
+        }
+    }
+
+}
+
+def props = new Properties()
+props.load(new FileInputStream(rootProject.file("release.properties")))
+android.signingConfigs.release.storeFile rootProject.file(props.keyStore)
+android.signingConfigs.release.storePassword props.keyStorePassword
+android.signingConfigs.release.keyAlias props.keyAlias
+android.signingConfigs.release.keyPassword props.keyAliasPassword
+
+dependencies {
+    compile project(':lib_supportpreffragment')
+    compile project(':lib_dragsortlistview')
+    compile 'com.android.support:support-v4:20.0.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.android.support:appcompat-v7:20.0.0'
+    compile 'com.google.android.gms:play-services:5.0.89'
+    compile 'com.mcxiaoke.volley:library:1.0.6'
+    compile files('libs/dashclock-api-r2.0.jar')
+    compile files('libs/core.jar')
+}
