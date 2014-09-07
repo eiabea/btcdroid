@@ -9,8 +9,8 @@ android {
         minSdkVersion 10
         targetSdkVersion 19
 
-        buildConfigField "String", "APP_STARTS", "\"appStarts\""
-        buildConfigField "String", "BEER_DIALOG_SHOWN", "\"beerDialogShown\""
+        buildConfigField "String", "APP_STARTS", "\"appStarts1\""
+        buildConfigField "String", "BEER_DIALOG_SHOWN", "\"beerDialogShown1\""
 
     }
 
