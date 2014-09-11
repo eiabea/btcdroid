@@ -9,6 +9,7 @@ import com.android.volley.toolbox.Volley;
 import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
 import com.eiabea.btcdroid.model.PricesCoinDesk;
+import com.eiabea.btcdroid.model.PricesCoinbase;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 
@@ -21,6 +22,7 @@ public class HttpWorker {
     public static final String PRICES_URL_COINDESK_FRONT = "https://api.coindesk.com/v1/bpi/currentprice/";
     public static final String PRICES_URL_COINDESK_END = ".json";
     public static final String PRICES_URL_BITSTAMP = "https://www.bitstamp.net/api/ticker/";
+    public static final String PRICES_URL_COINBASE = "https://coinbase.com/api/v1/prices/buy";
 
     public static final String STATS_URL = BASEURL + "stats/json/";
     public static final String PROFILE_URL = BASEURL + "accounts/profile/json/";
@@ -117,6 +119,17 @@ public class HttpWorker {
         System.out.println(HttpWorker.mQueue.toString());
 
         HttpWorker.mQueue.add(new GsonRequest<PricesBitStamp>(url, PricesBitStamp.class, null, success, error));
+
+    }
+
+    public void getPricesCoinbase(Response.Listener<PricesCoinbase> success, Response.ErrorListener error) {
+        Log.d(getClass().getSimpleName(), "get Prices BitStamp");
+
+        String url = HttpWorker.PRICES_URL_COINBASE;
+
+        System.out.println(HttpWorker.mQueue.toString());
+
+        HttpWorker.mQueue.add(new GsonRequest<PricesCoinbase>(url, PricesCoinbase.class, null, success, error));
 
     }
 

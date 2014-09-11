@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pools;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,8 @@ import java.util.Date;
 import java.util.List;
 
 public class PoolFragment extends Fragment {
+
+    public static final String TAG = PoolFragment.class.getSimpleName();
 
     public static final String PARAM_PROFILE = "param_profile";
     public static final String PARAM_STATS = "param_stats";
@@ -55,7 +58,7 @@ public class PoolFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(getClass().getSimpleName(), "onCreateView()");
+        Log.i(TAG, "onCreateView()");
 
         // Inflate the layout containing a title and body text.
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_pool, null);
@@ -91,7 +94,7 @@ public class PoolFragment extends Fragment {
         txtAvgLuck = (TextView) rootView.findViewById(R.id.txt_main_info_avg_luck);
     }
 
-    private void setLuck(TextView txt, float current) {
+    private void setLuck(TextView txt, float current, boolean highPrecision) {
         if (current > 0) {
             float last = pref.getFloat("txt_" + txt.getId() + "_value", 0f);
 
@@ -102,15 +105,15 @@ public class PoolFragment extends Fragment {
 
             long now = Calendar.getInstance().getTimeInMillis();
 
-            Log.d(getClass().getSimpleName(), "threshold min: " + minuteThreshold);
-            Log.d(getClass().getSimpleName(), "threshold: " + threshold);
-            Log.d(getClass().getSimpleName(), "last Updated: " + lastUpdated);
-            Log.d(getClass().getSimpleName(), "now: " + now);
-            Log.d(getClass().getSimpleName(), "time until update: " + (((lastUpdated + threshold) - now) / 1000) + " sec");
+            Log.d(TAG, "threshold min: " + minuteThreshold);
+            Log.d(TAG, "threshold: " + threshold);
+            Log.d(TAG, "last Updated: " + lastUpdated);
+            Log.d(TAG, "now: " + now);
+            Log.d(TAG, "time until update: " + (((lastUpdated + threshold) - now) / 1000) + " sec");
 
             if ((lastUpdated + threshold) < now) {
 
-                Log.d(getClass().getSimpleName(), "threshold expired --> set colors for " + "txt_" + txt.getId());
+                Log.d(TAG, "threshold expired --> set colors for " + "txt_" + txt.getId());
                 if (last > current) {
                     txt.setTextColor(getResources().getColor(R.color.bd_red));
                 } else if (last < current) {
@@ -120,10 +123,14 @@ public class PoolFragment extends Fragment {
                 }
                 pref.edit().putFloat("txt_" + txt.getId() + "_value", current).commit();
                 pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).commit();
-                Log.d(getClass().getSimpleName(), "set last luck to: " + current);
+                Log.d(TAG, "set last luck to: " + current);
             }
 
-            txt.setText(App.formatProcent(current));
+            if(highPrecision){
+                txt.setText(App.formatProcentHighPrecision(current));
+            }else{
+                txt.setText(App.formatProcent(current));
+            }
         } else {
             txt.setText(App.formatProcent(current));
         }
@@ -148,7 +155,7 @@ public class PoolFragment extends Fragment {
 
             @Override
             public void onRatingChanged(RatingBar arg0, float arg1, boolean arg2) {
-                Log.d(getClass().getSimpleName(), "Rating changed: " + arg1);
+                Log.d(TAG, "Rating changed: " + arg1);
                 arg0.setRating(ratingToSet);
             }
         });
@@ -156,7 +163,7 @@ public class PoolFragment extends Fragment {
         ratRating.setStepSize(0.5f);
 
         ratRating.setRating(ratingToSet);
-        Log.d(getClass().getSimpleName(), "Rating set: " + ratRating.getRating());
+        Log.d(TAG, "Rating set: " + ratRating.getRating());
 
     }
 
@@ -171,14 +178,14 @@ public class PoolFragment extends Fragment {
                 duration = App.dateDurationFormat.parse(tmpBlock.getMining_duration());
                 total += duration.getTime();
             } catch (ParseException e) {
-                Log.e(getClass().getSimpleName(), "Can't get AverageRoundTime (NullPointer)");
+                Log.e(TAG, "Can't get AverageRoundTime (NullPointer)");
             }
 
         }
 
         long average = total / blocks.size();
 
-        Log.d(getClass().getSimpleName(), "Total: " + total + "; " + "Avg.: " + average);
+        Log.d(TAG, "Total: " + total + "; " + "Avg.: " + average);
 
         return new Date(average);
     }
@@ -190,7 +197,7 @@ public class PoolFragment extends Fragment {
 
         double rating = dur / avg;
 
-        Log.d(getClass().getSimpleName(), "Raw Rating: " + rating);
+        Log.d(TAG, "Raw Rating: " + rating);
 
         return rating;
     }
@@ -234,14 +241,14 @@ public class PoolFragment extends Fragment {
                 started = App.dateStatsFormat.parse(stats.getRound_started());
                 txtRoundStarted.setText(App.dateFormat.format(started));
             } catch (java.text.ParseException e) {
-                Log.e(getClass().getSimpleName(), "Can't get RoundStarted (NullPointer)");
+                Log.e(TAG, "Can't get RoundStarted (NullPointer)");
             }
             try {
                 duration = App.dateDurationFormat.parse(stats.getRound_duration());
                 txtRoundDuration.setText(App.dateDurationFormat.format(duration));
             } catch (java.text.ParseException e) {
                 txtRoundDuration.setText(getString(R.string.txt_greater_one_day));
-                Log.e(getClass().getSimpleName(), "Can't get RoundDuration (NullPointer)");
+                Log.e(TAG, "Can't get RoundDuration (NullPointer)");
             }
 
             if (average != null && duration != null) {
@@ -252,10 +259,10 @@ public class PoolFragment extends Fragment {
 
             if (duration != null) {
                 float cdf = Float.valueOf(stats.getShares_cdf());
-                Log.i(getClass().getSimpleName(), "cdf: " + cdf);
+                Log.i(TAG, "cdf: " + cdf);
                 float estimated = (duration.getTime() / (cdf / 100));
-                Log.i(getClass().getSimpleName(), "estimated: " + (long) estimated);
-                Log.i(getClass().getSimpleName(), "duration: " + duration.getTime());
+                Log.i(TAG, "estimated: " + (long) estimated);
+                Log.i(TAG, "duration: " + duration.getTime());
 
                 txtEstimatedDuration.setText(App.dateDurationFormat.format(new Date((long) (estimated/* + duration.getTime()*/))));
             } else {
@@ -266,9 +273,9 @@ public class PoolFragment extends Fragment {
             float currentLuck7d = Float.parseFloat(stats.getLuck_7());
             float currentLuck30d = Float.parseFloat(stats.getLuck_30());
 
-            setLuck(txtLuck24h, currentLuck24);
-            setLuck(txtLuck7d, currentLuck7d);
-            setLuck(txtLuck30d, currentLuck30d);
+            setLuck(txtLuck24h, currentLuck24, false);
+            setLuck(txtLuck7d, currentLuck7d, false);
+            setLuck(txtLuck30d, currentLuck30d, false);
         } catch (NullPointerException ignore) {
         }
 
@@ -276,7 +283,7 @@ public class PoolFragment extends Fragment {
 
     private void fillUpAvgLuck() {
         if (avgLuck != null) {
-            setLuck(txtAvgLuck, avgLuck.getAvg_luck());
+            setLuck(txtAvgLuck, avgLuck.getAvg_luck(), true);
         }
     }
 

@@ -26,6 +26,7 @@
     <string name="MtGox_short">MtGox</string>
     <string name="BTCe_short">BTC-e</string>
     <string name="CoinDesk_short">CoinDesk</string>
+    <string name="Coinbase_short">CoinBase</string>
     <string name="BitStamp">BitStamp (USD)</string>
     <string name="MtGoxUsd">MtGox (USD)</string>
     <string name="MtGoxEur">MtGox (EUR)</string>
@@ -34,6 +35,7 @@
     <string name="CoinDeskUsd">CoinDesk (USD)</string>
     <string name="CoinDeskEur">CoinDesk (EUR)</string>
     <string name="CoinDeskGbp">CoinDesk (GBP)</string>
+    <string name="CoinBaseUsd">CoinBase (USD)</string>
 
     <!-- Notification -->
     <string name="txt_hashrate_dropped_title">Hashrate has dropped!</string>
@@ -174,6 +176,7 @@
         <item>@string/CoinDeskUsd</item>
         <item>@string/CoinDeskEur</item>
         <item>@string/CoinDeskGbp</item>
+        <item>@string/CoinBaseUsd</item>
     </string-array>
     <string-array name="price_source_values">
         <item>0</item>
@@ -182,6 +185,7 @@
         <item>5</item>
         <item>6</item>
         <item>7</item>
+        <item>8</item>
     </string-array>
     <string-array name="btc_style">
         <item>@string/btc</item>

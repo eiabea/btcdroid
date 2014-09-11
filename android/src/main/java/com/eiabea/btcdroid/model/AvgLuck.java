@@ -43,9 +43,5 @@ public class AvgLuck implements Parcelable {
         return avg_luck;
     }
 
-    public void setAvg_luck(float avg_luck) {
-        this.avg_luck = avg_luck;
-    }
-
 
 }

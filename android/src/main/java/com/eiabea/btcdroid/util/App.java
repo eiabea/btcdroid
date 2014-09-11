@@ -214,6 +214,10 @@ public class App extends Application {
         return String.format("%.0f", raw * 100) + " " + getResString(R.string.percent_sign, getInstance());
     }
 
+    public static String formatProcentHighPrecision(float raw) {
+        return String.format("%.2f", raw * 100) + " " + getResString(R.string.percent_sign, getInstance());
+    }
+
     public static String formatReward(float reward) {
         int style = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getInstance()).getString("btc_style_preference", "0"));
 

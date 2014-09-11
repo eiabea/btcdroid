@@ -25,6 +25,7 @@ import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
 import com.eiabea.btcdroid.model.PricesCoinDesk;
+import com.eiabea.btcdroid.model.PricesCoinbase;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
@@ -55,6 +56,7 @@ public class UpdateService extends Service {
     public static final int PRICE_SOURCE_COINDESK_USD = 5;
     public static final int PRICE_SOURCE_COINDESK_EUR = 6;
     public static final int PRICE_SOURCE_COINDESK_GBP = 7;
+    public static final int PRICE_SOURCE_COINBASE = 8;
 
     private Profile profile;
     private Stats stats;
@@ -233,6 +235,33 @@ public class UpdateService extends Service {
                     public void onErrorResponse(VolleyError error) {
                         onPriceError();
 
+                    }
+                });
+                break;
+            case PRICE_SOURCE_COINBASE:
+                App.getInstance().httpWorker.getPricesCoinbase(new Listener<PricesCoinbase>() {
+
+                    @Override
+                    public void onResponse(PricesCoinbase prices) {
+
+                        try {
+                            GenericPrice price = new GenericPrice();
+                            price.setValueFloat(prices.getSubtotal().getAmount());
+                            price.setSource(getApplicationContext().getString(R.string.Coinbase_short));
+                            price.setSymbol("$");
+
+                            onPriceLoaded(price);
+                        } catch (NullPointerException ignore) {
+                            onPriceError();
+                        }
+
+                    }
+
+                }, new ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        onPriceError();
                     }
                 });
                 break;
