@@ -11,11 +11,6 @@ public class Block implements Parcelable {
     private String date_started;
     private int confirmations;
 
-
-    // Standardconstructor
-    public Block() {
-    }
-
     // Constructor used for Parcelable
     public Block(Parcel in) {
         mining_duration = in.readString();
@@ -55,40 +50,21 @@ public class Block implements Parcelable {
         return mining_duration;
     }
 
-    public void setMining_duration(String mining_duration) {
-        this.mining_duration = mining_duration;
-    }
-
     public String getReward() {
         return reward;
-    }
-
-    public void setReward(String reward) {
-        this.reward = reward;
     }
 
     public int getConfirmations() {
         return confirmations;
     }
 
-    public void setConfirmations(int confirmations) {
-        this.confirmations = confirmations;
-    }
-
     public String getDate_found() {
         return date_found;
-    }
-
-    public void setDate_found(String date_found) {
-        this.date_found = date_found;
     }
 
     public String getDate_started() {
         return date_started;
     }
 
-    public void setDate_started(String date_started) {
-        this.date_started = date_started;
-    }
 
 }

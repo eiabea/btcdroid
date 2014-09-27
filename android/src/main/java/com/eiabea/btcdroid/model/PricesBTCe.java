@@ -10,11 +10,6 @@ public class PricesBTCe implements Parcelable {
     // Attributes
     private BTCeTicker ticker;
 
-
-    // Standardconstructor
-    public PricesBTCe() {
-    }
-
     // Constructor used for Parcelable
     public PricesBTCe(Parcel in) {
         ticker = in.readParcelable(BTCeTicker.class.getClassLoader());

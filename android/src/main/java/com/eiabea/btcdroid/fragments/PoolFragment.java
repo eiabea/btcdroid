@@ -235,7 +235,7 @@ public class PoolFragment extends Fragment {
         Date duration = null;
 
         try {
-            average = getAverageRoundTime(App.parseBlocks(stats.getBlocks()));
+            average = getAverageRoundTime(stats.getBlocks());
             txtAverageDuration.setText(App.dateDurationFormat.format(average));
             try {
                 started = App.dateStatsFormat.parse(stats.getRound_started());
@@ -270,7 +270,7 @@ public class PoolFragment extends Fragment {
             }
 
             float currentLuck24 = Float.parseFloat(stats.getLuck_1());
-            float currentLuck7d = Float.parseFloat(stats.getLuck_7());
+            float currentLuck7d = stats.getLuck_7();
             float currentLuck30d = Float.parseFloat(stats.getLuck_30());
 
             setLuck(txtLuck24h, currentLuck24, false);

@@ -75,7 +75,7 @@ public class RoundsFragment extends Fragment {
 
         this.stats = stats;
         try {
-            adapter = new RoundsListAdapter(getActivity(), App.parseBlocks(stats.getBlocks()));
+            adapter = new RoundsListAdapter(getActivity(), stats.getBlocks());
 
             exlvRoundsHolder.setAdapter(adapter);
         } catch (NullPointerException ignore) {

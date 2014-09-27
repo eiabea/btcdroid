@@ -8,10 +8,6 @@ public class AvgLuck implements Parcelable {
     // Attributes
     private float avg_luck;
 
-    // Standardconstructor
-    public AvgLuck() {
-    }
-
     // Constructor used for Parcelable
     public AvgLuck(Parcel in) {
         avg_luck = in.readFloat();

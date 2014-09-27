@@ -9,10 +9,6 @@ public class Subtotal implements Parcelable {
     private float amount;
     private String currency;
 
-    // Standardconstructor
-    public Subtotal() {
-    }
-
     // Constructor used for Parcelable
     public Subtotal(Parcel in) {
         amount = in.readFloat();
@@ -45,7 +41,4 @@ public class Subtotal implements Parcelable {
         return amount;
     }
 
-    public String getCurrency() {
-        return currency;
-    }
 }

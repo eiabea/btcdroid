@@ -11,11 +11,6 @@ public class PricesCoinbase implements Parcelable {
     // Attributes
     private Subtotal subtotal;
 
-
-    // Standardconstructor
-    public PricesCoinbase() {
-    }
-
     // Constructor used for Parcelable
     public PricesCoinbase(Parcel in) {
         subtotal = in.readParcelable(Subtotal.class.getClassLoader());

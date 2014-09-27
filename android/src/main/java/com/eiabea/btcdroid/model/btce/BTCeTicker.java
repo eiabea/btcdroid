@@ -5,19 +5,11 @@ import android.os.Parcelable;
 
 public class BTCeTicker implements Parcelable {
     // Attributes
-    private float high;
     private float last;
-    private float low;
-
-    // Standardconstructor
-    public BTCeTicker() {
-    }
 
     // Constructor used for Parcelable
     public BTCeTicker(Parcel in) {
-        high = in.readFloat();
         last = in.readFloat();
-        low = in.readFloat();
     }
 
     @Override
@@ -27,9 +19,7 @@ public class BTCeTicker implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeFloat(high);
         dest.writeFloat(last);
-        dest.writeFloat(low);
     }
 
     @SuppressWarnings("rawtypes")
@@ -43,27 +33,7 @@ public class BTCeTicker implements Parcelable {
         }
     };
 
-    public float getHigh() {
-        return high;
-    }
-
-    public void setHigh(float high) {
-        this.high = high;
-    }
-
     public float getLast() {
         return last;
-    }
-
-    public void setLast(float last) {
-        this.last = last;
-    }
-
-    public float getLow() {
-        return low;
-    }
-
-    public void setLow(float low) {
-        this.low = low;
     }
 }

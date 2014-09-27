@@ -10,11 +10,6 @@ public class Bpi implements Parcelable {
     private Currency EUR;
     private Currency GBP;
 
-
-    // Standardconstructor
-    public Bpi() {
-    }
-
     // Constructor used for Parcelable
     public Bpi(Parcel in) {
         USD = in.readParcelable(Currency.class.getClassLoader());
@@ -50,24 +45,13 @@ public class Bpi implements Parcelable {
         return USD;
     }
 
-    public void setUSD(Currency uSD) {
-        USD = uSD;
-    }
-
     public Currency getEUR() {
         return EUR;
-    }
-
-    public void setEUR(Currency eUR) {
-        EUR = eUR;
     }
 
     public Currency getGBP() {
         return GBP;
     }
 
-    public void setGBP(Currency gBP) {
-        GBP = gBP;
-    }
 
 }
