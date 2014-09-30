@@ -190,21 +190,13 @@ public class App extends Application {
         return blocks;
     }
 
-    public static String formatHashRate(String hash) {
-        double doubleHash = Double.valueOf(hash);
-        if (doubleHash > 1000) {
-            return String.format("%.2f", doubleHash / 1000d) + " " + getResString(R.string.gh_per_second, getInstance());
-        }
-        return doubleHash + " " + getResString(R.string.mh_per_second, getInstance());
-    }
-
-    public static String formatHashRate(int hash) {
+    public static String formatHashRate(float hash) {
         if (hash > 1000000) {
-            return String.format("%.2f", ((float) hash) / 1000000f) + " " + getResString(R.string.th_per_second, getInstance());
+            return String.format("%.2f", (hash) / 1000000f) + " " + getResString(R.string.th_per_second, getInstance());
         } else if (hash > 10000) {
-            return String.format("%.1f", ((float) hash) / 1000f) + " " + getResString(R.string.gh_per_second, getInstance());
+            return String.format("%.1f", (hash) / 1000f) + " " + getResString(R.string.gh_per_second, getInstance());
         } else if (hash > 1000) {
-            return String.format("%.2f", ((float) hash) / 1000f) + " " + getResString(R.string.gh_per_second, getInstance());
+            return String.format("%.2f", (hash) / 1000f) + " " + getResString(R.string.gh_per_second, getInstance());
 
         }
         return String.valueOf(hash) + " " + getResString(R.string.mh_per_second, getInstance());
@@ -243,7 +235,7 @@ public class App extends Application {
         return ctx.getResources().getString(id);
     }
 
-    public static int getTotalHashrate(Profile profile) {
+    public static float getTotalHashrate(Profile profile) {
         ArrayList<Worker> list = profile.getWorkersList();
 
         int totalHashrate = 0;

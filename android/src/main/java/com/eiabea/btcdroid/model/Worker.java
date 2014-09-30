@@ -11,11 +11,7 @@ public class Worker implements Parcelable {
     private String score;
     private boolean alive;
     private int shares;
-    private int hashrate;
-
-    // Standardconstructor
-    public Worker() {
-    }
+    private float hashrate;
 
     // Constructor used for Parcelable
     public Worker(Parcel in) {
@@ -24,7 +20,7 @@ public class Worker implements Parcelable {
         score = in.readString();
         alive = in.readByte() == 1;
         shares = in.readInt();
-        hashrate = in.readInt();
+        hashrate = in.readFloat();
     }
 
     @Override
@@ -39,7 +35,7 @@ public class Worker implements Parcelable {
         dest.writeString(score);
         dest.writeByte((byte) (alive ? 1 : 0));
         dest.writeInt(shares);
-        dest.writeInt(hashrate);
+        dest.writeFloat(hashrate);
 
     }
 
@@ -58,40 +54,25 @@ public class Worker implements Parcelable {
         return last_share;
     }
 
-    public void setLast_share(long last_share) {
-        this.last_share = last_share;
-    }
 
     public String getScore() {
         return score;
     }
 
-    public void setScore(String score) {
-        this.score = score;
-    }
 
     public boolean isAlive() {
         return alive;
     }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
-    }
 
     public int getShares() {
         return shares;
     }
 
-    public void setShares(int shares) {
-        this.shares = shares;
-    }
 
-    public int getHashrate() {
-        return hashrate;
-    }
-
-    public void setHashrate(int hashrate) {
-        this.hashrate = hashrate;
+    public float getHashrate() {
+        // slush switched to GH/s --> * 1000
+        return hashrate * 1000;
     }
 
     public String getName() {

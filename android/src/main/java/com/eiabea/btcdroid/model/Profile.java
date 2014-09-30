@@ -79,8 +79,9 @@ public class Profile implements Parcelable {
         return estimated_reward;
     }
 
-    public String getHashrate() {
-        return hashrate;
+    public float getHashrate() {
+        // slush switched to GH/s --> * 1000
+        return Float.valueOf(hashrate) * 1000;
     }
 
     public JsonObject getWorkers() {

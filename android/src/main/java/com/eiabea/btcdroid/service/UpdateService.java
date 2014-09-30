@@ -459,7 +459,7 @@ public class UpdateService extends Service {
 
                 List<Worker> workers = profile.getWorkersList();
 
-                int totalHashrate = 0;
+                float totalHashrate = 0;
                 int limit = Integer.valueOf(pref.getString("notification_hashrate", "0"));
 
                 for (Worker tmp : workers) {
