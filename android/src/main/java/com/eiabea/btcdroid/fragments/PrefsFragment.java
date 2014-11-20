@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.support.v4.preference.PreferenceFragment;
 
 import com.eiabea.btcdroid.PrefsActivity;
 import com.eiabea.btcdroid.R;
+import com.github.machinarius.preferencefragment.PreferenceFragment;
 
 import java.util.ArrayList;
 import java.util.List;
