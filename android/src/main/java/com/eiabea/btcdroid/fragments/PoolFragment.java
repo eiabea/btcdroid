@@ -39,7 +39,13 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private Stats stats;
     private AvgLuck avgLuck;
 
+    private boolean statsLoaded = false;
+    private boolean profileLoaded = false;
+    private boolean avgLuckLoaded = false;
+
     private SharedPreferences pref;
+
+    private SwipeRefreshLayout swipeLayout;
 
     private TextView txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
             txtRoundDuration, txtEstimatedDuration, txtAverageDuration,
@@ -77,7 +83,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         setAvgLuck(avgLuck);
 
-        SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
 
@@ -209,17 +215,33 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void setProfile(Profile profile) {
         this.profile = profile;
         fillUpProfile();
+        profileLoaded = true;
+        handleLoading();
     }
 
     public void setStats(Stats stats) {
         this.stats = stats;
         fillUpStats();
+        statsLoaded = true;
+        handleLoading();
     }
 
     public void setAvgLuck(AvgLuck avgLuck) {
         this.avgLuck = avgLuck;
         fillUpAvgLuck();
+        avgLuckLoaded = true;
+        handleLoading();
 
+    }
+
+    private void handleLoading(){
+        if(swipeLayout!=null &&
+                avgLuckLoaded == true &&
+                profileLoaded == true &&
+                statsLoaded == true){
+            swipeLayout.setRefreshing(false);
+            avgLuckLoaded = profileLoaded = statsLoaded = false;
+        }
     }
 
     private void fillUpProfile() {

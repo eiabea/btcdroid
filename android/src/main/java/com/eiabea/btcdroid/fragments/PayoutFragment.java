@@ -30,6 +30,9 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public static final String PARAM_PRICE = "param_price";
     public static final String PARAM_PROFILE = "param_profile";
 
+    private boolean profileLoaded = false;
+    private boolean pricesLoaded = false;
+
     private GenericPrice price;
     private Profile profile;
 
@@ -37,6 +40,8 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private TextView txtCurrentSource, txtCurrentValue, txtEstimatedReward, txtConfirmedReward,
             txtTotalReward, txtSendThreshold;
     private ProgressBar prgGauge;
+
+    private SwipeRefreshLayout swipeLayout;
 
     private SharedPreferences pref;
     private LinearLayout llPriceHolder;
@@ -57,7 +62,7 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         setProfile(profile);
 
-        SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
 
@@ -120,12 +125,15 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
             setGauge(profile, false);
         }
 
+        profileLoaded = true;
+        handleLoading();
+
 
     }
 
     public void setPrices(GenericPrice price) {
         this.price = price;
-        fillUpPrices();
+        setPrice(txtCurrentValue, price);
 
         if (llPriceHolder != null) {
             if (App.isPriceEnabled) {
@@ -173,6 +181,9 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
             txtCurrentValue.setText(App.formatPrice(current.getSymbol(), current.getValueFloat()));
             txtCurrentSource.setText(current.getSource() + ":");
+
+            pricesLoaded = true;
+            handleLoading();
         }
     }
 
@@ -217,10 +228,13 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
     }
 
-    private void fillUpPrices() {
-
-        setPrice(txtCurrentValue, price);
-
+    private void handleLoading(){
+        if(swipeLayout!=null &&
+                pricesLoaded == true &&
+                profileLoaded == true){
+            swipeLayout.setRefreshing(false);
+            pricesLoaded = profileLoaded = false;
+        }
     }
 
     public class ProgressBarAnimation extends Animation {

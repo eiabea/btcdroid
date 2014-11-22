@@ -27,11 +27,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.eiabea.btcdroid.adapter.MainViewAdapter;
@@ -52,7 +50,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         OnPageChangeListener {
 
     public static final String PAID_APP_PACKAGE = "com.eiabea.paid.btcdroid";
-    private static final int BEER_POPUP_THRESHOLD = 1;
+    private static final int BEER_POPUP_THRESHOLD = 10;
 
     public static final String ACTION_NEW_ROUND_NOTIFICATION = "action_new_round_notification";
     public static final String ACTION_DROP_NOTIFICATION = "action_drop_notification";
@@ -74,16 +72,12 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     private static final String STATE_STATS_LOADED = "state_stats_loaded";
     private static final String STATE_PRICES_LOADED = "state_prices_loaded";
     private static final String STATE_CURRENT_PAGE = "state_current_page";
-    private static final String STATE_PROGRESS_SHOWING = "state_progress_showing";
-
-    private MenuItem itemRefresh;
 
     // Tiles Layout
     private LinearLayout llTilesHolder;
 
     // ViewPager Layout
     private ViewPager viewPager;
-    private PagerTitleStrip viewPagerTitle;
     private MainViewAdapter adapter;
     private int currentPage = FRAGMENT_POOL;
 
@@ -109,7 +103,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -122,9 +115,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
         currentPage = pref.getInt("userMainFragment", FRAGMENT_POOL);
 
-        // initUi();
-        // setListeners();
-
         tryGettingDataFromService();
 
     }
@@ -132,15 +122,12 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     private void handleBeerDialog() {
         if (!BuildConfig.PAID) {
             int appStarts = pref.getInt(BuildConfig.APP_STARTS, 0);
-            boolean beerDialogShown = pref.getBoolean(BuildConfig.BEER_DIALOG_SHOWN, false);
 
-            if (appStarts == BEER_POPUP_THRESHOLD && !beerDialogShown) {
+            if (appStarts == BEER_POPUP_THRESHOLD) {
                 showBeerDialog();
-                pref.edit().putBoolean(BuildConfig.BEER_DIALOG_SHOWN, true).commit();
+                pref.edit().putInt(BuildConfig.APP_STARTS, 0).apply();
             } else {
-                if (!beerDialogShown) {
-                    pref.edit().putInt(BuildConfig.APP_STARTS, ++appStarts).commit();
-                }
+                pref.edit().putInt(BuildConfig.APP_STARTS, ++appStarts).apply();
             }
         }
     }
@@ -277,11 +264,10 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
             } else {
                 Log.d(getClass().getSimpleName(), "viewpager");
 
-                viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
+                PagerTitleStrip viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
                 viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
 
                 viewPager = (ViewPager) findViewById(R.id.vp_main);
-                // viewPager.setOffscreenPageLimit(2);
                 viewPager.setOnPageChangeListener(this);
 
                 viewPager.setAdapter(adapter);

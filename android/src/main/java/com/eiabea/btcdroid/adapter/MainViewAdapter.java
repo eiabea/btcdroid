@@ -67,18 +67,19 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         position = positionToCustomPosition(position);
 
-        if (position == MainActivity.FRAGMENT_PAYOUT) {
-            PayoutFragment payoutFragment = PayoutFragment.create(price, profile);
-            return payoutFragment;
-        } else if (position == MainActivity.FRAGMENT_POOL) {
-            PoolFragment poolFragment = PoolFragment.create(profile, stats, avgLuck);
-            return poolFragment;
-        } else if (position == MainActivity.FRAGMENT_WORKER) {
-            WorkerFragment workerFragment = WorkerFragment.create(profile);
-            return workerFragment;
-        } else if (position == MainActivity.FRAGMENT_ROUNDS) {
-            RoundsFragment roundsFragment = RoundsFragment.create(stats);
-            return roundsFragment;
+        switch (position) {
+            case MainActivity.FRAGMENT_PAYOUT:
+                PayoutFragment payoutFragment = PayoutFragment.create(price, profile);
+                return payoutFragment;
+            case MainActivity.FRAGMENT_POOL:
+                PoolFragment poolFragment = PoolFragment.create(profile, stats, avgLuck);
+                return poolFragment;
+            case MainActivity.FRAGMENT_WORKER:
+                WorkerFragment workerFragment = WorkerFragment.create(profile);
+                return workerFragment;
+            case MainActivity.FRAGMENT_ROUNDS:
+                RoundsFragment roundsFragment = RoundsFragment.create(stats);
+                return roundsFragment;
         }
 
         return null;

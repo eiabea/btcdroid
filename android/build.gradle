@@ -11,13 +11,13 @@ android {
     compileSdkVersion 21
     buildToolsVersion '21.1.1'
     defaultConfig {
-        versionCode 62
+        versionCode 70
         versionName "1.4.0"
         minSdkVersion 10
         targetSdkVersion 21
 
-        buildConfigField "String", "APP_STARTS", "\"appStarts2\""
-        buildConfigField "String", "BEER_DIALOG_SHOWN", "\"beerDialogShown2\""
+        buildConfigField "String", "APP_STARTS", "\"appStarts3\""
+        buildConfigField "String", "BEER_DIALOG_SHOWN", "\"beerDialogShown3\""
 
     }
 
@@ -61,9 +61,7 @@ android.signingConfigs.release.keyAlias props.keyAlias
 android.signingConfigs.release.keyPassword props.keyAliasPassword
 
 dependencies {
-    //compile project(':lib_supportpreffragment')
     compile 'com.github.machinarius:preferencefragment:0.1.1'
-    //compile project(':lib_dragsortlistview')
     compile 'com.mobeta.android.dslv:drag-sort-listview:0.6.1'
     compile 'com.android.support:support-v4:21.0.2'
     compile 'com.google.code.gson:gson:2.3'

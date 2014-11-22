@@ -47,31 +47,23 @@
             android:baselineAligned="false"
             android:orientation="horizontal">
 
-            <ScrollView
-                android:layout_width="match_parent"
+            <FrameLayout
+                android:id="@+id/fl_pool_tile"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:scrollbars="none"
-                android:layout_weight="1">
+                android:layout_weight="1"></FrameLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="vertical">
+            <FrameLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/bd_grey_text"></FrameLayout>
 
-                    <FrameLayout
-                        android:id="@+id/fl_pool_tile"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"></FrameLayout>
+            <FrameLayout
+                android:id="@+id/fl_payout_tile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"></FrameLayout>
 
-                    <FrameLayout
-                        android:id="@+id/fl_payout_tile"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"></FrameLayout>
-                </LinearLayout>
-            </ScrollView>
 
             <FrameLayout
                 android:layout_width="1dp"
@@ -79,7 +71,7 @@
                 android:background="@color/bd_grey_text"></FrameLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
