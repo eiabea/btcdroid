@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -65,10 +66,11 @@ public class ParticipantsActivity extends ActionBarActivity {
 
     private void initUi() {
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setSubtitle(R.string.action_participants);
+        setSupportActionBar(toolbar);
 
-        getSupportActionBar().setSubtitle(R.string.action_participants);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         rlQrCodeHolder = (RelativeLayout) findViewById(R.id.rl_qr_code_holder);
 

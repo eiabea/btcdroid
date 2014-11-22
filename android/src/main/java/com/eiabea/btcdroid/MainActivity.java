@@ -96,8 +96,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     ;
     private Button btnSetToken;
 
-    private boolean isProgessShowing = false;
-
     private SharedPreferences pref;
     private ClipboardManager clipboard;
     @SuppressWarnings("deprecation")
@@ -194,7 +192,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         this.price = savedInstanceState.getParcelable(STATE_PRICES);
         this.avgLuck = savedInstanceState.getParcelable(STATE_AVG_LUCK);
         this.currentPage = savedInstanceState.getInt(STATE_CURRENT_PAGE);
-        this.isProgessShowing = savedInstanceState.getBoolean(STATE_PROGRESS_SHOWING);
         this.profileLoaded = savedInstanceState.getBoolean(STATE_PROFILE_LOADED);
         this.statsLoaded = savedInstanceState.getBoolean(STATE_STATS_LOADED);
         this.pricesLoaded = savedInstanceState.getBoolean(STATE_PRICES_LOADED);
@@ -234,7 +231,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         savedInstanceState.putParcelable(STATE_PRICES, this.price);
         savedInstanceState.putParcelable(STATE_AVG_LUCK, this.avgLuck);
         savedInstanceState.putInt(STATE_CURRENT_PAGE, this.currentPage);
-        savedInstanceState.putBoolean(STATE_PROGRESS_SHOWING, this.isProgessShowing);
         savedInstanceState.putBoolean(STATE_PROFILE_LOADED, this.profileLoaded);
         savedInstanceState.putBoolean(STATE_STATS_LOADED, this.statsLoaded);
         savedInstanceState.putBoolean(STATE_PRICES_LOADED, this.pricesLoaded);
@@ -262,9 +258,8 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setSubtitle(R.string.app_name_subtitle);
         setSupportActionBar(toolbar);
-
-        //getSupportActionBar().setSubtitle(R.string.app_name_subtitle);
 
         adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price, this.avgLuck);
         try {
@@ -340,23 +335,12 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
-        itemRefresh = menu.findItem(R.id.action_refresh);
-
-        if (!isProgessShowing && App.getInstance().isTokenSet()) {
-            itemRefresh.setVisible(true);
-        }
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_refresh:
-                reloadData();
-
-                break;
-
             case R.id.action_settings:
                 startActivityForResult(new Intent(this, PrefsActivity.class), INTENT_PREF);
                 break;
@@ -531,19 +515,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         }
     }
 
-    private void showProgress(boolean show) {
-
-        Log.w(getClass().getSimpleName(), "showProgress: " + show);
-
-        setSupportProgressBarIndeterminateVisibility(show);
-
-        if (itemRefresh != null) {
-            itemRefresh.setVisible(!show);
-        }
-
-        this.isProgessShowing = show;
-    }
-
     public void setProfile(Profile profile) {
         this.profile = profile;
         try {
@@ -636,12 +607,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
             // ignore?
         } catch (NullPointerException e) {
             // ignore?
-        }
-
-        if (pricesLoaded && profileLoaded && statsLoaded) {
-            showProgress(false);
-        } else {
-            showProgress(true);
         }
 
     }

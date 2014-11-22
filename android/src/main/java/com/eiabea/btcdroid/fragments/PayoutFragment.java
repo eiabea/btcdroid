@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,7 @@ import com.eiabea.btcdroid.util.App;
 
 import java.util.Calendar;
 
-public class PayoutFragment extends Fragment {
+public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     public static final String PARAM_PRICE = "param_price";
     public static final String PARAM_PROFILE = "param_profile";
@@ -55,6 +56,10 @@ public class PayoutFragment extends Fragment {
         setPrices(price);
 
         setProfile(profile);
+
+        SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
 
         return rootView;
 
@@ -287,5 +292,11 @@ public class PayoutFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onRefresh() {
+        if (App.getInstance().isTokenSet()) {
+            App.resetUpdateManager(getActivity());
+        }
+    }
 
 }

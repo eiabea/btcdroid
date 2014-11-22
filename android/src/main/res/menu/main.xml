@@ -2,39 +2,33 @@
     xmlns:btcdroid="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_action_refresh"
-        android:title="@string/action_refresh"
-        android:visible="false"
-        btcdroid:showAsAction="always" />
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        btcdroid:showAsAction="never"
         android:title="@string/action_settings" />
     <item
         android:id="@+id/action_customize"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        btcdroid:showAsAction="never"
         android:title="@string/action_customize" />
     <item
         android:id="@+id/action_participants"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        btcdroid:showAsAction="never"
         android:title="@string/action_participants" />
     <item
         android:id="@+id/action_email"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        btcdroid:showAsAction="never"
         android:title="@string/action_email" />
     <item
         android:id="@+id/action_donate"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        btcdroid:showAsAction="never"
         android:title="@string/action_donate" />
     <item
         android:id="@+id/action_buy"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        btcdroid:showAsAction="never"
         android:title="@string/action_buy" />
 </menu>

@@ -1,263 +1,269 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bd_background">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/ll_main_info_price_holder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bd_white"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="5dp">
-
-                <TextView
-                    android:id="@+id/txt_main_info_current_source"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text="@string/txt_one_btc_is" />
-
-                <TextView
-                    android:id="@+id/txt_main_info_current_value"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="right" />
-            </LinearLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/small_card_bottom_line_height"
-                android:background="@color/bd_card_bottom_line"></FrameLayout>
-        </LinearLayout>
+        android:layout_height="match_parent"
+        android:background="@color/bd_background">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:orientation="vertical">
 
-            <com.eiabea.btcdroid.fonts.RobotoBold
-                style="@style/style_small_card_headline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:text="@string/txt_rewards"
-                android:textAllCaps="true" />
-
             <LinearLayout
+                android:id="@+id/ll_main_info_price_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="3dp"
-                    android:layout_weight="1"
-                    android:background="@color/bd_white"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/ll_reference_width"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/small_card_content_padding_bottom"
-                        android:paddingTop="@dimen/small_card_content_padding_top">
-
-                        <com.eiabea.btcdroid.fonts.RobotoBold
-                            android:id="@+id/txt_main_info_estimated_reward"
-                            style="@style/style_small_card_value"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/bd_orange" />
-
-                        <TextView
-                            style="@style/style_small_card_desc"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/txt_estimated_reward" />
-                    </LinearLayout>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/small_card_bottom_line_height"
-                        android:background="@color/bd_card_bottom_line"></FrameLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="3dp"
-                    android:layout_weight="1"
-                    android:background="@color/bd_white"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/small_card_content_padding_bottom"
-                        android:paddingTop="@dimen/small_card_content_padding_top">
-
-                        <com.eiabea.btcdroid.fonts.RobotoBold
-                            android:id="@+id/txt_main_info_confirmed_reward"
-                            style="@style/style_small_card_value"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/bd_green" />
-
-                        <TextView
-                            style="@style/style_small_card_desc"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/txt_confirmed_reward" />
-                    </LinearLayout>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/small_card_bottom_line_height"
-                        android:background="@color/bd_card_bottom_line"></FrameLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_weight="1"
-                    android:background="@color/bd_white"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/small_card_content_padding_bottom"
-                        android:paddingTop="@dimen/small_card_content_padding_top">
-
-                        <com.eiabea.btcdroid.fonts.RobotoBold
-                            android:id="@+id/txt_main_info_total_reward"
-                            style="@style/style_small_card_value"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/bd_dark_grey_text" />
-
-                        <TextView
-                            style="@style/style_small_card_desc"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/txt_total_reward" />
-                    </LinearLayout>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/small_card_bottom_line_height"
-                        android:background="@color/bd_card_bottom_line"></FrameLayout>
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:orientation="vertical"
-            android:paddingBottom="20dp">
-
-            <com.eiabea.btcdroid.fonts.RobotoBold
-                style="@style/style_small_card_headline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:text="@string/txt_progress"
-                android:textAllCaps="true" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:background="@color/bd_white"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:id="@+id/txt_main_info_current_source"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text="@string/txt_one_btc_is" />
+
+                    <TextView
+                        android:id="@+id/txt_main_info_current_value"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/small_card_bottom_line_height"
+                    android:background="@color/bd_card_bottom_line"></FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical">
 
-                <!-- Gauge -->
+                <com.eiabea.btcdroid.fonts.RobotoBold
+                    style="@style/style_small_card_headline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="15dp"
+                    android:text="@string/txt_rewards"
+                    android:textAllCaps="true" />
 
-                <RelativeLayout
-                    android:id="@+id/rl_data_gauge_holder"
-                    android:layout_width="220dp"
-                    android:layout_height="220dp"
-                    android:layout_gravity="center_horizontal"
-                    android:padding="0dp">
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/bd_background" />
-
-                    <ProgressBar
-                        android:id="@+id/prg_data_gauge"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:indeterminate="false"
-                        android:max="1000"
-                        android:progressDrawable="@drawable/circular_progressbar"
-                        android:rotation="90" />
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerInParent="true"
-                        android:padding="0dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/gauge_payout_white"
-                        android:visibility="visible" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:orientation="vertical"
-                        android:paddingBottom="10dp">
+                        android:layout_marginRight="3dp"
+                        android:layout_weight="1"
+                        android:background="@color/bd_white"
+                        android:orientation="vertical">
 
-                        <com.eiabea.btcdroid.fonts.RobotoBold
-                            android:id="@+id/txt_main_info_send_threshold"
-                            style="@style/style_small_card_value"
+                        <LinearLayout
+                            android:id="@+id/ll_reference_width"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/bd_dark_grey_text" />
+                            android:orientation="vertical"
+                            android:paddingBottom="@dimen/small_card_content_padding_bottom"
+                            android:paddingTop="@dimen/small_card_content_padding_top">
 
-                        <TextView
-                            style="@style/style_small_card_desc"
+                            <com.eiabea.btcdroid.fonts.RobotoBold
+                                android:id="@+id/txt_main_info_estimated_reward"
+                                style="@style/style_small_card_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/bd_orange" />
+
+                            <TextView
+                                style="@style/style_small_card_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_estimated_reward" />
+                        </LinearLayout>
+
+                        <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/txt_send_threshold" />
+                            android:layout_height="@dimen/small_card_bottom_line_height"
+                            android:background="@color/bd_card_bottom_line"></FrameLayout>
                     </LinearLayout>
-                </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:layout_weight="1"
+                        android:background="@color/bd_white"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingBottom="@dimen/small_card_content_padding_bottom"
+                            android:paddingTop="@dimen/small_card_content_padding_top">
+
+                            <com.eiabea.btcdroid.fonts.RobotoBold
+                                android:id="@+id/txt_main_info_confirmed_reward"
+                                style="@style/style_small_card_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/bd_green" />
+
+                            <TextView
+                                style="@style/style_small_card_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_confirmed_reward" />
+                        </LinearLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/small_card_bottom_line_height"
+                            android:background="@color/bd_card_bottom_line"></FrameLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:layout_weight="1"
+                        android:background="@color/bd_white"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingBottom="@dimen/small_card_content_padding_bottom"
+                            android:paddingTop="@dimen/small_card_content_padding_top">
+
+                            <com.eiabea.btcdroid.fonts.RobotoBold
+                                android:id="@+id/txt_main_info_total_reward"
+                                style="@style/style_small_card_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/bd_dark_grey_text" />
+
+                            <TextView
+                                style="@style/style_small_card_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_total_reward" />
+                        </LinearLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/small_card_bottom_line_height"
+                            android:background="@color/bd_card_bottom_line"></FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/small_card_bottom_line_height"
-                android:background="@color/bd_card_bottom_line"></FrameLayout>
-        </LinearLayout>
-    </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical"
+                android:paddingBottom="20dp">
 
-</ScrollView>
+                <com.eiabea.btcdroid.fonts.RobotoBold
+                    style="@style/style_small_card_headline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="15dp"
+                    android:text="@string/txt_progress"
+                    android:textAllCaps="true" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bd_white"
+                    android:orientation="vertical">
+
+                    <!-- Gauge -->
+
+                    <RelativeLayout
+                        android:id="@+id/rl_data_gauge_holder"
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:layout_gravity="center_horizontal"
+                        android:padding="0dp">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/bd_background" />
+
+                        <ProgressBar
+                            android:id="@+id/prg_data_gauge"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:indeterminate="false"
+                            android:max="1000"
+                            android:progressDrawable="@drawable/circular_progressbar"
+                            android:rotation="90" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true"
+                            android:padding="0dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/gauge_payout_white"
+                            android:visibility="visible" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical"
+                            android:paddingBottom="10dp">
+
+                            <com.eiabea.btcdroid.fonts.RobotoBold
+                                android:id="@+id/txt_main_info_send_threshold"
+                                style="@style/style_small_card_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/bd_dark_grey_text" />
+
+                            <TextView
+                                style="@style/style_small_card_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_send_threshold" />
+                        </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/small_card_bottom_line_height"
+                    android:background="@color/bd_card_bottom_line"></FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

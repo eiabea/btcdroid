@@ -41,8 +41,6 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private SharedPreferences pref;
 
-    private SwipeRefreshLayout swipeLayout;
-
     private TextView txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
             txtRoundDuration, txtEstimatedDuration, txtAverageDuration,
             txtLuck24h, txtLuck7d, txtLuck30d, txtAvgLuck;
@@ -79,12 +77,9 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         setAvgLuck(avgLuck);
 
-        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
-        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+        swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
 
         return rootView;
     }
@@ -299,12 +294,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onRefresh() {
         if (App.getInstance().isTokenSet()) {
-//            pricesLoaded = profileLoaded = statsLoaded = false;
             App.resetUpdateManager(getActivity());
-//            showInfos();
-//            handleProgessIndicator();
-        } else {
-//            hideInfos();
         }
     }
 }
