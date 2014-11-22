@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.Pools;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class PoolFragment extends Fragment {
+public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     public static final String TAG = PoolFragment.class.getSimpleName();
 
@@ -40,6 +40,8 @@ public class PoolFragment extends Fragment {
     private AvgLuck avgLuck;
 
     private SharedPreferences pref;
+
+    private SwipeRefreshLayout swipeLayout;
 
     private TextView txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
             txtRoundDuration, txtEstimatedDuration, txtAverageDuration,
@@ -76,6 +78,13 @@ public class PoolFragment extends Fragment {
         setStats(stats);
 
         setAvgLuck(avgLuck);
+
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         return rootView;
     }
@@ -126,9 +135,9 @@ public class PoolFragment extends Fragment {
                 Log.d(TAG, "set last luck to: " + current);
             }
 
-            if(highPrecision){
+            if (highPrecision) {
                 txt.setText(App.formatProcentHighPrecision(current));
-            }else{
+            } else {
                 txt.setText(App.formatProcent(current));
             }
         } else {
@@ -287,4 +296,15 @@ public class PoolFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onRefresh() {
+        if (App.getInstance().isTokenSet()) {
+//            pricesLoaded = profileLoaded = statsLoaded = false;
+            App.resetUpdateManager(getActivity());
+//            showInfos();
+//            handleProgessIndicator();
+        } else {
+//            hideInfos();
+        }
+    }
 }

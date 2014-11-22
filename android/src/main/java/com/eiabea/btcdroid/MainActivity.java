@@ -20,6 +20,7 @@ import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
@@ -30,6 +31,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.eiabea.btcdroid.adapter.MainViewAdapter;
@@ -109,7 +111,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -259,7 +261,10 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
         setContentView(R.layout.activity_main);
 
-        getSupportActionBar().setSubtitle(R.string.app_name_subtitle);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        //getSupportActionBar().setSubtitle(R.string.app_name_subtitle);
 
         adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price, this.avgLuck);
         try {
