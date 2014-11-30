@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="bd_actionbar_background">#FF8C00</color>
+    <color name="bd_primary_dark">#C66D00</color>
     <color name="bd_background">#ededed</color>
     <color name="bd_red">#FF615D</color>
     <color name="bd_orange">#F9BF51</color>

@@ -25,11 +25,6 @@ public class RoundsFragment extends Fragment {
 
     private ExpandableListView exlvRoundsHolder;
 
-    private RoundsListAdapter adapter;
-
-    private DisplayMetrics metrics;
-    private int width;
-
     public static RoundsFragment create(Stats stats) {
         RoundsFragment fragment = new RoundsFragment();
         Bundle b = new Bundle();
@@ -56,18 +51,18 @@ public class RoundsFragment extends Fragment {
     @SuppressLint("NewApi")
     private void initUi(LayoutInflater inflater, ViewGroup rootView) {
 
-        metrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        width = metrics.widthPixels;
+//        DisplayMetrics metrics = new DisplayMetrics();
+//        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//
+//        width = metrics.widthPixels;
 
         exlvRoundsHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_rounds_holder);
 
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            exlvRoundsHolder.setIndicatorBounds(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
-        } else {
-            exlvRoundsHolder.setIndicatorBoundsRelative(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
-        }
+//        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+//            exlvRoundsHolder.setIndicatorBounds(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
+//        } else {
+//            exlvRoundsHolder.setIndicatorBoundsRelative(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
+//        }
 
     }
 
@@ -75,7 +70,7 @@ public class RoundsFragment extends Fragment {
 
         this.stats = stats;
         try {
-            adapter = new RoundsListAdapter(getActivity(), App.parseBlocks(stats.getBlocks()));
+            RoundsListAdapter adapter = new RoundsListAdapter(getActivity(), App.parseBlocks(stats.getBlocks()));
 
             exlvRoundsHolder.setAdapter(adapter);
         } catch (NullPointerException ignore) {

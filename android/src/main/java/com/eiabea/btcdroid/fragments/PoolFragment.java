@@ -115,15 +115,8 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             long now = Calendar.getInstance().getTimeInMillis();
 
-            Log.d(TAG, "threshold min: " + minuteThreshold);
-            Log.d(TAG, "threshold: " + threshold);
-            Log.d(TAG, "last Updated: " + lastUpdated);
-            Log.d(TAG, "now: " + now);
-            Log.d(TAG, "time until update: " + (((lastUpdated + threshold) - now) / 1000) + " sec");
-
             if ((lastUpdated + threshold) < now) {
 
-                Log.d(TAG, "threshold expired --> set colors for " + "txt_" + txt.getId());
                 if (last > current) {
                     txt.setTextColor(getResources().getColor(R.color.bd_red));
                 } else if (last < current) {
@@ -131,9 +124,8 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 } else {
                     txt.setTextColor(getResources().getColor(R.color.bd_dark_grey_text));
                 }
-                pref.edit().putFloat("txt_" + txt.getId() + "_value", current).commit();
-                pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).commit();
-                Log.d(TAG, "set last luck to: " + current);
+                pref.edit().putFloat("txt_" + txt.getId() + "_value", current).apply();
+                pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).apply();
             }
 
             if (highPrecision) {
@@ -236,9 +228,9 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private void handleLoading(){
         if(swipeLayout!=null &&
-                avgLuckLoaded == true &&
-                profileLoaded == true &&
-                statsLoaded == true){
+                avgLuckLoaded &&
+                profileLoaded &&
+                statsLoaded){
             swipeLayout.setRefreshing(false);
             avgLuckLoaded = profileLoaded = statsLoaded = false;
         }
@@ -256,8 +248,8 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private void fillUpStats() {
 
-        Date started = null;
-        Date average = null;
+        Date started;
+        Date average;
         Date duration = null;
 
         try {

@@ -183,7 +183,7 @@ public class CustomizeFragment extends Fragment {
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                pref.edit().putInt("userMainFragment", position).commit();
+                pref.edit().putInt("userMainFragment", position).apply();
             }
 
             @Override
@@ -239,8 +239,8 @@ public class CustomizeFragment extends Fragment {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 // Force default order
-                pref.edit().remove("userMainFragment").commit();
-                pref.edit().remove("userOrder").commit();
+                pref.edit().remove("userMainFragment").apply();
+                pref.edit().remove("userOrder").apply();
                 setListAdapter();
             }
         });

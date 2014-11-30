@@ -174,8 +174,8 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
                 }
 
-                pref.edit().putFloat("txt_" + txt.getId() + "_value", currentPriceFloat).commit();
-                pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).commit();
+                pref.edit().putFloat("txt_" + txt.getId() + "_value", currentPriceFloat).apply();
+                pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).apply();
                 Log.d(getClass().getSimpleName(), "set last price to: " + currentPriceFloat);
             }
 
@@ -230,8 +230,8 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private void handleLoading(){
         if(swipeLayout!=null &&
-                pricesLoaded == true &&
-                profileLoaded == true){
+                pricesLoaded &&
+                profileLoaded){
             swipeLayout.setRefreshing(false);
             pricesLoaded = profileLoaded = false;
         }

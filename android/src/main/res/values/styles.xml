@@ -19,7 +19,10 @@
 
         <!-- Set AppCompat’s color theming attrs -->
         <item name="colorPrimary">@color/bd_actionbar_background</item>
-        <item name="colorPrimaryDark">@color/bd_black</item>
+        <item name="colorPrimaryDark">@color/bd_primary_dark</item>
+
+        <item name="android:colorPrimary">@color/bd_actionbar_background</item>
+        <item name="android:colorPrimaryDark">@color/bd_primary_dark</item>
 
     </style>
 

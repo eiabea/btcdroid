@@ -25,16 +25,14 @@ public class WorkerFragment extends Fragment {
 
     public static final String PARAM_PROFILE = "param_profile";
 
-    private ViewGroup rootView;
-
     private Profile profile;
 
     private ExpandableListView exlvWOrkerHolder;
 
     private WorkerListAdapter adapter;
 
-    private DisplayMetrics metrics;
-    private int width;
+//    private DisplayMetrics metrics;
+//    private int width;
 
     public static WorkerFragment create(Profile profile) {
         WorkerFragment fragment = new WorkerFragment();
@@ -48,7 +46,7 @@ public class WorkerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(getClass().getSimpleName(), "onCreateView()");
         // Inflate the layout containing a title and body text.
-        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_worker, null);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_worker, null);
 
         this.profile = getArguments().getParcelable(PARAM_PROFILE);
 
@@ -62,17 +60,17 @@ public class WorkerFragment extends Fragment {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void initUi(LayoutInflater inflater, ViewGroup rootView) {
 
-        metrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        width = metrics.widthPixels;
+//        metrics = new DisplayMetrics();
+//        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//        width = metrics.widthPixels;
 
         exlvWOrkerHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_worker_holder);
 
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            exlvWOrkerHolder.setIndicatorBounds(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
-        } else {
-            exlvWOrkerHolder.setIndicatorBoundsRelative(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
-        }
+//        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+//            exlvWOrkerHolder.setIndicatorBounds(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
+//        } else {
+//            exlvWOrkerHolder.setIndicatorBoundsRelative(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
+//        }
 
     }
 

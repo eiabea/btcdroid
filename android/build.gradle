@@ -11,8 +11,8 @@ android {
     compileSdkVersion 21
     buildToolsVersion '21.1.1'
     defaultConfig {
-        versionCode 70
-        versionName "1.4.0"
+        versionCode 71
+        versionName "1.4.1"
         minSdkVersion 10
         targetSdkVersion 21
 
@@ -27,12 +27,17 @@ android {
 
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             applicationVariants.all { variant ->
-                def file = variant.outputFile
-                variant.outputFile = new File(file.parent, file.name.replace(".apk", "_v" + defaultConfig.versionName + ".apk"))
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        def fileName = outputFile.name.replace(".apk", "_v" + defaultConfig.versionName + ".apk")
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
             }
         }
 
