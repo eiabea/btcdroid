@@ -29,6 +29,7 @@ import com.eiabea.btcdroid.widget.MultiWidgetProvider;
 import com.eiabea.btcdroid.widget.PriceWidgetProvider;
 import com.eiabea.btcdroid.widget.RoundDurationWidgetProvider;
 import com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider;
+import com.eiabea.btcdroid.widget.TotalRewardWidgetProvider;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -49,7 +50,6 @@ public class App extends Application {
     public static final SimpleDateFormat dateStatsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     public static final SimpleDateFormat dateDurationFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 
-    public static final String PREF_NAME = "app_data";
     public static final String PREF_TOKEN = "token";
 
     public static boolean isPriceEnabled = true;
@@ -74,22 +74,6 @@ public class App extends Application {
      */
     @Override
     public void onCreate() {
-
-
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectNetwork()   // or .detectAll() for all detectable problems
-                .penaltyLog()
-                .build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .penaltyLog()
-                .penaltyDeath()
-                .build());
-
-
         super.onCreate();
         gson = new Gson();
 
@@ -160,37 +144,6 @@ public class App extends Application {
             return true;
         }
         return false;
-    }
-
-    public static int getDipsFromPixel(float pixels, Context ctx) {
-        // Get the screen's density scale
-        final float scale = ctx.getResources().getDisplayMetrics().density;
-        // Convert the dps to pixels, based on density scale
-        return (int) (pixels * scale + 0.5f);
-    }
-
-    public static PricesMtGox parsePrices(JsonObject json) {
-        PricesMtGox prices = new PricesMtGox();
-
-        Set<Entry<String, JsonElement>> set = json.entrySet();
-
-        for (Iterator<Entry<String, JsonElement>> it = set.iterator(); it.hasNext(); ) {
-            Entry<String, JsonElement> current = it.next();
-
-            if (current.getKey().equals("last")) {
-
-                JsonObject data = current.getValue().getAsJsonObject();
-
-                GenericPrice tmpPrice = new GenericPrice();
-
-                tmpPrice.setValueFloat(Float.parseFloat(data.get("value").getAsString()));
-
-                prices.setLastPrice(tmpPrice);
-            }
-
-        }
-
-        return prices;
     }
 
     public static List<Block> parseBlocks(JsonObject json) {
@@ -321,6 +274,11 @@ public class App extends Application {
         estimatedIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         estimatedIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
         context.sendBroadcast(estimatedIntent);
+        // Update Total Reward Widget
+        Intent totalRewardIntent = new Intent(context, TotalRewardWidgetProvider.class);
+        totalRewardIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        totalRewardIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
+        context.sendBroadcast(totalRewardIntent);
         // Update Multi Widget
         Intent multiIntent = new Intent(context, MultiWidgetProvider.class);
         multiIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
