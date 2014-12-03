@@ -168,6 +168,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
         } catch (NullPointerException e) {
             reloadData();
+
         }
     }
 
