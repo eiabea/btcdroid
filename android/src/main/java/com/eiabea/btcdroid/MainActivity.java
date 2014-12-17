@@ -302,7 +302,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
                         Editable value = input.getText();
 
                         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                        pref.edit().putString(App.PREF_TOKEN, value.toString()).commit();
+                        pref.edit().putString(App.PREF_TOKEN, value.toString()).apply();
 
                         App.getInstance().resetToken();
 

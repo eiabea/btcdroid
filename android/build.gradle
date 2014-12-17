@@ -11,13 +11,12 @@ android {
     compileSdkVersion 21
     buildToolsVersion '21.1.2'
     defaultConfig {
-        versionCode 73
-        versionName "1.4.2.1"
+        versionCode 74
+        versionName "1.4.3"
         minSdkVersion 10
         targetSdkVersion 21
 
-        buildConfigField "String", "APP_STARTS", "\"appStarts3\""
-        buildConfigField "String", "BEER_DIALOG_SHOWN", "\"beerDialogShown3\""
+        buildConfigField "String", "APP_STARTS", "\"appStarts\""
 
     }
 

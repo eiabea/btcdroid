@@ -136,6 +136,8 @@
     <string name="txt_pref_style_btc_style_message">Switch the style the values are formated</string>
     <string name="txt_pref_style_worker_username_title">Worker Name Style</string>
     <string name="txt_pref_style_worker_username_message">Show username in front of workername</string>
+    <string name="txt_pref_style_transparent_widgets_message">Set the background of the widgets to a transparent black</string>
+    <string name="txt_pref_style_transparent_widgets_title">Transparent Widgets</string>
     <string name="txt_pref_update_title">Updates</string>
     <string name="txt_pref_update_checking_interval_title">Checking Interval (minutes)</string>
     <string name="txt_pref_update_checking_interval_message">How often should the data be updated (Widgets, Notifications,&#8230;)</string>
