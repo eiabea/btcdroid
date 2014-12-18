@@ -55,8 +55,10 @@ public class Stats implements Parcelable {
         dest.writeString(shares_cdf);
 
         dest.writeLong(shares);
-
-        dest.writeString(blocks.toString());
+        if(blocks != null){
+            dest.writeString(blocks.toString());
+        }
+        
     }
 
     public String getShares_cdf() {

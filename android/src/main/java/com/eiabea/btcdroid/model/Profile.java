@@ -70,8 +70,10 @@ public class Profile implements Parcelable {
         dest.writeString(unconfirmed_reward);
         dest.writeString(estimated_reward);
         dest.writeString(hashrate);
-
-        dest.writeString(workers.toString());
+        if(workers != null){
+        	dest.writeString(workers.toString());
+        }
+        
 
     }
 
