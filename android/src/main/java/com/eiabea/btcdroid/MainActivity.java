@@ -510,7 +510,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
             ((PoolFragment) getFragment(FRAGMENT_POOL)).setProfile(profile);
             ((WorkerFragment) getFragment(FRAGMENT_WORKER)).setProfile(profile);
 
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             Log.e(getClass().getSimpleName(), "Can't get all Fragments to setProfile (NullPointer)");
         }
     }
@@ -521,7 +521,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
             ((PoolFragment) getFragment(FRAGMENT_POOL)).setStats(stats);
             ((RoundsFragment) getFragment(FRAGMENT_ROUNDS)).setStats(stats);
 
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             Log.e(getClass().getSimpleName(), "Can't get all Fragments to setStats (NullPointer)");
         }
     }
@@ -531,7 +531,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         try {
             ((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setPrices(price);
 
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             Log.e(getClass().getSimpleName(), "Can't get all Fragments to setPrice (NullPointer)");
         }
     }
@@ -541,7 +541,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         try {
             ((PoolFragment) getFragment(FRAGMENT_POOL)).setAvgLuck(avgLuck);
 
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             Log.e(getClass().getSimpleName(), "Can't get all Fragments to setAvgLuck (NullPointer)");
         }
     }
@@ -566,7 +566,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
             return PoolFragment.class.getSimpleName();
         } else if (which == FRAGMENT_WORKER) {
             return WorkerFragment.class.getSimpleName();
-        } else if (which == FRAGMENT_WORKER) {
+        } else if (which == FRAGMENT_ROUNDS) {
             return RoundsFragment.class.getSimpleName();
         }
         return "";
@@ -655,27 +655,18 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     public void onProfileError() {
         profileLoaded = true;
         handleProgessIndicator();
-        // Toast.makeText(MainActivity.this,
-        // getString(R.string.toast_error_loading_profile),
-        // Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onStatsError() {
         statsLoaded = true;
         handleProgessIndicator();
-        // Toast.makeText(MainActivity.this,
-        // getString(R.string.toast_error_loading_stats),
-        // Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onPricesError() {
         pricesLoaded = true;
         handleProgessIndicator();
-        // Toast.makeText(MainActivity.this,
-        // getString(R.string.toast_error_loading_price),
-        // Toast.LENGTH_SHORT).show();
     }
 
     @Override
