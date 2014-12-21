@@ -98,7 +98,7 @@ public class UpdateService extends Service {
                     getProfileWidgets();
                     break;
                 case GET_STATS:
-//                    getStatsWidgets();
+                    getStatsWidgets();
                     break;
                 case GET_PRICE:
 //                    getPriceWidgets();
@@ -107,7 +107,7 @@ public class UpdateService extends Service {
                 default:
                     getProfileWidgets();
 //                    getPriceWidgets();
-//                    getStatsWidgets();
+                    getStatsWidgets();
 //                    getAvgLuckWidgets();
                     break;
             }
@@ -631,11 +631,14 @@ public class UpdateService extends Service {
     }
 
     private void onStatsLoaded(Stats stats) {
-        UpdateService.this.stats = stats;
-        App.updateWidgets(getApplicationContext(), stats);
-        if (updateInterface != null) {
-            updateInterface.onStatsLoaded(stats);
-        }
+
+        DataProvider.insertOrUpdateStats(getApplicationContext(), stats);
+
+//        UpdateService.this.stats = stats;
+//        App.updateWidgets(getApplicationContext(), stats);
+//        if (updateInterface != null) {
+//            updateInterface.onStatsLoaded(stats);
+//        }
     }
 
     private void onStatsError() {

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.eiabea.btcdroid.model.Profile;
+import com.eiabea.btcdroid.model.Stats;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -16,14 +17,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TAG = DatabaseHelper.class.getSimpleName();
 
     public static final String PROFILE_TABLE_NAME = "profile";
+    public static final String STATS_TABLE_NAME = "stats";
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "btcdroid";
 
-    private static final String CREATE_DIARY_ENTRIES_TABLE =
+    private static final String CREATE_PROFILE_TABLE =
             " CREATE TABLE " + PROFILE_TABLE_NAME +
                     " (" + Profile._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     " " + Profile.JSON + " TEXT " +
+                    ");";
+
+    private static final String CREATE_STATS_TABLE =
+            " CREATE TABLE " + STATS_TABLE_NAME +
+                    " (" + Stats._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    " " + Stats.JSON + " TEXT " +
                     ");";
 
     DatabaseHelper(Context context) {
@@ -32,7 +40,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_DIARY_ENTRIES_TABLE);
+        db.execSQL(CREATE_PROFILE_TABLE);
+        db.execSQL(CREATE_STATS_TABLE);
     }
 
     @Override
@@ -41,6 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Upgrading Database from v" + oldVersion + " to v" + newVersion);
 
         db.execSQL("DROP TABLE IF EXISTS " + PROFILE_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + STATS_TABLE_NAME);
         onCreate(db);
     }
 }

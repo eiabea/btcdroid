@@ -19,6 +19,7 @@ import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
+import com.eiabea.btcdroid.data.DataProvider;
 import com.eiabea.btcdroid.model.AvgLuck;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Profile;
@@ -34,14 +35,11 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     public static final String TAG = PoolFragment.class.getSimpleName();
 
-    public static final String PARAM_PROFILE = "param_profile";
-    public static final String PARAM_STATS = "param_stats";
     public static final String PARAM_AVG_LUCK = "param_avg_luck";
     private static final int POOL_PROFILE_LOADER_ID = 222;
 
     private ViewGroup rootView;
 
-    private Stats stats;
     private AvgLuck avgLuck;
 
     private boolean statsLoaded = false;
@@ -57,10 +55,9 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             txtLuck24h, txtLuck7d, txtLuck30d, txtAvgLuck;
     private RatingBar ratRating;
 
-    public static PoolFragment create(Stats stats, AvgLuck avgLuck) {
+    public static PoolFragment create(AvgLuck avgLuck) {
         PoolFragment fragment = new PoolFragment();
         Bundle b = new Bundle();
-        b.putParcelable(PARAM_STATS, stats);
         b.putParcelable(PARAM_AVG_LUCK, avgLuck);
         fragment.setArguments(b);
         return fragment;
@@ -75,18 +72,15 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        this.stats = getArguments().getParcelable(PARAM_STATS);
         this.avgLuck = getArguments().getParcelable(PARAM_AVG_LUCK);
 
         initUi();
 
-//        setStats(stats);
-//
-//        setAvgLuck(avgLuck);
-//
-//        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
-//        swipeLayout.setOnRefreshListener(this);
-//        swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
+        setAvgLuck(avgLuck);
+
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
 
         getActivity().getSupportLoaderManager().initLoader(POOL_PROFILE_LOADER_ID, null, this);
 
@@ -218,32 +212,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         handleLoading();
     }
 
-    public void setStats(Stats stats) {
-        this.stats = stats;
-        fillUpStats();
-        statsLoaded = true;
-        handleLoading();
-    }
-
-    public void setAvgLuck(AvgLuck avgLuck) {
-        this.avgLuck = avgLuck;
-        fillUpAvgLuck();
-        avgLuckLoaded = true;
-        handleLoading();
-
-    }
-
-    private void handleLoading() {
-        if (swipeLayout != null &&
-                avgLuckLoaded &&
-                profileLoaded &&
-                statsLoaded) {
-            swipeLayout.setRefreshing(false);
-            avgLuckLoaded = profileLoaded = statsLoaded = false;
-        }
-    }
-
-    private void fillUpStats() {
+    private void setStats(Stats stats) {
 
         Date started;
         Date average;
@@ -294,7 +263,28 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         } catch (NullPointerException ignore) {
         }
 
+        statsLoaded = true;
+        handleLoading();
     }
+
+    public void setAvgLuck(AvgLuck avgLuck) {
+        this.avgLuck = avgLuck;
+        fillUpAvgLuck();
+        avgLuckLoaded = true;
+        handleLoading();
+
+    }
+
+    private void handleLoading() {
+        if (swipeLayout != null &&
+                avgLuckLoaded &&
+                profileLoaded &&
+                statsLoaded) {
+            swipeLayout.setRefreshing(false);
+            avgLuckLoaded = profileLoaded = statsLoaded = false;
+        }
+    }
+
 
     private void fillUpAvgLuck() {
         if (avgLuck != null) {
@@ -323,6 +313,9 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         if (c.getCount() > 0) {
+
+            DatabaseUtils.dumpCursor(c);
+
             switch (loader.getId()) {
                 case POOL_PROFILE_LOADER_ID:
                     c.moveToFirst();

@@ -1,8 +1,13 @@
 package com.eiabea.btcdroid.fragments;
 
 import android.annotation.SuppressLint;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,23 +17,20 @@ import android.widget.ExpandableListView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.adapter.RoundsListAdapter;
+import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.util.App;
 
-public class RoundsFragment extends Fragment {
+public class RoundsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    public static final String PARAM_STATS = "param_stats";
-
+    private static final int ROUNDS_STATS_LOADER_ID = 444;
     private ViewGroup rootView;
-
-    private Stats stats;
 
     private ExpandableListView exlvRoundsHolder;
 
-    public static RoundsFragment create(Stats stats) {
+    public static RoundsFragment create() {
         RoundsFragment fragment = new RoundsFragment();
         Bundle b = new Bundle();
-        b.putParcelable(PARAM_STATS, stats);
         fragment.setArguments(b);
         return fragment;
     }
@@ -39,11 +41,9 @@ public class RoundsFragment extends Fragment {
         // Inflate the layout containing a title and body text.
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_rounds, null);
 
-        this.stats = getArguments().getParcelable(PARAM_STATS);
-
         initUi(inflater, rootView);
 
-        setStats(stats);
+        getActivity().getSupportLoaderManager().initLoader(ROUNDS_STATS_LOADER_ID, null, this);
 
         return rootView;
     }
@@ -66,9 +66,8 @@ public class RoundsFragment extends Fragment {
 
     }
 
-    public void setStats(Stats stats) {
+    private void setStats(Stats stats) {
 
-        this.stats = stats;
         try {
             RoundsListAdapter adapter = new RoundsListAdapter(getActivity(), App.parseBlocks(stats.getBlocks()));
 
@@ -77,5 +76,44 @@ public class RoundsFragment extends Fragment {
 
         }
 
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int which, Bundle arg1) {
+
+
+        String selection = Stats._ID + "=?";
+        String[] selectionArgs = {"1"};
+
+        return new CursorLoader(getActivity(), Stats.CONTENT_URI, null, selection, selectionArgs, null);
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+        if (c.getCount() > 0) {
+
+            DatabaseUtils.dumpCursor(c);
+
+            switch (loader.getId()) {
+                case ROUNDS_STATS_LOADER_ID:
+                    c.moveToFirst();
+
+                    Stats stats = new Stats(c);
+                    stats = App.getInstance().gson.fromJson(stats.getJson(), Stats.class);
+
+                    if (stats != null) {
+                        setStats(stats);
+                    }
+                    break;
+            }
+
+
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> arg0) {
     }
 }

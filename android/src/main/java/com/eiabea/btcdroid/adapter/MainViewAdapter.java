@@ -23,7 +23,6 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 
     private static int PAGES = 0;
 
-    private Stats stats;
     private GenericPrice price;
     private AvgLuck avgLuck;
 
@@ -31,11 +30,10 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 
     private static int[] fragmentOrder;
 
-    public MainViewAdapter(Context context, FragmentManager fm, Stats stats, GenericPrice price, AvgLuck avgLuck) {
+    public MainViewAdapter(Context context, FragmentManager fm, GenericPrice price, AvgLuck avgLuck) {
         super(fm);
 
         this.context = context;
-        this.stats = stats;
         this.price = price;
         this.avgLuck = avgLuck;
 
@@ -71,13 +69,13 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
                 PayoutFragment payoutFragment = PayoutFragment.create(price);
                 return payoutFragment;
             case MainActivity.FRAGMENT_POOL:
-                PoolFragment poolFragment = PoolFragment.create(stats, avgLuck);
+                PoolFragment poolFragment = PoolFragment.create(avgLuck);
                 return poolFragment;
             case MainActivity.FRAGMENT_WORKER:
                 WorkerFragment workerFragment = WorkerFragment.create();
                 return workerFragment;
             case MainActivity.FRAGMENT_ROUNDS:
-                RoundsFragment roundsFragment = RoundsFragment.create(stats);
+                RoundsFragment roundsFragment = RoundsFragment.create();
                 return roundsFragment;
         }
 
@@ -113,14 +111,6 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
             return context.getResources().getString(R.string.txt_viewpager_round_fragment);
         }
         return "";
-    }
-
-    public Stats getStats() {
-        return stats;
-    }
-
-    public void setStats(Stats stats) {
-        this.stats = stats;
     }
 
     public GenericPrice getPrice() {

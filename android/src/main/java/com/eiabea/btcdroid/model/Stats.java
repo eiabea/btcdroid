@@ -1,12 +1,27 @@
 package com.eiabea.btcdroid.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.eiabea.btcdroid.data.DataProvider;
+import com.eiabea.btcdroid.data.DatabaseHelper;
 import com.eiabea.btcdroid.util.App;
 import com.google.gson.JsonObject;
 
-public class Stats implements Parcelable {
+public class Stats {
+
+    private static final String URL = "content://" + DataProvider.PROVIDER_NAME + "/" + DatabaseHelper.STATS_TABLE_NAME;
+    public static final Uri CONTENT_URI = Uri.parse(URL);
+
+    public static final String _ID = "_id";
+    public static final String JSON = "json";
+
+    // Database
+    private long id;
+    private String json;
 
     // Attributes
     private String round_duration;
@@ -23,42 +38,37 @@ public class Stats implements Parcelable {
     public Stats() {
     }
 
-    // Constructor used for Parcelable
-    public Stats(Parcel in) {
-        round_duration = in.readString();
-        ghashes_ps = in.readString();
-        round_started = in.readString();
-        luck_1 = in.readString();
-        luck_7 = in.readString();
-        luck_30 = in.readString();
-        shares_cdf = in.readString();
-
-        shares = in.readLong();
-
-        blocks = new JsonObject();
-        blocks = App.getInstance().gson.fromJson(in.readString(), JsonObject.class);
+    public Stats(Cursor c) {
+        setId(c.getLong(c.getColumnIndex(_ID)));
+        setJson(c.getString(c.getColumnIndex(JSON)));
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+    public ContentValues getContentValues(boolean forInsert) {
+        ContentValues values = new ContentValues();
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(round_duration);
-        dest.writeString(ghashes_ps);
-        dest.writeString(round_started);
-        dest.writeString(luck_1);
-        dest.writeString(luck_7);
-        dest.writeString(luck_30);
-        dest.writeString(shares_cdf);
-
-        dest.writeLong(shares);
-        if(blocks != null){
-            dest.writeString(blocks.toString());
+        if (forInsert) {
+            //values.put(_ID, getId());
         }
-        
+
+        values.put(JSON, getJson());
+
+        return values;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getJson() {
+        return json;
+    }
+
+    public void setJson(String json) {
+        this.json = json;
     }
 
     public String getShares_cdf() {
@@ -76,17 +86,6 @@ public class Stats implements Parcelable {
     public void setBlocks(JsonObject blocks) {
         this.blocks = blocks;
     }
-
-    @SuppressWarnings("rawtypes")
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public Stats createFromParcel(Parcel in) {
-            return new Stats(in);
-        }
-
-        public Stats[] newArray(int size) {
-            return new Stats[size];
-        }
-    };
 
     public String getRound_duration() {
         return round_duration;

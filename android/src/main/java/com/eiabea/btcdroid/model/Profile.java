@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class Profile {
 
-    private static final String URL = "content://" + DataProvider.PROVIDER_NAME + "/" + DatabaseHelper.PROFILE_TABLE_NAME;
+    private static final String URL = "content://" + DataProvider.PROVIDER_NAME + "/" + DatabaseHelper.STATS_TABLE_NAME;
     public static final Uri CONTENT_URI = Uri.parse(URL);
 
     public static final String _ID = "_id";

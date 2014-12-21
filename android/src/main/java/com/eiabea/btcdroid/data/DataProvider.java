@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.eiabea.btcdroid.BuildConfig;
 import com.eiabea.btcdroid.model.Profile;
+import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.util.App;
 
 public class DataProvider extends ContentProvider {
@@ -27,6 +28,8 @@ public class DataProvider extends ContentProvider {
 
     static final int PROFILES = 1;
     static final int PROFILE_ID = 2;
+    static final int STATS = 3;
+    static final int STAT_ID = 4;
 
     static final UriMatcher uriMatcher;
 
@@ -34,6 +37,8 @@ public class DataProvider extends ContentProvider {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.PROFILE_TABLE_NAME, PROFILES);
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.PROFILE_TABLE_NAME + "/#", PROFILE_ID);
+        uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.STATS_TABLE_NAME, STATS);
+        uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.STATS_TABLE_NAME + "/#", STAT_ID);
     }
 
     @Override
@@ -63,6 +68,14 @@ public class DataProvider extends ContentProvider {
                 qb.appendWhere(PROFILE_ID + "=" + uri.getPathSegments().get(0));
                 break;
 
+            case STATS:
+                qb.setTables(DatabaseHelper.STATS_TABLE_NAME);
+                break;
+            case STAT_ID:
+                qb.setTables(DatabaseHelper.STATS_TABLE_NAME);
+                qb.appendWhere(STAT_ID + "=" + uri.getPathSegments().get(0));
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -80,6 +93,10 @@ public class DataProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + PROVIDER_NAME + "." + DatabaseHelper.PROFILE_TABLE_NAME;
             case PROFILE_ID:
                 return "vnd.android.cursor.item/" + PROVIDER_NAME + "." + DatabaseHelper.PROFILE_TABLE_NAME;
+            case STATS:
+                return "vnd.android.cursor.dir/" + PROVIDER_NAME + "." + DatabaseHelper.STATS_TABLE_NAME;
+            case STAT_ID:
+                return "vnd.android.cursor.item/" + PROVIDER_NAME + "." + DatabaseHelper.STATS_TABLE_NAME;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -98,6 +115,17 @@ public class DataProvider extends ContentProvider {
 
                 if (rowID > 0) {
                     Uri _uri = ContentUris.withAppendedId(Profile.CONTENT_URI, rowID);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                    return _uri;
+                }
+                break;
+
+            case STATS:
+            case STAT_ID:
+                rowID = db.insertOrThrow(DatabaseHelper.STATS_TABLE_NAME, "", values);
+
+                if (rowID > 0) {
+                    Uri _uri = ContentUris.withAppendedId(Stats.CONTENT_URI, rowID);
                     getContext().getContentResolver().notifyChange(_uri, null);
                     return _uri;
                 }
@@ -126,6 +154,15 @@ public class DataProvider extends ContentProvider {
                         + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
                 break;
 
+            case STATS:
+                count = db.delete(DatabaseHelper.STATS_TABLE_NAME, selection, selectionArgs);
+                break;
+            case STAT_ID:
+                id = uri.getPathSegments().get(1);
+                count = db.delete(DatabaseHelper.STATS_TABLE_NAME, STAT_ID + " = " + id
+                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -146,6 +183,14 @@ public class DataProvider extends ContentProvider {
             case PROFILE_ID:
                 id = uri.getPathSegments().get(1);
                 count = db.update(DatabaseHelper.PROFILE_TABLE_NAME, values, PROFILE_ID + " = " + id
+                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                break;
+            case STATS:
+                count = db.update(DatabaseHelper.STATS_TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case STAT_ID:
+                id = uri.getPathSegments().get(1);
+                count = db.update(DatabaseHelper.STATS_TABLE_NAME, values, STAT_ID + " = " + id
                         + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
                 break;
 
@@ -192,10 +237,47 @@ public class DataProvider extends ContentProvider {
         }.execute();
     }
 
+    public static void insertOrUpdateStats(final Context context, final Stats stats) {
+
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                String where = null;
+                String[] whereArgs = null;
+
+
+                if (stats != null) {
+                    stats.setJson(App.getInstance().gson.toJson(stats));
+
+                    where = Stats._ID + "=?";
+                    whereArgs = new String[]{ "1" };
+                }
+
+                int updated = context.getContentResolver().update(Stats.CONTENT_URI, stats.getContentValues(false),
+                        where, whereArgs);
+
+                if (updated == 0) {
+                    context.getContentResolver().insert(Stats.CONTENT_URI, stats.getContentValues(true));
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+            }
+
+        }.execute();
+    }
+
 
     public static void clearDatabase(Context context) {
         Log.d(TAG, "clearDatabase");
         context.getContentResolver().delete(Profile.CONTENT_URI, null, null);
+        context.getContentResolver().delete(Stats.CONTENT_URI, null, null);
     }
 
 }

@@ -296,12 +296,12 @@ public class App extends Application {
         // Update Round Widget
         Intent roundIntent = new Intent(context, RoundDurationWidgetProvider.class);
         roundIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        roundIntent.putExtra(RoundDurationWidgetProvider.PARAM_STATS, stats);
+//        roundIntent.putExtra(RoundDurationWidgetProvider.PARAM_STATS, stats);
         context.sendBroadcast(roundIntent);
         // Update Multi Widget
         Intent multiIntent = new Intent(context, MultiWidgetProvider.class);
         multiIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        multiIntent.putExtra(MultiWidgetProvider.PARAM_STATS, stats);
+//        multiIntent.putExtra(MultiWidgetProvider.PARAM_STATS, stats);
         context.sendBroadcast(multiIntent);
     }
 
