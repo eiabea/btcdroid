@@ -1,10 +1,15 @@
 package com.eiabea.btcdroid.fragments;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,16 +30,16 @@ import com.eiabea.btcdroid.util.App;
 
 import java.util.Calendar;
 
-public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String PARAM_PRICE = "param_price";
     public static final String PARAM_PROFILE = "param_profile";
+    private static final int PAYOUT_PROFILE_LOADER_ID = 111;
 
     private boolean profileLoaded = false;
     private boolean pricesLoaded = false;
 
     private GenericPrice price;
-    private Profile profile;
 
     private View rootView;
     private TextView txtCurrentSource, txtCurrentValue, txtEstimatedReward, txtConfirmedReward,
@@ -52,7 +57,6 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         price = getArguments().getParcelable(PARAM_PRICE);
-        profile = getArguments().getParcelable(PARAM_PROFILE);
 
         initUi();
 
@@ -60,11 +64,11 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         setPrices(price);
 
-        setProfile(profile);
-
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
+
+        getActivity().getSupportLoaderManager().initLoader(PAYOUT_PROFILE_LOADER_ID, null, this);
 
         return rootView;
 
@@ -86,18 +90,15 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private void setListeners() {
     }
 
-    public static PayoutFragment create(GenericPrice price, Profile profile) {
+    public static PayoutFragment create(GenericPrice price) {
         PayoutFragment fragment = new PayoutFragment();
         Bundle b = new Bundle();
         b.putParcelable(PARAM_PRICE, price);
-        b.putParcelable(PARAM_PROFILE, profile);
         fragment.setArguments(b);
         return fragment;
     }
 
-    public void setProfile(final Profile profile) {
-        this.profile = profile;
-
+    private void setProfile(final Profile profile) {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
             Log.d(getClass().getSimpleName(), "Under Honeycomb");
             Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
@@ -228,10 +229,10 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
     }
 
-    private void handleLoading(){
-        if(swipeLayout!=null &&
+    private void handleLoading() {
+        if (swipeLayout != null &&
                 pricesLoaded &&
-                profileLoaded){
+                profileLoaded) {
             swipeLayout.setRefreshing(false);
             pricesLoaded = profileLoaded = false;
         }
@@ -311,6 +312,43 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
         if (App.getInstance().isTokenSet()) {
             App.resetUpdateManager(getActivity());
         }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int which, Bundle arg1) {
+
+
+        String selection = Profile._ID + "=?";
+        String[] selectionArgs = {"1"};
+
+        return new CursorLoader(getActivity(), Profile.CONTENT_URI, null, selection, selectionArgs, null);
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+        if (c.getCount() > 0) {
+            switch (loader.getId()) {
+                case PAYOUT_PROFILE_LOADER_ID:
+                    c.moveToFirst();
+
+                    Profile profile = new Profile(c);
+                    profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
+
+                    if (profile != null) {
+                        setProfile(profile);
+                    }
+                    break;
+            }
+
+
+        }
+
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> arg0) {
     }
 
 }

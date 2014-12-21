@@ -1,9 +1,14 @@
 package com.eiabea.btcdroid.fragments;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,17 +30,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String TAG = PoolFragment.class.getSimpleName();
 
     public static final String PARAM_PROFILE = "param_profile";
     public static final String PARAM_STATS = "param_stats";
     public static final String PARAM_AVG_LUCK = "param_avg_luck";
+    private static final int POOL_PROFILE_LOADER_ID = 222;
 
     private ViewGroup rootView;
 
-    private Profile profile;
     private Stats stats;
     private AvgLuck avgLuck;
 
@@ -52,10 +57,9 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             txtLuck24h, txtLuck7d, txtLuck30d, txtAvgLuck;
     private RatingBar ratRating;
 
-    public static PoolFragment create(Profile profile, Stats stats, AvgLuck avgLuck) {
+    public static PoolFragment create(Stats stats, AvgLuck avgLuck) {
         PoolFragment fragment = new PoolFragment();
         Bundle b = new Bundle();
-        b.putParcelable(PARAM_PROFILE, profile);
         b.putParcelable(PARAM_STATS, stats);
         b.putParcelable(PARAM_AVG_LUCK, avgLuck);
         fragment.setArguments(b);
@@ -71,21 +75,21 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        this.profile = getArguments().getParcelable(PARAM_PROFILE);
         this.stats = getArguments().getParcelable(PARAM_STATS);
         this.avgLuck = getArguments().getParcelable(PARAM_AVG_LUCK);
 
         initUi();
 
-        setProfile(profile);
+//        setStats(stats);
+//
+//        setAvgLuck(avgLuck);
+//
+//        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+//        swipeLayout.setOnRefreshListener(this);
+//        swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
 
-        setStats(stats);
+        getActivity().getSupportLoaderManager().initLoader(POOL_PROFILE_LOADER_ID, null, this);
 
-        setAvgLuck(avgLuck);
-
-        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
-        swipeLayout.setOnRefreshListener(this);
-        swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
 
         return rootView;
     }
@@ -204,9 +208,12 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         return rating;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-        fillUpProfile();
+    private void setProfile(Profile profile) {
+        try {
+            txtTotalHashrate.setText(App.formatHashRate(App.getTotalHashrate(profile)));
+            txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
+        } catch (NullPointerException ignore) {
+        }
         profileLoaded = true;
         handleLoading();
     }
@@ -226,24 +233,14 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     }
 
-    private void handleLoading(){
-        if(swipeLayout!=null &&
+    private void handleLoading() {
+        if (swipeLayout != null &&
                 avgLuckLoaded &&
                 profileLoaded &&
-                statsLoaded){
+                statsLoaded) {
             swipeLayout.setRefreshing(false);
             avgLuckLoaded = profileLoaded = statsLoaded = false;
         }
-    }
-
-    private void fillUpProfile() {
-
-        try {
-            txtTotalHashrate.setText(App.formatHashRate(App.getTotalHashrate(profile)));
-            txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
-        } catch (NullPointerException ignore) {
-        }
-
     }
 
     private void fillUpStats() {
@@ -310,5 +307,41 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (App.getInstance().isTokenSet()) {
             App.resetUpdateManager(getActivity());
         }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int which, Bundle arg1) {
+
+
+        String selection = Profile._ID + "=?";
+        String[] selectionArgs = {"1"};
+
+        return new CursorLoader(getActivity(), Profile.CONTENT_URI, null, selection, selectionArgs, null);
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+        if (c.getCount() > 0) {
+            switch (loader.getId()) {
+                case POOL_PROFILE_LOADER_ID:
+                    c.moveToFirst();
+
+                    Profile profile = new Profile(c);
+                    profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
+
+                    if (profile != null) {
+                        setProfile(profile);
+                    }
+                    break;
+            }
+
+
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> arg0) {
     }
 }

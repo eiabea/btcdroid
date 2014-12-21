@@ -1,9 +1,14 @@
 package com.eiabea.btcdroid.fragments;
 
 import android.annotation.TargetApi;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,11 +26,10 @@ import com.eiabea.btcdroid.util.App;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class WorkerFragment extends Fragment {
+public class WorkerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
     public static final String PARAM_PROFILE = "param_profile";
-
-    private Profile profile;
+    private static final int WORKER_PROFILE_LOADER_ID = 333;
 
     private ExpandableListView exlvWOrkerHolder;
 
@@ -34,10 +38,9 @@ public class WorkerFragment extends Fragment {
 //    private DisplayMetrics metrics;
 //    private int width;
 
-    public static WorkerFragment create(Profile profile) {
+    public static WorkerFragment create() {
         WorkerFragment fragment = new WorkerFragment();
         Bundle b = new Bundle();
-        b.putParcelable(PARAM_PROFILE, profile);
         fragment.setArguments(b);
         return fragment;
     }
@@ -48,11 +51,9 @@ public class WorkerFragment extends Fragment {
         // Inflate the layout containing a title and body text.
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_worker, null);
 
-        this.profile = getArguments().getParcelable(PARAM_PROFILE);
-
         initUi(inflater, rootView);
 
-        setProfile(profile);
+        getActivity().getSupportLoaderManager().initLoader(WORKER_PROFILE_LOADER_ID, null, this);
 
         return rootView;
     }
@@ -74,12 +75,7 @@ public class WorkerFragment extends Fragment {
 
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-        fillUpProfile();
-    }
-
-    private void fillUpProfile() {
+    private void setProfile(Profile profile) {
         try {
             ArrayList<Worker> list = profile.getWorkersList();
 
@@ -106,6 +102,42 @@ public class WorkerFragment extends Fragment {
             }
 
         }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int which, Bundle arg1) {
+
+
+        String selection = Profile._ID + "=?";
+        String[] selectionArgs = { "1" };
+
+        return new CursorLoader(getActivity(), Profile.CONTENT_URI, null, selection, selectionArgs, null);
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+        if (c.getCount() > 0) {
+            switch (loader.getId()) {
+                case WORKER_PROFILE_LOADER_ID:
+                    c.moveToFirst();
+
+                    Profile profile = new Profile(c);
+                    profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
+
+                    if (profile != null) {
+                        setProfile(profile);
+                    }
+                    break;
+            }
+
+
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> arg0) {
     }
 
 }

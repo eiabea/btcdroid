@@ -20,6 +20,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
+import com.eiabea.btcdroid.data.DataProvider;
 import com.eiabea.btcdroid.model.AvgLuck;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.PricesBTCe;
@@ -97,17 +98,17 @@ public class UpdateService extends Service {
                     getProfileWidgets();
                     break;
                 case GET_STATS:
-                    getStatsWidgets();
+//                    getStatsWidgets();
                     break;
                 case GET_PRICE:
-                    getPriceWidgets();
+//                    getPriceWidgets();
                     break;
 
                 default:
                     getProfileWidgets();
-                    getPriceWidgets();
-                    getStatsWidgets();
-                    getAvgLuckWidgets();
+//                    getPriceWidgets();
+//                    getStatsWidgets();
+//                    getAvgLuckWidgets();
                     break;
             }
 
@@ -611,11 +612,14 @@ public class UpdateService extends Service {
     }
 
     private void onProfileLoaded(Profile profile) {
-        UpdateService.this.profile = profile;
-        App.updateWidgets(getApplicationContext(), profile);
-        if (updateInterface != null) {
-            updateInterface.onProfileLoaded(profile);
-        }
+
+        DataProvider.insertOrUpdateProfile(getApplicationContext(), profile);
+
+//        UpdateService.this.profile = profile;
+//        App.updateWidgets(getApplicationContext(), profile);
+//        if (updateInterface != null) {
+//            updateInterface.onProfileLoaded(profile);
+//        }
     }
 
     private void onProfileError() {

@@ -18,6 +18,13 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name=".data.DataProvider"
+            android:authorities="@string/data_provider"
+            android:exported="false" >
+        </provider>
+
         <activity
             android:name="com.eiabea.btcdroid.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"

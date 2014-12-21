@@ -50,11 +50,15 @@ android {
             applicationId = 'com.eiabea.paid.btcdroid'
             buildConfigField "boolean", "PAID", "true"
             resValue "string", "app_name", "BTCDroid"
+            resValue "string", "data_provider", "com.eiabea.paid.btcdroid.data"
+            buildConfigField "String", "DATA_PROVIDER", "\"com.eiabea.paid.btcdroid.data\""
         }
         free {
             applicationId = 'com.eiabea.btcdroid'
             buildConfigField "boolean", "PAID", "false"
             resValue "string", "app_name", "BTCDroid Free"
+            resValue "string", "data_provider", "com.eiabea.btcdroid.data"
+            buildConfigField "String", "DATA_PROVIDER", "\"com.eiabea.btcdroid.data\""
         }
     }
 

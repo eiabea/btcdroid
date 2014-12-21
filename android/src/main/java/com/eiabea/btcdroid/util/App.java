@@ -257,37 +257,37 @@ public class App extends Application {
         // Update Total Widget
         Intent totalIntent = new Intent(context, TotalHashrateWidgetProvider.class);
         totalIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        totalIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
+//        totalIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
         context.sendBroadcast(totalIntent);
         // Update Total Widget
         Intent averageIntent = new Intent(context, AverageHashrateWidgetProvider.class);
         averageIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        averageIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
+//        averageIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
         context.sendBroadcast(averageIntent);
         // Update Confirmed Reward Widget
         Intent confirmedIntent = new Intent(context, ConfirmedRewardWidgetProvider.class);
         confirmedIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        confirmedIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
+//        confirmedIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
         context.sendBroadcast(confirmedIntent);
         // Update Estimated Reward Widget
         Intent estimatedIntent = new Intent(context, EstimatedRewardWidgetProvider.class);
         estimatedIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        estimatedIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
+//        estimatedIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
         context.sendBroadcast(estimatedIntent);
         // Update Total Reward Widget
         Intent totalRewardIntent = new Intent(context, TotalRewardWidgetProvider.class);
         totalRewardIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        totalRewardIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
+//        totalRewardIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
         context.sendBroadcast(totalRewardIntent);
         // Update Multi Widget
         Intent multiIntent = new Intent(context, MultiWidgetProvider.class);
         multiIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        multiIntent.putExtra(MultiWidgetProvider.PARAM_PROFILE, profile);
+//        multiIntent.putExtra(MultiWidgetProvider.PARAM_PROFILE, profile);
         context.sendBroadcast(multiIntent);
 
         // Update Dashclock
         Intent dashclockIntent = new Intent(DashClockWidget.UPDATE_DASHCLOCK);
-        dashclockIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
+//        dashclockIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
         LocalBroadcastManager.getInstance(context).sendBroadcast(dashclockIntent);
         Log.d(context.getClass().getSimpleName(), "sent Broadcast to update DashClock");
     }

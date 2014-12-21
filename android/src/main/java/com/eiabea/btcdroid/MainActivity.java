@@ -10,12 +10,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -33,6 +38,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.eiabea.btcdroid.adapter.MainViewAdapter;
+import com.eiabea.btcdroid.data.DataProvider;
 import com.eiabea.btcdroid.fragments.PayoutFragment;
 import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
@@ -47,7 +53,7 @@ import com.eiabea.btcdroid.util.App;
 
 @SuppressLint("InlinedApi")
 public class MainActivity extends ActionBarActivity implements UpdateInterface,
-        OnPageChangeListener {
+        OnPageChangeListener{
 
     public static final String PAID_APP_PACKAGE = "com.eiabea.paid.btcdroid";
     private static final int BEER_POPUP_THRESHOLD = 10;
@@ -64,7 +70,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     private static final int INTENT_CUSTOMIZE = 1;
     private static final int INTENT_PARTICIPANTS = 2;
 
-    private static final String STATE_PROFILE = "state_profile";
     private static final String STATE_STATS = "state_stats";
     private static final String STATE_PRICES = "state_prices";
     private static final String STATE_AVG_LUCK = "state_avg_luck";
@@ -95,7 +100,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     @SuppressWarnings("deprecation")
     private android.text.ClipboardManager clipboardold;
 
-    private Profile profile = null;
     private Stats stats = null;
     private GenericPrice price = null;
     private AvgLuck avgLuck = null;
@@ -156,7 +160,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
     private void tryGettingDataFromService() {
         try {
-            this.profile = UpdateService.getInstance().getProfile();
             this.stats = UpdateService.getInstance().getStats();
             this.price = UpdateService.getInstance().getPrice();
             this.avgLuck = UpdateService.getInstance().getAvgLuck();
@@ -167,7 +170,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
             setSavedValues();
 
         } catch (NullPointerException e) {
-            reloadData();
+            //reloadData();
 
         }
     }
@@ -175,7 +178,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        this.profile = savedInstanceState.getParcelable(STATE_PROFILE);
         this.stats = savedInstanceState.getParcelable(STATE_STATS);
         this.price = savedInstanceState.getParcelable(STATE_PRICES);
         this.avgLuck = savedInstanceState.getParcelable(STATE_AVG_LUCK);
@@ -189,7 +191,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
     private void setSavedValues() {
         setPrices(this.price);
-        setProfile(this.profile);
+//        setProfile(this.profile);
         setStats(this.stats);
         setAvgLuck(this.avgLuck);
 
@@ -214,7 +216,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         // Save the user's current game state
-        savedInstanceState.putParcelable(STATE_PROFILE, this.profile);
         savedInstanceState.putParcelable(STATE_STATS, this.stats);
         savedInstanceState.putParcelable(STATE_PRICES, this.price);
         savedInstanceState.putParcelable(STATE_AVG_LUCK, this.avgLuck);
@@ -249,7 +250,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         toolbar.setSubtitle(R.string.app_name_subtitle);
         setSupportActionBar(toolbar);
 
-        adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price, this.avgLuck);
+        adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.stats, this.price, this.avgLuck);
         try {
             if (isTablet && isLand) {
 
@@ -502,19 +503,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         }
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-        try {
-
-            ((PayoutFragment) getFragment(FRAGMENT_PAYOUT)).setProfile(profile);
-            ((PoolFragment) getFragment(FRAGMENT_POOL)).setProfile(profile);
-            ((WorkerFragment) getFragment(FRAGMENT_WORKER)).setProfile(profile);
-
-        } catch (Exception e) {
-            Log.e(getClass().getSimpleName(), "Can't get all Fragments to setProfile (NullPointer)");
-        }
-    }
-
     public void setStats(Stats stats) {
         this.stats = stats;
         try {
@@ -579,9 +567,8 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         Log.w(getClass().getSimpleName(), "avgLuck: " + avgLuckLoaded);
 
         if (adapter == null) {
-            adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.profile, this.stats, this.price, this.avgLuck);
+            adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.stats, this.price, this.avgLuck);
         } else {
-            adapter.setProfile(profile);
             adapter.setStats(stats);
             adapter.setPrice(price);
             adapter.setAvgLuck(avgLuck);
@@ -602,7 +589,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     public void onProfileLoaded(Profile profile) {
         profileLoaded = true;
         // App.updateWidgets(MainActivity.this, profile);
-        setProfile(profile);
+        //setProfile(profile);
         handleProgessIndicator();
     }
 

@@ -1,8 +1,11 @@
 package com.eiabea.btcdroid.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 
+import com.eiabea.btcdroid.data.DataProvider;
+import com.eiabea.btcdroid.data.DatabaseHelper;
 import com.eiabea.btcdroid.util.App;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -12,7 +15,17 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class Profile implements Parcelable {
+public class Profile {
+
+    private static final String URL = "content://" + DataProvider.PROVIDER_NAME + "/" + DatabaseHelper.PROFILE_TABLE_NAME;
+    public static final Uri CONTENT_URI = Uri.parse(URL);
+
+    public static final String _ID = "_id";
+    public static final String JSON = "json";
+
+    // Database
+    private long id;
+    private String json;
 
     // Attributes
     private String username;
@@ -34,59 +47,38 @@ public class Profile implements Parcelable {
     public Profile() {
     }
 
-    // Constructor used for Parcelable
-    public Profile(Parcel in) {
-        username = in.readString();
-        rating = in.readString();
-        confirmed_nmc_reward = in.readString();
-        send_threshold = in.readString();
-        nmc_send_threshold = in.readString();
-        confirmed_reward = in.readString();
-        wallet = in.readString();
-        unconfirmed_nmc_reward = in.readString();
-        unconfirmed_reward = in.readString();
-        estimated_reward = in.readString();
-        hashrate = in.readString();
-
-        workers = new JsonObject();
-        workers = App.getInstance().gson.fromJson(in.readString(), JsonObject.class);
+    public Profile(Cursor c) {
+        setId(c.getLong(c.getColumnIndex(_ID)));
+        setJson(c.getString(c.getColumnIndex(JSON)));
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public ContentValues getContentValues(boolean forInsert) {
+        ContentValues values = new ContentValues();
+
+        if (forInsert) {
+            //values.put(_ID, getId());
+        }
+
+        values.put(JSON, getJson());
+
+        return values;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(username);
-        dest.writeString(rating);
-        dest.writeString(confirmed_nmc_reward);
-        dest.writeString(send_threshold);
-        dest.writeString(nmc_send_threshold);
-        dest.writeString(confirmed_reward);
-        dest.writeString(wallet);
-        dest.writeString(unconfirmed_nmc_reward);
-        dest.writeString(unconfirmed_reward);
-        dest.writeString(estimated_reward);
-        dest.writeString(hashrate);
-        if(workers != null){
-        	dest.writeString(workers.toString());
-        }
-        
-
+    public long getId() {
+        return id;
     }
 
-    @SuppressWarnings("rawtypes")
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public Profile createFromParcel(Parcel in) {
-            return new Profile(in);
-        }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-        public Profile[] newArray(int size) {
-            return new Profile[size];
-        }
-    };
+    public String getJson() {
+        return json;
+    }
+
+    public void setJson(String json) {
+        this.json = json;
+    }
 
     public String getUsername() {
         return username;
