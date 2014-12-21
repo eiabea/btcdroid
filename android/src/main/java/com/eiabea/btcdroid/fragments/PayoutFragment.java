@@ -26,20 +26,18 @@ import android.widget.TextView;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
+import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.util.App;
 
 import java.util.Calendar;
 
 public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-    public static final String PARAM_PRICE = "param_price";
-    public static final String PARAM_PROFILE = "param_profile";
     private static final int PAYOUT_PROFILE_LOADER_ID = 111;
+    private static final int PAYOUT_PRICE_LOADER_ID = 112;
 
     private boolean profileLoaded = false;
     private boolean pricesLoaded = false;
-
-    private GenericPrice price;
 
     private View rootView;
     private TextView txtCurrentSource, txtCurrentValue, txtEstimatedReward, txtConfirmedReward,
@@ -56,19 +54,16 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        price = getArguments().getParcelable(PARAM_PRICE);
-
         initUi();
 
         setListeners();
-
-        setPrices(price);
 
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
 
         getActivity().getSupportLoaderManager().initLoader(PAYOUT_PROFILE_LOADER_ID, null, this);
+        getActivity().getSupportLoaderManager().initLoader(PAYOUT_PRICE_LOADER_ID, null, this);
 
         return rootView;
 
@@ -90,10 +85,9 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private void setListeners() {
     }
 
-    public static PayoutFragment create(GenericPrice price) {
+    public static PayoutFragment create() {
         PayoutFragment fragment = new PayoutFragment();
         Bundle b = new Bundle();
-        b.putParcelable(PARAM_PRICE, price);
         fragment.setArguments(b);
         return fragment;
     }
@@ -133,7 +127,6 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     public void setPrices(GenericPrice price) {
-        this.price = price;
         setPrice(txtCurrentValue, price);
 
         if (llPriceHolder != null) {
@@ -318,10 +311,18 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public Loader<Cursor> onCreateLoader(int which, Bundle arg1) {
 
 
-        String selection = Profile._ID + "=?";
+        String selection;
         String[] selectionArgs = {"1"};
+        switch (which) {
+            case PAYOUT_PROFILE_LOADER_ID:
+                selection = Profile._ID + "=?";
+                return new CursorLoader(getActivity(), Profile.CONTENT_URI, null, selection, selectionArgs, null);
+            case PAYOUT_PRICE_LOADER_ID:
+                selection = GenericPrice._ID + "=?";
+                return new CursorLoader(getActivity(), GenericPrice.CONTENT_URI, null, selection, selectionArgs, null);
+        }
 
-        return new CursorLoader(getActivity(), Profile.CONTENT_URI, null, selection, selectionArgs, null);
+        return null;
 
     }
 
@@ -337,6 +338,16 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
                     if (profile != null) {
                         setProfile(profile);
+                    }
+                    break;
+                case PAYOUT_PRICE_LOADER_ID:
+                    c.moveToFirst();
+
+                    GenericPrice price = new GenericPrice(c);
+                    price = App.getInstance().gson.fromJson(price.getJson(), GenericPrice.class);
+
+                    if (price != null) {
+                        setPrices(price);
                     }
                     break;
             }

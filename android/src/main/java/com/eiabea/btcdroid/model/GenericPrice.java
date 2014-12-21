@@ -1,9 +1,24 @@
 package com.eiabea.btcdroid.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 
-public class GenericPrice implements Parcelable {
+import com.eiabea.btcdroid.data.DataProvider;
+import com.eiabea.btcdroid.data.DatabaseHelper;
+
+public class GenericPrice {
+
+
+    private static final String URL = "content://" + DataProvider.PROVIDER_NAME + "/" + DatabaseHelper.PRICE_TABLE_NAME;
+    public static final Uri CONTENT_URI = Uri.parse(URL);
+
+    public static final String _ID = "_id";
+    public static final String JSON = "json";
+
+    // Database
+    private long id;
+    private String json;
 
     // Attributes
     private float valueFloat;
@@ -14,36 +29,38 @@ public class GenericPrice implements Parcelable {
     public GenericPrice() {
     }
 
-    // Constructor used for Parcelable
-    public GenericPrice(Parcel in) {
-        valueFloat = in.readFloat();
-        symbol = in.readString();
-        source = in.readString();
+    public GenericPrice(Cursor c) {
+        setId(c.getLong(c.getColumnIndex(_ID)));
+        setJson(c.getString(c.getColumnIndex(JSON)));
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+    public ContentValues getContentValues(boolean forInsert) {
+        ContentValues values = new ContentValues();
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeFloat(valueFloat);
-        dest.writeString(symbol);
-        dest.writeString(source);
-
-    }
-
-    @SuppressWarnings("rawtypes")
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public GenericPrice createFromParcel(Parcel in) {
-            return new GenericPrice(in);
+        if (forInsert) {
+            //values.put(_ID, getId());
         }
 
-        public GenericPrice[] newArray(int size) {
-            return new GenericPrice[size];
-        }
-    };
+        values.put(JSON, getJson());
+
+        return values;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getJson() {
+        return json;
+    }
+
+    public void setJson(String json) {
+        this.json = json;
+    }
 
     public float getValueFloat() {
         return valueFloat;

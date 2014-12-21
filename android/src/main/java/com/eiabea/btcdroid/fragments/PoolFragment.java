@@ -19,7 +19,6 @@ import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
-import com.eiabea.btcdroid.data.DataProvider;
 import com.eiabea.btcdroid.model.AvgLuck;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Profile;
@@ -37,6 +36,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     public static final String PARAM_AVG_LUCK = "param_avg_luck";
     private static final int POOL_PROFILE_LOADER_ID = 222;
+    private static final int POOL_STATS_LOADER_ID = 223;
 
     private ViewGroup rootView;
 
@@ -83,6 +83,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
 
         getActivity().getSupportLoaderManager().initLoader(POOL_PROFILE_LOADER_ID, null, this);
+        getActivity().getSupportLoaderManager().initLoader(POOL_STATS_LOADER_ID, null, this);
 
 
         return rootView;
@@ -302,11 +303,18 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public Loader<Cursor> onCreateLoader(int which, Bundle arg1) {
 
-
-        String selection = Profile._ID + "=?";
+        String selection;
         String[] selectionArgs = {"1"};
+        switch (which) {
+            case POOL_PROFILE_LOADER_ID:
+                selection = Profile._ID + "=?";
+                return new CursorLoader(getActivity(), Profile.CONTENT_URI, null, selection, selectionArgs, null);
+            case POOL_STATS_LOADER_ID:
+                selection = Stats._ID + "=?";
+                return new CursorLoader(getActivity(), Stats.CONTENT_URI, null, selection, selectionArgs, null);
+        }
 
-        return new CursorLoader(getActivity(), Profile.CONTENT_URI, null, selection, selectionArgs, null);
+        return null;
 
     }
 
@@ -325,6 +333,16 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                     if (profile != null) {
                         setProfile(profile);
+                    }
+                    break;
+                case POOL_STATS_LOADER_ID:
+                    c.moveToFirst();
+
+                    Stats stats = new Stats(c);
+                    stats = App.getInstance().gson.fromJson(stats.getJson(), Stats.class);
+
+                    if (stats != null) {
+                        setStats(stats);
                     }
                     break;
             }

@@ -30,7 +30,7 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 
     private static int[] fragmentOrder;
 
-    public MainViewAdapter(Context context, FragmentManager fm, GenericPrice price, AvgLuck avgLuck) {
+    public MainViewAdapter(Context context, FragmentManager fm, AvgLuck avgLuck) {
         super(fm);
 
         this.context = context;
@@ -66,7 +66,7 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case MainActivity.FRAGMENT_PAYOUT:
-                PayoutFragment payoutFragment = PayoutFragment.create(price);
+                PayoutFragment payoutFragment = PayoutFragment.create();
                 return payoutFragment;
             case MainActivity.FRAGMENT_POOL:
                 PoolFragment poolFragment = PoolFragment.create(avgLuck);

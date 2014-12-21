@@ -309,7 +309,7 @@ public class App extends Application {
         // Update Price Widget
         Intent priceIntent = new Intent(context, PriceWidgetProvider.class);
         priceIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        priceIntent.putExtra(PriceWidgetProvider.PARAM_PRICE, price);
+//        priceIntent.putExtra(PriceWidgetProvider.PARAM_PRICE, price);
         context.sendBroadcast(priceIntent);
     }
 

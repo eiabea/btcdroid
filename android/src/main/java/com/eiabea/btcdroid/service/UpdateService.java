@@ -59,9 +59,6 @@ public class UpdateService extends Service {
     public static final int PRICE_SOURCE_COINDESK_GBP = 7;
     public static final int PRICE_SOURCE_COINBASE = 8;
 
-    private Profile profile;
-    private Stats stats;
-    private GenericPrice price;
     private AvgLuck avgLuck;
 
     private static int dropNotificationCount = 0;
@@ -101,12 +98,12 @@ public class UpdateService extends Service {
                     getStatsWidgets();
                     break;
                 case GET_PRICE:
-//                    getPriceWidgets();
+                    getPriceWidgets();
                     break;
 
                 default:
                     getProfileWidgets();
-//                    getPriceWidgets();
+                    getPriceWidgets();
                     getStatsWidgets();
 //                    getAvgLuckWidgets();
                     break;
@@ -546,30 +543,6 @@ public class UpdateService extends Service {
         return notification;
     }
 
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
-
-    public Stats getStats() {
-        return stats;
-    }
-
-    public void setStats(Stats stats) {
-        this.stats = stats;
-    }
-
-    public GenericPrice getPrice() {
-        return price;
-    }
-
-    public void setPrice(GenericPrice price) {
-        this.price = price;
-    }
-
     public AvgLuck getAvgLuck() {
         return avgLuck;
     }
@@ -595,12 +568,15 @@ public class UpdateService extends Service {
     }
 
     private void onPriceLoaded(GenericPrice price) {
-        this.price = price;
-        App.updateWidgets(getApplicationContext(), price);
 
-        if (updateInterface != null) {
-            updateInterface.onPricesLoaded(price);
-        }
+        DataProvider.insertOrUpdatePrice(getApplicationContext(), price);
+
+//        this.price = price;
+//        App.updateWidgets(getApplicationContext(), price);
+//
+//        if (updateInterface != null) {
+//            updateInterface.onPricesLoaded(price);
+//        }
     }
 
     private void onPriceError() {
