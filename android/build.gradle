@@ -11,7 +11,7 @@ android {
     compileSdkVersion 21
     buildToolsVersion '21.1.2'
     defaultConfig {
-        versionCode 77
+        versionCode 78
         versionName "1.4.3"
         minSdkVersion 10
         targetSdkVersion 21
@@ -31,9 +31,7 @@ android {
     buildTypes {
         release {
             zipAlignEnabled true
-            minifyEnabled true
             signingConfig signingConfigs.release
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
                     def outputFile = output.outputFile
