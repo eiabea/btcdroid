@@ -20,7 +20,7 @@ android {
 
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             applicationVariants.all { variant ->
@@ -56,7 +56,7 @@ android.signingConfigs.release.keyPassword props.keyAliasPassword
 dependencies {
     compile project(':lib_supportpreffragment')
     compile project(':lib_dragsortlistview')
-    compile 'com.android.support:support-v4:20.0.0'
+    compile 'com.android.support:support-v4:21.0.3'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.android.support:appcompat-v7:20.0.0'
     compile 'com.google.android.gms:play-services:5.0.89'
