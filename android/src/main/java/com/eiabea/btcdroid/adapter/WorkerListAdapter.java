@@ -1,117 +1,72 @@
 package com.eiabea.btcdroid.adapter;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
+import android.widget.CursorAdapter;
+import android.widget.CursorTreeAdapter;
 
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.views.WorkerView;
 import com.eiabea.btcdroid.views.WorkerViewHeader;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * Created by eiabea on 12/22/14.
+ */
+public class WorkerListAdapter extends CursorTreeAdapter {
 
-public class WorkerListAdapter extends BaseExpandableListAdapter {
+    public static final String TAG = WorkerListAdapter.class.getSimpleName();
 
-    private Context context;
+    private LayoutInflater inflater;
 
-    private List<Holder> holders = new ArrayList<WorkerListAdapter.Holder>();
-
-    public WorkerListAdapter(Context context) {
-        this.context = context;
-    }
-
-    public void setData(List<Worker> workers) {
-
-        for (Worker tmpWorker : workers) {
-            holders.add(new Holder(tmpWorker.getName(), tmpWorker));
-        }
-
-        notifyDataSetChanged();
+    public WorkerListAdapter(Cursor cursor, Context context) {
+        super(cursor, context, true);
+        this.inflater = LayoutInflater.from(context);
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
-        return holders.get(groupPosition).getWorker();
+    protected Cursor getChildrenCursor(Cursor groupCursor) {
+        return null;
     }
 
     @Override
-    public long getChildId(int groupPosition, int childPosition) {
-        return 0;
-    }
+    protected View newGroupView(Context context, Cursor cursor, boolean isExpanded, ViewGroup parent) {
+        WorkerViewHeader view = null;
 
-    @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        WorkerView view = (WorkerView) convertView;
+        view = new WorkerViewHeader(context);
 
-        if (view == null) {
-            view = new WorkerView(context);
-        }
+        Worker worker = new Worker(cursor);
 
-        view.setData(holders.get(groupPosition).getWorker());
+        view.setData(worker, isExpanded);
 
         return view;
     }
 
     @Override
-    public int getChildrenCount(int groupPosition) {
+    protected void bindGroupView(View view, Context context, Cursor cursor, boolean isExpanded) {
 
-        return 1;
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
-        return holders.get(groupPosition);
-    }
+    protected View newChildView(Context context, Cursor cursor, boolean isLastChild, ViewGroup parent) {
+        WorkerView view = new WorkerView(context);
 
-    @Override
-    public int getGroupCount() {
-        if (holders != null) {
-            return holders.size();
-        }
-        return 0;
-    }
-
-    @Override
-    public long getGroupId(int groupPosition) {
-        return 0;
-    }
-
-    @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        WorkerViewHeader view = (WorkerViewHeader) convertView;
-
-        if (view == null) {
-            view = new WorkerViewHeader(context);
-        }
-
-        view.setData(holders.get(groupPosition).getWorker(), isExpanded);
+        view.setTag(view);
 
         return view;
     }
 
     @Override
-    public boolean hasStableIds() {
-        return false;
+    protected void bindChildView(View view, Context context, Cursor cursor, boolean isLastChild) {
+        WorkerView viewHolder = (WorkerView) view.getTag();
+
+        Worker worker = new Worker(cursor);
+
+        viewHolder.setData(worker);
+
     }
-
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
-    }
-
-
-    @Override
-    public void onGroupCollapsed(int groupPosition) {
-        super.onGroupCollapsed(groupPosition);
-    }
-
-    @Override
-    public void onGroupExpanded(int groupPosition) {
-        super.onGroupExpanded(groupPosition);
-    }
-
 
     public class Holder {
         private String title;
@@ -138,5 +93,4 @@ public class WorkerListAdapter extends BaseExpandableListAdapter {
             this.worker = worker;
         }
     }
-
 }

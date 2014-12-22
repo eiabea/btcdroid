@@ -95,6 +95,10 @@ public class Profile {
         return hashrate;
     }
 
+    public JsonObject getWorkers() {
+        return workers;
+    }
+
     public ArrayList<Worker> getWorkersList() {
 
         listWorkers = new ArrayList<Worker>();

@@ -91,10 +91,10 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
                     c.moveToFirst();
 
                     Stats stats = new Stats(c);
-                    stats = App.getInstance().gson.fromJson(stats.getJson(), Stats.class);
+//                    stats = App.getInstance().gson.fromJson(stats.getJson(), Stats.class);
 
                     if (stats != null) {
-                        setStats(stats);
+//                        setStats(stats);
                     }
                     break;
             }

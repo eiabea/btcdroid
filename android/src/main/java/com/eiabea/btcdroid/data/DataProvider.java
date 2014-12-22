@@ -19,7 +19,15 @@ import com.eiabea.btcdroid.model.AvgLuck;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
+import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 public class DataProvider extends ContentProvider {
 
@@ -36,6 +44,8 @@ public class DataProvider extends ContentProvider {
     static final int PRICE_ID = 6;
     static final int AVG_LUCKS = 7;
     static final int AVG_LUCK_ID = 8;
+    static final int WORKERS = 9;
+    static final int WORKER_ID = 10;
 
     static final UriMatcher uriMatcher;
 
@@ -49,6 +59,8 @@ public class DataProvider extends ContentProvider {
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.PRICE_TABLE_NAME + "/#", PRICE_ID);
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.AVG_LUCK_TABLE_NAME, AVG_LUCKS);
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.AVG_LUCK_TABLE_NAME + "/#", AVG_LUCK_ID);
+        uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.WORKER_TABLE_NAME, WORKERS);
+        uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.WORKER_TABLE_NAME + "/#", WORKER_ID);
     }
 
     @Override
@@ -102,6 +114,14 @@ public class DataProvider extends ContentProvider {
                 qb.appendWhere(AVG_LUCK_ID + "=" + uri.getPathSegments().get(0));
                 break;
 
+            case WORKERS:
+                qb.setTables(DatabaseHelper.WORKER_TABLE_NAME);
+                break;
+            case WORKER_ID:
+                qb.setTables(DatabaseHelper.WORKER_TABLE_NAME);
+                qb.appendWhere(WORKER_ID + "=" + uri.getPathSegments().get(0));
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -131,6 +151,10 @@ public class DataProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + PROVIDER_NAME + "." + DatabaseHelper.AVG_LUCK_TABLE_NAME;
             case AVG_LUCK_ID:
                 return "vnd.android.cursor.item/" + PROVIDER_NAME + "." + DatabaseHelper.AVG_LUCK_TABLE_NAME;
+            case WORKERS:
+                return "vnd.android.cursor.dir/" + PROVIDER_NAME + "." + DatabaseHelper.WORKER_TABLE_NAME;
+            case WORKER_ID:
+                return "vnd.android.cursor.item/" + PROVIDER_NAME + "." + DatabaseHelper.WORKER_TABLE_NAME;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -187,6 +211,17 @@ public class DataProvider extends ContentProvider {
                 }
                 break;
 
+            case WORKERS:
+            case WORKER_ID:
+                rowID = db.insertOrThrow(DatabaseHelper.WORKER_TABLE_NAME, "", values);
+
+                if (rowID > 0) {
+                    Uri _uri = ContentUris.withAppendedId(Worker.CONTENT_URI, rowID);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                    return _uri;
+                }
+                break;
+
             default:
                 break;
         }
@@ -234,6 +269,15 @@ public class DataProvider extends ContentProvider {
             case AVG_LUCK_ID:
                 id = uri.getPathSegments().get(1);
                 count = db.delete(DatabaseHelper.AVG_LUCK_TABLE_NAME, AVG_LUCK_ID + " = " + id
+                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                break;
+
+            case WORKERS:
+                count = db.delete(DatabaseHelper.WORKER_TABLE_NAME, selection, selectionArgs);
+                break;
+            case WORKER_ID:
+                id = uri.getPathSegments().get(1);
+                count = db.delete(DatabaseHelper.WORKER_TABLE_NAME, WORKER_ID + " = " + id
                         + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
                 break;
 
@@ -287,6 +331,15 @@ public class DataProvider extends ContentProvider {
                         + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
                 break;
 
+            case WORKERS:
+                count = db.update(DatabaseHelper.WORKER_TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case WORKER_ID:
+                id = uri.getPathSegments().get(1);
+                count = db.update(DatabaseHelper.WORKER_TABLE_NAME, values, WORKER_ID + " = " + id
+                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -309,7 +362,7 @@ public class DataProvider extends ContentProvider {
                     profile.setJson(App.getInstance().gson.toJson(profile));
 
                     where = Profile._ID + "=?";
-                    whereArgs = new String[]{ "1" };
+                    whereArgs = new String[]{"1"};
                 }
 
                 int updated = context.getContentResolver().update(Profile.CONTENT_URI, profile.getContentValues(false),
@@ -345,7 +398,7 @@ public class DataProvider extends ContentProvider {
                     stats.setJson(App.getInstance().gson.toJson(stats));
 
                     where = Stats._ID + "=?";
-                    whereArgs = new String[]{ "1" };
+                    whereArgs = new String[]{"1"};
                 }
 
                 int updated = context.getContentResolver().update(Stats.CONTENT_URI, stats.getContentValues(false),
@@ -381,7 +434,7 @@ public class DataProvider extends ContentProvider {
                     price.setJson(App.getInstance().gson.toJson(price));
 
                     where = Stats._ID + "=?";
-                    whereArgs = new String[]{ "1" };
+                    whereArgs = new String[]{"1"};
                 }
 
                 int updated = context.getContentResolver().update(GenericPrice.CONTENT_URI, price.getContentValues(false),
@@ -417,7 +470,7 @@ public class DataProvider extends ContentProvider {
                     avgLuck.setJson(App.getInstance().gson.toJson(avgLuck));
 
                     where = Stats._ID + "=?";
-                    whereArgs = new String[]{ "1" };
+                    whereArgs = new String[]{"1"};
                 }
 
                 int updated = context.getContentResolver().update(AvgLuck.CONTENT_URI, avgLuck.getContentValues(false),
@@ -425,6 +478,53 @@ public class DataProvider extends ContentProvider {
 
                 if (updated == 0) {
                     context.getContentResolver().insert(AvgLuck.CONTENT_URI, avgLuck.getContentValues(true));
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+            }
+
+        }.execute();
+    }
+
+    public static void insertOrUpdateWorkers(final Context context, final JsonObject workers) {
+
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                ArrayList<Worker> listWorkers = new ArrayList<Worker>();
+
+                Set<Map.Entry<String, JsonElement>> set = workers.entrySet();
+
+                Gson gson = App.getInstance().gson;
+
+                for (Map.Entry<String, JsonElement> current : set) {
+                    Worker tmpWorker = gson.fromJson(current.getValue(), Worker.class);
+                    tmpWorker.setName(current.getKey().replace(".", ""));
+
+                    listWorkers.add(tmpWorker);
+                }
+
+                for (Worker worker : listWorkers) {
+
+                    String where = null;
+                    String[] whereArgs = null;
+
+                    where = Worker.NAME + "=?";
+                    whereArgs = new String[]{worker.getName()};
+
+                    int updated = context.getContentResolver().update(Worker.CONTENT_URI, worker.getContentValues(false),
+                            where, whereArgs);
+
+                    if (updated == 0) {
+                        context.getContentResolver().insert(Worker.CONTENT_URI, worker.getContentValues(true));
+                    }
                 }
 
                 return null;

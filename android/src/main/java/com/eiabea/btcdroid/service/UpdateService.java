@@ -572,6 +572,8 @@ public class UpdateService extends Service {
 
         DataProvider.insertOrUpdateProfile(getApplicationContext(), profile);
 
+        DataProvider.insertOrUpdateWorkers(getApplicationContext(), profile.getWorkers());
+
         App.updateWidgets(getApplicationContext());
     }
 
