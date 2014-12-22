@@ -59,8 +59,6 @@ public class UpdateService extends Service {
     public static final int PRICE_SOURCE_COINDESK_GBP = 7;
     public static final int PRICE_SOURCE_COINBASE = 8;
 
-    private AvgLuck avgLuck;
-
     private static int dropNotificationCount = 0;
     private static int newRoundNotificationCount = 0;
 
@@ -105,7 +103,7 @@ public class UpdateService extends Service {
                     getProfileWidgets();
                     getPriceWidgets();
                     getStatsWidgets();
-//                    getAvgLuckWidgets();
+                    getAvgLuckWidgets();
                     break;
             }
 
@@ -418,7 +416,7 @@ public class UpdateService extends Service {
                 if (lastDuration > duration) {
                     createRoundFinishedNotification();
                 }
-                pref.edit().putLong("lastDuration", duration).commit();
+                pref.edit().putLong("lastDuration", duration).apply();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -429,7 +427,7 @@ public class UpdateService extends Service {
     private void createRoundFinishedNotification() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setAction(MainActivity.ACTION_NEW_ROUND_NOTIFICATION);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_round_finished).setContentTitle(getString(R.string.txt_new_round_title)).setContentText(getString(R.string.txt_new_round_message)).setAutoCancel(true);
 
@@ -543,14 +541,6 @@ public class UpdateService extends Service {
         return notification;
     }
 
-    public AvgLuck getAvgLuck() {
-        return avgLuck;
-    }
-
-    public void setAvgLuck(AvgLuck avgLuck) {
-        this.avgLuck = avgLuck;
-    }
-
     public static UpdateInterface getUpdateInterface() {
         return updateInterface;
     }
@@ -572,11 +562,11 @@ public class UpdateService extends Service {
         DataProvider.insertOrUpdatePrice(getApplicationContext(), price);
 
 //        this.price = price;
-//        App.updateWidgets(getApplicationContext(), price);
+        App.updateWidgets(getApplicationContext(), price);
 //
-//        if (updateInterface != null) {
-//            updateInterface.onPricesLoaded(price);
-//        }
+        if (updateInterface != null) {
+            updateInterface.onPricesLoaded(price);
+        }
     }
 
     private void onPriceError() {
@@ -591,11 +581,10 @@ public class UpdateService extends Service {
 
         DataProvider.insertOrUpdateProfile(getApplicationContext(), profile);
 
-//        UpdateService.this.profile = profile;
-//        App.updateWidgets(getApplicationContext(), profile);
-//        if (updateInterface != null) {
-//            updateInterface.onProfileLoaded(profile);
-//        }
+        App.updateWidgets(getApplicationContext(), profile);
+        if (updateInterface != null) {
+            updateInterface.onProfileLoaded(profile);
+        }
     }
 
     private void onProfileError() {
@@ -610,11 +599,10 @@ public class UpdateService extends Service {
 
         DataProvider.insertOrUpdateStats(getApplicationContext(), stats);
 
-//        UpdateService.this.stats = stats;
-//        App.updateWidgets(getApplicationContext(), stats);
-//        if (updateInterface != null) {
-//            updateInterface.onStatsLoaded(stats);
-//        }
+        App.updateWidgets(getApplicationContext(), stats);
+        if (updateInterface != null) {
+            updateInterface.onStatsLoaded(stats);
+        }
     }
 
     private void onStatsError() {
@@ -626,7 +614,9 @@ public class UpdateService extends Service {
     }
 
     private void onAvgLuckLoaded(AvgLuck avgLuck) {
-        UpdateService.this.avgLuck = avgLuck;
+
+        DataProvider.insertOrUpdateAvgLuck(getApplicationContext(), avgLuck);
+
         if (updateInterface != null) {
             updateInterface.onAvgLuckLoaded(avgLuck);
         }

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.eiabea.btcdroid.MainActivity;
@@ -16,8 +15,6 @@ import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
 import com.eiabea.btcdroid.model.AvgLuck;
 import com.eiabea.btcdroid.model.GenericPrice;
-import com.eiabea.btcdroid.model.Profile;
-import com.eiabea.btcdroid.model.Stats;
 
 public class MainViewAdapter extends FragmentStatePagerAdapter {
 
@@ -66,17 +63,13 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case MainActivity.FRAGMENT_PAYOUT:
-                PayoutFragment payoutFragment = PayoutFragment.create();
-                return payoutFragment;
+                return PayoutFragment.create();
             case MainActivity.FRAGMENT_POOL:
-                PoolFragment poolFragment = PoolFragment.create(avgLuck);
-                return poolFragment;
+                return PoolFragment.create();
             case MainActivity.FRAGMENT_WORKER:
-                WorkerFragment workerFragment = WorkerFragment.create();
-                return workerFragment;
+                return WorkerFragment.create();
             case MainActivity.FRAGMENT_ROUNDS:
-                RoundsFragment roundsFragment = RoundsFragment.create();
-                return roundsFragment;
+                return RoundsFragment.create();
         }
 
         return null;
@@ -101,15 +94,17 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
     }
 
     public static String getNameOfFragment(int which, Context context) {
-        if (which == MainActivity.FRAGMENT_PAYOUT) {
-            return context.getResources().getString(R.string.txt_viewpager_payout_fragment);
-        } else if (which == MainActivity.FRAGMENT_POOL) {
-            return context.getResources().getString(R.string.txt_viewpager_pool_fragment);
-        } else if (which == MainActivity.FRAGMENT_WORKER) {
-            return context.getResources().getString(R.string.txt_viewpager_worker_fragment);
-        } else if (which == MainActivity.FRAGMENT_ROUNDS) {
-            return context.getResources().getString(R.string.txt_viewpager_round_fragment);
+        switch (which) {
+            case MainActivity.FRAGMENT_PAYOUT:
+                return context.getResources().getString(R.string.txt_viewpager_payout_fragment);
+            case MainActivity.FRAGMENT_POOL:
+                return context.getResources().getString(R.string.txt_viewpager_pool_fragment);
+            case MainActivity.FRAGMENT_WORKER:
+                return context.getResources().getString(R.string.txt_viewpager_worker_fragment);
+            case MainActivity.FRAGMENT_ROUNDS:
+                return context.getResources().getString(R.string.txt_viewpager_round_fragment);
         }
+
         return "";
     }
 

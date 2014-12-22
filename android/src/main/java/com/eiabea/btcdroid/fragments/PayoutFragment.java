@@ -329,10 +329,9 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         if (c.getCount() > 0) {
+            c.moveToFirst();
             switch (loader.getId()) {
                 case PAYOUT_PROFILE_LOADER_ID:
-                    c.moveToFirst();
-
                     Profile profile = new Profile(c);
                     profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
 
@@ -341,8 +340,6 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     }
                     break;
                 case PAYOUT_PRICE_LOADER_ID:
-                    c.moveToFirst();
-
                     GenericPrice price = new GenericPrice(c);
                     price = App.getInstance().gson.fromJson(price.getJson(), GenericPrice.class);
 

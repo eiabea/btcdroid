@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -18,8 +19,6 @@ import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;
 
 public class EstimatedRewardWidgetProvider extends AppWidgetProvider {
-    public static final String PARAM_PROFILE = "param_profile";
-
     private static final String ACTION_CLICK = "ACTION_CLICK";
     public static final String LOADING_FAILED = "ACTION_FAILED";
 
@@ -38,9 +37,9 @@ public class EstimatedRewardWidgetProvider extends AppWidgetProvider {
         for (int widgetId : allWidgetIds) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
-            if(trans){
+            if (trans) {
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_black_transparent);
-            }else{
+            } else {
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_white);
             }
 
@@ -52,14 +51,24 @@ public class EstimatedRewardWidgetProvider extends AppWidgetProvider {
                     i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PROFILE);
                     context.startService(i);
                 } else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-                    Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
+                    String selection = Profile._ID + "=?";
+                    String[] selectionArgs = {"1"};
 
-                    float estimated = Float.valueOf(profile.getEstimated_reward());
-                    remoteViews.setTextViewText(R.id.txt_widget_value, App.formatReward(estimated));
-                    remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_orange));
-                    remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_estimated_reward));
+                    Cursor c = context.getContentResolver().query(Profile.CONTENT_URI, null, selection, selectionArgs, null);
 
-                    remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+                    if (c.getCount() > 0) {
+                        c.moveToFirst();
+
+                        Profile profile = new Profile(c);
+                        profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
+
+                        float estimated = Float.valueOf(profile.getEstimated_reward());
+                        remoteViews.setTextViewText(R.id.txt_widget_value, App.formatReward(estimated));
+                        remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_orange));
+                        remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_estimated_reward));
+
+                        remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+                    }
 
                 } else if (intent.getAction().equals(LOADING_FAILED)) {
                     remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);

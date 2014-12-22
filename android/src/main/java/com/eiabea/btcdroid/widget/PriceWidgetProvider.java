@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -18,8 +19,6 @@ import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;
 
 public class PriceWidgetProvider extends AppWidgetProvider {
-    public static final String PARAM_PRICE = "param_price";
-
     private static final String ACTION_CLICK = "ACTION_CLICK";
     public static final String LOADING_FAILED = "ACTION_FAILED";
 
@@ -52,13 +51,24 @@ public class PriceWidgetProvider extends AppWidgetProvider {
                     i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PRICE);
                     context.startService(i);
                 } else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-                    GenericPrice price = intent.getParcelableExtra(PARAM_PRICE);
 
-                    remoteViews.setTextViewText(R.id.txt_widget_value, App.formatPrice(price.getSymbol(), price.getValueFloat()));
-                    remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
-                    remoteViews.setTextViewText(R.id.txt_widget_desc, price.getSource());
+                    String selection = GenericPrice._ID + "=?";
+                    String[] selectionArgs = { "1" };
 
-                    remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+                    Cursor c = context.getContentResolver().query(GenericPrice.CONTENT_URI, null,selection,selectionArgs, null);
+                    if(c.getCount() > 0){
+                        c.moveToFirst();
+
+                        GenericPrice price = new GenericPrice(c);
+                        price = App.getInstance().gson.fromJson(price.getJson(), GenericPrice.class);
+
+                        remoteViews.setTextViewText(R.id.txt_widget_value, App.formatPrice(price.getSymbol(), price.getValueFloat()));
+                        remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
+                        remoteViews.setTextViewText(R.id.txt_widget_desc, price.getSource());
+
+                        remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
+                    }
+
 
                 } else if (intent.getAction().equals(LOADING_FAILED)) {
                     remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);

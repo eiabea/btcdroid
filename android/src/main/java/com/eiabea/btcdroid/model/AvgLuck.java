@@ -1,9 +1,23 @@
 package com.eiabea.btcdroid.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 
-public class AvgLuck implements Parcelable {
+import com.eiabea.btcdroid.data.DataProvider;
+import com.eiabea.btcdroid.data.DatabaseHelper;
+
+public class AvgLuck {
+
+    private static final String URL = "content://" + DataProvider.PROVIDER_NAME + "/" + DatabaseHelper.AVG_LUCK_TABLE_NAME;
+    public static final Uri CONTENT_URI = Uri.parse(URL);
+
+    public static final String _ID = "_id";
+    public static final String JSON = "json";
+
+    // Database
+    private long id;
+    private String json;
 
     // Attributes
     private float avg_luck;
@@ -12,36 +26,40 @@ public class AvgLuck implements Parcelable {
     public AvgLuck() {
     }
 
-    // Constructor used for Parcelable
-    public AvgLuck(Parcel in) {
-        avg_luck = in.readFloat();
+    public AvgLuck(Cursor c) {
+        setId(c.getLong(c.getColumnIndex(_ID)));
+        setJson(c.getString(c.getColumnIndex(JSON)));
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+    public ContentValues getContentValues(boolean forInsert) {
+        ContentValues values = new ContentValues();
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeFloat(avg_luck);
-
-    }
-
-    @SuppressWarnings("rawtypes")
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public AvgLuck createFromParcel(Parcel in) {
-            return new AvgLuck(in);
+        if (forInsert) {
+            //values.put(_ID, getId());
         }
 
-        public AvgLuck[] newArray(int size) {
-            return new AvgLuck[size];
-        }
-    };
+        values.put(JSON, getJson());
+
+        return values;
+    }
 
     public float getAvg_luck() {
         return avg_luck;
     }
 
+    public long getId() {
+        return id;
+    }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getJson() {
+        return json;
+    }
+
+    public void setJson(String json) {
+        this.json = json;
+    }
 }

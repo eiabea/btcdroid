@@ -109,7 +109,8 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
         currentPage = pref.getInt("userMainFragment", FRAGMENT_POOL);
 
-        tryGettingDataFromService();
+        //tryGettingDataFromService();
+        reloadData();
 
     }
 
@@ -150,7 +151,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
     private void tryGettingDataFromService() {
         try {
-            this.avgLuck = UpdateService.getInstance().getAvgLuck();
             profileLoaded = true;
             statsLoaded = true;
             pricesLoaded = true;
@@ -166,7 +166,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        this.avgLuck = savedInstanceState.getParcelable(STATE_AVG_LUCK);
         this.currentPage = savedInstanceState.getInt(STATE_CURRENT_PAGE);
         this.profileLoaded = savedInstanceState.getBoolean(STATE_PROFILE_LOADED);
         this.statsLoaded = savedInstanceState.getBoolean(STATE_STATS_LOADED);
@@ -199,7 +198,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         // Save the user's current game state
-        savedInstanceState.putParcelable(STATE_AVG_LUCK, this.avgLuck);
         savedInstanceState.putInt(STATE_CURRENT_PAGE, this.currentPage);
         savedInstanceState.putBoolean(STATE_PROFILE_LOADED, this.profileLoaded);
         savedInstanceState.putBoolean(STATE_STATS_LOADED, this.statsLoaded);

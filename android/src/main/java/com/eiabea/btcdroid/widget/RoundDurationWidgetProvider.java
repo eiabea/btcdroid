@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -21,8 +22,6 @@ import java.text.ParseException;
 import java.util.Date;
 
 public class RoundDurationWidgetProvider extends AppWidgetProvider {
-    public static final String PARAM_STATS = "param_stats";
-
     private static final String ACTION_CLICK = "ACTION_CLICK";
     public static final String LOADING_FAILED = "ACTION_FAILED";
 
@@ -52,23 +51,33 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
                     i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_STATS);
                     context.startService(i);
                 } else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-                    Stats stats = intent.getParcelableExtra(PARAM_STATS);
+                    String selectionStats = Stats._ID + "=?";
+                    String[] selectionArgsStats = { "1" };
 
-                    Date duration = null;
+                    Cursor cStats = context.getContentResolver().query(Stats.CONTENT_URI, null,selectionStats,selectionArgsStats, null);
 
-                    try {
-                        duration = App.dateDurationFormat.parse(stats.getRound_duration());
-                        remoteViews.setTextViewText(R.id.txt_widget_value, App.dateDurationFormat.format(duration));
-                        remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_green));
-                        remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_round_duration_widget));
-                    } catch (ParseException e) {
-                        Log.e(getClass().getSimpleName(), "Can't parse RoundDuration (ParseExeception)");
-                        remoteViews.setTextViewText(R.id.txt_widget_value, context.getString(R.string.txt_greater_one_day));
-                        remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_green));
-                        remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_round_duration_widget));
+                    if (cStats.getCount() > 0) {
+                        cStats.moveToFirst();
+
+                        Stats stats = new Stats(cStats);
+                        stats = App.getInstance().gson.fromJson(stats.getJson(), Stats.class);
+
+                        Date duration = null;
+
+                        try {
+                            duration = App.dateDurationFormat.parse(stats.getRound_duration());
+                            remoteViews.setTextViewText(R.id.txt_widget_value, App.dateDurationFormat.format(duration));
+                            remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_green));
+                            remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_round_duration_widget));
+                        } catch (ParseException e) {
+                            Log.e(getClass().getSimpleName(), "Can't parse RoundDuration (ParseExeception)");
+                            remoteViews.setTextViewText(R.id.txt_widget_value, context.getString(R.string.txt_greater_one_day));
+                            remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_green));
+                            remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_round_duration_widget));
+                        }
+
+                        remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
                     }
-
-                    remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
 
                 } else if (intent.getAction().equals(LOADING_FAILED)) {
                     remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);

@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -22,9 +23,6 @@ import java.text.ParseException;
 import java.util.Date;
 
 public class MultiWidgetProvider extends AppWidgetProvider {
-    public static final String PARAM_PROFILE = "param_profile";
-    public static final String PARAM_STATS = "param_stats";
-
     private static final String ACTION_CLICK = "ACTION_CLICK";
     public static final String LOADING_FAILED = "ACTION_FAILED";
 
@@ -45,9 +43,9 @@ public class MultiWidgetProvider extends AppWidgetProvider {
         for (int widgetId : allWidgetIds) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_multi_layout);
 
-            if(trans){
+            if (trans) {
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_black_transparent);
-            }else{
+            } else {
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_white);
             }
 
@@ -58,8 +56,32 @@ public class MultiWidgetProvider extends AppWidgetProvider {
                     Intent i = new Intent(context, UpdateService.class);
                     context.startService(i);
                 } else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-                    Profile profile = intent.getParcelableExtra(PARAM_PROFILE);
-                    Stats stats = intent.getParcelableExtra(PARAM_STATS);
+                    String selection = Profile._ID + "=?";
+                    String[] selectionArgs = {"1"};
+
+                    Cursor c = context.getContentResolver().query(Profile.CONTENT_URI, null, selection, selectionArgs, null);
+
+                    Profile profile = null;
+                    if (c.getCount() > 0) {
+                        c.moveToFirst();
+
+                        profile = new Profile(c);
+                        profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
+                    }
+
+                    String selectionStats = Stats._ID + "=?";
+                    String[] selectionArgsStats = {"1"};
+
+                    Cursor cStats = context.getContentResolver().query(Stats.CONTENT_URI, null, selectionStats, selectionArgsStats, null);
+
+                    Stats stats = null;
+                    if (cStats.getCount() > 0) {
+                        cStats.moveToFirst();
+
+                        stats = new Stats(cStats);
+                        stats = App.getInstance().gson.fromJson(stats.getJson(), Stats.class);
+                    }
+
 
                     if (profile != null) {
                         remoteViews.setTextViewText(R.id.txt_widget_current_hashrate, App.formatHashRate(App.getTotalHashrate(profile)));

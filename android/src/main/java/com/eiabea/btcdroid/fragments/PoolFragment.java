@@ -34,13 +34,11 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     public static final String TAG = PoolFragment.class.getSimpleName();
 
-    public static final String PARAM_AVG_LUCK = "param_avg_luck";
     private static final int POOL_PROFILE_LOADER_ID = 222;
     private static final int POOL_STATS_LOADER_ID = 223;
+    private static final int POOL_AVG_LUCK_LOADER_ID = 224;
 
     private ViewGroup rootView;
-
-    private AvgLuck avgLuck;
 
     private boolean statsLoaded = false;
     private boolean profileLoaded = false;
@@ -55,10 +53,9 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             txtLuck24h, txtLuck7d, txtLuck30d, txtAvgLuck;
     private RatingBar ratRating;
 
-    public static PoolFragment create(AvgLuck avgLuck) {
+    public static PoolFragment create() {
         PoolFragment fragment = new PoolFragment();
         Bundle b = new Bundle();
-        b.putParcelable(PARAM_AVG_LUCK, avgLuck);
         fragment.setArguments(b);
         return fragment;
     }
@@ -72,11 +69,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        this.avgLuck = getArguments().getParcelable(PARAM_AVG_LUCK);
-
         initUi();
-
-        setAvgLuck(avgLuck);
 
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
@@ -84,6 +77,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         getActivity().getSupportLoaderManager().initLoader(POOL_PROFILE_LOADER_ID, null, this);
         getActivity().getSupportLoaderManager().initLoader(POOL_STATS_LOADER_ID, null, this);
+        getActivity().getSupportLoaderManager().initLoader(POOL_AVG_LUCK_LOADER_ID, null, this);
 
 
         return rootView;
@@ -269,8 +263,11 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     public void setAvgLuck(AvgLuck avgLuck) {
-        this.avgLuck = avgLuck;
-        fillUpAvgLuck();
+
+        if (avgLuck != null) {
+            setLuck(txtAvgLuck, avgLuck.getAvg_luck(), true);
+        }
+
         avgLuckLoaded = true;
         handleLoading();
 
@@ -283,13 +280,6 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 statsLoaded) {
             swipeLayout.setRefreshing(false);
             avgLuckLoaded = profileLoaded = statsLoaded = false;
-        }
-    }
-
-
-    private void fillUpAvgLuck() {
-        if (avgLuck != null) {
-            setLuck(txtAvgLuck, avgLuck.getAvg_luck(), true);
         }
     }
 
@@ -312,6 +302,9 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             case POOL_STATS_LOADER_ID:
                 selection = Stats._ID + "=?";
                 return new CursorLoader(getActivity(), Stats.CONTENT_URI, null, selection, selectionArgs, null);
+            case POOL_AVG_LUCK_LOADER_ID:
+                selection = AvgLuck._ID + "=?";
+                return new CursorLoader(getActivity(), AvgLuck.CONTENT_URI, null, selection, selectionArgs, null);
         }
 
         return null;
@@ -323,11 +316,10 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (c.getCount() > 0) {
 
             DatabaseUtils.dumpCursor(c);
+            c.moveToFirst();
 
             switch (loader.getId()) {
                 case POOL_PROFILE_LOADER_ID:
-                    c.moveToFirst();
-
                     Profile profile = new Profile(c);
                     profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
 
@@ -336,13 +328,19 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     }
                     break;
                 case POOL_STATS_LOADER_ID:
-                    c.moveToFirst();
-
                     Stats stats = new Stats(c);
                     stats = App.getInstance().gson.fromJson(stats.getJson(), Stats.class);
 
                     if (stats != null) {
                         setStats(stats);
+                    }
+                    break;
+                case POOL_AVG_LUCK_LOADER_ID:
+                    AvgLuck avgLuck = new AvgLuck(c);
+                    avgLuck = App.getInstance().gson.fromJson(avgLuck.getJson(), AvgLuck.class);
+
+                    if (avgLuck != null) {
+                        setAvgLuck(avgLuck);
                     }
                     break;
             }

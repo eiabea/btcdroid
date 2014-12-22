@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.eiabea.btcdroid.R;
+import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.service.UpdateService;
@@ -51,8 +53,20 @@ public class DashClockWidget extends DashClockExtension {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(getClass().getSimpleName(), "onReceive");
-            Profile profile = intent.getParcelableExtra(TotalHashrateWidgetProvider.PARAM_PROFILE);
-            updateWidget(profile);
+
+            String selection = GenericPrice._ID + "=?";
+            String[] selectionArgs = {"1"};
+
+            Cursor c = context.getContentResolver().query(Profile.CONTENT_URI, null, selection, selectionArgs, null);
+
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+
+                Profile profile = new Profile(c);
+                profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
+
+                updateWidget(profile);
+            }
         }
     }
 
