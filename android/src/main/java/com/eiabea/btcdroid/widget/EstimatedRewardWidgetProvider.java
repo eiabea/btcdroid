@@ -70,6 +70,8 @@ public class EstimatedRewardWidgetProvider extends AppWidgetProvider {
                         remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
                     }
 
+                    c.close();
+
                 } else if (intent.getAction().equals(LOADING_FAILED)) {
                     remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
                 }

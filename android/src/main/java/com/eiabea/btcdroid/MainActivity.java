@@ -13,7 +13,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerTitleStrip;
@@ -64,9 +63,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     private static final int INTENT_CUSTOMIZE = 1;
     private static final int INTENT_PARTICIPANTS = 2;
 
-    private static final String STATE_PROFILE_LOADED = "state_profile_loaded";
-    private static final String STATE_STATS_LOADED = "state_stats_loaded";
-    private static final String STATE_PRICES_LOADED = "state_prices_loaded";
     private static final String STATE_CURRENT_PAGE = "state_current_page";
 
     // Tiles Layout
@@ -77,11 +73,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     private MainViewAdapter adapter;
     private int currentPage = FRAGMENT_POOL;
 
-    private boolean statsLoaded = false;
-    private boolean profileLoaded = false;
-    private boolean pricesLoaded = false;
-    private boolean avgLuckLoaded = false;
-
     private LinearLayout llNoPools;
     private Button btnSetToken;
 
@@ -89,8 +80,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     private ClipboardManager clipboard;
     @SuppressWarnings("deprecation")
     private android.text.ClipboardManager clipboardold;
-
-    private AvgLuck avgLuck = null;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -107,7 +96,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
         currentPage = pref.getInt("userMainFragment", FRAGMENT_POOL);
 
-        //tryGettingDataFromService();
         reloadData();
 
     }
@@ -151,18 +139,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         this.currentPage = savedInstanceState.getInt(STATE_CURRENT_PAGE);
-        this.profileLoaded = savedInstanceState.getBoolean(STATE_PROFILE_LOADED);
-        this.statsLoaded = savedInstanceState.getBoolean(STATE_STATS_LOADED);
-        this.pricesLoaded = savedInstanceState.getBoolean(STATE_PRICES_LOADED);
-
-        setSavedValues();
-    }
-
-    private void setSavedValues() {
-        setAvgLuck(this.avgLuck);
-
-        handleProgessIndicator();
-
     }
 
     @Override
@@ -183,9 +159,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         super.onSaveInstanceState(savedInstanceState);
         // Save the user's current game state
         savedInstanceState.putInt(STATE_CURRENT_PAGE, this.currentPage);
-        savedInstanceState.putBoolean(STATE_PROFILE_LOADED, this.profileLoaded);
-        savedInstanceState.putBoolean(STATE_STATS_LOADED, this.statsLoaded);
-        savedInstanceState.putBoolean(STATE_PRICES_LOADED, this.pricesLoaded);
     }
 
     @Override
@@ -213,7 +186,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         toolbar.setSubtitle(R.string.app_name_subtitle);
         setSupportActionBar(toolbar);
 
-        adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.avgLuck);
+        adapter = new MainViewAdapter(this, getSupportFragmentManager());
         try {
             if (isTablet && isLand) {
 
@@ -234,7 +207,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
                 viewPager = (ViewPager) findViewById(R.id.vp_main);
                 viewPager.setOnPageChangeListener(this);
-//                viewPager.setOffscreenPageLimit(2);
+                viewPager.setOffscreenPageLimit(2);
                 viewPager.setAdapter(adapter);
                 viewPager.setCurrentItem(currentPage);
             }
@@ -423,10 +396,8 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     private void reloadData() {
 
         if (App.getInstance().isTokenSet()) {
-            pricesLoaded = profileLoaded = statsLoaded = false;
             App.resetUpdateManager(this);
             showInfos();
-            handleProgessIndicator();
         } else {
             hideInfos();
         }
@@ -466,29 +437,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         }
     }
 
-    public void setAvgLuck(AvgLuck avgLuck) {
-        this.avgLuck = avgLuck;
-        try {
-            ((PoolFragment) getFragment(FRAGMENT_POOL)).setAvgLuck(avgLuck);
-
-        } catch (Exception e) {
-            Log.e(getClass().getSimpleName(), "Can't get all Fragments to setAvgLuck (NullPointer)");
-        }
-    }
-
-    private Fragment getFragment(int which) {
-        Fragment frag = (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vp_main + ":" + which));
-        if (frag != null) {
-            return frag;
-        } else {
-            frag = getSupportFragmentManager().findFragmentByTag(getFragmentTag(which));
-            if (frag != null) {
-                return frag;
-            }
-        }
-        return null;
-    }
-
     private String getFragmentTag(int which) {
         if (which == FRAGMENT_PAYOUT) {
             return PayoutFragment.class.getSimpleName();
@@ -500,46 +448,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
             return RoundsFragment.class.getSimpleName();
         }
         return "";
-    }
-
-    private void handleProgessIndicator() {
-        if (adapter == null) {
-            adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.avgLuck);
-        } else {
-            adapter.setAvgLuck(avgLuck);
-        }
-
-        try {
-            viewPager.setAdapter(adapter);
-            viewPager.setCurrentItem(currentPage);
-        } catch (Exception e) {
-            // ignore?
-        }
-
-    }
-
-    @Override
-    public void onProfileLoaded(Profile profile) {
-        profileLoaded = true;
-        handleProgessIndicator();
-    }
-
-    @Override
-    public void onStatsLoaded(Stats stats) {
-        statsLoaded = true;
-        handleProgessIndicator();
-    }
-
-    @Override
-    public void onPricesLoaded(GenericPrice price) {
-        pricesLoaded = true;
-        handleProgessIndicator();
-    }
-
-    @Override
-    public void onAvgLuckLoaded(AvgLuck avgLuck) {
-        avgLuckLoaded = true;
-        handleProgessIndicator();
     }
 
     @Override
@@ -568,26 +476,22 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
     @Override
     public void onProfileError() {
-        profileLoaded = true;
-        handleProgessIndicator();
+
     }
 
     @Override
     public void onStatsError() {
-        statsLoaded = true;
-        handleProgessIndicator();
+
     }
 
     @Override
     public void onPricesError() {
-        pricesLoaded = true;
-        handleProgessIndicator();
+
     }
 
     @Override
     public void onAvgLuckError() {
-        avgLuckLoaded = true;
-        handleProgessIndicator();
+
     }
 
 }

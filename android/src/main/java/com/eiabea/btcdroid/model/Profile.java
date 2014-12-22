@@ -7,6 +7,7 @@ import android.net.Uri;
 import com.eiabea.btcdroid.data.DataProvider;
 import com.eiabea.btcdroid.data.DatabaseHelper;
 import com.eiabea.btcdroid.util.App;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -100,8 +101,10 @@ public class Profile {
 
         Set<Entry<String, JsonElement>> set = workers.entrySet();
 
+        Gson gson = App.getInstance().gson;
+
         for (Entry<String, JsonElement> current : set) {
-            Worker tmpWorker = App.getInstance().gson.fromJson(current.getValue(), Worker.class);
+            Worker tmpWorker = gson.fromJson(current.getValue(), Worker.class);
             tmpWorker.setName(current.getKey());
 
             listWorkers.add(tmpWorker);

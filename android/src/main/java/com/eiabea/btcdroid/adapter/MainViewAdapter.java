@@ -13,26 +13,19 @@ import com.eiabea.btcdroid.fragments.PayoutFragment;
 import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
-import com.eiabea.btcdroid.model.AvgLuck;
-import com.eiabea.btcdroid.model.GenericPrice;
 
 public class MainViewAdapter extends FragmentStatePagerAdapter {
 
     private static int PAGES = 0;
 
-    private GenericPrice price;
-    private AvgLuck avgLuck;
-
     private Context context;
 
     private static int[] fragmentOrder;
 
-    public MainViewAdapter(Context context, FragmentManager fm, AvgLuck avgLuck) {
+    public MainViewAdapter(Context context, FragmentManager fm) {
         super(fm);
 
         this.context = context;
-        this.price = price;
-        this.avgLuck = avgLuck;
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -106,18 +99,6 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
         }
 
         return "";
-    }
-
-    public GenericPrice getPrice() {
-        return price;
-    }
-
-    public void setPrice(GenericPrice price) {
-        this.price = price;
-    }
-
-    public void setAvgLuck(AvgLuck avgLuck) {
-        this.avgLuck = avgLuck;
     }
 
 }

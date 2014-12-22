@@ -102,31 +102,4 @@ public class RoundsListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    public class BlockHolder {
-        private String title;
-        private Block block;
-
-        public BlockHolder(String title, Block block) {
-            this.title = title;
-            this.block = block;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public Block getBlock() {
-            return block;
-        }
-
-        public void setBlock(Block block) {
-            this.block = block;
-        }
-
-    }
-
 }

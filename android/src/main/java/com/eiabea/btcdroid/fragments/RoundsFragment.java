@@ -1,8 +1,6 @@
 package com.eiabea.btcdroid.fragments;
 
-import android.annotation.SuppressLint;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -19,7 +17,7 @@ import com.eiabea.btcdroid.adapter.RoundsListAdapter;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.util.App;
 
-public class RoundsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class RoundsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int ROUNDS_STATS_LOADER_ID = 444;
     private ViewGroup rootView;
@@ -34,37 +32,32 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().getSupportLoaderManager().initLoader(ROUNDS_STATS_LOADER_ID, null, this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(getClass().getSimpleName(), "onCreateView()");
         // Inflate the layout containing a title and body text.
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_rounds, null);
 
-        initUi(inflater, rootView);
+        initUi();
 
-        getActivity().getSupportLoaderManager().initLoader(ROUNDS_STATS_LOADER_ID, null, this);
+        Log.i(getClass().getSimpleName(), "onCreateView() /done");
 
         return rootView;
     }
 
-    @SuppressLint("NewApi")
-    private void initUi(LayoutInflater inflater, ViewGroup rootView) {
-
-//        DisplayMetrics metrics = new DisplayMetrics();
-//        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//
-//        width = metrics.widthPixels;
-
+    private void initUi() {
         exlvRoundsHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_rounds_holder);
-
-//        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-//            exlvRoundsHolder.setIndicatorBounds(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
-//        } else {
-//            exlvRoundsHolder.setIndicatorBoundsRelative(width - App.getDipsFromPixel(78, getActivity()), width - App.getDipsFromPixel(0, getActivity()));
-//        }
-
     }
 
     private void setStats(Stats stats) {
+
+        Log.i(getClass().getSimpleName(), "setStats()");
 
         try {
             RoundsListAdapter adapter = new RoundsListAdapter(getActivity(), App.parseBlocks(stats.getBlocks()));
@@ -73,6 +66,8 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
         } catch (NullPointerException ignore) {
 
         }
+
+        Log.i(getClass().getSimpleName(), "setStats() /done");
 
     }
 

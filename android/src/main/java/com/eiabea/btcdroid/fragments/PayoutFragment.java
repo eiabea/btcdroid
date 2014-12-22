@@ -31,11 +31,10 @@ import java.util.Calendar;
 
 public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final String TAG = PayoutFragment.class.getSimpleName();
+
     private static final int PAYOUT_PROFILE_LOADER_ID = 111;
     private static final int PAYOUT_PRICE_LOADER_ID = 112;
-
-    private boolean profileLoaded = false;
-    private boolean pricesLoaded = false;
 
     private View rootView;
     private TextView txtCurrentSource, txtCurrentValue, txtEstimatedReward, txtConfirmedReward,
@@ -47,10 +46,26 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private SharedPreferences pref;
     private LinearLayout llPriceHolder;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().getSupportLoaderManager().initLoader(PAYOUT_PROFILE_LOADER_ID, null, this);
+        getActivity().getSupportLoaderManager().initLoader(PAYOUT_PRICE_LOADER_ID, null, this);
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup root, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_payout, root, false);
 
-        pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Log.i(TAG, "onCreateView()");
 
         initUi();
 
@@ -59,9 +74,6 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
-
-        getActivity().getSupportLoaderManager().initLoader(PAYOUT_PROFILE_LOADER_ID, null, this);
-        getActivity().getSupportLoaderManager().initLoader(PAYOUT_PRICE_LOADER_ID, null, this);
 
         return rootView;
 
@@ -118,7 +130,6 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
             setGauge(profile, false);
         }
 
-        profileLoaded = true;
         handleLoading();
 
 
@@ -151,11 +162,11 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
             long now = Calendar.getInstance().getTimeInMillis();
 
-            Log.d(getClass().getSimpleName(), "Pricethreshold min: " + minuteThreshold);
-            Log.d(getClass().getSimpleName(), "Pricethreshold: " + threshold);
-            Log.d(getClass().getSimpleName(), "Price last Updated: " + lastUpdated);
-            Log.d(getClass().getSimpleName(), "Price now: " + now);
-            Log.d(getClass().getSimpleName(), "time until priceupdate: " + (((lastUpdated + threshold) - now) / 1000) + " sec");
+//            Log.d(getClass().getSimpleName(), "Pricethreshold min: " + minuteThreshold);
+//            Log.d(getClass().getSimpleName(), "Pricethreshold: " + threshold);
+//            Log.d(getClass().getSimpleName(), "Price last Updated: " + lastUpdated);
+//            Log.d(getClass().getSimpleName(), "Price now: " + now);
+//            Log.d(getClass().getSimpleName(), "time until priceupdate: " + (((lastUpdated + threshold) - now) / 1000) + " sec");
 
             if ((lastUpdated + threshold) < now) {
 
@@ -168,13 +179,12 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
                 pref.edit().putFloat("txt_" + txt.getId() + "_value", currentPriceFloat).apply();
                 pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).apply();
-                Log.d(getClass().getSimpleName(), "set last price to: " + currentPriceFloat);
+//                Log.d(getClass().getSimpleName(), "set last price to: " + currentPriceFloat);
             }
 
             txtCurrentValue.setText(App.formatPrice(current.getSymbol(), current.getValueFloat()));
             txtCurrentSource.setText(current.getSource() + ":");
 
-            pricesLoaded = true;
             handleLoading();
         }
     }
@@ -221,11 +231,8 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void handleLoading() {
-        if (swipeLayout != null &&
-                pricesLoaded &&
-                profileLoaded) {
+        if (swipeLayout != null) {
             swipeLayout.setRefreshing(false);
-            pricesLoaded = profileLoaded = false;
         }
     }
 
@@ -346,11 +353,7 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     }
                     break;
             }
-
-
         }
-
-
     }
 
     @Override

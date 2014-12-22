@@ -69,6 +69,8 @@ public class MultiWidgetProvider extends AppWidgetProvider {
                         profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
                     }
 
+                    c.close();
+
                     String selectionStats = Stats._ID + "=?";
                     String[] selectionArgsStats = {"1"};
 
@@ -82,6 +84,7 @@ public class MultiWidgetProvider extends AppWidgetProvider {
                         stats = App.getInstance().gson.fromJson(stats.getJson(), Stats.class);
                     }
 
+                    cStats.close();
 
                     if (profile != null) {
                         remoteViews.setTextViewText(R.id.txt_widget_current_hashrate, App.formatHashRate(App.getTotalHashrate(profile)));

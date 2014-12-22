@@ -157,12 +157,12 @@ public class App extends Application {
 
         Set<Entry<String, JsonElement>> set = json.entrySet();
 
-        for (Iterator<Entry<String, JsonElement>> it = set.iterator(); it.hasNext(); ) {
-            Entry<String, JsonElement> current = it.next();
+        Gson gson = App.getInstance().gson;
 
-            blocks.add(App.getInstance().gson.fromJson(current.getValue(), Block.class));
-
+        for (Entry<String, JsonElement> current : set) {
+            blocks.add(gson.fromJson(current.getValue(), Block.class));
         }
+
         return blocks;
     }
 

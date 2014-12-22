@@ -79,6 +79,8 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
                         remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
                     }
 
+                    cStats.close();
+
                 } else if (intent.getAction().equals(LOADING_FAILED)) {
                     remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
                 }

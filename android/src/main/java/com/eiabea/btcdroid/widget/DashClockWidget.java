@@ -67,6 +67,8 @@ public class DashClockWidget extends DashClockExtension {
 
                 updateWidget(profile);
             }
+            c.close();
+
         }
     }
 

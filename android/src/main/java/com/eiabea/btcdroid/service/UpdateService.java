@@ -541,10 +541,6 @@ public class UpdateService extends Service {
         return notification;
     }
 
-    public static UpdateInterface getUpdateInterface() {
-        return updateInterface;
-    }
-
     public static void setUpdateInterface(UpdateInterface updateInterface) {
         UpdateService.updateInterface = updateInterface;
     }
@@ -563,9 +559,6 @@ public class UpdateService extends Service {
 
         App.updateWidgets(getApplicationContext());
 
-        if (updateInterface != null) {
-            updateInterface.onPricesLoaded(price);
-        }
     }
 
     private void onPriceError() {
@@ -580,9 +573,6 @@ public class UpdateService extends Service {
         DataProvider.insertOrUpdateProfile(getApplicationContext(), profile);
 
         App.updateWidgets(getApplicationContext());
-        if (updateInterface != null) {
-            updateInterface.onProfileLoaded(profile);
-        }
     }
 
     private void onProfileError() {
@@ -597,9 +587,6 @@ public class UpdateService extends Service {
         DataProvider.insertOrUpdateStats(getApplicationContext(), stats);
 
         App.updateWidgets(getApplicationContext());
-        if (updateInterface != null) {
-            updateInterface.onStatsLoaded(stats);
-        }
     }
 
     private void onStatsError() {
@@ -613,9 +600,6 @@ public class UpdateService extends Service {
 
         DataProvider.insertOrUpdateAvgLuck(getApplicationContext(), avgLuck);
 
-        if (updateInterface != null) {
-            updateInterface.onAvgLuckLoaded(avgLuck);
-        }
     }
 
     private void onAvgLuckError() {
@@ -625,23 +609,13 @@ public class UpdateService extends Service {
     }
 
     public interface UpdateInterface {
-        public void onProfileLoaded(Profile profile);
-
         public void onProfileError();
-
-        public void onStatsLoaded(Stats stats);
 
         public void onStatsError();
 
-        public void onAvgLuckLoaded(AvgLuck avgLuck);
-
         public void onAvgLuckError();
-
-        public void onPricesLoaded(GenericPrice price);
 
         public void onPricesError();
     }
-
-    ;
 
 }

@@ -2,7 +2,6 @@ package com.eiabea.btcdroid.fragments;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -40,10 +39,6 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private ViewGroup rootView;
 
-    private boolean statsLoaded = false;
-    private boolean profileLoaded = false;
-    private boolean avgLuckLoaded = false;
-
     private SharedPreferences pref;
 
     private SwipeRefreshLayout swipeLayout;
@@ -61,6 +56,15 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().getSupportLoaderManager().initLoader(POOL_PROFILE_LOADER_ID, null, this);
+        getActivity().getSupportLoaderManager().initLoader(POOL_STATS_LOADER_ID, null, this);
+        getActivity().getSupportLoaderManager().initLoader(POOL_AVG_LUCK_LOADER_ID, null, this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView()");
 
@@ -74,11 +78,6 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
-
-        getActivity().getSupportLoaderManager().initLoader(POOL_PROFILE_LOADER_ID, null, this);
-        getActivity().getSupportLoaderManager().initLoader(POOL_STATS_LOADER_ID, null, this);
-        getActivity().getSupportLoaderManager().initLoader(POOL_AVG_LUCK_LOADER_ID, null, this);
-
 
         return rootView;
     }
@@ -150,7 +149,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             @Override
             public void onRatingChanged(RatingBar arg0, float arg1, boolean arg2) {
-                Log.d(TAG, "Rating changed: " + arg1);
+//                Log.d(TAG, "Rating changed: " + arg1);
                 arg0.setRating(ratingToSet);
             }
         });
@@ -158,7 +157,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         ratRating.setStepSize(0.5f);
 
         ratRating.setRating(ratingToSet);
-        Log.d(TAG, "Rating set: " + ratRating.getRating());
+//        Log.d(TAG, "Rating set: " + ratRating.getRating());
 
     }
 
@@ -180,7 +179,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         long average = total / blocks.size();
 
-        Log.d(TAG, "Total: " + total + "; " + "Avg.: " + average);
+//        Log.d(TAG, "Total: " + total + "; " + "Avg.: " + average);
 
         return new Date(average);
     }
@@ -192,7 +191,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         double rating = dur / avg;
 
-        Log.d(TAG, "Raw Rating: " + rating);
+//        Log.d(TAG, "Raw Rating: " + rating);
 
         return rating;
     }
@@ -203,7 +202,6 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
         } catch (NullPointerException ignore) {
         }
-        profileLoaded = true;
         handleLoading();
     }
 
@@ -238,10 +236,10 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             if (duration != null) {
                 float cdf = Float.valueOf(stats.getShares_cdf());
-                Log.i(TAG, "cdf: " + cdf);
+//                Log.i(TAG, "cdf: " + cdf);
                 float estimated = (duration.getTime() / (cdf / 100));
-                Log.i(TAG, "estimated: " + (long) estimated);
-                Log.i(TAG, "duration: " + duration.getTime());
+//                Log.i(TAG, "estimated: " + (long) estimated);
+//                Log.i(TAG, "duration: " + duration.getTime());
 
                 txtEstimatedDuration.setText(App.dateDurationFormat.format(new Date((long) (estimated/* + duration.getTime()*/))));
             } else {
@@ -258,28 +256,22 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         } catch (NullPointerException ignore) {
         }
 
-        statsLoaded = true;
         handleLoading();
     }
 
-    public void setAvgLuck(AvgLuck avgLuck) {
+    private void setAvgLuck(AvgLuck avgLuck) {
 
         if (avgLuck != null) {
             setLuck(txtAvgLuck, avgLuck.getAvg_luck(), true);
         }
 
-        avgLuckLoaded = true;
         handleLoading();
 
     }
 
     private void handleLoading() {
-        if (swipeLayout != null &&
-                avgLuckLoaded &&
-                profileLoaded &&
-                statsLoaded) {
+        if (swipeLayout != null ){
             swipeLayout.setRefreshing(false);
-            avgLuckLoaded = profileLoaded = statsLoaded = false;
         }
     }
 
