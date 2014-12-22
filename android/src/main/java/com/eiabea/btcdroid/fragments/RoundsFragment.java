@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.ExpandableListView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.adapter.RoundsListAdapter;
-import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.util.App;
 
@@ -92,8 +90,6 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         if (c.getCount() > 0) {
-
-            DatabaseUtils.dumpCursor(c);
 
             switch (loader.getId()) {
                 case ROUNDS_STATS_LOADER_ID:

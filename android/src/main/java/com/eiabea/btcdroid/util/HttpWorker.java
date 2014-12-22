@@ -10,8 +10,6 @@ import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
 import com.eiabea.btcdroid.model.PricesCoinDesk;
 import com.eiabea.btcdroid.model.PricesCoinbase;
-import com.eiabea.btcdroid.model.Profile;
-import com.eiabea.btcdroid.model.Stats;
 
 import java.util.Locale;
 
@@ -23,6 +21,7 @@ public class HttpWorker {
     public static final String PRICES_URL_COINDESK_END = ".json";
     public static final String PRICES_URL_BITSTAMP = "https://www.bitstamp.net/api/ticker/";
     public static final String PRICES_URL_COINBASE = "https://coinbase.com/api/v1/prices/buy";
+    public static final String AVG_LUCK_URL = "http://slush-eiabea.rhcloud.com/avg_luck";
 
     public static final String STATS_URL = BASEURL + "stats/json/";
     public static final String PROFILE_URL = BASEURL + "accounts/profile/json/";
@@ -31,18 +30,11 @@ public class HttpWorker {
 
     private Context context;
 
-    private String token;
-
     public static RequestQueue mQueue;
 
-    public HttpWorker() {
-    }
-
-    public HttpWorker(Context context, String token) {
+    public HttpWorker(Context context) {
         HttpWorker.me = this;
         this.context = context;
-
-        this.token = token;
 
         initVolley();
     }
@@ -55,39 +47,6 @@ public class HttpWorker {
         mQueue = Volley.newRequestQueue(context);
         mQueue.start();
     }
-
-    public void getProfile(Response.Listener<Profile> success, Response.ErrorListener error) {
-        Log.d(getClass().getSimpleName(), "get Profile");
-
-        String url = HttpWorker.PROFILE_URL + token;
-
-        System.out.println(HttpWorker.mQueue.toString());
-
-        HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null, success, error));
-
-    }
-
-    public void getStats(Response.Listener<Stats> success, Response.ErrorListener error) {
-        Log.d(getClass().getSimpleName(), "get Stats");
-
-        String url = HttpWorker.STATS_URL + token;
-
-        System.out.println(HttpWorker.mQueue.toString());
-
-        HttpWorker.mQueue.add(new GsonRequest<Stats>(url, Stats.class, null, success, error));
-
-    }
-
-//	public void getPricesMtGox(String currency, Response.Listener<PricesMtGox> success, Response.ErrorListener error) {
-//		Log.d(getClass().getSimpleName(), "get Prices MtGox");
-//
-//		String url = HttpWorker.PRICES_URL_MTGOX_FRONT + currency + HttpWorker.PRICES_URL_MTGOX_END;
-//
-//		System.out.println(HttpWorker.mQueue.toString());
-//
-//		HttpWorker.mQueue.add(new GsonRequest<PricesMtGox>(url, PricesMtGox.class, null, success, error));
-//
-//	}
 
     public void getPricesBTCe(String currency, Response.Listener<PricesBTCe> success, Response.ErrorListener error) {
         Log.d(getClass().getSimpleName(), "get Prices BTC-e");

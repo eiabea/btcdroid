@@ -11,8 +11,8 @@ android {
     compileSdkVersion 21
     buildToolsVersion '21.1.2'
     defaultConfig {
-        versionCode 78
-        versionName "1.4.3"
+        versionCode 79
+        versionName "1.5"
         minSdkVersion 10
         targetSdkVersion 21
 

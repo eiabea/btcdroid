@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.eiabea.btcdroid.R;
-import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;

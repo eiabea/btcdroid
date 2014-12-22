@@ -140,7 +140,7 @@ public class CustomizeFragment extends Fragment {
 
         list = new ArrayList<CustomizeItem>(split.length);
         for (int i = 0; i < split.length; i++) {
-            list.add(new CustomizeItem(Integer.valueOf(split[i]), MainViewAdapter.getNameOfFragment(Integer.valueOf(split[i]), getActivity()), false));
+            list.add(new CustomizeItem(Integer.valueOf(split[i]), MainViewAdapter.getNameOfFragment(Integer.valueOf(split[i]), getActivity())));
         }
 
         adapter = new CustomizeAdapter(getActivity(), R.layout.list_item_handle_left, list);

@@ -175,7 +175,7 @@ public class UpdateService extends Service {
     private void getAvgLuckWidgets() {
         Log.d(getClass().getSimpleName(), "get AvgLuck");
 
-        String url = "http://slush-eiabea.rhcloud.com/avg_luck";
+        String url = HttpWorker.AVG_LUCK_URL;
 
         System.out.println(HttpWorker.mQueue.toString());
 
@@ -561,17 +561,15 @@ public class UpdateService extends Service {
 
         DataProvider.insertOrUpdatePrice(getApplicationContext(), price);
 
-//        this.price = price;
-        App.updateWidgets(getApplicationContext(), price);
-//
+        App.updateWidgets(getApplicationContext());
+
         if (updateInterface != null) {
             updateInterface.onPricesLoaded(price);
         }
     }
 
     private void onPriceError() {
-        GenericPrice price = null;
-        App.updateWidgets(getApplicationContext(), price);
+        App.updateWidgets(getApplicationContext());
         if (updateInterface != null) {
             updateInterface.onPricesError();
         }
@@ -581,15 +579,14 @@ public class UpdateService extends Service {
 
         DataProvider.insertOrUpdateProfile(getApplicationContext(), profile);
 
-        App.updateWidgets(getApplicationContext(), profile);
+        App.updateWidgets(getApplicationContext());
         if (updateInterface != null) {
             updateInterface.onProfileLoaded(profile);
         }
     }
 
     private void onProfileError() {
-        Profile profile = null;
-        App.updateWidgets(getApplicationContext(), profile);
+        App.updateWidgets(getApplicationContext());
         if (updateInterface != null) {
             updateInterface.onProfileError();
         }
@@ -599,15 +596,14 @@ public class UpdateService extends Service {
 
         DataProvider.insertOrUpdateStats(getApplicationContext(), stats);
 
-        App.updateWidgets(getApplicationContext(), stats);
+        App.updateWidgets(getApplicationContext());
         if (updateInterface != null) {
             updateInterface.onStatsLoaded(stats);
         }
     }
 
     private void onStatsError() {
-        Stats stats = null;
-        App.updateWidgets(getApplicationContext(), stats);
+        App.updateWidgets(getApplicationContext());
         if (updateInterface != null) {
             updateInterface.onStatsError();
         }
@@ -635,11 +631,11 @@ public class UpdateService extends Service {
 
         public void onStatsLoaded(Stats stats);
 
+        public void onStatsError();
+
         public void onAvgLuckLoaded(AvgLuck avgLuck);
 
         public void onAvgLuckError();
-
-        public void onStatsError();
 
         public void onPricesLoaded(GenericPrice price);
 

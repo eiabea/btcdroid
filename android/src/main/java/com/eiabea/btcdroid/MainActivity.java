@@ -64,8 +64,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     private static final int INTENT_CUSTOMIZE = 1;
     private static final int INTENT_PARTICIPANTS = 2;
 
-    private static final String STATE_PRICES = "state_prices";
-    private static final String STATE_AVG_LUCK = "state_avg_luck";
     private static final String STATE_PROFILE_LOADED = "state_profile_loaded";
     private static final String STATE_STATS_LOADED = "state_stats_loaded";
     private static final String STATE_PRICES_LOADED = "state_prices_loaded";
@@ -147,20 +145,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         });
 
         builder.create().show();
-    }
-
-    private void tryGettingDataFromService() {
-        try {
-            profileLoaded = true;
-            statsLoaded = true;
-            pricesLoaded = true;
-            avgLuckLoaded = true;
-            setSavedValues();
-
-        } catch (NullPointerException e) {
-            //reloadData();
-
-        }
     }
 
     @Override
@@ -519,11 +503,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     }
 
     private void handleProgessIndicator() {
-        Log.w(getClass().getSimpleName(), "price: " + pricesLoaded);
-        Log.w(getClass().getSimpleName(), "profile: " + profileLoaded);
-        Log.w(getClass().getSimpleName(), "stats: " + statsLoaded);
-        Log.w(getClass().getSimpleName(), "avgLuck: " + avgLuckLoaded);
-
         if (adapter == null) {
             adapter = new MainViewAdapter(this, getSupportFragmentManager(), this.avgLuck);
         } else {
@@ -533,9 +512,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         try {
             viewPager.setAdapter(adapter);
             viewPager.setCurrentItem(currentPage);
-        } catch (IllegalStateException e) {
-            // ignore?
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             // ignore?
         }
 
@@ -544,8 +521,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     @Override
     public void onProfileLoaded(Profile profile) {
         profileLoaded = true;
-        // App.updateWidgets(MainActivity.this, profile);
-        //setProfile(profile);
         handleProgessIndicator();
     }
 
@@ -558,14 +533,12 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     @Override
     public void onPricesLoaded(GenericPrice price) {
         pricesLoaded = true;
-//        setPrices(price);
         handleProgessIndicator();
     }
 
     @Override
     public void onAvgLuckLoaded(AvgLuck avgLuck) {
         avgLuckLoaded = true;
-        setAvgLuck(avgLuck);
         handleProgessIndicator();
     }
 

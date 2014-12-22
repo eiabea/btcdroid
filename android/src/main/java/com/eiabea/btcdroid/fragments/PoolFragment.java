@@ -315,7 +315,6 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         if (c.getCount() > 0) {
 
-            DatabaseUtils.dumpCursor(c);
             c.moveToFirst();
 
             switch (loader.getId()) {

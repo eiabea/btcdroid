@@ -7,7 +7,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.StrictMode;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -16,7 +15,6 @@ import android.util.Log;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
-import com.eiabea.btcdroid.model.PricesMtGox;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
@@ -58,6 +56,8 @@ public class App extends Application {
     private int luckThreshold = 15;
     private int priceThreshold = 15;
 
+    private static ArrayList<Class> allWidgetClasses;
+
     public HttpWorker httpWorker;
 
     public Gson gson;
@@ -77,10 +77,20 @@ public class App extends Application {
         super.onCreate();
         gson = new Gson();
 
+        allWidgetClasses = new ArrayList<>();
+        allWidgetClasses.add(TotalHashrateWidgetProvider.class);
+        allWidgetClasses.add(AverageHashrateWidgetProvider.class);
+        allWidgetClasses.add(ConfirmedRewardWidgetProvider.class);
+        allWidgetClasses.add(EstimatedRewardWidgetProvider.class);
+        allWidgetClasses.add(TotalRewardWidgetProvider.class);
+        allWidgetClasses.add(MultiWidgetProvider.class);
+        allWidgetClasses.add(RoundDurationWidgetProvider.class);
+        allWidgetClasses.add(PriceWidgetProvider.class);
+
         initPrefs();
 
         me = this;
-        httpWorker = new HttpWorker(this.getApplicationContext(), token);
+        httpWorker = new HttpWorker(this.getApplicationContext());
 
     }
 
@@ -131,12 +141,8 @@ public class App extends Application {
     public void setToken(String token) {
         App.token = token;
 
-        httpWorker = new HttpWorker(this.getApplicationContext(), token);
+        httpWorker = new HttpWorker(this.getApplicationContext());
 
-    }
-
-    public static String getToken() {
-        return token;
     }
 
     public boolean isTokenSet() {
@@ -228,7 +234,7 @@ public class App extends Application {
 
         @Override
         public int compare(Worker lhs, Worker rhs) {
-            return (lhs.isAlive() ^ rhs.isAlive()) ? ((lhs.isAlive() ^ true) ? 1 : -1) : 0;
+            return (lhs.isAlive() ^ rhs.isAlive()) ? ((!lhs.isAlive()) ? 1 : -1) : 0;
         }
 
     }
@@ -253,64 +259,18 @@ public class App extends Application {
 
     }
 
-    public static void updateWidgets(Context context, Profile profile) {
-        // Update Total Widget
-        Intent totalIntent = new Intent(context, TotalHashrateWidgetProvider.class);
-        totalIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//        totalIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
-        context.sendBroadcast(totalIntent);
-        // Update Total Widget
-        Intent averageIntent = new Intent(context, AverageHashrateWidgetProvider.class);
-        averageIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//        averageIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
-        context.sendBroadcast(averageIntent);
-        // Update Confirmed Reward Widget
-        Intent confirmedIntent = new Intent(context, ConfirmedRewardWidgetProvider.class);
-        confirmedIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//        confirmedIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
-        context.sendBroadcast(confirmedIntent);
-        // Update Estimated Reward Widget
-        Intent estimatedIntent = new Intent(context, EstimatedRewardWidgetProvider.class);
-        estimatedIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//        estimatedIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
-        context.sendBroadcast(estimatedIntent);
-        // Update Total Reward Widget
-        Intent totalRewardIntent = new Intent(context, TotalRewardWidgetProvider.class);
-        totalRewardIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//        totalRewardIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
-        context.sendBroadcast(totalRewardIntent);
-        // Update Multi Widget
-        Intent multiIntent = new Intent(context, MultiWidgetProvider.class);
-        multiIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//        multiIntent.putExtra(MultiWidgetProvider.PARAM_PROFILE, profile);
-        context.sendBroadcast(multiIntent);
+    public static void updateWidgets(Context context) {
+
+        for(Class c : allWidgetClasses){
+            Intent intent = new Intent(context, c);
+            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            context.sendBroadcast(intent);
+        }
 
         // Update Dashclock
         Intent dashclockIntent = new Intent(DashClockWidget.UPDATE_DASHCLOCK);
-//        dashclockIntent.putExtra(TotalHashrateWidgetProvider.PARAM_PROFILE, profile);
         LocalBroadcastManager.getInstance(context).sendBroadcast(dashclockIntent);
         Log.d(context.getClass().getSimpleName(), "sent Broadcast to update DashClock");
-    }
-
-    public static void updateWidgets(Context context, Stats stats) {
-        // Update Round Widget
-        Intent roundIntent = new Intent(context, RoundDurationWidgetProvider.class);
-        roundIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//        roundIntent.putExtra(RoundDurationWidgetProvider.PARAM_STATS, stats);
-        context.sendBroadcast(roundIntent);
-        // Update Multi Widget
-        Intent multiIntent = new Intent(context, MultiWidgetProvider.class);
-        multiIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//        multiIntent.putExtra(MultiWidgetProvider.PARAM_STATS, stats);
-        context.sendBroadcast(multiIntent);
-    }
-
-    public static void updateWidgets(Context context, GenericPrice price) {
-        // Update Price Widget
-        Intent priceIntent = new Intent(context, PriceWidgetProvider.class);
-        priceIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//        priceIntent.putExtra(PriceWidgetProvider.PARAM_PRICE, price);
-        context.sendBroadcast(priceIntent);
     }
 
     public static void resetUpdateManager(Context context) {
