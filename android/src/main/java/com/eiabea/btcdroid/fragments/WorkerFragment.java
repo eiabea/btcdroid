@@ -1,7 +1,6 @@
 package com.eiabea.btcdroid.fragments;
 
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -14,8 +13,6 @@ import android.widget.ExpandableListView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.adapter.WorkerListAdapter;
-import com.eiabea.btcdroid.adapter.WorkerListAdapter_old.Holder;
-import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Worker;
 
 public class WorkerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -56,31 +53,14 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
         exlvWOrkerHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_worker_holder);
     }
 
-//    private void setProfile(Profile profile) {
-//        Log.i(getClass().getSimpleName(), "setProfile()");
-//        try {
-//            ArrayList<Worker> list = profile.getWorkersList();
-//
-//            Collections.sort(list, new App.WorkerSorter());
-//
-//            adapter = new WorkerListAdapter_old(getActivity());
-//
-//            adapter.setData(list);
-//
-//            exlvWOrkerHolder.setAdapter(adapter);
-//
-//            expandActiveWorker();
-//
-//        } catch (NullPointerException ignore) {
-//
-//        }
-//        Log.i(getClass().getSimpleName(), "setProfile() /done");
-//    }
-
     private void expandActiveWorker() {
         for (int i = 0; i < adapter.getGroupCount(); i++) {
-            Holder holder = (Holder) adapter.getGroup(i);
-            if (holder.getWorker().isAlive()) {
+
+            Cursor c = adapter.getGroup(i);
+
+            boolean isAlive = c.getInt(c.getColumnIndex(Worker.ALIVE)) == 1;
+
+            if (isAlive) {
                 exlvWOrkerHolder.expandGroup(i);
             }
 
@@ -89,11 +69,7 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public Loader<Cursor> onCreateLoader(int which, Bundle arg1) {
-
-
-        String selection = Profile._ID + "=?";
-        String[] selectionArgs = {"1"};
-        String sort = Worker.ALIVE + " DESC, " + Worker.NAME ;
+        String sort = Worker.ALIVE + " DESC, " + Worker.NAME;
 
         return new CursorLoader(getActivity(), Worker.CONTENT_URI, null, null, null, sort);
 
@@ -110,13 +86,7 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
 
                     exlvWOrkerHolder.setAdapter(adapter);
 
-//                    Profile profile = new Profile(c);
-////                    profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
-//
-//                    if (profile != null) {
-////                        setProfile(profile);
-//
-//                    }
+                    expandActiveWorker();
                     break;
             }
 
