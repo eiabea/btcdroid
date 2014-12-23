@@ -207,6 +207,8 @@ public class App extends Application {
             totalHashrate += c.getInt(c.getColumnIndex(Worker.HASHRATE));
         }
 
+        c.close();
+
         return totalHashrate;
     }
 

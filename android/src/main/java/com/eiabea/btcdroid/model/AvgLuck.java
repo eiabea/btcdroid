@@ -29,6 +29,7 @@ public class AvgLuck {
     public AvgLuck(Cursor c) {
         setId(c.getLong(c.getColumnIndex(_ID)));
         setJson(c.getString(c.getColumnIndex(JSON)));
+
     }
 
     public ContentValues getContentValues(boolean forInsert) {

@@ -46,6 +46,10 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
 
         initUi();
 
+        adapter = new WorkerListAdapter(null, getActivity());
+
+        exlvWOrkerHolder.setAdapter(adapter);
+
         return rootView;
     }
 
@@ -82,10 +86,8 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
                 case WORKER_LOADER_ID:
                     c.moveToFirst();
 
-                    adapter = new WorkerListAdapter(c, getActivity());
+                    adapter.setGroupCursor(c);
 
-                    exlvWOrkerHolder.setAdapter(adapter);
-//
                     expandActiveWorker();
                     break;
             }

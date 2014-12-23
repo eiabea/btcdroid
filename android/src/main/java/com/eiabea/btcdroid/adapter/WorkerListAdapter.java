@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class WorkerListAdapter extends CursorTreeAdapter {
 
     @Override
     protected View newGroupView(Context context, Cursor cursor, boolean isExpanded, ViewGroup parent) {
+
         View v = inflater.inflate(R.layout.view_worker_header, parent, false);
 
         WorkerHeader wh = new WorkerHeader();
@@ -63,6 +65,7 @@ public class WorkerListAdapter extends CursorTreeAdapter {
 
     @Override
     protected void bindGroupView(View view, Context context, Cursor cursor, boolean isExpanded) {
+
         WorkerHeader wh = (WorkerHeader) view.getTag();
 
         Worker worker = new Worker(cursor);

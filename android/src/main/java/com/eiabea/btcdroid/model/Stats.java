@@ -36,6 +36,7 @@ public class Stats {
     public Stats(Cursor c) {
         setId(c.getLong(c.getColumnIndex(_ID)));
         setJson(c.getString(c.getColumnIndex(JSON)));
+
     }
 
     public ContentValues getContentValues(boolean forInsert) {

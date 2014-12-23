@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,8 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
 
     private static final int ROUNDS_LOADER_ID = 444;
     private ViewGroup rootView;
+
+    private RoundsListAdapter adapter;
 
     private ExpandableListView exlvRoundsHolder;
 
@@ -39,13 +40,14 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(getClass().getSimpleName(), "onCreateView()");
         // Inflate the layout containing a title and body text.
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_rounds, null);
 
         initUi();
 
-        Log.i(getClass().getSimpleName(), "onCreateView() /done");
+        adapter = new RoundsListAdapter(null, getActivity());
+
+        exlvRoundsHolder.setAdapter(adapter);
 
         return rootView;
     }
@@ -71,7 +73,7 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
                 case ROUNDS_LOADER_ID:
                     c.moveToFirst();
 
-                    exlvRoundsHolder.setAdapter(new RoundsListAdapter(c, getActivity()));
+                    adapter.setGroupCursor(c);
 
                     break;
             }

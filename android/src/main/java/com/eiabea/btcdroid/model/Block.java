@@ -44,6 +44,7 @@ public class Block {
         setDate_found(c.getString(c.getColumnIndex(DATE_FOUND)));
         setDate_started(c.getString(c.getColumnIndex(DATE_STARTED)));
         setConfirmations(c.getInt(c.getColumnIndex(CONFIRMATIONS)));
+
     }
 
     public ContentValues getContentValues(boolean forInsert) {
