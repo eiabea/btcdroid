@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
@@ -13,8 +14,11 @@ import com.eiabea.btcdroid.fragments.PayoutFragment;
 import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
+import com.eiabea.btcdroid.model.Worker;
 
 public class MainViewAdapter extends FragmentStatePagerAdapter {
+
+    public static final String TAG = MainViewAdapter.class.getSimpleName();
 
     private static int PAGES = 0;
 
@@ -54,18 +58,26 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         position = positionToCustomPosition(position);
 
+        Fragment frag = null;
+
         switch (position) {
             case MainActivity.FRAGMENT_PAYOUT:
-                return PayoutFragment.create();
+                frag = PayoutFragment.create();
+                break;
             case MainActivity.FRAGMENT_POOL:
-                return PoolFragment.create();
+                frag = PoolFragment.create();
+                break;
             case MainActivity.FRAGMENT_WORKER:
-                return WorkerFragment.create();
+                frag = WorkerFragment.create();
+                break;
             case MainActivity.FRAGMENT_ROUNDS:
-                return RoundsFragment.create();
+                frag = RoundsFragment.create();
+                break;
         }
 
-        return null;
+//        frag = WorkerFragment.create();
+
+        return frag;
 
     }
 

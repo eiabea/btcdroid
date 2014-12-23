@@ -36,10 +36,6 @@ import com.eiabea.btcdroid.fragments.PayoutFragment;
 import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
-import com.eiabea.btcdroid.model.AvgLuck;
-import com.eiabea.btcdroid.model.GenericPrice;
-import com.eiabea.btcdroid.model.Profile;
-import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.service.UpdateService.UpdateInterface;
 import com.eiabea.btcdroid.util.App;
@@ -48,6 +44,7 @@ import com.eiabea.btcdroid.util.App;
 public class MainActivity extends ActionBarActivity implements UpdateInterface,
         OnPageChangeListener {
 
+    public static final String TAG = MainActivity.class.getSimpleName();
     public static final String PAID_APP_PACKAGE = "com.eiabea.paid.btcdroid";
     private static final int BEER_POPUP_THRESHOLD = 10;
 
@@ -85,6 +82,10 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        initUi();
+
+        setListeners();
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -144,8 +145,8 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     @Override
     protected void onResume() {
 
-        initUi();
-        setListeners();
+//        initUi();
+//        setListeners();
 
         handleBeerDialog();
 
@@ -200,8 +201,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
                 ft.replace(R.id.fl_round_tile, adapter.getItem(FRAGMENT_ROUNDS), getFragmentTag(FRAGMENT_ROUNDS));
                 ft.commitAllowingStateLoss();
             } else {
-                Log.d(getClass().getSimpleName(), "viewpager");
-
                 PagerTitleStrip viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
                 viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
 
@@ -339,6 +338,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
     @Override
     protected void onActivityResult(int reqCode, int resCode, Intent intent) {
+
         switch (reqCode) {
             case INTENT_PREF:
                 if (resCode == RESULT_OK) {

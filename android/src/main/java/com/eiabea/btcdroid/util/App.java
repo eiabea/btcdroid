@@ -14,7 +14,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.eiabea.btcdroid.R;
-import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.widget.AverageHashrateWidgetProvider;

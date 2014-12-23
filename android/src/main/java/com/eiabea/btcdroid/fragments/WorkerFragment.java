@@ -85,7 +85,7 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
                     adapter = new WorkerListAdapter(c, getActivity());
 
                     exlvWOrkerHolder.setAdapter(adapter);
-
+//
                     expandActiveWorker();
                     break;
             }

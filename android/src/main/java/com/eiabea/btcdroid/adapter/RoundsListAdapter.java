@@ -2,20 +2,16 @@ package com.eiabea.btcdroid.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Typeface;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorTreeAdapter;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
-import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 
 import java.text.ParseException;

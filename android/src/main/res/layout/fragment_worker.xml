@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bd_background"
-    android:minHeight="300dp"
     android:orientation="vertical">
 
     <ExpandableListView
@@ -14,6 +13,6 @@
         android:background="@color/bd_white"
         android:childDivider="@null"
         android:groupIndicator="@null"
-        android:divider="@null"></ExpandableListView>
+        android:divider="@null"/>
 
-</LinearLayout>
+</FrameLayout>
