@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -14,9 +15,6 @@ import android.util.Log;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
-import com.eiabea.btcdroid.model.GenericPrice;
-import com.eiabea.btcdroid.model.Profile;
-import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.widget.AverageHashrateWidgetProvider;
@@ -29,18 +27,10 @@ import com.eiabea.btcdroid.widget.RoundDurationWidgetProvider;
 import com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider;
 import com.eiabea.btcdroid.widget.TotalRewardWidgetProvider;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.Set;
 
 public class App extends Application {
 
@@ -152,20 +142,6 @@ public class App extends Application {
         return false;
     }
 
-    public static List<Block> parseBlocks(JsonObject json) {
-        List<Block> blocks = new ArrayList<Block>();
-
-        Set<Entry<String, JsonElement>> set = json.entrySet();
-
-        Gson gson = App.getInstance().gson;
-
-        for (Entry<String, JsonElement> current : set) {
-            blocks.add(gson.fromJson(current.getValue(), Block.class));
-        }
-
-        return blocks;
-    }
-
     public static String formatHashRate(String hash) {
         double doubleHash = Double.valueOf(hash);
         if (doubleHash > 1000) {
@@ -219,49 +195,25 @@ public class App extends Application {
         return ctx.getResources().getString(id);
     }
 
-    public static int getTotalHashrate(Profile profile) {
-        ArrayList<Worker> list = profile.getWorkersList();
+    public static int getTotalHashrate(Context context) {
 
         int totalHashrate = 0;
+        String[] projection = new String[]{Worker.HASHRATE};
 
-        for (Worker tmp : list) {
-            totalHashrate += tmp.getHashrate();
+        Cursor c = context.getContentResolver().query(Worker.CONTENT_URI, projection, null, null, null);
+
+        c.moveToFirst();
+
+        while (c.moveToNext()) {
+            totalHashrate += c.getInt(c.getColumnIndex(Worker.HASHRATE));
         }
+
         return totalHashrate;
-    }
-
-    public static class WorkerSorter implements Comparator<Worker> {
-
-        @Override
-        public int compare(Worker lhs, Worker rhs) {
-            return (lhs.isAlive() ^ rhs.isAlive()) ? ((!lhs.isAlive()) ? 1 : -1) : 0;
-        }
-
-    }
-
-    public static class BlockSorter implements Comparator<Block> {
-
-        @Override
-        public int compare(Block lhs, Block rhs) {
-
-            try {
-                long timestampLhs = dateStatsFormat.parse(lhs.getDate_found()).getTime();
-                long timestampRhs = dateStatsFormat.parse(rhs.getDate_found()).getTime();
-                if (timestampLhs < timestampRhs) return 1;
-                if (timestampLhs > timestampRhs) return -1;
-                return 0;
-            } catch (ParseException e) {
-                Log.e(getClass().getSimpleName(), "Can't get sort blocks per DateFound (ParseExecption)");
-            }
-
-            return 0;
-        }
-
     }
 
     public static void updateWidgets(Context context) {
 
-        for(Class c : allWidgetClasses){
+        for (Class c : allWidgetClasses) {
             Intent intent = new Intent(context, c);
             intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             context.sendBroadcast(intent);

@@ -588,6 +588,8 @@ public class UpdateService extends Service {
 
         DataProvider.insertOrUpdateStats(getApplicationContext(), stats);
 
+        DataProvider.insertOrUpdateRounds(getApplicationContext(), stats.getBlocks());
+
         App.updateWidgets(getApplicationContext());
     }
 

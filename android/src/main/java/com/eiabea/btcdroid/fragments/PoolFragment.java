@@ -161,25 +161,26 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     }
 
-    private Date getAverageRoundTime(List<Block> blocks) {
+    private Date getAverageRoundTime() {
 
         long total = 0;
+        String[] projection = new String[]{Block.MINING_DURATION};
 
-        for (Block tmpBlock : blocks) {
+        Cursor c = getActivity().getContentResolver().query(Block.CONTENT_URI, projection, null, null, null);
 
+        c.moveToFirst();
+
+        while (c.moveToNext()){
             Date duration;
             try {
-                duration = App.dateDurationFormat.parse(tmpBlock.getMining_duration());
+                duration = App.dateDurationFormat.parse(c.getString(c.getColumnIndex(Block.MINING_DURATION)));
                 total += duration.getTime();
             } catch (ParseException e) {
                 Log.e(TAG, "Can't get AverageRoundTime (NullPointer)");
             }
-
         }
 
-        long average = total / blocks.size();
-
-//        Log.d(TAG, "Total: " + total + "; " + "Avg.: " + average);
+        long average = total / c.getCount();
 
         return new Date(average);
     }
@@ -198,7 +199,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private void setProfile(Profile profile) {
         try {
-            txtTotalHashrate.setText(App.formatHashRate(App.getTotalHashrate(profile)));
+            txtTotalHashrate.setText(App.formatHashRate(App.getTotalHashrate(getActivity())));
             txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
         } catch (NullPointerException ignore) {
         }
@@ -212,7 +213,9 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         Date duration = null;
 
         try {
-            average = getAverageRoundTime(App.parseBlocks(stats.getBlocks()));
+            Log.d(TAG, "parsing started");
+            average = getAverageRoundTime();
+            Log.d(TAG, "parsing done");
             txtAverageDuration.setText(App.dateDurationFormat.format(average));
             try {
                 started = App.dateStatsFormat.parse(stats.getRound_started());

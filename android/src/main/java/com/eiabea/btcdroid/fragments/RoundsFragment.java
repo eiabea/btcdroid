@@ -1,6 +1,7 @@
 package com.eiabea.btcdroid.fragments;
 
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -14,12 +15,11 @@ import android.widget.ExpandableListView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.adapter.RoundsListAdapter;
-import com.eiabea.btcdroid.model.Stats;
-import com.eiabea.btcdroid.util.App;
+import com.eiabea.btcdroid.model.Block;
 
 public class RoundsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int ROUNDS_STATS_LOADER_ID = 444;
+    private static final int ROUNDS_LOADER_ID = 444;
     private ViewGroup rootView;
 
     private ExpandableListView exlvRoundsHolder;
@@ -35,7 +35,7 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
     public void onResume() {
         super.onResume();
 
-        getActivity().getSupportLoaderManager().initLoader(ROUNDS_STATS_LOADER_ID, null, this);
+        getActivity().getSupportLoaderManager().initLoader(ROUNDS_LOADER_ID, null, this);
     }
 
     @Override
@@ -55,30 +55,12 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
         exlvRoundsHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_rounds_holder);
     }
 
-    private void setStats(Stats stats) {
-
-        Log.i(getClass().getSimpleName(), "setStats()");
-
-        try {
-            RoundsListAdapter adapter = new RoundsListAdapter(getActivity(), App.parseBlocks(stats.getBlocks()));
-
-            exlvRoundsHolder.setAdapter(adapter);
-        } catch (NullPointerException ignore) {
-
-        }
-
-        Log.i(getClass().getSimpleName(), "setStats() /done");
-
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int which, Bundle arg1) {
 
+        String sort = Block.NUMBER + " DESC";
 
-        String selection = Stats._ID + "=?";
-        String[] selectionArgs = {"1"};
-
-        return new CursorLoader(getActivity(), Stats.CONTENT_URI, null, selection, selectionArgs, null);
+        return new CursorLoader(getActivity(), Block.CONTENT_URI, null, null, null, sort);
 
     }
 
@@ -87,15 +69,11 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
         if (c.getCount() > 0) {
 
             switch (loader.getId()) {
-                case ROUNDS_STATS_LOADER_ID:
+                case ROUNDS_LOADER_ID:
                     c.moveToFirst();
 
-                    Stats stats = new Stats(c);
-//                    stats = App.getInstance().gson.fromJson(stats.getJson(), Stats.class);
+                    exlvRoundsHolder.setAdapter(new RoundsListAdapter(c, getActivity()));
 
-                    if (stats != null) {
-//                        setStats(stats);
-                    }
                     break;
             }
 

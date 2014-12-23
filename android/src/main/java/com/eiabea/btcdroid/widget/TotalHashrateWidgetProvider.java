@@ -62,7 +62,7 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
                         Profile profile = new Profile(c);
                         profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
 
-                        remoteViews.setTextViewText(R.id.txt_widget_value, App.formatHashRate(App.getTotalHashrate(profile)));
+                        remoteViews.setTextViewText(R.id.txt_widget_value, App.formatHashRate(App.getTotalHashrate(context)));
                         remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_green));
                         remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_current_total_hashrate));
 

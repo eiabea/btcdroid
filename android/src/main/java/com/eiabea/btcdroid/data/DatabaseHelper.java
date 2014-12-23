@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.eiabea.btcdroid.model.AvgLuck;
+import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
@@ -24,8 +25,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String PRICE_TABLE_NAME = "price";
     public static final String AVG_LUCK_TABLE_NAME = "avg_luck";
     public static final String WORKER_TABLE_NAME = "worker";
+    public static final String ROUNDS_TABLE_NAME = "rounds";
 
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
     private static final String DATABASE_NAME = "btcdroid";
 
     private static final String CREATE_PROFILE_TABLE =
@@ -63,6 +65,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " " + Worker.HASHRATE + " INTEGER " +
                     ");";
 
+    private static final String CREATE_ROUNDS_TABLE =
+            " CREATE TABLE " + ROUNDS_TABLE_NAME +
+                    " (" + Block._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    " " + Block.NUMBER + " INTEGER, " +
+                    " " + Block.MINING_DURATION + " TEXT, " +
+                    " " + Block.REWARD + " TEXT, " +
+                    " " + Block.DATE_FOUND + " TEXT, " +
+                    " " + Block.DATE_STARTED + " TEXT, " +
+                    " " + Block.CONFIRMATIONS + " INTEGER " +
+                    ");";
+
     DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -74,6 +87,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_PRICE_TABLE);
         db.execSQL(CREATE_AVG_LUCK_TABLE);
         db.execSQL(CREATE_WORKER_TABLE);
+        db.execSQL(CREATE_ROUNDS_TABLE);
     }
 
     @Override
@@ -86,6 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + PRICE_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + AVG_LUCK_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + WORKER_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ROUNDS_TABLE_NAME);
         onCreate(db);
     }
 }

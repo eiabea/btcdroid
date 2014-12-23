@@ -87,7 +87,7 @@ public class MultiWidgetProvider extends AppWidgetProvider {
                     cStats.close();
 
                     if (profile != null) {
-                        remoteViews.setTextViewText(R.id.txt_widget_current_hashrate, App.formatHashRate(App.getTotalHashrate(profile)));
+                        remoteViews.setTextViewText(R.id.txt_widget_current_hashrate, App.formatHashRate(App.getTotalHashrate(context)));
 
                         float estimated = Float.valueOf(profile.getEstimated_reward());
                         remoteViews.setTextViewText(R.id.txt_widget_estimated_reward, App.formatReward(estimated));

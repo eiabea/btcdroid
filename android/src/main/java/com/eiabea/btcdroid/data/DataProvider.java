@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.eiabea.btcdroid.BuildConfig;
 import com.eiabea.btcdroid.model.AvgLuck;
+import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
@@ -26,6 +27,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,6 +48,8 @@ public class DataProvider extends ContentProvider {
     static final int AVG_LUCK_ID = 8;
     static final int WORKERS = 9;
     static final int WORKER_ID = 10;
+    static final int ROUNDS = 11;
+    static final int ROUND_ID = 12;
 
     static final UriMatcher uriMatcher;
 
@@ -61,6 +65,8 @@ public class DataProvider extends ContentProvider {
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.AVG_LUCK_TABLE_NAME + "/#", AVG_LUCK_ID);
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.WORKER_TABLE_NAME, WORKERS);
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.WORKER_TABLE_NAME + "/#", WORKER_ID);
+        uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.ROUNDS_TABLE_NAME, ROUNDS);
+        uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.ROUNDS_TABLE_NAME + "/#", ROUND_ID);
     }
 
     @Override
@@ -122,6 +128,14 @@ public class DataProvider extends ContentProvider {
                 qb.appendWhere(WORKER_ID + "=" + uri.getPathSegments().get(0));
                 break;
 
+            case ROUNDS:
+                qb.setTables(DatabaseHelper.ROUNDS_TABLE_NAME);
+                break;
+            case ROUND_ID:
+                qb.setTables(DatabaseHelper.ROUNDS_TABLE_NAME);
+                qb.appendWhere(ROUND_ID + "=" + uri.getPathSegments().get(0));
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -155,6 +169,10 @@ public class DataProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + PROVIDER_NAME + "." + DatabaseHelper.WORKER_TABLE_NAME;
             case WORKER_ID:
                 return "vnd.android.cursor.item/" + PROVIDER_NAME + "." + DatabaseHelper.WORKER_TABLE_NAME;
+            case ROUNDS:
+                return "vnd.android.cursor.dir/" + PROVIDER_NAME + "." + DatabaseHelper.ROUNDS_TABLE_NAME;
+            case ROUND_ID:
+                return "vnd.android.cursor.item/" + PROVIDER_NAME + "." + DatabaseHelper.ROUNDS_TABLE_NAME;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -222,6 +240,17 @@ public class DataProvider extends ContentProvider {
                 }
                 break;
 
+            case ROUNDS:
+            case ROUND_ID:
+                rowID = db.insertOrThrow(DatabaseHelper.ROUNDS_TABLE_NAME, "", values);
+
+                if (rowID > 0) {
+                    Uri _uri = ContentUris.withAppendedId(Block.CONTENT_URI, rowID);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                    return _uri;
+                }
+                break;
+
             default:
                 break;
         }
@@ -281,6 +310,15 @@ public class DataProvider extends ContentProvider {
                         + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
                 break;
 
+            case ROUNDS:
+                count = db.delete(DatabaseHelper.ROUNDS_TABLE_NAME, selection, selectionArgs);
+                break;
+            case ROUND_ID:
+                id = uri.getPathSegments().get(1);
+                count = db.delete(DatabaseHelper.ROUNDS_TABLE_NAME, ROUND_ID + " = " + id
+                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -337,6 +375,15 @@ public class DataProvider extends ContentProvider {
             case WORKER_ID:
                 id = uri.getPathSegments().get(1);
                 count = db.update(DatabaseHelper.WORKER_TABLE_NAME, values, WORKER_ID + " = " + id
+                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                break;
+
+            case ROUNDS:
+                count = db.update(DatabaseHelper.ROUNDS_TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case ROUND_ID:
+                id = uri.getPathSegments().get(1);
+                count = db.update(DatabaseHelper.ROUNDS_TABLE_NAME, values, ROUND_ID + " = " + id
                         + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
                 break;
 
@@ -538,6 +585,54 @@ public class DataProvider extends ContentProvider {
         }.execute();
     }
 
+    public static void insertOrUpdateRounds(final Context context, final JsonObject blocks) {
+
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                List<Block> listBlocks = new ArrayList<Block>();
+
+                Set<Map.Entry<String, JsonElement>> set = blocks.entrySet();
+
+                Gson gson = App.getInstance().gson;
+
+                for (Map.Entry<String, JsonElement> current : set) {
+
+                    Block tmpBlock = gson.fromJson(current.getValue(), Block.class);
+                    tmpBlock.setNumber(Long.parseLong(current.getKey()));
+
+                    listBlocks.add(tmpBlock);
+                }
+
+                for (Block block : listBlocks) {
+
+                    String where = null;
+                    String[] whereArgs = null;
+
+                    where = Block.NUMBER + "=?";
+                    whereArgs = new String[]{String.valueOf(block.getNumber())};
+
+                    int updated = context.getContentResolver().update(Block.CONTENT_URI, block.getContentValues(false),
+                            where, whereArgs);
+
+                    if (updated == 0) {
+                        context.getContentResolver().insert(Block.CONTENT_URI, block.getContentValues(true));
+                    }
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+            }
+
+        }.execute();
+    }
+
 
     public static void clearDatabase(Context context) {
         Log.d(TAG, "clearDatabase");
@@ -545,6 +640,8 @@ public class DataProvider extends ContentProvider {
         context.getContentResolver().delete(Stats.CONTENT_URI, null, null);
         context.getContentResolver().delete(GenericPrice.CONTENT_URI, null, null);
         context.getContentResolver().delete(AvgLuck.CONTENT_URI, null, null);
+        context.getContentResolver().delete(Worker.CONTENT_URI, null, null);
+        context.getContentResolver().delete(Block.CONTENT_URI, null, null);
     }
 
 }
