@@ -70,83 +70,6 @@ public class DataProvider extends ContentProvider {
     }
 
     @Override
-    public boolean onCreate() {
-        Context context = getContext();
-        DatabaseHelper dbHelper = new DatabaseHelper(context);
-        /**
-         * Create a write able database which will trigger its creation if it
-         * doesn't already exist.
-         */
-        db = dbHelper.getWritableDatabase();
-        return (db != null);
-    }
-
-    @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-
-        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-
-        switch (uriMatcher.match(uri)) {
-
-            case PROFILES:
-                qb.setTables(DatabaseHelper.PROFILE_TABLE_NAME);
-                break;
-            case PROFILE_ID:
-                qb.setTables(DatabaseHelper.PROFILE_TABLE_NAME);
-                qb.appendWhere(PROFILE_ID + "=" + uri.getPathSegments().get(0));
-                break;
-
-            case STATS:
-                qb.setTables(DatabaseHelper.STATS_TABLE_NAME);
-                break;
-            case STAT_ID:
-                qb.setTables(DatabaseHelper.STATS_TABLE_NAME);
-                qb.appendWhere(STAT_ID + "=" + uri.getPathSegments().get(0));
-                break;
-
-            case PRICES:
-                qb.setTables(DatabaseHelper.PRICE_TABLE_NAME);
-                break;
-            case PRICE_ID:
-                qb.setTables(DatabaseHelper.PRICE_TABLE_NAME);
-                qb.appendWhere(PRICE_ID + "=" + uri.getPathSegments().get(0));
-                break;
-
-            case AVG_LUCKS:
-                qb.setTables(DatabaseHelper.AVG_LUCK_TABLE_NAME);
-                break;
-            case AVG_LUCK_ID:
-                qb.setTables(DatabaseHelper.AVG_LUCK_TABLE_NAME);
-                qb.appendWhere(AVG_LUCK_ID + "=" + uri.getPathSegments().get(0));
-                break;
-
-            case WORKERS:
-                qb.setTables(DatabaseHelper.WORKER_TABLE_NAME);
-                break;
-            case WORKER_ID:
-                qb.setTables(DatabaseHelper.WORKER_TABLE_NAME);
-                qb.appendWhere(WORKER_ID + "=" + uri.getPathSegments().get(0));
-                break;
-
-            case ROUNDS:
-                qb.setTables(DatabaseHelper.ROUNDS_TABLE_NAME);
-                break;
-            case ROUND_ID:
-                qb.setTables(DatabaseHelper.ROUNDS_TABLE_NAME);
-                qb.appendWhere(ROUND_ID + "=" + uri.getPathSegments().get(0));
-                break;
-
-            default:
-                throw new IllegalArgumentException("Unknown URI " + uri);
-        }
-
-        Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
-        c.setNotificationUri(getContext().getContentResolver(), uri);
-
-        return c;
-    }
-
-    @Override
     public String getType(Uri uri) {
         switch (uriMatcher.match(uri)) {
             case PROFILES:
@@ -179,80 +102,46 @@ public class DataProvider extends ContentProvider {
     }
 
     @Override
+    public boolean onCreate() {
+        Context context = getContext();
+        DatabaseHelper dbHelper = new DatabaseHelper(context);
+        /**
+         * Create a write able database which will trigger its creation if it
+         * doesn't already exist.
+         */
+        db = dbHelper.getWritableDatabase();
+        return (db != null);
+    }
+
+    @Override
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        SwitchHolder switchHolder = getSwitchHolder(uri);
+
+        if (switchHolder.getId() == -1) {
+            qb.setTables(switchHolder.getTable());
+        } else {
+            qb.setTables(switchHolder.getTable());
+            qb.appendWhere(switchHolder.getId() + "=" + uri.getPathSegments().get(0));
+        }
+
+        Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+        c.setNotificationUri(getContext().getContentResolver(), uri);
+
+        return c;
+    }
+
+    @Override
     public Uri insert(Uri uri, ContentValues values) {
+        long rowID;
 
-        long rowID = 0;
+        SwitchHolder switchHolder = getSwitchHolder(uri);
 
-        switch (uriMatcher.match(uri)) {
-
-            case PROFILES:
-            case PROFILE_ID:
-                rowID = db.insertOrThrow(DatabaseHelper.PROFILE_TABLE_NAME, "", values);
-
-                if (rowID > 0) {
-                    Uri _uri = ContentUris.withAppendedId(Profile.CONTENT_URI, rowID);
-                    getContext().getContentResolver().notifyChange(_uri, null);
-                    return _uri;
-                }
-                break;
-
-            case STATS:
-            case STAT_ID:
-                rowID = db.insertOrThrow(DatabaseHelper.STATS_TABLE_NAME, "", values);
-
-                if (rowID > 0) {
-                    Uri _uri = ContentUris.withAppendedId(Stats.CONTENT_URI, rowID);
-                    getContext().getContentResolver().notifyChange(_uri, null);
-                    return _uri;
-                }
-                break;
-
-            case PRICES:
-            case PRICE_ID:
-                rowID = db.insertOrThrow(DatabaseHelper.PRICE_TABLE_NAME, "", values);
-
-                if (rowID > 0) {
-                    Uri _uri = ContentUris.withAppendedId(GenericPrice.CONTENT_URI, rowID);
-                    getContext().getContentResolver().notifyChange(_uri, null);
-                    return _uri;
-                }
-                break;
-
-            case AVG_LUCKS:
-            case AVG_LUCK_ID:
-                rowID = db.insertOrThrow(DatabaseHelper.AVG_LUCK_TABLE_NAME, "", values);
-
-                if (rowID > 0) {
-                    Uri _uri = ContentUris.withAppendedId(AvgLuck.CONTENT_URI, rowID);
-                    getContext().getContentResolver().notifyChange(_uri, null);
-                    return _uri;
-                }
-                break;
-
-            case WORKERS:
-            case WORKER_ID:
-                rowID = db.insertOrThrow(DatabaseHelper.WORKER_TABLE_NAME, "", values);
-
-                if (rowID > 0) {
-                    Uri _uri = ContentUris.withAppendedId(Worker.CONTENT_URI, rowID);
-                    getContext().getContentResolver().notifyChange(_uri, null);
-                    return _uri;
-                }
-                break;
-
-            case ROUNDS:
-            case ROUND_ID:
-                rowID = db.insertOrThrow(DatabaseHelper.ROUNDS_TABLE_NAME, "", values);
-
-                if (rowID > 0) {
-                    Uri _uri = ContentUris.withAppendedId(Block.CONTENT_URI, rowID);
-                    getContext().getContentResolver().notifyChange(_uri, null);
-                    return _uri;
-                }
-                break;
-
-            default:
-                break;
+        rowID = db.insertOrThrow(switchHolder.getTable(), "", values);
+        if (rowID > 0) {
+            Uri _uri = ContentUris.withAppendedId(switchHolder.getContentUri(), rowID);
+            getContext().getContentResolver().notifyChange(_uri, null);
+            return _uri;
         }
 
         throw new SQLException("Failed to add a record into " + uri);
@@ -261,136 +150,38 @@ public class DataProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         int count;
-        String id;
 
-        switch (uriMatcher.match(uri)) {
+        SwitchHolder switchHolder = getSwitchHolder(uri);
 
-            case PROFILES:
-                count = db.delete(DatabaseHelper.PROFILE_TABLE_NAME, selection, selectionArgs);
-                break;
-            case PROFILE_ID:
-                id = uri.getPathSegments().get(1);
-                count = db.delete(DatabaseHelper.PROFILE_TABLE_NAME, PROFILE_ID + " = " + id
-                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
-
-            case STATS:
-                count = db.delete(DatabaseHelper.STATS_TABLE_NAME, selection, selectionArgs);
-                break;
-            case STAT_ID:
-                id = uri.getPathSegments().get(1);
-                count = db.delete(DatabaseHelper.STATS_TABLE_NAME, STAT_ID + " = " + id
-                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
-
-            case PRICES:
-                count = db.delete(DatabaseHelper.PRICE_TABLE_NAME, selection, selectionArgs);
-                break;
-            case PRICE_ID:
-                id = uri.getPathSegments().get(1);
-                count = db.delete(DatabaseHelper.PRICE_TABLE_NAME, PRICE_ID + " = " + id
-                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
-
-            case AVG_LUCKS:
-                count = db.delete(DatabaseHelper.AVG_LUCK_TABLE_NAME, selection, selectionArgs);
-                break;
-            case AVG_LUCK_ID:
-                id = uri.getPathSegments().get(1);
-                count = db.delete(DatabaseHelper.AVG_LUCK_TABLE_NAME, AVG_LUCK_ID + " = " + id
-                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
-
-            case WORKERS:
-                count = db.delete(DatabaseHelper.WORKER_TABLE_NAME, selection, selectionArgs);
-                break;
-            case WORKER_ID:
-                id = uri.getPathSegments().get(1);
-                count = db.delete(DatabaseHelper.WORKER_TABLE_NAME, WORKER_ID + " = " + id
-                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
-
-            case ROUNDS:
-                count = db.delete(DatabaseHelper.ROUNDS_TABLE_NAME, selection, selectionArgs);
-                break;
-            case ROUND_ID:
-                id = uri.getPathSegments().get(1);
-                count = db.delete(DatabaseHelper.ROUNDS_TABLE_NAME, ROUND_ID + " = " + id
-                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
-
-            default:
-                throw new IllegalArgumentException("Unknown URI " + uri);
+        if (switchHolder.getId() == -1) {
+            count = db.delete(switchHolder.getTable(), selection, selectionArgs);
+        } else {
+            count = db.delete(switchHolder.getTable(), switchHolder.getId() + " = " + uri.getPathSegments().get(1)
+                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
         }
 
         getContext().getContentResolver().notifyChange(uri, null);
+
         return count;
+
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        int count = 0;
-        String id;
 
-        switch (uriMatcher.match(uri)) {
-            case PROFILES:
-                count = db.update(DatabaseHelper.PROFILE_TABLE_NAME, values, selection, selectionArgs);
-                break;
-            case PROFILE_ID:
-                id = uri.getPathSegments().get(1);
-                count = db.update(DatabaseHelper.PROFILE_TABLE_NAME, values, PROFILE_ID + " = " + id
-                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
+        int count;
 
-            case STATS:
-                count = db.update(DatabaseHelper.STATS_TABLE_NAME, values, selection, selectionArgs);
-                break;
-            case STAT_ID:
-                id = uri.getPathSegments().get(1);
-                count = db.update(DatabaseHelper.STATS_TABLE_NAME, values, STAT_ID + " = " + id
-                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
+        SwitchHolder switchHolder = getSwitchHolder(uri);
 
-            case PRICES:
-                count = db.update(DatabaseHelper.PRICE_TABLE_NAME, values, selection, selectionArgs);
-                break;
-            case PRICE_ID:
-                id = uri.getPathSegments().get(1);
-                count = db.update(DatabaseHelper.PRICE_TABLE_NAME, values, PRICE_ID + " = " + id
-                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
-
-            case AVG_LUCKS:
-                count = db.update(DatabaseHelper.AVG_LUCK_TABLE_NAME, values, selection, selectionArgs);
-                break;
-            case AVG_LUCK_ID:
-                id = uri.getPathSegments().get(1);
-                count = db.update(DatabaseHelper.AVG_LUCK_TABLE_NAME, values, AVG_LUCK_ID + " = " + id
-                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
-
-            case WORKERS:
-                count = db.update(DatabaseHelper.WORKER_TABLE_NAME, values, selection, selectionArgs);
-                break;
-            case WORKER_ID:
-                id = uri.getPathSegments().get(1);
-                count = db.update(DatabaseHelper.WORKER_TABLE_NAME, values, WORKER_ID + " = " + id
-                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
-
-            case ROUNDS:
-                count = db.update(DatabaseHelper.ROUNDS_TABLE_NAME, values, selection, selectionArgs);
-                break;
-            case ROUND_ID:
-                id = uri.getPathSegments().get(1);
-                count = db.update(DatabaseHelper.ROUNDS_TABLE_NAME, values, ROUND_ID + " = " + id
-                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
-
-            default:
-                throw new IllegalArgumentException("Unknown URI " + uri);
+        if (switchHolder.getId() == -1) {
+            count = db.update(switchHolder.getTable(), values, selection, selectionArgs);
+        } else {
+            count = db.update(switchHolder.getTable(), values, switchHolder.getId() + " = " + uri.getPathSegments().get(1)
+                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
         }
+
         getContext().getContentResolver().notifyChange(uri, null);
+
         return count;
     }
 
@@ -642,6 +433,104 @@ public class DataProvider extends ContentProvider {
         context.getContentResolver().delete(AvgLuck.CONTENT_URI, null, null);
         context.getContentResolver().delete(Worker.CONTENT_URI, null, null);
         context.getContentResolver().delete(Block.CONTENT_URI, null, null);
+    }
+
+    private SwitchHolder getSwitchHolder(Uri uri) {
+
+        int id = -1;
+        String tableName;
+        Uri contentUri;
+
+        switch (uriMatcher.match(uri)) {
+            case PROFILES:
+                tableName = DatabaseHelper.PROFILE_TABLE_NAME;
+                contentUri = Profile.CONTENT_URI;
+                break;
+            case PROFILE_ID:
+                id = PROFILE_ID;
+                tableName = DatabaseHelper.PROFILE_TABLE_NAME;
+                contentUri = Profile.CONTENT_URI;
+                break;
+
+            case STATS:
+                tableName = DatabaseHelper.STATS_TABLE_NAME;
+                contentUri = Stats.CONTENT_URI;
+                break;
+            case STAT_ID:
+                id = STAT_ID;
+                tableName = DatabaseHelper.STATS_TABLE_NAME;
+                contentUri = Stats.CONTENT_URI;
+                break;
+
+            case PRICES:
+                tableName = DatabaseHelper.PRICE_TABLE_NAME;
+                contentUri = GenericPrice.CONTENT_URI;
+                break;
+            case PRICE_ID:
+                id = STAT_ID;
+                tableName = DatabaseHelper.PRICE_TABLE_NAME;
+                contentUri = GenericPrice.CONTENT_URI;
+                break;
+
+            case AVG_LUCKS:
+                tableName = DatabaseHelper.AVG_LUCK_TABLE_NAME;
+                contentUri = AvgLuck.CONTENT_URI;
+                break;
+            case AVG_LUCK_ID:
+                id = AVG_LUCK_ID;
+                tableName = DatabaseHelper.AVG_LUCK_TABLE_NAME;
+                contentUri = AvgLuck.CONTENT_URI;
+                break;
+
+            case WORKERS:
+                tableName = DatabaseHelper.WORKER_TABLE_NAME;
+                contentUri = Worker.CONTENT_URI;
+                break;
+            case WORKER_ID:
+                id = WORKER_ID;
+                tableName = DatabaseHelper.WORKER_TABLE_NAME;
+                contentUri = Worker.CONTENT_URI;
+                break;
+
+            case ROUNDS:
+                tableName = DatabaseHelper.ROUNDS_TABLE_NAME;
+                contentUri = Block.CONTENT_URI;
+                break;
+            case ROUND_ID:
+                id = ROUND_ID;
+                tableName = DatabaseHelper.ROUNDS_TABLE_NAME;
+                contentUri = Block.CONTENT_URI;
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+
+        return new SwitchHolder(id, tableName, contentUri);
+    }
+
+    private class SwitchHolder {
+        private int id;
+        private String table;
+        private Uri contentUri;
+
+        public SwitchHolder(int id, String tableName, Uri contentUri) {
+            this.id = id;
+            this.table = tableName;
+            this.contentUri = contentUri;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getTable() {
+            return table;
+        }
+
+        public Uri getContentUri() {
+            return contentUri;
+        }
     }
 
 }

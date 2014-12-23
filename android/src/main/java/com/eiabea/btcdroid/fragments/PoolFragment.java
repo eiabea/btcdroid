@@ -27,7 +27,6 @@ import com.eiabea.btcdroid.util.App;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -170,7 +169,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         c.moveToFirst();
 
-        while (c.moveToNext()){
+        while (c.moveToNext()) {
             Date duration;
             try {
                 duration = App.dateDurationFormat.parse(c.getString(c.getColumnIndex(Block.MINING_DURATION)));
@@ -213,9 +212,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         Date duration = null;
 
         try {
-            Log.d(TAG, "parsing started");
             average = getAverageRoundTime();
-            Log.d(TAG, "parsing done");
             txtAverageDuration.setText(App.dateDurationFormat.format(average));
             try {
                 started = App.dateStatsFormat.parse(stats.getRound_started());
@@ -273,7 +270,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void handleLoading() {
-        if (swipeLayout != null ){
+        if (swipeLayout != null) {
             swipeLayout.setRefreshing(false);
         }
     }
