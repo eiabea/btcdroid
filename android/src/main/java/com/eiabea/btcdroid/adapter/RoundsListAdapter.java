@@ -21,13 +21,10 @@ public class RoundsListAdapter extends CursorTreeAdapter {
 
     public static final String TAG = RoundsListAdapter.class.getSimpleName();
 
-    private LayoutInflater inflater;
-
     private Context context;
 
     public RoundsListAdapter(Cursor cursor, Context context) {
         super(cursor, context, true);
-        this.inflater = LayoutInflater.from(context);
         this.context = context;
     }
 
@@ -42,6 +39,8 @@ public class RoundsListAdapter extends CursorTreeAdapter {
 
     @Override
     protected View newGroupView(Context context, Cursor cursor, boolean isExpanded, ViewGroup parent) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+
         View v = inflater.inflate(R.layout.view_block_header, parent, false);
 
         RoundHeader rh = new RoundHeader();
@@ -101,6 +100,8 @@ public class RoundsListAdapter extends CursorTreeAdapter {
 
     @Override
     protected View newChildView(Context context, Cursor cursor, boolean isLastChild, ViewGroup parent) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+
         View v = inflater.inflate(R.layout.view_block, parent, false);
 
         RoundBody rb = new RoundBody();
