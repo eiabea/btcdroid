@@ -256,7 +256,13 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+
+        if (BuildConfig.PAID) {
+            getMenuInflater().inflate(R.menu.main_paid, menu);
+        }else{
+            getMenuInflater().inflate(R.menu.main_free, menu);
+        }
+
 
         return true;
     }
