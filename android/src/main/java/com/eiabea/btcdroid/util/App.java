@@ -8,12 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.eiabea.btcdroid.R;
+import com.eiabea.btcdroid.data.DataProvider;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.widget.AverageHashrateWidgetProvider;
@@ -102,6 +104,8 @@ public class App extends Application {
 
     public void resetToken() {
         App.token = PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
+
+        DataProvider.clearWorkers(getApplicationContext());
 
         setToken(App.token);
     }
@@ -203,13 +207,17 @@ public class App extends Application {
 
         Cursor c = context.getContentResolver().query(Worker.CONTENT_URI, projection, null, null, null);
 
-        c.moveToFirst();
+        if(c.getCount() > 0){
+            while (c.moveToNext()) {
 
-        while (c.moveToNext()) {
-            totalHashrate += c.getLong(c.getColumnIndex(Worker.HASHRATE));
+                int index = c.getColumnIndex(Worker.HASHRATE);
+                long value = c.getLong(index);
+                totalHashrate += value;
+            }
+
+            c.close();
         }
 
-        c.close();
 
         return totalHashrate;
     }

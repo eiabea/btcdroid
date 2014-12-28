@@ -336,8 +336,6 @@ public class DataProvider extends ContentProvider {
             @Override
             protected Void doInBackground(Void... params) {
 
-//                clearWorkers(context);
-
                 ArrayList<Worker> listWorkers = new ArrayList<Worker>();
 
                 Set<Map.Entry<String, JsonElement>> set = workers.entrySet();

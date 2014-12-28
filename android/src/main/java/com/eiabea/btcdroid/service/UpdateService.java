@@ -129,7 +129,7 @@ public class UpdateService extends Service {
             @Override
             public void onResponse(Profile profile) {
                 Log.d(getClass().getSimpleName(), "onResponse Profile Widgets");
-                handleDropNotification(profile);
+                handleDropNotification();
                 onProfileLoaded(profile);
             }
 
@@ -450,26 +450,20 @@ public class UpdateService extends Service {
 
     }
 
-    private void handleDropNotification(Profile profile) {
+    private void handleDropNotification() {
         boolean enabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled", false);
         try {
 
             if (enabled) {
 
-                List<Worker> workers = profile.getWorkersList();
-
-                int totalHashrate = 0;
-                int limit = Integer.valueOf(pref.getString("notification_hashrate", "0"));
-
-                for (Worker tmp : workers) {
-                    totalHashrate += tmp.getHashrate();
-                }
+                long totalHashrate = App.getTotalHashrate(getApplicationContext());
+                long limit = Integer.valueOf(pref.getString("notification_hashrate", "0"));
 
                 if (limit > 0 && totalHashrate < limit) {
 
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.setAction(MainActivity.ACTION_DROP_NOTIFICATION);
-                    PendingIntent pi = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+                    PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
                     mBuilder.setContentTitle(getString(R.string.txt_hashrate_dropped_title));
