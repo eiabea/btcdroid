@@ -336,7 +336,7 @@ public class DataProvider extends ContentProvider {
             @Override
             protected Void doInBackground(Void... params) {
 
-                clearWorkers(context);
+//                clearWorkers(context);
 
                 ArrayList<Worker> listWorkers = new ArrayList<Worker>();
 
