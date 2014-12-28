@@ -30,7 +30,6 @@ public class RoundsListAdapter extends CursorTreeAdapter {
 
     @Override
     protected Cursor getChildrenCursor(Cursor groupCursor) {
-
         String selection = Block.NUMBER + "=?";
         String[] selectionArgs = new String[]{groupCursor.getString(groupCursor.getColumnIndex(Block.NUMBER))};
 

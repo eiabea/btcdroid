@@ -336,6 +336,8 @@ public class DataProvider extends ContentProvider {
             @Override
             protected Void doInBackground(Void... params) {
 
+                clearWorkers(context);
+
                 ArrayList<Worker> listWorkers = new ArrayList<Worker>();
 
                 Set<Map.Entry<String, JsonElement>> set = workers.entrySet();
@@ -344,7 +346,19 @@ public class DataProvider extends ContentProvider {
 
                 for (Map.Entry<String, JsonElement> current : set) {
                     Worker tmpWorker = gson.fromJson(current.getValue(), Worker.class);
-                    tmpWorker.setName(current.getKey().replace(".", ""));
+
+                    String fullString = current.getKey();
+                    String workerName = "";
+                    int dotIndex = fullString.indexOf(".");
+                    if (dotIndex > -1) {
+                        // Increase index to cut out the dot
+                        dotIndex++;
+                        workerName = fullString.substring(dotIndex);
+                    } else {
+                        throw new NullPointerException("no Dot");
+                    }
+
+                    tmpWorker.setName(workerName);
 
                     listWorkers.add(tmpWorker);
                 }
@@ -433,6 +447,11 @@ public class DataProvider extends ContentProvider {
         context.getContentResolver().delete(AvgLuck.CONTENT_URI, null, null);
         context.getContentResolver().delete(Worker.CONTENT_URI, null, null);
         context.getContentResolver().delete(Block.CONTENT_URI, null, null);
+    }
+
+    public static void clearWorkers(Context context){
+        Log.d(TAG, "clearWorkers");
+        context.getContentResolver().delete(Worker.CONTENT_URI, null, null);
     }
 
     private SwitchHolder getSwitchHolder(Uri uri) {

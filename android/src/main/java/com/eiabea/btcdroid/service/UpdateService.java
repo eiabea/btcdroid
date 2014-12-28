@@ -429,10 +429,15 @@ public class UpdateService extends Service {
         intent.setAction(MainActivity.ACTION_NEW_ROUND_NOTIFICATION);
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_round_finished).setContentTitle(getString(R.string.txt_new_round_title)).setContentText(getString(R.string.txt_new_round_message)).setAutoCancel(true);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_stat_maps_local_atm)
+                .setContentTitle(getString(R.string.txt_new_round_title))
+                .setContentText(getString(R.string.txt_new_round_message))
+                .setAutoCancel(true);
 
         mBuilder.setDeleteIntent(getDeleteIntent(OnDeleteReceiver.ACTION_DELETE_NEW_ROUND));
         mBuilder.setWhen(Calendar.getInstance().getTimeInMillis());
+        mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_round_finished));
         mBuilder.setNumber(++newRoundNotificationCount);
         mBuilder.setContentIntent(pi);
 
@@ -440,8 +445,6 @@ public class UpdateService extends Service {
         Notification notif = setFinishParameters(mBuilder.build());
 
         mNotificationManager.notify(NEW_ROUND_NOTIFICATION_ID, notif);
-
-        mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_round_finished));
 
         NotificationManagerCompat.from(this).notify(NEW_ROUND_NOTIFICATION_ID, mBuilder.build());
 
@@ -470,7 +473,8 @@ public class UpdateService extends Service {
 
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
                     mBuilder.setContentTitle(getString(R.string.txt_hashrate_dropped_title));
-                    mBuilder.setSmallIcon(R.drawable.ic_launcher);
+                    mBuilder.setSmallIcon(R.drawable.ic_stat_alert_warning);
+                    mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
                     mBuilder.setContentText(String.format(getString(R.string.txt_hashrate_dropped_message), App.formatHashRate(totalHashrate)));
                     mBuilder.setAutoCancel(true);
                     mBuilder.setWhen(Calendar.getInstance().getTimeInMillis());

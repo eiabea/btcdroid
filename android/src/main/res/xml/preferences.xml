@@ -43,11 +43,6 @@
             android:title="@string/txt_pref_price_price_source_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/txt_pref_style_title">
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="username_workers"
-            android:summary="@string/txt_pref_style_worker_username_message"
-            android:title="@string/txt_pref_style_worker_username_title" />
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/btc_style"

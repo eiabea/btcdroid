@@ -24,14 +24,19 @@ public class WorkerListAdapter extends CursorTreeAdapter {
 
     private Context context;
 
+    private Typeface tfRegular;
+    private Typeface tfItalic;
+
     public WorkerListAdapter(Cursor cursor, Context context) {
         super(cursor, context, true);
         this.context = context;
+
+        this.tfRegular = Typeface.createFromAsset(context.getAssets(), "RobotoCondensed-Regular.ttf");
+        this.tfItalic = Typeface.createFromAsset(context.getAssets(), "RobotoCondensed-Italic.ttf");
     }
 
     @Override
     protected Cursor getChildrenCursor(Cursor groupCursor) {
-
         String selection = Worker.NAME + "=?";
         String[] selectionArgs = new String[]{groupCursor.getString(groupCursor.getColumnIndex(Worker.NAME))};
 
@@ -68,33 +73,7 @@ public class WorkerListAdapter extends CursorTreeAdapter {
 
         Worker worker = new Worker(cursor);
 
-        Typeface tfRegular = Typeface.createFromAsset(context.getAssets(), "RobotoCondensed-Regular.ttf");
-        Typeface tfItalic = Typeface.createFromAsset(context.getAssets(), "RobotoCondensed-Italic.ttf");
-
-        boolean showUsername = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("username_workers", true);
-
-        if (showUsername) {
-            wh.txtName.setText(worker.getName());
-        } else {
-
-            try {
-
-                String fullString = worker.getName();
-                String workerName = "";
-                int dotIndex = fullString.indexOf(".");
-                if (dotIndex > -1) {
-                    // Increase index to cut out the dot
-                    dotIndex++;
-                    workerName = fullString.substring(dotIndex);
-                    wh.txtName.setText(workerName);
-                } else {
-                    throw new NullPointerException("no Dot");
-                }
-            } catch (NullPointerException e) {
-
-                wh.txtName.setText(worker.getName());
-            }
-        }
+        wh.txtName.setText(worker.getName());
 
         if (worker.isAlive()) {
             wh.imgCircle.setImageResource(R.drawable.shape_circle_green);

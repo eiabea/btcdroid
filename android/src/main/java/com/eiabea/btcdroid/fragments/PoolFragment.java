@@ -163,23 +163,30 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private Date getAverageRoundTime() {
 
         long total = 0;
+        long average = 0;
         String[] projection = new String[]{Block.MINING_DURATION};
 
         Cursor c = getActivity().getContentResolver().query(Block.CONTENT_URI, projection, null, null, null);
 
-        c.moveToFirst();
+        if(c.getCount() > 0){
 
-        while (c.moveToNext()) {
-            Date duration;
-            try {
-                duration = App.dateDurationFormat.parse(c.getString(c.getColumnIndex(Block.MINING_DURATION)));
-                total += duration.getTime();
-            } catch (ParseException e) {
-                Log.e(TAG, "Can't get AverageRoundTime (NullPointer)");
+            c.moveToFirst();
+
+            while (c.moveToNext()) {
+                Date duration;
+                try {
+                    duration = App.dateDurationFormat.parse(c.getString(c.getColumnIndex(Block.MINING_DURATION)));
+                    total += duration.getTime();
+                } catch (ParseException e) {
+                    Log.e(TAG, "Can't get AverageRoundTime (NullPointer)");
+                }
+            }
+
+            if(total > 0){
+                average = total / c.getCount();
             }
         }
 
-        long average = total / c.getCount();
 
         return new Date(average);
     }
