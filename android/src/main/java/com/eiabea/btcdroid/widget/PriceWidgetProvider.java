@@ -39,8 +39,10 @@ public class PriceWidgetProvider extends AppWidgetProvider {
 
             if(trans){
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_black_transparent);
+                remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_background));
             }else{
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_white);
+                remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
             }
 
             try {
@@ -63,7 +65,6 @@ public class PriceWidgetProvider extends AppWidgetProvider {
                         price = App.getInstance().gson.fromJson(price.getJson(), GenericPrice.class);
 
                         remoteViews.setTextViewText(R.id.txt_widget_value, App.formatPrice(price.getSymbol(), price.getValueFloat()));
-                        remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
                         remoteViews.setTextViewText(R.id.txt_widget_desc, price.getSource());
 
                         remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);

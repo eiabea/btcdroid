@@ -149,8 +149,10 @@ public class App extends Application {
         return doubleHash + " " + getResString(R.string.mh_per_second, getInstance());
     }
 
-    public static String formatHashRate(int hash) {
-        if (hash > 1000000) {
+    public static String formatHashRate(long hash) {
+        if (hash > 1000000000) {
+            return String.format("%.2f", ((float) hash) / 1000000f) + " " + getResString(R.string.ph_per_second, getInstance());
+        } else if (hash > 1000000) {
             return String.format("%.2f", ((float) hash) / 1000000f) + " " + getResString(R.string.th_per_second, getInstance());
         } else if (hash > 10000) {
             return String.format("%.1f", ((float) hash) / 1000f) + " " + getResString(R.string.gh_per_second, getInstance());
@@ -194,9 +196,9 @@ public class App extends Application {
         return ctx.getResources().getString(id);
     }
 
-    public static int getTotalHashrate(Context context) {
+    public static long getTotalHashrate(Context context) {
 
-        int totalHashrate = 0;
+        long totalHashrate = 0;
         String[] projection = new String[]{Worker.HASHRATE};
 
         Cursor c = context.getContentResolver().query(Worker.CONTENT_URI, projection, null, null, null);
@@ -204,7 +206,7 @@ public class App extends Application {
         c.moveToFirst();
 
         while (c.moveToNext()) {
-            totalHashrate += c.getInt(c.getColumnIndex(Worker.HASHRATE));
+            totalHashrate += c.getLong(c.getColumnIndex(Worker.HASHRATE));
         }
 
         c.close();

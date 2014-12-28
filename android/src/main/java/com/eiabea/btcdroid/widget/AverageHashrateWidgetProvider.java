@@ -39,8 +39,10 @@ public class AverageHashrateWidgetProvider extends AppWidgetProvider {
 
             if(trans){
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_black_transparent);
+                remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_background));
             }else{
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_white);
+                remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
             }
 
             try {
@@ -63,7 +65,6 @@ public class AverageHashrateWidgetProvider extends AppWidgetProvider {
                         profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
 
                         remoteViews.setTextViewText(R.id.txt_widget_value, App.formatHashRate(profile.getHashrate()));
-                        remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
                         remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_average_total_hashrate));
 
                         remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);

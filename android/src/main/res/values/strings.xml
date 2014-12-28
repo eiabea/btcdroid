@@ -12,6 +12,8 @@
     <string name="action_buy">Buy App</string>
     <string name="action_participants">Participants</string>
     <string name="action_email">Email me</string>
+    <string name="eh_per_second">EH/s</string>
+    <string name="ph_per_second">PH/s</string>
     <string name="th_per_second">TH/s</string>
     <string name="gh_per_second">GH/s</string>
     <string name="mh_per_second">MH/s</string>

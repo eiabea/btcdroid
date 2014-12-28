@@ -29,7 +29,7 @@ public class Worker {
     private String score;
     private boolean alive;
     private int shares;
-    private int hashrate;
+    private long hashrate;
 
     // Standardconstructor
     public Worker() {
@@ -42,7 +42,7 @@ public class Worker {
         setScore(c.getString(c.getColumnIndex(SCORE)));
         setAlive(c.getInt(c.getColumnIndex(ALIVE)) == 1);
         setShares(c.getInt(c.getColumnIndex(SHARES)));
-        setHashrate(c.getInt(c.getColumnIndex(HASHRATE)));
+        setHashrate(c.getLong(c.getColumnIndex(HASHRATE)));
     }
 
     public ContentValues getContentValues(boolean forInsert) {
@@ -86,7 +86,7 @@ public class Worker {
         return shares;
     }
 
-    public int getHashrate() {
+    public long getHashrate() {
         return hashrate;
     }
 
@@ -114,7 +114,7 @@ public class Worker {
         this.shares = shares;
     }
 
-    public void setHashrate(int hashrate) {
+    public void setHashrate(long hashrate) {
         this.hashrate = hashrate;
     }
 }
