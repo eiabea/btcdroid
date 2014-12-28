@@ -1,8 +1,0 @@
-[submodule "lib_drag-sort-listview"]
-    path = lib_drag-sort-listview
-    url = https://github.com/bauerca/drag-sort-listview.git
-    ignore = dirty
-[submodule "lib_support-pref-fragment"]
-    path = lib_support-pref-fragment
-    url = https://github.com/kolavar/android-support-v4-preferencefragment.git
-    ignore = dirty

@@ -81,7 +81,7 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
-        if (c.getCount() > 0) {
+        if (c.getCount() > 0 && isAdded()) {
             switch (loader.getId()) {
                 case WORKER_LOADER_ID:
                     c.moveToFirst();

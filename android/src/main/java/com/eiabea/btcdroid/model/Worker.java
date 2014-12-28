@@ -52,7 +52,7 @@ public class Worker {
             //values.put(_ID, getId());
         }
 
-        values.put(NAME, getName());
+        values.put(NAME, getName().replaceAll(".", "\\."));
         values.put(LAST_SHARE, getLast_share());
         values.put(SCORE, getScore());
         values.put(ALIVE, isAlive());

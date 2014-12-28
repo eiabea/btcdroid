@@ -305,7 +305,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
-        if (c.getCount() > 0) {
+        if (c.getCount() > 0 && isAdded()) {
 
             c.moveToFirst();
 

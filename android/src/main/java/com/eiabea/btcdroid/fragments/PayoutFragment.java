@@ -333,7 +333,7 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
-        if (c.getCount() > 0) {
+        if (c.getCount() > 0 && isAdded()) {
             c.moveToFirst();
             switch (loader.getId()) {
                 case PAYOUT_PROFILE_LOADER_ID:
