@@ -7,12 +7,17 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.android.volley.Response.ErrorListener;
@@ -36,7 +41,6 @@ import com.eiabea.btcdroid.util.HttpWorker;
 
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.List;
 
 public class UpdateService extends Service {
 
