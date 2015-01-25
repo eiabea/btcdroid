@@ -133,7 +133,7 @@ public class UpdateService extends Service {
             @Override
             public void onResponse(Profile profile) {
                 Log.d(getClass().getSimpleName(), "onResponse Profile Widgets");
-                handleDropNotification();
+                handleDropNotification(profile);
                 onProfileLoaded(profile);
             }
 
@@ -454,14 +454,22 @@ public class UpdateService extends Service {
 
     }
 
-    private void handleDropNotification() {
+    private void handleDropNotification(Profile profile) {
         boolean enabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled", false);
         try {
 
             if (enabled) {
 
-                long totalHashrate = App.getTotalHashrate(getApplicationContext());
+                long totalHashrate =0;
                 long limit = Integer.valueOf(pref.getString("notification_hashrate", "0"));
+
+                if(profile != null){
+                    for(Worker tmpWorker : profile.getWorkersList()){
+                        totalHashrate+=tmpWorker.getHashrate();
+                    }
+                }else{
+                    totalHashrate = App.getTotalHashrate(getApplicationContext());
+                }
 
                 if (limit > 0 && totalHashrate < limit) {
 
