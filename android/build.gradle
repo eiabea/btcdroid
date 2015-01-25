@@ -36,8 +36,7 @@ android {
                 variant.outputs.each { output ->
                     def outputFile = output.outputFile
                     if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                        def branch = hasProperty('branch') ? branch.replaceAll('origin/', '') : "UNKNOWN"
-                        def fileName = outputFile.name.replace(".apk", "_v" + defaultConfig.versionName + "_" + branch + ".apk")
+                        def fileName = outputFile.name.replace(".apk", "_v" + defaultConfig.versionName + "_" + getWorkingBranch() + ".apk")
                         output.outputFile = new File(outputFile.parent, fileName)
                     }
                 }
@@ -63,6 +62,20 @@ android {
         }
     }
 
+}
+
+/**
+ * Get the name of the working branch of the project
+ *
+ * @return Name of the working branch
+ */
+def getWorkingBranch() {
+    // Triple double-quotes for the breaklines
+    def workingBranch = """git --git-dir=${rootDir}/../.git
+                               --work-tree=${rootDir}/..
+                               rev-parse --abbrev-ref HEAD""".execute().text.trim()
+    print "Working branch: " + workingBranch
+    return workingBranch
 }
 
 def props = new Properties()
