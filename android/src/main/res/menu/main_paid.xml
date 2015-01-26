@@ -26,4 +26,5 @@
         android:orderInCategory="100"
         btcdroid:showAsAction="never"
         android:title="@string/action_donate" />
+
 </menu>

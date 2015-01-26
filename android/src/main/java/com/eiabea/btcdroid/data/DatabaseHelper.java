@@ -5,11 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.eiabea.btcdroid.model.AvgLuck;
-import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
-import com.eiabea.btcdroid.model.Profile;
-import com.eiabea.btcdroid.model.Stats;
+import com.eiabea.btcdroid.model.Pool;
+import com.eiabea.btcdroid.model.User;
 import com.eiabea.btcdroid.model.Worker;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -20,27 +18,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String TAG = DatabaseHelper.class.getSimpleName();
 
-    public static final String PROFILE_TABLE_NAME = "profile";
-    public static final String STATS_TABLE_NAME = "stats";
+    public static final String POOL_TABLE_NAME = "pool";
+    public static final String WORKERS_TABLE_NAME = "workers";
+    public static final String USER_TABLE_NAME = "user";
     public static final String PRICE_TABLE_NAME = "price";
-    public static final String AVG_LUCK_TABLE_NAME = "avg_luck";
-    public static final String WORKER_TABLE_NAME = "worker";
-    public static final String ROUNDS_TABLE_NAME = "rounds";
 
-    private static final int DATABASE_VERSION = 13;
-    private static final String DATABASE_NAME = "btcdroid";
-
-    private static final String CREATE_PROFILE_TABLE =
-            " CREATE TABLE " + PROFILE_TABLE_NAME +
-                    " (" + Profile._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    " " + Profile.JSON + " TEXT " +
-                    ");";
-
-    private static final String CREATE_STATS_TABLE =
-            " CREATE TABLE " + STATS_TABLE_NAME +
-                    " (" + Stats._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    " " + Stats.JSON + " TEXT " +
-                    ");";
+    private static final int DATABASE_VERSION = 5;
+    private static final String DATABASE_NAME = "btcdroid_btcguild";
 
     private static final String CREATE_PRICE_TABLE =
             " CREATE TABLE " + PRICE_TABLE_NAME +
@@ -48,32 +32,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " " + GenericPrice.JSON + " TEXT " +
                     ");";
 
-    private static final String CREATE_AVG_LUCK_TABLE =
-            " CREATE TABLE " + AVG_LUCK_TABLE_NAME +
-                    " (" + AvgLuck._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    " " + AvgLuck.JSON + " TEXT " +
+    private static final String CREATE_POOL_TABLE =
+            " CREATE TABLE " + POOL_TABLE_NAME +
+                    " (" + Pool._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    " " + Pool.POOL_SPEED + " INTEGER, " +
+                    " " + Pool.DIFFICULTY + " INTEGER " +
                     ");";
 
-    private static final String CREATE_WORKER_TABLE =
-            " CREATE TABLE " + WORKER_TABLE_NAME +
+    private static final String CREATE_WORKERS_TABLE =
+            " CREATE TABLE " + WORKERS_TABLE_NAME +
                     " (" + Worker._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    " " + Worker.NAME + " TEXT, " +
-                    " " + Worker.LAST_SHARE + " INTEGER, " +
-                    " " + Worker.SCORE + " TEXT, " +
-                    " " + Worker.ALIVE + " INTEGER, " +
-                    " " + Worker.SHARES + " INTEGER, " +
-                    " " + Worker.HASHRATE + " INTEGER " +
+                    " " + Worker.WORKER_NAME + " TEXT, " +
+                    " " + Worker.HASHRATE + " INTEGER, " +
+                    " " + Worker.VALID_SHARES + " INTEGER, " +
+                    " " + Worker.STALE_SHARES + " INTEGER, " +
+                    " " + Worker.DUPE_SHARES + " INTEGER, " +
+                    " " + Worker.UNKNOWN_SHARES + " INTEGER, " +
+                    " " + Worker.VALID_SHARES_SINCE_RESET + " INTEGER, " +
+                    " " + Worker.STALE_SHARES_SINCE_RESET + " INTEGER, " +
+                    " " + Worker.DUPE_SHARES_SINCE_RESET + " INTEGER, " +
+                    " " + Worker.UNKNOWN_SHARES_SINCE_RESET + " INTEGER, " +
+                    " " + Worker.LAST_SHARE + " INTEGER " +
                     ");";
 
-    private static final String CREATE_ROUNDS_TABLE =
-            " CREATE TABLE " + ROUNDS_TABLE_NAME +
-                    " (" + Block._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    " " + Block.NUMBER + " INTEGER, " +
-                    " " + Block.MINING_DURATION + " TEXT, " +
-                    " " + Block.REWARD + " TEXT, " +
-                    " " + Block.DATE_FOUND + " TEXT, " +
-                    " " + Block.DATE_STARTED + " TEXT, " +
-                    " " + Block.CONFIRMATIONS + " INTEGER " +
+    private static final String CREATE_USER_TABLE =
+            " CREATE TABLE " + USER_TABLE_NAME +
+                    " (" + User._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    " " + User.USER_ID + " INTEGER, " +
+                    " " + User.TOTAL_REWARDS + " INTEGER, " +
+                    " " + User.PAID_REWARDS + " INTEGER, " +
+                    " " + User.UNPAID_REWARDS + " INTEGER, " +
+                    " " + User.PAST_24H_REWARDS + " INTEGER " +
                     ");";
 
     DatabaseHelper(Context context) {
@@ -82,12 +71,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_PROFILE_TABLE);
-        db.execSQL(CREATE_STATS_TABLE);
+        db.execSQL(CREATE_POOL_TABLE);
+        db.execSQL(CREATE_WORKERS_TABLE);
+        db.execSQL(CREATE_USER_TABLE);
         db.execSQL(CREATE_PRICE_TABLE);
-        db.execSQL(CREATE_AVG_LUCK_TABLE);
-        db.execSQL(CREATE_WORKER_TABLE);
-        db.execSQL(CREATE_ROUNDS_TABLE);
     }
 
     @Override
@@ -95,12 +82,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         Log.d(TAG, "Upgrading Database from v" + oldVersion + " to v" + newVersion);
 
-        db.execSQL("DROP TABLE IF EXISTS " + PROFILE_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + STATS_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + POOL_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + WORKERS_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PRICE_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + AVG_LUCK_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + WORKER_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + ROUNDS_TABLE_NAME);
         onCreate(db);
     }
 }

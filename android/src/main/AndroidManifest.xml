@@ -38,19 +38,19 @@
         </activity>
         <activity
             android:name="com.eiabea.btcdroid.ParticipantsActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"></activity>
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"/>
         <activity
             android:name="com.eiabea.btcdroid.PrefsActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"></activity>
-        <activity android:name="com.eiabea.btcdroid.CustomizeActivity"></activity>
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"/>
+        <activity android:name="com.eiabea.btcdroid.CustomizeActivity"/>
 
         <service
             android:name="com.eiabea.btcdroid.service.UpdateService"
-            android:enabled="true"></service>
+            android:enabled="true"/>
 
         <receiver
             android:name="com.eiabea.btcdroid.service.OnDeleteReceiver"
-            android:enabled="true"></receiver>
+            android:enabled="true"/>
         <receiver
             android:name="com.eiabea.btcdroid.service.OnBootReceiver"
             android:enabled="true">
@@ -71,9 +71,9 @@
                 android:resource="@xml/widget_info" />
         </receiver>
         <receiver
-            android:name="com.eiabea.btcdroid.widget.AverageHashrateWidgetProvider"
+            android:name=".widget.PaidRewardWidgetProvider"
             android:icon="@drawable/ic_launcher"
-            android:label="BTCDroid Average Hashrate">
+            android:label="BTCDroid Paid Reward">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -83,33 +83,9 @@
                 android:resource="@xml/widget_info" />
         </receiver>
         <receiver
-            android:name="com.eiabea.btcdroid.widget.ConfirmedRewardWidgetProvider"
+            android:name=".widget.UnpaidRewardWidgetProvider"
             android:icon="@drawable/ic_launcher"
-            android:label="BTCDroid Confirmed Reward">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info" />
-        </receiver>
-        <receiver
-            android:name="com.eiabea.btcdroid.widget.RoundDurationWidgetProvider"
-            android:icon="@drawable/ic_launcher"
-            android:label="BTCDroid Round Duration">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info" />
-        </receiver>
-        <receiver
-            android:name="com.eiabea.btcdroid.widget.EstimatedRewardWidgetProvider"
-            android:icon="@drawable/ic_launcher"
-            android:label="BTCDroid Estimated Reward">
+            android:label="BTCDroid Unpaid Reward">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -129,18 +105,6 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
-        </receiver>
-        <receiver
-            android:name="com.eiabea.btcdroid.widget.MultiWidgetProvider"
-            android:icon="@drawable/ic_launcher"
-            android:label="BTCDroid Multi">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/multi_widget_info" />
         </receiver>
         <receiver
             android:name="com.eiabea.btcdroid.widget.PriceWidgetProvider"

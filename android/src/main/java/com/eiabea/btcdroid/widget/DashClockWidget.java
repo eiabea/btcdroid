@@ -11,8 +11,6 @@ import android.util.Log;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.GenericPrice;
-import com.eiabea.btcdroid.model.Profile;
-import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;
 import com.google.android.apps.dashclock.api.DashClockExtension;
@@ -29,7 +27,7 @@ public class DashClockWidget extends DashClockExtension {
     @Override
     protected void onUpdateData(int reason) {
         Intent i = new Intent(getApplicationContext(), UpdateService.class);
-        i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PROFILE);
+        i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_API_RESPONSE);
         getApplicationContext().startService(i);
     }
 
@@ -57,50 +55,50 @@ public class DashClockWidget extends DashClockExtension {
             String selection = GenericPrice._ID + "=?";
             String[] selectionArgs = {"1"};
 
-            Cursor c = context.getContentResolver().query(Profile.CONTENT_URI, null, selection, selectionArgs, null);
-
-            if (c.getCount() > 0) {
-                c.moveToFirst();
-
-                Profile profile = new Profile(c);
-                profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
-
-                updateWidget(profile);
-            }
-            c.close();
+//            Cursor c = context.getContentResolver().query(Profile.CONTENT_URI, null, selection, selectionArgs, null);
+//
+//            if (c.getCount() > 0) {
+//                c.moveToFirst();
+//
+//                Profile profile = new Profile(c);
+//                profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
+//
+//                updateWidget(profile);
+//            }
+//            c.close();
 
         }
     }
 
-    private void updateWidget(Profile profile) {
-        if (profile != null) {
-
-            ArrayList<Worker> list = profile.getWorkersList();
-
-            int totalHashrate = 0;
-
-            for (Worker tmp : list) {
-                totalHashrate += tmp.getHashrate();
-            }
-
-            Intent i = null;
-            PackageManager manager = getPackageManager();
-            try {
-                i = manager.getLaunchIntentForPackage(getApplicationContext().getPackageName());
-                if (i == null)
-                    throw new PackageManager.NameNotFoundException();
-                i.addCategory(Intent.CATEGORY_LAUNCHER);
-            } catch (PackageManager.NameNotFoundException e) {
-
-            }
-
-            publishUpdate(new ExtensionData()
-                    .visible(true)
-                    .icon(R.drawable.ic_launcher_dashclock)
-                    .status(App.formatHashRate(totalHashrate))
-                    .expandedTitle(App.formatHashRate(totalHashrate))
-                    .expandedBody(getString(R.string.txt_dashclock_expanded_body))
-                    .clickIntent(i));
-        }
-    }
+//    private void updateWidget(Profile profile) {
+//        if (profile != null) {
+//
+//            ArrayList<Worker> list = profile.getWorkersList();
+//
+//            int totalHashrate = 0;
+//
+//            for (Worker tmp : list) {
+//                totalHashrate += tmp.getHashrate();
+//            }
+//
+//            Intent i = null;
+//            PackageManager manager = getPackageManager();
+//            try {
+//                i = manager.getLaunchIntentForPackage(getApplicationContext().getPackageName());
+//                if (i == null)
+//                    throw new PackageManager.NameNotFoundException();
+//                i.addCategory(Intent.CATEGORY_LAUNCHER);
+//            } catch (PackageManager.NameNotFoundException e) {
+//
+//            }
+//
+//            publishUpdate(new ExtensionData()
+//                    .visible(true)
+//                    .icon(R.drawable.ic_launcher_dashclock)
+//                    .status(App.formatHashRate(totalHashrate))
+//                    .expandedTitle(App.formatHashRate(totalHashrate))
+//                    .expandedBody(getString(R.string.txt_dashclock_expanded_body))
+//                    .clickIntent(i));
+//        }
+//    }
 }

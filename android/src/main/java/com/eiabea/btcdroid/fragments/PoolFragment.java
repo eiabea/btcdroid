@@ -2,6 +2,7 @@ package com.eiabea.btcdroid.fragments;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -13,18 +14,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
-import com.eiabea.btcdroid.model.AvgLuck;
-import com.eiabea.btcdroid.model.Block;
-import com.eiabea.btcdroid.model.Profile;
-import com.eiabea.btcdroid.model.Stats;
+import com.eiabea.btcdroid.model.GenericPrice;
+import com.eiabea.btcdroid.model.Pool;
+import com.eiabea.btcdroid.model.User;
+import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -32,9 +33,9 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     public static final String TAG = PoolFragment.class.getSimpleName();
 
-    private static final int POOL_PROFILE_LOADER_ID = 222;
-    private static final int POOL_STATS_LOADER_ID = 223;
-    private static final int POOL_AVG_LUCK_LOADER_ID = 224;
+    private static final int POOL_LOADER_ID = 222;
+    private static final int USER_LOADER_ID = 223;
+    private static final int PRICE_LOADER_ID = 224;
 
     private ViewGroup rootView;
 
@@ -42,10 +43,9 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private SwipeRefreshLayout swipeLayout;
 
-    private TextView txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
-            txtRoundDuration, txtEstimatedDuration, txtAverageDuration,
-            txtLuck24h, txtLuck7d, txtLuck30d, txtAvgLuck;
-    private RatingBar ratRating;
+    private TextView txtCurrentSource, txtCurrentValue,txtHashrate, txtTotalReward, txtPaidReward, txtUnpaidReward, txtPoolSpeed, txtDifficulty;
+
+    private LinearLayout llPriceHolder;
 
     public static PoolFragment create() {
         PoolFragment fragment = new PoolFragment();
@@ -58,9 +58,9 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onResume() {
         super.onResume();
 
-        getActivity().getSupportLoaderManager().initLoader(POOL_PROFILE_LOADER_ID, null, this);
-        getActivity().getSupportLoaderManager().initLoader(POOL_STATS_LOADER_ID, null, this);
-        getActivity().getSupportLoaderManager().initLoader(POOL_AVG_LUCK_LOADER_ID, null, this);
+        getActivity().getSupportLoaderManager().initLoader(POOL_LOADER_ID, null, this);
+        getActivity().getSupportLoaderManager().initLoader(USER_LOADER_ID, null, this);
+        getActivity().getSupportLoaderManager().initLoader(PRICE_LOADER_ID, null, this);
     }
 
     @Override
@@ -82,198 +82,16 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void initUi() {
-        txtTotalHashrate = (TextView) rootView.findViewById(R.id.txt_main_info_total_hashrate);
-        txtAverageHashrate = (TextView) rootView.findViewById(R.id.txt_main_info_average_hashrate);
-        txtRoundStarted = (TextView) rootView.findViewById(R.id.txt_main_info_round_started);
-        txtRoundDuration = (TextView) rootView.findViewById(R.id.txt_main_info_round_duration);
-        txtEstimatedDuration = (TextView) rootView.findViewById(R.id.txt_main_info_estimated_duration);
-        txtAverageDuration = (TextView) rootView.findViewById(R.id.txt_main_info_average_duration);
-        ratRating = (RatingBar) rootView.findViewById(R.id.rat_main_info_rating);
-        txtLuck24h = (TextView) rootView.findViewById(R.id.txt_main_info_luck_24h);
-        txtLuck7d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_7d);
-        txtLuck30d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_30d);
-        txtAvgLuck = (TextView) rootView.findViewById(R.id.txt_main_info_avg_luck);
-    }
+        llPriceHolder = (LinearLayout) rootView.findViewById(R.id.ll_main_info_price_holder);
+        txtCurrentSource = (TextView) rootView.findViewById(R.id.txt_main_info_current_source);
+        txtCurrentValue = (TextView) rootView.findViewById(R.id.txt_main_info_current_value);
 
-    private void setLuck(TextView txt, float current, boolean highPrecision) {
-        if (current > 0) {
-            float last = pref.getFloat("txt_" + txt.getId() + "_value", 0f);
-
-            int minuteThreshold = App.getInstance().getLuckThreshold();
-            long threshold = minuteThreshold * 60 * 1000;
-
-            long lastUpdated = pref.getLong("txt_" + txt.getId(), 0);
-
-            long now = Calendar.getInstance().getTimeInMillis();
-
-            if ((lastUpdated + threshold) < now) {
-
-                if (last > current) {
-                    txt.setTextColor(getResources().getColor(R.color.bd_red));
-                } else if (last < current) {
-                    txt.setTextColor(getResources().getColor(R.color.bd_green));
-                } else {
-                    txt.setTextColor(getResources().getColor(R.color.bd_dark_grey_text));
-                }
-                pref.edit().putFloat("txt_" + txt.getId() + "_value", current).apply();
-                pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).apply();
-            }
-
-            if (highPrecision) {
-                txt.setText(App.formatProcentHighPrecision(current));
-            } else {
-                txt.setText(App.formatProcent(current));
-            }
-        } else {
-            txt.setText(App.formatProcent(current));
-        }
-    }
-
-    private void setRatingBar(double rating) {
-        double stars = ratRating.getNumStars();
-
-        if (rating < 0) {
-            rating = 0;
-        }
-
-        if (rating > stars) {
-            rating = stars;
-        }
-
-        final float ratingToSet = (float) (stars - rating);
-        // final float ratingToSet = 2.4f;
-
-        // Dirty hack to set ratingbar
-        ratRating.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
-
-            @Override
-            public void onRatingChanged(RatingBar arg0, float arg1, boolean arg2) {
-//                Log.d(TAG, "Rating changed: " + arg1);
-                arg0.setRating(ratingToSet);
-            }
-        });
-
-        ratRating.setStepSize(0.5f);
-
-        ratRating.setRating(ratingToSet);
-//        Log.d(TAG, "Rating set: " + ratRating.getRating());
-
-    }
-
-    private Date getAverageRoundTime() {
-
-        long total = 0;
-        long average = 0;
-        String[] projection = new String[]{Block.MINING_DURATION};
-
-        Cursor c = getActivity().getContentResolver().query(Block.CONTENT_URI, projection, null, null, null);
-
-        if(c.getCount() > 0){
-
-            c.moveToFirst();
-
-            while (c.moveToNext()) {
-                Date duration;
-                try {
-                    duration = App.dateDurationFormat.parse(c.getString(c.getColumnIndex(Block.MINING_DURATION)));
-                    total += duration.getTime();
-                } catch (ParseException e) {
-                    Log.e(TAG, "Can't get AverageRoundTime (NullPointer)");
-                }
-            }
-
-            if(total > 0){
-                average = total / c.getCount();
-            }
-        }
-
-
-        return new Date(average);
-    }
-
-    private double calculateRoundRating(Date average, Date duration) {
-
-        double avg = average.getTime();
-        double dur = duration.getTime();
-
-        double rating = dur / avg;
-
-//        Log.d(TAG, "Raw Rating: " + rating);
-
-        return rating;
-    }
-
-    private void setProfile(Profile profile) {
-        try {
-            txtTotalHashrate.setText(App.formatHashRate(App.getTotalHashrate(getActivity())));
-            txtAverageHashrate.setText(App.formatHashRate(profile.getHashrate()));
-        } catch (NullPointerException ignore) {
-        }
-        handleLoading();
-    }
-
-    private void setStats(Stats stats) {
-
-        Date started;
-        Date average;
-        Date duration = null;
-
-        try {
-            average = getAverageRoundTime();
-            txtAverageDuration.setText(App.dateDurationFormat.format(average));
-            try {
-                started = App.dateStatsFormat.parse(stats.getRound_started());
-                txtRoundStarted.setText(App.dateFormat.format(started));
-            } catch (java.text.ParseException e) {
-                Log.e(TAG, "Can't get RoundStarted (NullPointer)");
-            }
-            try {
-                duration = App.dateDurationFormat.parse(stats.getRound_duration());
-                txtRoundDuration.setText(App.dateDurationFormat.format(duration));
-            } catch (java.text.ParseException e) {
-                txtRoundDuration.setText(getString(R.string.txt_greater_one_day));
-                Log.e(TAG, "Can't get RoundDuration (NullPointer)");
-            }
-
-            if (average != null && duration != null) {
-                double rating = calculateRoundRating(average, duration);
-
-                setRatingBar(rating);
-            }
-
-            if (duration != null) {
-                float cdf = Float.valueOf(stats.getShares_cdf());
-//                Log.i(TAG, "cdf: " + cdf);
-                float estimated = (duration.getTime() / (cdf / 100));
-//                Log.i(TAG, "estimated: " + (long) estimated);
-//                Log.i(TAG, "duration: " + duration.getTime());
-
-                txtEstimatedDuration.setText(App.dateDurationFormat.format(new Date((long) (estimated/* + duration.getTime()*/))));
-            } else {
-                txtEstimatedDuration.setText(getString(R.string.txt_infinite_symbol));
-            }
-
-            float currentLuck24 = Float.parseFloat(stats.getLuck_1());
-            float currentLuck7d = Float.parseFloat(stats.getLuck_7());
-            float currentLuck30d = Float.parseFloat(stats.getLuck_30());
-
-            setLuck(txtLuck24h, currentLuck24, false);
-            setLuck(txtLuck7d, currentLuck7d, false);
-            setLuck(txtLuck30d, currentLuck30d, false);
-        } catch (NullPointerException ignore) {
-        }
-
-        handleLoading();
-    }
-
-    private void setAvgLuck(AvgLuck avgLuck) {
-
-        if (avgLuck != null) {
-            setLuck(txtAvgLuck, avgLuck.getAvg_luck(), true);
-        }
-
-        handleLoading();
-
+        txtHashrate = (TextView) rootView.findViewById(R.id.txt_main_info_hashrate);
+        txtTotalReward = (TextView) rootView.findViewById(R.id.txt_main_info_total_reward);
+        txtPaidReward = (TextView) rootView.findViewById(R.id.txt_main_info_paid_reward);
+        txtUnpaidReward = (TextView) rootView.findViewById(R.id.txt_main_info_unpaid_reward);
+        txtPoolSpeed = (TextView) rootView.findViewById(R.id.txt_main_info_pool_speed);
+        txtDifficulty = (TextView) rootView.findViewById(R.id.txt_main_info_difficulty);
     }
 
     private void handleLoading() {
@@ -289,21 +107,67 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
     }
 
+    public void setPrices(GenericPrice price) {
+        setPrice(txtCurrentValue, price);
+
+        if (llPriceHolder != null) {
+            if (App.isPriceEnabled) {
+                llPriceHolder.setVisibility(View.VISIBLE);
+
+            } else {
+                llPriceHolder.setVisibility(View.GONE);
+
+            }
+        }
+
+    }
+
+    private void setPrice(TextView txt, GenericPrice current) {
+        if (current != null && txt != null) {
+            float lastPriceFloat = pref.getFloat("txt_" + txt.getId() + "_value", 0f);
+            float currentPriceFloat = current.getValueFloat();
+
+            int minuteThreshold = App.getInstance().getPriceThreshold();
+            long threshold = minuteThreshold * 60 * 1000;
+
+            long lastUpdated = pref.getLong("txt_" + txt.getId(), 0);
+
+            long now = Calendar.getInstance().getTimeInMillis();
+
+            if ((lastUpdated + threshold) < now) {
+
+                Log.d(getClass().getSimpleName(), "threshold expired --> set colors for " + "txt_" + txt.getId());
+                if (lastPriceFloat > currentPriceFloat) {
+                    txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
+                } else {
+                    txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
+                }
+
+                pref.edit().putFloat("txt_" + txt.getId() + "_value", currentPriceFloat).apply();
+                pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).apply();
+//                Log.d(getClass().getSimpleName(), "set last price to: " + currentPriceFloat);
+            }
+
+            txtCurrentValue.setText(App.formatPrice(current.getSymbol(), current.getValueFloat()));
+            txtCurrentSource.setText(current.getSource() + ":");
+
+            handleLoading();
+        }
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int which, Bundle arg1) {
 
-        String selection;
+        String selection = Pool._ID + "=?";
         String[] selectionArgs = {"1"};
+
         switch (which) {
-            case POOL_PROFILE_LOADER_ID:
-                selection = Profile._ID + "=?";
-                return new CursorLoader(getActivity(), Profile.CONTENT_URI, null, selection, selectionArgs, null);
-            case POOL_STATS_LOADER_ID:
-                selection = Stats._ID + "=?";
-                return new CursorLoader(getActivity(), Stats.CONTENT_URI, null, selection, selectionArgs, null);
-            case POOL_AVG_LUCK_LOADER_ID:
-                selection = AvgLuck._ID + "=?";
-                return new CursorLoader(getActivity(), AvgLuck.CONTENT_URI, null, selection, selectionArgs, null);
+            case POOL_LOADER_ID:
+                return new CursorLoader(getActivity(), Pool.CONTENT_URI, null, selection, selectionArgs, null);
+            case USER_LOADER_ID:
+                return new CursorLoader(getActivity(), User.CONTENT_URI, null, selection, selectionArgs, null);
+            case PRICE_LOADER_ID:
+                return new CursorLoader(getActivity(), GenericPrice.CONTENT_URI, null, selection, selectionArgs, null);
         }
 
         return null;
@@ -312,33 +176,34 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
-        if (c.getCount() > 0 && isAdded()) {
+        if (c.getCount() > 0) {
+
+            handleLoading();
 
             c.moveToFirst();
 
             switch (loader.getId()) {
-                case POOL_PROFILE_LOADER_ID:
-                    Profile profile = new Profile(c);
-                    profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
+                case POOL_LOADER_ID:
+                    Pool pool = new Pool(c);
 
-                    if (profile != null) {
-                        setProfile(profile);
-                    }
+                    txtHashrate.setText(App.formatHashRate(App.getTotalHashrate(getActivity())));
+                    txtPoolSpeed.setText(App.formatHashRate(pool.getPool_speed() * 1000));
+                    txtDifficulty.setText(String.valueOf(pool.getDifficulty()));
                     break;
-                case POOL_STATS_LOADER_ID:
-                    Stats stats = new Stats(c);
-                    stats = App.getInstance().gson.fromJson(stats.getJson(), Stats.class);
+                case USER_LOADER_ID:
 
-                    if (stats != null) {
-                        setStats(stats);
-                    }
+                    User user = new User(c);
+
+                    txtTotalReward.setText(App.formatReward(user.getTotal_rewards()));
+                    txtPaidReward.setText(App.formatReward(user.getPaid_rewards()));
+                    txtUnpaidReward.setText(App.formatReward(user.getUnpaid_rewards()));
                     break;
-                case POOL_AVG_LUCK_LOADER_ID:
-                    AvgLuck avgLuck = new AvgLuck(c);
-                    avgLuck = App.getInstance().gson.fromJson(avgLuck.getJson(), AvgLuck.class);
+                case PRICE_LOADER_ID:
+                    GenericPrice price = new GenericPrice(c);
+                    price = App.getInstance().gson.fromJson(price.getJson(), GenericPrice.class);
 
-                    if (avgLuck != null) {
-                        setAvgLuck(avgLuck);
+                    if (price != null) {
+                        setPrices(price);
                     }
                     break;
             }

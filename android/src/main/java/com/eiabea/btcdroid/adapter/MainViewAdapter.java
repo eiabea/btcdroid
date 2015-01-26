@@ -6,15 +6,11 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
-import com.eiabea.btcdroid.fragments.PayoutFragment;
 import com.eiabea.btcdroid.fragments.PoolFragment;
-import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
-import com.eiabea.btcdroid.model.Worker;
 
 public class MainViewAdapter extends FragmentStatePagerAdapter {
 
@@ -33,7 +29,7 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
 
-        String userOrder = pref.getString("userOrder", "0:1:2:3");
+        String userOrder = pref.getString("userOrder", "0:1");
         String[] split = userOrder.split(":");
         fragmentOrder = new int[split.length];
 
@@ -61,17 +57,11 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
         Fragment frag = null;
 
         switch (position) {
-            case MainActivity.FRAGMENT_PAYOUT:
-                frag = PayoutFragment.create();
-                break;
             case MainActivity.FRAGMENT_POOL:
                 frag = PoolFragment.create();
                 break;
             case MainActivity.FRAGMENT_WORKER:
                 frag = WorkerFragment.create();
-                break;
-            case MainActivity.FRAGMENT_ROUNDS:
-                frag = RoundsFragment.create();
                 break;
         }
 
@@ -100,14 +90,10 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 
     public static String getNameOfFragment(int which, Context context) {
         switch (which) {
-            case MainActivity.FRAGMENT_PAYOUT:
-                return context.getResources().getString(R.string.txt_viewpager_payout_fragment);
             case MainActivity.FRAGMENT_POOL:
                 return context.getResources().getString(R.string.txt_viewpager_pool_fragment);
             case MainActivity.FRAGMENT_WORKER:
                 return context.getResources().getString(R.string.txt_viewpager_worker_fragment);
-            case MainActivity.FRAGMENT_ROUNDS:
-                return context.getResources().getString(R.string.txt_viewpager_round_fragment);
         }
 
         return "";

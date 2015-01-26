@@ -11,8 +11,8 @@ android {
     compileSdkVersion 21
     buildToolsVersion '21.1.2'
     defaultConfig {
-        versionCode 86
-        versionName "2.0.1"
+        versionCode 1
+        versionName "0.0.1"
         minSdkVersion 10
         targetSdkVersion 21
 
@@ -32,11 +32,12 @@ android {
         release {
             zipAlignEnabled true
             signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
                     def outputFile = output.outputFile
                     if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                        def fileName = outputFile.name.replace(".apk", "_v" + defaultConfig.versionName + ".apk")
+                        def fileName = outputFile.name.replace(".apk", "_btcguild_v" + defaultConfig.versionName + ".apk")
                         output.outputFile = new File(outputFile.parent, fileName)
                     }
                 }
@@ -47,18 +48,18 @@ android {
 
     productFlavors {
         paid {
-            applicationId = 'com.eiabea.paid.btcdroid'
+            applicationId = 'com.eiabea.paid.btcdroid.btcguild'
             buildConfigField "boolean", "PAID", "true"
+            buildConfigField "String", "DATA_PROVIDER", "\"com.eiabea.paid.btcdroid.btcguild.data\""
             resValue "string", "app_name", "BTCDroid"
-            resValue "string", "data_provider", "com.eiabea.paid.btcdroid.data"
-            buildConfigField "String", "DATA_PROVIDER", "\"com.eiabea.paid.btcdroid.data\""
+            resValue "string", "data_provider", "com.eiabea.paid.btcdroid.btcguild.data"
         }
         free {
-            applicationId = 'com.eiabea.btcdroid'
+            applicationId = 'com.eiabea.btcdroid.btcguild'
             buildConfigField "boolean", "PAID", "false"
+            buildConfigField "String", "DATA_PROVIDER", "\"com.eiabea.btcdroid.btcguild.data\""
             resValue "string", "app_name", "BTCDroid Free"
-            resValue "string", "data_provider", "com.eiabea.btcdroid.data"
-            buildConfigField "String", "DATA_PROVIDER", "\"com.eiabea.btcdroid.data\""
+            resValue "string", "data_provider", "com.eiabea.btcdroid.btcguild.data"
         }
     }
 

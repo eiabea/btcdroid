@@ -47,53 +47,23 @@
             android:baselineAligned="false"
             android:orientation="horizontal">
 
-
             <FrameLayout
                 android:id="@+id/fl_pool_tile"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"></FrameLayout>
+                android:layout_weight="1"/>
 
             <FrameLayout
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/bd_grey_text"></FrameLayout>
+                android:background="@color/bd_grey_text"/>
 
             <FrameLayout
-                android:id="@+id/fl_payout_tile"
+                android:id="@+id/fl_worker_tile"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"></FrameLayout>
+                android:layout_weight="1"/>
 
-
-            <FrameLayout
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/bd_grey_text"></FrameLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <FrameLayout
-                    android:id="@+id/fl_worker_tile"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"></FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/bd_grey_text"></FrameLayout>
-
-                <FrameLayout
-                    android:id="@+id/fl_round_tile"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"></FrameLayout>
-            </LinearLayout>
         </LinearLayout>
 
     </RelativeLayout>

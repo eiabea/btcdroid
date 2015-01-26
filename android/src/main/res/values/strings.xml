@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
+    <string name="app_name_subtitle">BTCGuild Monitor</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_reset">Reset</string>
     <string name="action_accept">Accept</string>
@@ -12,8 +12,6 @@
     <string name="action_buy">Buy App</string>
     <string name="action_participants">Participants</string>
     <string name="action_email">Email me</string>
-    <string name="eh_per_second">EH/s</string>
-    <string name="ph_per_second">PH/s</string>
     <string name="th_per_second">TH/s</string>
     <string name="gh_per_second">GH/s</string>
     <string name="mh_per_second">MH/s</string>
@@ -46,31 +44,31 @@
     <string name="txt_new_round_message">A new Round has begun</string>
 
     <!-- MainActivity -->
-    <string name="txt_no_token">No valid Token found, please set one</string>
-    <string name="txt_set_token">Set Token</string>
-    <string name="alert_set_token_title">Slush\'s Pool Token</string>
-    <string name="alert_set_token_message">.) Login at mining.bitcoin.cz\n.) Manage API tokens\n.) Your current token\n\nHint: Open Website on your Phone to Copy &amp; Paste the Token</string>
+    <string name="txt_no_token">No valid API Key found, please set one</string>
+    <string name="txt_set_token">Set API Key</string>
+    <string name="alert_set_token_title">BTC Guild API Key</string>
+    <string name="alert_set_token_message">.) Login at btcguild.com\n.) Settings\n.) API Key\n\nHint: Open Website on your Phone to Copy &amp; Paste the Key</string>
     <string name="alert_set_token_ok">Set Token</string>
     <string name="alert_set_token_cancel">Cancel</string>
     <string name="txt_viewpager_payout_fragment">Payout</string>
-    <string name="txt_viewpager_pool_fragment">Pool Data</string>
+    <string name="txt_viewpager_pool_fragment">Data</string>
     <string name="txt_viewpager_worker_fragment">Worker</string>
     <string name="txt_viewpager_round_fragment">Rounds</string>
     <string name="mail_address">developer@eiabea.com</string>
-    <string name="mail_subject">BTCDroid</string>
+    <string name="mail_subject">BTCDroid GHash.IO</string>
     <string name="mail_intent_title">Send Email&#8230;</string>
 
     <!-- PayoutFragment -->
     <string name="txt_progress">Progress</string>
     <string name="txt_send_threshold">send threshold</string>
-    <string name="txt_estimated_reward">estimated</string>
-    <string name="txt_confirmed_reward">confirmed</string>
+    <string name="txt_unpaid_reward">unpaid</string>
+    <string name="txt_paid_reward">paid</string>
     <string name="txt_rewards">Rewards</string>
 
     <!-- PoolFragment | Headers -->
-    <string name="txt_hashrates">Hashrates</string>
+    <string name="txt_hashrates">Hashrate</string>
     <string name="txt_round">Round</string>
-    <string name="txt_luck">Luck</string>
+    <string name="txt_pool">Pool</string>
 
     <!-- PoolFragment | left -->
     <string name="txt_one_btc_is">1 BTC is:</string>
@@ -81,12 +79,8 @@
     <string name="txt_round_duration">current</string>
     <string name="txt_round_estimated">worst case</string>
     <string name="txt_round_average">average</string>
-    <string name="txt_avg_luck">Ø</string>
-    <string name="txt_luck_24h">24h</string>
-    <string name="txt_luck_7d">7d</string>
-    <string name="txt_luck_30d">30d</string>
-    <string name="txt_greater_one_day">> 1 day</string>
-    <string name="txt_infinite_symbol">∞</string>
+    <string name="txt_pool_speed">pool speed</string>
+    <string name="txt_difficulty">difficulty</string>
 
     <!-- RoundFragment | BlockView -->
     <string name="txt_confirmations_left">Confirmations left:</string>
@@ -121,8 +115,8 @@
 
     <!-- PreferencesFragment -->
     <string name="txt_pref_api_title">API</string>
-    <string name="txt_pref_api_token_title">API Token</string>
-    <string name="txt_pref_api_token_message">Set the Slush\'s Pool Token</string>
+    <string name="txt_pref_api_token_title">API Key</string>
+    <string name="txt_pref_api_token_message">Set the BTC Guild API Key</string>
     <string name="txt_pref_thresholds_title">Thresholds</string>
     <string name="txt_pref_thresholds_price_title">Price Threshold (minutes)</string>
     <string name="txt_pref_thresholds_price_message">Set the Threshold for reloading price</string>
@@ -136,8 +130,6 @@
     <string name="txt_pref_style_title">Style</string>
     <string name="txt_pref_style_btc_style_title">BTC Style</string>
     <string name="txt_pref_style_btc_style_message">Switch the style the values are formated</string>
-    <string name="txt_pref_widget_behavior_title">Widget Behavior</string>
-    <string name="txt_pref_widget_behavior_message">What should happen if widget gets clicked</string>
     <string name="txt_pref_style_worker_username_title">Worker Name Style</string>
     <string name="txt_pref_style_worker_username_message">Show username in front of workername</string>
     <string name="txt_pref_style_transparent_widgets_message">Set the background of the widgets to a transparent black</string>
@@ -162,7 +154,7 @@
     <string name="txt_pref_notification_led_message">Flash LED on Notification</string>
 
     <!-- DashClock -->
-    <string name="txt_dashclock_description">Displays the current total hashrate of your workers at slush\'s pool</string>
+    <string name="txt_dashclock_description">Displays the current total hashrate of your workers at BTC Guild</string>
     <string name="txt_dashclock_expanded_body">total current hashrate</string>
 
     <!-- Widget -->
@@ -202,14 +194,6 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
-    </string-array>
-    <string-array name="widget_behavior">
-        <item>Update Data</item>
-        <item>Open App</item>
-    </string-array>
-    <string-array name="widget_behavior_values">
-        <item>0</item>
-        <item>1</item>
     </string-array>
     <string-array name="update_interval">
         <item>Manual</item>

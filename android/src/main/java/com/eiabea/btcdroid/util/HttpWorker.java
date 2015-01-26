@@ -14,7 +14,7 @@ import com.eiabea.btcdroid.model.PricesCoinbase;
 import java.util.Locale;
 
 public class HttpWorker {
-    public static final String BASEURL = "https://mining.bitcoin.cz/";
+    public static final String BASEURL = "https://www.btcguild.com/api.php?api_key=";
     public static final String PRICES_URL_BTCE_FRONT = "https://btc-e.com/api/2/btc_";
     public static final String PRICES_URL_BTCE_END = "/ticker";
     public static final String PRICES_URL_COINDESK_FRONT = "https://api.coindesk.com/v1/bpi/currentprice/";
@@ -22,9 +22,6 @@ public class HttpWorker {
     public static final String PRICES_URL_BITSTAMP = "https://www.bitstamp.net/api/ticker/";
     public static final String PRICES_URL_COINBASE = "https://coinbase.com/api/v1/prices/buy";
     public static final String AVG_LUCK_URL = "http://slush-eiabea.rhcloud.com/avg_luck";
-
-    public static final String STATS_URL = BASEURL + "stats/json/";
-    public static final String PROFILE_URL = BASEURL + "accounts/profile/json/";
 
     private static HttpWorker me;
 
@@ -55,7 +52,7 @@ public class HttpWorker {
 
         System.out.println(HttpWorker.mQueue.toString());
 
-        HttpWorker.mQueue.add(new GsonRequest<PricesBTCe>(url, PricesBTCe.class, null, success, error));
+        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesBTCe.class, success, error));
 
     }
 
@@ -66,7 +63,7 @@ public class HttpWorker {
 
         System.out.println(HttpWorker.mQueue.toString());
 
-        HttpWorker.mQueue.add(new GsonRequest<PricesCoinDesk>(url, PricesCoinDesk.class, null, success, error));
+        HttpWorker.mQueue.add(new GsonRequest<PricesCoinDesk>(url, PricesCoinDesk.class, success, error));
 
     }
 
@@ -77,7 +74,7 @@ public class HttpWorker {
 
         System.out.println(HttpWorker.mQueue.toString());
 
-        HttpWorker.mQueue.add(new GsonRequest<PricesBitStamp>(url, PricesBitStamp.class, null, success, error));
+        HttpWorker.mQueue.add(new GsonRequest<PricesBitStamp>(url, PricesBitStamp.class, success, error));
 
     }
 
@@ -88,7 +85,7 @@ public class HttpWorker {
 
         System.out.println(HttpWorker.mQueue.toString());
 
-        HttpWorker.mQueue.add(new GsonRequest<PricesCoinbase>(url, PricesCoinbase.class, null, success, error));
+        HttpWorker.mQueue.add(new GsonRequest<PricesCoinbase>(url, PricesCoinbase.class, success, error));
 
     }
 

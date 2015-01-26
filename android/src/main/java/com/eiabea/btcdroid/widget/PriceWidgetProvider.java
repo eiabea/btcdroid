@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.service.UpdateService;
@@ -40,32 +39,17 @@ public class PriceWidgetProvider extends AppWidgetProvider {
 
             if(trans){
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_black_transparent);
-                remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_background));
             }else{
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_white);
-                remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
             }
 
             try {
 
                 if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
-                    int behavior = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString("widget_behavior_preference", "0"));
-
-                    Intent i;
-
-                    switch (behavior){
-                        case 0:
-                            remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-                            i = new Intent(context, UpdateService.class);
-                            i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PRICE);
-                            context.startService(i);
-                            break;
-                        case 1:
-                            i = new Intent(context, MainActivity.class);
-                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(i);
-                            break;
-                    }
+                    remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
+                    Intent i = new Intent(context, UpdateService.class);
+                    i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PRICE);
+                    context.startService(i);
                 } else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 
                     String selection = GenericPrice._ID + "=?";
@@ -79,6 +63,7 @@ public class PriceWidgetProvider extends AppWidgetProvider {
                         price = App.getInstance().gson.fromJson(price.getJson(), GenericPrice.class);
 
                         remoteViews.setTextViewText(R.id.txt_widget_value, App.formatPrice(price.getSymbol(), price.getValueFloat()));
+                        remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
                         remoteViews.setTextViewText(R.id.txt_widget_desc, price.getSource());
 
                         remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);

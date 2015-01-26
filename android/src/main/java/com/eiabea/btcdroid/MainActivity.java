@@ -32,29 +32,22 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.eiabea.btcdroid.adapter.MainViewAdapter;
-import com.eiabea.btcdroid.fragments.PayoutFragment;
 import com.eiabea.btcdroid.fragments.PoolFragment;
-import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
 import com.eiabea.btcdroid.service.UpdateService;
-import com.eiabea.btcdroid.service.UpdateService.UpdateInterface;
 import com.eiabea.btcdroid.util.App;
 
 @SuppressLint("InlinedApi")
-public class MainActivity extends ActionBarActivity implements UpdateInterface,
-        OnPageChangeListener {
+public class MainActivity extends ActionBarActivity implements OnPageChangeListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    public static final String PAID_APP_PACKAGE = "com.eiabea.paid.btcdroid";
+    public static final String PAID_APP_PACKAGE = "com.eiabea.paid.btcdroid.btcguild";
     private static final int BEER_POPUP_THRESHOLD = 10;
 
-    public static final String ACTION_NEW_ROUND_NOTIFICATION = "action_new_round_notification";
     public static final String ACTION_DROP_NOTIFICATION = "action_drop_notification";
 
-    public static final int FRAGMENT_PAYOUT = 0;
-    public static final int FRAGMENT_POOL = 1;
-    public static final int FRAGMENT_WORKER = 2;
-    public static final int FRAGMENT_ROUNDS = 3;
+    public static final int FRAGMENT_POOL = 0;
+    public static final int FRAGMENT_WORKER = 1;
 
     private static final int INTENT_PREF = 0;
     private static final int INTENT_CUSTOMIZE = 1;
@@ -150,7 +143,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
         handleBeerDialog();
 
-        UpdateService.setUpdateInterface(this);
         supportInvalidateOptionsMenu();
         super.onResume();
     }
@@ -170,8 +162,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
             Log.d(getClass().getSimpleName(), "action = " + intent.getAction());
             if (intent.getAction().equalsIgnoreCase(ACTION_DROP_NOTIFICATION)) {
                 UpdateService.resetDropNotificationCount();
-            } else if (intent.getAction().equalsIgnoreCase(ACTION_NEW_ROUND_NOTIFICATION)) {
-                UpdateService.resetNewRoundNotificationCount();
             }
         }
     }
@@ -196,9 +186,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
                 FragmentManager fm = getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.fl_pool_tile, adapter.getItem(FRAGMENT_POOL), getFragmentTag(FRAGMENT_POOL));
-                ft.replace(R.id.fl_payout_tile, adapter.getItem(FRAGMENT_PAYOUT), getFragmentTag(FRAGMENT_PAYOUT));
                 ft.replace(R.id.fl_worker_tile, adapter.getItem(FRAGMENT_WORKER), getFragmentTag(FRAGMENT_WORKER));
-                ft.replace(R.id.fl_round_tile, adapter.getItem(FRAGMENT_ROUNDS), getFragmentTag(FRAGMENT_ROUNDS));
                 ft.commitAllowingStateLoss();
             } else {
                 PagerTitleStrip viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
@@ -258,11 +246,11 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         // Inflate the menu; this adds items to the action bar if it is present.
 
         if (BuildConfig.PAID) {
+
             getMenuInflater().inflate(R.menu.main_paid, menu);
-        }else{
+        } else {
             getMenuInflater().inflate(R.menu.main_free, menu);
         }
-
 
         return true;
     }
@@ -444,14 +432,10 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
     }
 
     private String getFragmentTag(int which) {
-        if (which == FRAGMENT_PAYOUT) {
-            return PayoutFragment.class.getSimpleName();
-        } else if (which == FRAGMENT_POOL) {
+        if (which == FRAGMENT_POOL) {
             return PoolFragment.class.getSimpleName();
         } else if (which == FRAGMENT_WORKER) {
             return WorkerFragment.class.getSimpleName();
-        } else if (which == FRAGMENT_ROUNDS) {
-            return RoundsFragment.class.getSimpleName();
         }
         return "";
     }
@@ -477,26 +461,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
         initUi();
         setListeners();
-
-    }
-
-    @Override
-    public void onProfileError() {
-
-    }
-
-    @Override
-    public void onStatsError() {
-
-    }
-
-    @Override
-    public void onPricesError() {
-
-    }
-
-    @Override
-    public void onAvgLuckError() {
 
     }
 

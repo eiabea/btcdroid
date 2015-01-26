@@ -89,7 +89,7 @@ public class CustomizeFragment extends Fragment {
         }
         Log.d(getClass().getSimpleName(), "userOrder: " + builder.toString());
 
-        pref.edit().putString("userOrder", builder.toString()).commit();
+        pref.edit().putString("userOrder", builder.toString()).apply();
 
         // Set Spinner
         List<String> spinnerList = new ArrayList<String>();
@@ -135,7 +135,7 @@ public class CustomizeFragment extends Fragment {
      */
     public void setListAdapter() {
 
-        String userOrder = pref.getString("userOrder", "0:1:2:3");
+        String userOrder = pref.getString("userOrder", "0:1");
         String[] split = userOrder.split(":");
 
         list = new ArrayList<CustomizeItem>(split.length);

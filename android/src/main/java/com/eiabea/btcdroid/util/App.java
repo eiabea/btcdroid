@@ -8,23 +8,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.eiabea.btcdroid.R;
-import com.eiabea.btcdroid.data.DataProvider;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.service.UpdateService;
-import com.eiabea.btcdroid.widget.AverageHashrateWidgetProvider;
-import com.eiabea.btcdroid.widget.ConfirmedRewardWidgetProvider;
+import com.eiabea.btcdroid.widget.PaidRewardWidgetProvider;
 import com.eiabea.btcdroid.widget.DashClockWidget;
-import com.eiabea.btcdroid.widget.EstimatedRewardWidgetProvider;
-import com.eiabea.btcdroid.widget.MultiWidgetProvider;
+import com.eiabea.btcdroid.widget.UnpaidRewardWidgetProvider;
 import com.eiabea.btcdroid.widget.PriceWidgetProvider;
-import com.eiabea.btcdroid.widget.RoundDurationWidgetProvider;
 import com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider;
 import com.eiabea.btcdroid.widget.TotalRewardWidgetProvider;
 import com.google.gson.Gson;
@@ -70,12 +65,9 @@ public class App extends Application {
 
         allWidgetClasses = new ArrayList<>();
         allWidgetClasses.add(TotalHashrateWidgetProvider.class);
-        allWidgetClasses.add(AverageHashrateWidgetProvider.class);
-        allWidgetClasses.add(ConfirmedRewardWidgetProvider.class);
-        allWidgetClasses.add(EstimatedRewardWidgetProvider.class);
+        allWidgetClasses.add(PaidRewardWidgetProvider.class);
+        allWidgetClasses.add(UnpaidRewardWidgetProvider.class);
         allWidgetClasses.add(TotalRewardWidgetProvider.class);
-        allWidgetClasses.add(MultiWidgetProvider.class);
-        allWidgetClasses.add(RoundDurationWidgetProvider.class);
         allWidgetClasses.add(PriceWidgetProvider.class);
 
         initPrefs();
@@ -104,8 +96,6 @@ public class App extends Application {
 
     public void resetToken() {
         App.token = PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
-
-        DataProvider.clearWorkers(getApplicationContext());
 
         setToken(App.token);
     }
@@ -145,18 +135,8 @@ public class App extends Application {
         return false;
     }
 
-    public static String formatHashRate(String hash) {
-        double doubleHash = Double.valueOf(hash);
-        if (doubleHash > 1000) {
-            return String.format("%.2f", doubleHash / 1000d) + " " + getResString(R.string.gh_per_second, getInstance());
-        }
-        return doubleHash + " " + getResString(R.string.mh_per_second, getInstance());
-    }
-
-    public static String formatHashRate(long hash) {
-        if (hash > 1000000000) {
-            return String.format("%.2f", ((float) hash) / 1000000f) + " " + getResString(R.string.ph_per_second, getInstance());
-        } else if (hash > 1000000) {
+    public static String formatHashRate(double hash) {
+        if (hash > 1000000) {
             return String.format("%.2f", ((float) hash) / 1000000f) + " " + getResString(R.string.th_per_second, getInstance());
         } else if (hash > 10000) {
             return String.format("%.1f", ((float) hash) / 1000f) + " " + getResString(R.string.gh_per_second, getInstance());
@@ -167,15 +147,7 @@ public class App extends Application {
         return String.valueOf(hash) + " " + getResString(R.string.mh_per_second, getInstance());
     }
 
-    public static String formatProcent(float raw) {
-        return String.format("%.0f", raw * 100) + " " + getResString(R.string.percent_sign, getInstance());
-    }
-
-    public static String formatProcentHighPrecision(float raw) {
-        return String.format("%.2f", raw * 100) + " " + getResString(R.string.percent_sign, getInstance());
-    }
-
-    public static String formatReward(float reward) {
+    public static String formatReward(double reward) {
         int style = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getInstance()).getString("btc_style_preference", "0"));
 
         switch (style) {
@@ -207,17 +179,13 @@ public class App extends Application {
 
         Cursor c = context.getContentResolver().query(Worker.CONTENT_URI, projection, null, null, null);
 
-        if(c.getCount() > 0){
-            while (c.moveToNext()) {
+        c.moveToFirst();
 
-                int index = c.getColumnIndex(Worker.HASHRATE);
-                long value = c.getLong(index);
-                totalHashrate += value;
-            }
-
-            c.close();
+        while (c.moveToNext()) {
+            totalHashrate += c.getLong(c.getColumnIndex(Worker.HASHRATE));
         }
 
+        c.close();
 
         return totalHashrate;
     }

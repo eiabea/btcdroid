@@ -57,38 +57,37 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
         exlvWOrkerHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_worker_holder);
     }
 
-    private void expandActiveWorker() {
-        for (int i = 0; i < adapter.getGroupCount(); i++) {
-
-            Cursor c = adapter.getGroup(i);
-
-            boolean isAlive = c.getInt(c.getColumnIndex(Worker.ALIVE)) == 1;
-
-            if (isAlive) {
-                exlvWOrkerHolder.expandGroup(i);
-            }
-
-        }
-    }
+//    private void expandActiveWorker() {
+//        for (int i = 0; i < adapter.getGroupCount(); i++) {
+//
+//            Cursor c = adapter.getGroup(i);
+//
+//            boolean isAlive = c.getInt(c.getColumnIndex(Worker.ALIVE)) == 1;
+//
+//            if (isAlive) {
+//                exlvWOrkerHolder.expandGroup(i);
+//            }
+//
+//        }
+//    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int which, Bundle arg1) {
-        String sort = Worker.ALIVE + " DESC, " + Worker.NAME;
+        String sort = Worker.WORKER_NAME + " DESC";
 
         return new CursorLoader(getActivity(), Worker.CONTENT_URI, null, null, null, sort);
-
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
-        if (c.getCount() > 0 && isAdded()) {
+        if (c.getCount() > 0) {
             switch (loader.getId()) {
                 case WORKER_LOADER_ID:
                     c.moveToFirst();
 
                     adapter.setGroupCursor(c);
 
-                    expandActiveWorker();
+//                    expandActiveWorker();
                     break;
             }
 

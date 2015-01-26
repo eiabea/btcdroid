@@ -26,27 +26,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="@string/txt_score" />
-
-            <com.eiabea.btcdroid.fonts.RobotoBold
-                android:id="@+id/txt_worker_score"
-                style="@style/style_card_value"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            style="@style/style_card_holder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/style_card_desc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
                 android:text="@string/txt_last_share" />
 
             <com.eiabea.btcdroid.fonts.RobotoBold

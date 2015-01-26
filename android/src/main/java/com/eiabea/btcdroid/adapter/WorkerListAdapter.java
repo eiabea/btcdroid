@@ -16,6 +16,7 @@ import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class WorkerListAdapter extends CursorTreeAdapter {
@@ -24,21 +25,16 @@ public class WorkerListAdapter extends CursorTreeAdapter {
 
     private Context context;
 
-    private Typeface tfRegular;
-    private Typeface tfItalic;
-
     public WorkerListAdapter(Cursor cursor, Context context) {
         super(cursor, context, true);
         this.context = context;
-
-        this.tfRegular = Typeface.createFromAsset(context.getAssets(), "RobotoCondensed-Regular.ttf");
-        this.tfItalic = Typeface.createFromAsset(context.getAssets(), "RobotoCondensed-Italic.ttf");
     }
 
     @Override
     protected Cursor getChildrenCursor(Cursor groupCursor) {
-        String selection = Worker.NAME + "=?";
-        String[] selectionArgs = new String[]{groupCursor.getString(groupCursor.getColumnIndex(Worker.NAME))};
+
+        String selection = Worker.WORKER_NAME + "=?";
+        String[] selectionArgs = new String[]{groupCursor.getString(groupCursor.getColumnIndex(Worker.WORKER_NAME))};
 
         return context.getContentResolver().query(Worker.CONTENT_URI, null, selection, selectionArgs, null);
     }
@@ -73,11 +69,37 @@ public class WorkerListAdapter extends CursorTreeAdapter {
 
         Worker worker = new Worker(cursor);
 
-        wh.txtName.setText(worker.getName());
+        Typeface tfRegular = Typeface.createFromAsset(context.getAssets(), "RobotoCondensed-Regular.ttf");
+        Typeface tfItalic = Typeface.createFromAsset(context.getAssets(), "RobotoCondensed-Italic.ttf");
+
+        boolean showUsername = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("username_workers", true);
+
+        if (showUsername) {
+            wh.txtName.setText(worker.getWorker_name());
+        } else {
+
+            try {
+
+                String fullString = worker.getWorker_name();
+                String workerName = "";
+                int dotIndex = fullString.indexOf("_");
+                if (dotIndex > -1) {
+                    // Increase index to cut out the dot
+                    dotIndex++;
+                    workerName = fullString.substring(dotIndex);
+                    wh.txtName.setText(workerName);
+                } else {
+                    throw new NullPointerException("no Dot");
+                }
+            } catch (NullPointerException e) {
+
+                wh.txtName.setText(worker.getWorker_name());
+            }
+        }
 
         if (worker.isAlive()) {
             wh.imgCircle.setImageResource(R.drawable.shape_circle_green);
-            wh.txtStatus.setText(App.formatHashRate(worker.getHashrate()));
+            wh.txtStatus.setText(App.formatHashRate(worker.getHash_rate()));
             wh.txtStatus.setTypeface(tfRegular);
             wh.txtStatus.setTextColor(context.getResources().getColor(R.color.bd_circle_green_solid));
         } else {
@@ -106,7 +128,6 @@ public class WorkerListAdapter extends CursorTreeAdapter {
 
         WorkerBody wb = new WorkerBody();
 
-        wb.txtScore = (TextView) v.findViewById(R.id.txt_worker_score);
         wb.txtLastShare = (TextView) v.findViewById(R.id.txt_worker_last_share);
         wb.txtHashrate = (TextView) v.findViewById(R.id.txt_worker_hashrate);
         wb.txtShares = (TextView) v.findViewById(R.id.txt_worker_shares);
@@ -122,10 +143,13 @@ public class WorkerListAdapter extends CursorTreeAdapter {
 
         Worker worker = new Worker(cursor);
 
-        wb.txtScore.setText(worker.getScore());
-        wb.txtLastShare.setText(App.dateFormat.format(new Date(worker.getLast_share() * 1000)));
-        wb.txtHashrate.setText(App.formatHashRate(worker.getHashrate()));
-        wb.txtShares.setText(String.valueOf(worker.getShares()));
+        if(worker.getLast_share() > 0){
+            wb.txtLastShare.setText(App.dateFormat.format(new Date(Calendar.getInstance().getTimeInMillis() - (worker.getLast_share() * 1000))));
+        }else{
+            wb.txtLastShare.setText("-");
+        }
+        wb.txtHashrate.setText(App.formatHashRate(worker.getHash_rate()));
+        wb.txtShares.setText(String.valueOf(worker.getValid_shares()));
     }
 
     public static class WorkerHeader {
@@ -136,7 +160,7 @@ public class WorkerListAdapter extends CursorTreeAdapter {
     }
 
     public static class WorkerBody {
-        TextView txtScore, txtLastShare, txtHashrate, txtShares;
+        TextView txtLastShare, txtHashrate, txtShares;
     }
 
 }

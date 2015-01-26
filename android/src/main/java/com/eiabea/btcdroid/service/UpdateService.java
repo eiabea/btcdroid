@@ -7,17 +7,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.android.volley.Response.ErrorListener;
@@ -26,20 +21,17 @@ import com.android.volley.VolleyError;
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.data.DataProvider;
-import com.eiabea.btcdroid.model.AvgLuck;
+import com.eiabea.btcdroid.model.ApiResponse;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
 import com.eiabea.btcdroid.model.PricesCoinDesk;
 import com.eiabea.btcdroid.model.PricesCoinbase;
-import com.eiabea.btcdroid.model.Profile;
-import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.GsonRequest;
 import com.eiabea.btcdroid.util.HttpWorker;
 
-import java.text.ParseException;
 import java.util.Calendar;
 
 public class UpdateService extends Service {
@@ -49,11 +41,9 @@ public class UpdateService extends Service {
     public static final String PARAM_GET = "param_get";
 
     public static final int DROP_NOTIFICATION_ID = 1566789;
-    public static final int NEW_ROUND_NOTIFICATION_ID = 3219876;
 
-    public static final int GET_PRICE = 0;
-    public static final int GET_STATS = 1;
-    public static final int GET_PROFILE = 2;
+    public static final int GET_API_RESPONSE = 0;
+    public static final int GET_PRICE = 10;
 
     public static final int PRICE_SOURCE_BITSTAMP_USD = 0;
     public static final int PRICE_SOURCE_BTCE_USD = 3;
@@ -64,7 +54,6 @@ public class UpdateService extends Service {
     public static final int PRICE_SOURCE_COINBASE = 8;
 
     private static int dropNotificationCount = 0;
-    private static int newRoundNotificationCount = 0;
 
     private static UpdateService me;
     private static UpdateInterface updateInterface;
@@ -93,21 +82,16 @@ public class UpdateService extends Service {
             int get = intent.getIntExtra(PARAM_GET, -1);
 
             switch (get) {
-                case GET_PROFILE:
-                    getProfileWidgets();
-                    break;
-                case GET_STATS:
-                    getStatsWidgets();
+                case GET_API_RESPONSE:
+                    getApiResponse();
                     break;
                 case GET_PRICE:
                     getPriceWidgets();
                     break;
-
+//
                 default:
-                    getProfileWidgets();
+                    getApiResponse();
                     getPriceWidgets();
-                    getStatsWidgets();
-                    getAvgLuckWidgets();
                     break;
             }
 
@@ -121,85 +105,34 @@ public class UpdateService extends Service {
         return me;
     }
 
-    private void getProfileWidgets() {
-        Log.d(getClass().getSimpleName(), "get Profile Widgets");
+    private void getApiResponse() {
+        Log.d(getClass().getSimpleName(), "getApiResponse");
 
-        String url = HttpWorker.PROFILE_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
+        String apiKey = PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
+
+        String url = HttpWorker.BASEURL + apiKey;
 
         System.out.println(HttpWorker.mQueue.toString());
 
-        HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null, new Listener<Profile>() {
+        HttpWorker.mQueue.add(new GsonRequest<ApiResponse>(url, ApiResponse.class, new Listener<ApiResponse>() {
 
             @Override
-            public void onResponse(Profile profile) {
-                Log.d(getClass().getSimpleName(), "onResponse Profile Widgets");
-                handleDropNotification(profile);
-                onProfileLoaded(profile);
+            public void onResponse(ApiResponse apiResponse) {
+                Log.d(getClass().getSimpleName(), "onResponse getApiResponse");
+                handleDropNotification();
+                onApiResponseSuccessful(apiResponse);
             }
 
         }, new ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(getClass().getSimpleName(), "onErrorResponse Profile Widgets");
+                Log.d(getClass().getSimpleName(), "onErrorResponse getApiResponse");
                 Log.d(getClass().getSimpleName(), " " + error.getCause());
-                onProfileError();
+                onApiResponseError();
             }
         }));
 
-    }
-
-    private void getStatsWidgets() {
-        Log.d(getClass().getSimpleName(), "get Stats Widgets");
-
-        String url = HttpWorker.STATS_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
-
-        System.out.println(HttpWorker.mQueue.toString());
-
-        HttpWorker.mQueue.add(new GsonRequest<Stats>(url, Stats.class, null, new Listener<Stats>() {
-
-            @Override
-            public void onResponse(Stats stats) {
-                Log.d(getClass().getSimpleName(), "onResponse Stats Widgets");
-                handleRoundFinishedNotification(stats);
-                onStatsLoaded(stats);
-            }
-
-        }, new ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(getClass().getSimpleName(), "onErrorResponse Stats Widgets");
-                Log.d(getClass().getSimpleName(), " " + error.getCause());
-                onStatsError();
-            }
-        }));
-    }
-
-    private void getAvgLuckWidgets() {
-        Log.d(getClass().getSimpleName(), "get AvgLuck");
-
-        String url = HttpWorker.AVG_LUCK_URL;
-
-        System.out.println(HttpWorker.mQueue.toString());
-
-        HttpWorker.mQueue.add(new GsonRequest<AvgLuck>(url, AvgLuck.class, null, new Listener<AvgLuck>() {
-
-            @Override
-            public void onResponse(AvgLuck avgLuck) {
-                Log.d(getClass().getSimpleName(), "onResponse AvgLuck");
-                onAvgLuckLoaded(avgLuck);
-            }
-
-        }, new ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(getClass().getSimpleName(), "onErrorResponse AvgLuck");
-                Log.d(getClass().getSimpleName(), " " + error.getCause());
-                onAvgLuckError();
-            }
-        }));
     }
 
     private void getPriceWidgets() {
@@ -405,71 +338,14 @@ public class UpdateService extends Service {
         }
     }
 
-    private void handleRoundFinishedNotification(Stats stats) {
-        boolean globalEnabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled", false);
-        boolean enabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("round_finished_notification_enabled", false);
-
-        // Debug
-//		createRoundFinishedNotification();
-
-        if (enabled && globalEnabled) {
-            try {
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                long lastDuration = pref.getLong("lastDuration", 0);
-                long duration = App.dateDurationFormat.parse(stats.getRound_duration()).getTime();
-                if (lastDuration > duration) {
-                    createRoundFinishedNotification();
-                }
-                pref.edit().putLong("lastDuration", duration).apply();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-    private void createRoundFinishedNotification() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setAction(MainActivity.ACTION_NEW_ROUND_NOTIFICATION);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_stat_maps_local_atm)
-                .setContentTitle(getString(R.string.txt_new_round_title))
-                .setContentText(getString(R.string.txt_new_round_message))
-                .setAutoCancel(true);
-
-        mBuilder.setDeleteIntent(getDeleteIntent(OnDeleteReceiver.ACTION_DELETE_NEW_ROUND));
-        mBuilder.setWhen(Calendar.getInstance().getTimeInMillis());
-        mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_round_finished));
-        mBuilder.setNumber(++newRoundNotificationCount);
-        mBuilder.setContentIntent(pi);
-
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notif = setFinishParameters(mBuilder.build());
-
-        mNotificationManager.notify(NEW_ROUND_NOTIFICATION_ID, notif);
-
-        NotificationManagerCompat.from(this).notify(NEW_ROUND_NOTIFICATION_ID, mBuilder.build());
-
-    }
-
-    private void handleDropNotification(Profile profile) {
+    private void handleDropNotification() {
         boolean enabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled", false);
         try {
 
             if (enabled) {
 
-                long totalHashrate =0;
-                long limit = Integer.valueOf(pref.getString("notification_hashrate", "0"));
-
-                if(profile != null){
-                    for(Worker tmpWorker : profile.getWorkersList()){
-                        totalHashrate+=tmpWorker.getHashrate();
-                    }
-                }else{
-                    totalHashrate = App.getTotalHashrate(getApplicationContext());
-                }
+                long totalHashrate = App.getTotalHashrate(getApplicationContext());
+                long limit = Long.valueOf(pref.getString("notification_hashrate", "0"));
 
                 if (limit > 0 && totalHashrate < limit) {
 
@@ -479,8 +355,7 @@ public class UpdateService extends Service {
 
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
                     mBuilder.setContentTitle(getString(R.string.txt_hashrate_dropped_title));
-                    mBuilder.setSmallIcon(R.drawable.ic_stat_alert_warning);
-                    mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+                    mBuilder.setSmallIcon(R.drawable.ic_launcher);
                     mBuilder.setContentText(String.format(getString(R.string.txt_hashrate_dropped_message), App.formatHashRate(totalHashrate)));
                     mBuilder.setAutoCancel(true);
                     mBuilder.setWhen(Calendar.getInstance().getTimeInMillis());
@@ -559,10 +434,6 @@ public class UpdateService extends Service {
         dropNotificationCount = 0;
     }
 
-    public static void resetNewRoundNotificationCount() {
-        newRoundNotificationCount = 0;
-    }
-
     private void onPriceLoaded(GenericPrice price) {
 
         DataProvider.insertOrUpdatePrice(getApplicationContext(), price);
@@ -578,56 +449,22 @@ public class UpdateService extends Service {
         }
     }
 
-    private void onProfileLoaded(Profile profile) {
-
-        DataProvider.insertOrUpdateProfile(getApplicationContext(), profile);
-
-        DataProvider.insertOrUpdateWorkers(getApplicationContext(), profile.getWorkers());
-
+    private void onApiResponseSuccessful(ApiResponse apiResponse) {
+        DataProvider.insertOrUpdatePool(getApplicationContext(), apiResponse.getPool());
+        DataProvider.insertOrUpdateWorkers(getApplicationContext(), apiResponse.getWorkers());
+        DataProvider.insertOrUpdateUser(getApplicationContext(), apiResponse.getUser());
         App.updateWidgets(getApplicationContext());
     }
 
-    private void onProfileError() {
+    private void onApiResponseError(){
         App.updateWidgets(getApplicationContext());
         if (updateInterface != null) {
-            updateInterface.onProfileError();
-        }
-    }
-
-    private void onStatsLoaded(Stats stats) {
-
-        DataProvider.insertOrUpdateStats(getApplicationContext(), stats);
-
-        DataProvider.insertOrUpdateRounds(getApplicationContext(), stats.getBlocks());
-
-        App.updateWidgets(getApplicationContext());
-    }
-
-    private void onStatsError() {
-        App.updateWidgets(getApplicationContext());
-        if (updateInterface != null) {
-            updateInterface.onStatsError();
-        }
-    }
-
-    private void onAvgLuckLoaded(AvgLuck avgLuck) {
-
-        DataProvider.insertOrUpdateAvgLuck(getApplicationContext(), avgLuck);
-
-    }
-
-    private void onAvgLuckError() {
-        if (updateInterface != null) {
-            updateInterface.onAvgLuckError();
+            updateInterface.onApiResponseError();
         }
     }
 
     public interface UpdateInterface {
-        public void onProfileError();
-
-        public void onStatsError();
-
-        public void onAvgLuckError();
+        public void onApiResponseError();
 
         public void onPricesError();
     }

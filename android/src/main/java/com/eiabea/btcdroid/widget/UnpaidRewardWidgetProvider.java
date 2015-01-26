@@ -13,13 +13,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
-import com.eiabea.btcdroid.model.Profile;
+import com.eiabea.btcdroid.model.User;
 import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;
 
-public class AverageHashrateWidgetProvider extends AppWidgetProvider {
+public class UnpaidRewardWidgetProvider extends AppWidgetProvider {
     private static final String ACTION_CLICK = "ACTION_CLICK";
     public static final String LOADING_FAILED = "ACTION_FAILED";
 
@@ -33,54 +32,38 @@ public class AverageHashrateWidgetProvider extends AppWidgetProvider {
         boolean trans = pref.getBoolean("transparent_widgets", false);
 
         // Get all ids
-        ComponentName thisWidget = new ComponentName(context, AverageHashrateWidgetProvider.class);
+        ComponentName thisWidget = new ComponentName(context, UnpaidRewardWidgetProvider.class);
         int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
         for (int widgetId : allWidgetIds) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
-            if(trans){
+            if (trans) {
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_black_transparent);
-                remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_background));
-            }else{
+            } else {
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_white);
-                remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
             }
 
             try {
 
                 if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
-                    int behavior = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString("widget_behavior_preference", "0"));
-
-                    Intent i;
-
-                    switch (behavior){
-                        case 0:
-                            remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-                            i = new Intent(context, UpdateService.class);
-                            i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PROFILE);
-                            context.startService(i);
-                            break;
-                        case 1:
-                            i = new Intent(context, MainActivity.class);
-                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(i);
-                            break;
-                    }
-
+                    remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
+                    Intent i = new Intent(context, UpdateService.class);
+                    i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_API_RESPONSE);
+                    context.startService(i);
                 } else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-                    String selection = Profile._ID + "=?";
-                    String[] selectionArgs = { "1" };
+                    String selection = User._ID + "=?";
+                    String[] selectionArgs = {"1"};
 
-                    Cursor c = context.getContentResolver().query(Profile.CONTENT_URI, null,selection,selectionArgs, null);
+                    Cursor c = context.getContentResolver().query(User.CONTENT_URI, null, selection, selectionArgs, null);
 
-                    if(c.getCount() > 0) {
+                    if (c.getCount() > 0) {
                         c.moveToFirst();
 
-                        Profile profile = new Profile(c);
-                        profile = App.getInstance().gson.fromJson(profile.getJson(), Profile.class);
+                        User user = new User(c);
 
-                        remoteViews.setTextViewText(R.id.txt_widget_value, App.formatHashRate(profile.getHashrate()));
-                        remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_average_total_hashrate));
+                        remoteViews.setTextViewText(R.id.txt_widget_value, App.formatReward(user.getUnpaid_rewards()));
+                        remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_orange));
+                        remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_unpaid_reward));
 
                         remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
                     }
@@ -91,7 +74,7 @@ public class AverageHashrateWidgetProvider extends AppWidgetProvider {
                     remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);
                 }
 
-                ComponentName widget = new ComponentName(context, AverageHashrateWidgetProvider.class);
+                ComponentName widget = new ComponentName(context, UnpaidRewardWidgetProvider.class);
                 AppWidgetManager.getInstance(context).updateAppWidget(widget, remoteViews);
 
             } catch (NullPointerException e) {
@@ -99,7 +82,7 @@ public class AverageHashrateWidgetProvider extends AppWidgetProvider {
                 Log.e(getClass().getSimpleName(), "Something was null, damn! (NullPointer)");
             }
 
-            Intent intent = new Intent(context, AverageHashrateWidgetProvider.class);
+            Intent intent = new Intent(context, UnpaidRewardWidgetProvider.class);
             intent.setAction(ACTION_CLICK);
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -115,7 +98,7 @@ public class AverageHashrateWidgetProvider extends AppWidgetProvider {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
         // Get all ids
-        ComponentName thisWidget = new ComponentName(context, AverageHashrateWidgetProvider.class);
+        ComponentName thisWidget = new ComponentName(context, UnpaidRewardWidgetProvider.class);
         int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
         onUpdate(context, appWidgetManager, allWidgetIds);
