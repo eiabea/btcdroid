@@ -50,12 +50,24 @@
             android:key="btc_style_preference"
             android:summary="@string/txt_pref_style_btc_style_message"
             android:title="@string/txt_pref_style_btc_style_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Widgets">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="transparent_widgets"
             android:summary="@string/txt_pref_style_transparent_widgets_message"
             android:title="@string/txt_pref_style_transparent_widgets_title" />
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/widget_behavior"
+            android:entryValues="@array/widget_behavior_values"
+            android:key="widget_behavior_preference"
+            android:summary="@string/txt_pref_widget_behavior_message"
+            android:title="@string/txt_pref_widget_behavior_title" />
     </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/txt_pref_update_title">
         <EditTextPreference
             android:defaultValue="30"

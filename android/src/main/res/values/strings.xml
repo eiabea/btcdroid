@@ -136,6 +136,8 @@
     <string name="txt_pref_style_title">Style</string>
     <string name="txt_pref_style_btc_style_title">BTC Style</string>
     <string name="txt_pref_style_btc_style_message">Switch the style the values are formated</string>
+    <string name="txt_pref_widget_behavior_title">Widget Behavior</string>
+    <string name="txt_pref_widget_behavior_message">What should happen if widget gets clicked</string>
     <string name="txt_pref_style_worker_username_title">Worker Name Style</string>
     <string name="txt_pref_style_worker_username_message">Show username in front of workername</string>
     <string name="txt_pref_style_transparent_widgets_message">Set the background of the widgets to a transparent black</string>
@@ -200,6 +202,14 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+    <string-array name="widget_behavior">
+        <item>Update Data</item>
+        <item>Open App</item>
+    </string-array>
+    <string-array name="widget_behavior_values">
+        <item>0</item>
+        <item>1</item>
     </string-array>
     <string-array name="update_interval">
         <item>Manual</item>

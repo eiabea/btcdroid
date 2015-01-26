@@ -136,6 +136,8 @@
     <string name="txt_pref_style_title">Aussehen</string>
     <string name="txt_pref_style_btc_style_title">BTC Aussehen</string>
     <string name="txt_pref_style_btc_style_message">Wechlse das Aussehen der BTC Werte</string>
+    <string name="txt_pref_widget_behavior_title">Widget Verhalten</string>
+    <string name="txt_pref_widget_behavior_message">Was soll passieren, wenn ein Widget geklickt wird</string>
     <string name="txt_pref_style_worker_username_title">Arbeiter Aussehen</string>
     <string name="txt_pref_style_worker_username_message">Benutzernamen vor Arbeitername anzeigen</string>
     <string name="txt_pref_style_transparent_widgets_message">Hintergründe der Widgets auf ein transparentes Schwarz färben</string>
@@ -200,6 +202,14 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+    <string-array name="widget_behavior">
+        <item>Daten aktualisieren</item>
+        <item>App öffnen</item>
+    </string-array>
+    <string-array name="widget_behavior_values">
+        <item>0</item>
+        <item>1</item>
     </string-array>
     <string-array name="update_interval">
         <item>Manuell</item>
