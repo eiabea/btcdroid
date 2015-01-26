@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;
@@ -44,10 +45,23 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
             try {
 
                 if (intent.getAction().equals(ACTION_CLICK) || intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_ENABLED)) {
-                    remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
-                    Intent i = new Intent(context, UpdateService.class);
-                    i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_API_RESPONSE);
-                    context.startService(i);
+                    int behavior = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString("widget_behavior_preference", "0"));
+
+                    Intent i;
+
+                    switch (behavior){
+                        case 0:
+                            remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
+                            i = new Intent(context, UpdateService.class);
+                            i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_API_RESPONSE);
+                            context.startService(i);
+                            break;
+                        case 1:
+                            i = new Intent(context, MainActivity.class);
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(i);
+                            break;
+                    }
                 } else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 
                     remoteViews.setTextViewText(R.id.txt_widget_value, App.formatHashRate(App.getTotalHashrate(context)));

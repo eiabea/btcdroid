@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
+    <string name="action_refresh">Vernieuwen</string>
+    <string name="action_reset">Reset</string>
+    <string name="action_accept">Accepteren</string>
+    <string name="action_add_pool">Pool toevoegen</string>
+    <string name="action_settings">Instellingen</string>
+    <string name="action_customize">Aanpassen</string>
+    <string name="action_donate">Doneren</string>
+    <string name="action_buy">Buy App</string>
+    <string name="action_participants">Deelnemers</string>
+    <string name="action_email">E-mail Ontwikkelaar</string>
+    <string name="eh_per_second">EH/s</string>
+    <string name="ph_per_second">PH/s</string>
+    <string name="th_per_second">TH/s</string>
+    <string name="gh_per_second">GH/s</string>
+    <string name="mh_per_second">MH/s</string>
+    <string name="btc">BTC</string>
+    <string name="mbtc">mBTC</string>
+    <string name="ubtc">µBTC</string>
+    <string name="btc_short"></string>
+    <string name="mbtc_short">m</string>
+    <string name="ubtc_short">µ</string>
+    <string name="percent_sign">%</string>
+    <string name="BitStamp_short">BitStamp</string>
+    <string name="MtGox_short">MtGox</string>
+    <string name="BTCe_short">BTC-e</string>
+    <string name="CoinDesk_short">CoinDesk</string>
+    <string name="Coinbase_short">CoinBase</string>
+    <string name="BitStamp">BitStamp (USD)</string>
+    <string name="MtGoxUsd">MtGox (USD)</string>
+    <string name="MtGoxEur">MtGox (EUR)</string>
+    <string name="BTCeUsd">BTC-e (USD)</string>
+    <string name="BTCeEur">BTC-e (EUR)</string>
+    <string name="CoinDeskUsd">CoinDesk (USD)</string>
+    <string name="CoinDeskEur">CoinDesk (EUR)</string>
+    <string name="CoinDeskGbp">CoinDesk (GBP)</string>
+    <string name="CoinBaseUsd">CoinBase (USD)</string>
+
+    <!-- Notification -->
+    <string name="txt_hashrate_dropped_title">Hash snelheid is weggevallen!</string>
+    <string name="txt_hashrate_dropped_message">Huidige hash snelheid: %1$s</string>
+    <string name="txt_new_round_title">Success!</string>
+    <string name="txt_new_round_message">A new Round has begun</string>
+
+    <!-- MainActivity -->
+    <string name="txt_no_token">Geen correcte Token gevonden, stel er in</string>
+    <string name="txt_set_token">Stel Token in</string>
+    <string name="alert_set_token_title">Slush\'s Pool Token</string>
+    <string name="alert_set_token_message">.) Login bij mining.bitcoin.cz\n.) Beheer API tokens\n.) Uw huidige token\n\nHint: Open de Website op uw telefoon om de token te kopieren en &amp; Plak de Token hier onder:</string>
+    <string name="alert_set_token_ok">Token instellen</string>
+    <string name="alert_set_token_cancel">Annuleren</string>
+    <string name="txt_viewpager_payout_fragment">Uitbetaling</string>
+    <string name="txt_viewpager_pool_fragment">Pool gegevens</string>
+    <string name="txt_viewpager_worker_fragment">Werkers</string>
+    <string name="txt_viewpager_round_fragment">Ronden</string>
+    <string name="mail_address">developer@eiabea.com</string>
+    <string name="mail_subject">BTCDroid</string>
+    <string name="mail_intent_title">Verstuur Mail&#8230;</string>
+
+    <!-- PayoutFragment -->
+    <string name="txt_progress">voortgang</string>
+    <string name="txt_send_threshold">Hoeveelheid tot uitbetaling</string>
+    <string name="txt_estimated_reward">Verwacht</string>
+    <string name="txt_confirmed_reward">Bevestigd</string>
+    <string name="txt_rewards">Opbrengst</string>
+
+    <!-- PoolFragment | Headers -->
+    <string name="txt_hashrates">Hash Snelheid</string>
+    <string name="txt_round">Ronde</string>
+    <string name="txt_luck">Geluk</string>
+
+    <!-- PoolFragment | left -->
+    <string name="txt_one_btc_is">1 BTC is:</string>
+    <string name="txt_total_reward">Totaal</string>
+    <string name="txt_current_total_hashrate">Totaal Huidig</string>
+    <string name="txt_average_total_hashrate">Totaal Gemiddeld</string>
+    <string name="txt_round_started">Gestart op</string>
+    <string name="txt_round_duration">Huidig</string>
+    <string name="txt_round_estimated">Tijd verwacht</string>
+    <string name="txt_round_average">Gemiddeld</string>
+    <string name="txt_avg_luck">Ø</string>
+    <string name="txt_luck_24h">24 Uur</string>
+    <string name="txt_luck_7d">7 Dagen</string>
+    <string name="txt_luck_30d">30 Dagen</string>
+    <string name="txt_greater_one_day">> 1 Dag</string>
+    <string name="txt_infinite_symbol">∞</string>
+
+    <!-- RoundFragment | BlockView -->
+    <string name="txt_confirmations_left">Bevestigingen te gaan:</string>
+    <string name="txt_block_found">Block gevonden:</string>
+    <string name="txt_block_started">Block Gestart:</string>
+    <string name="txt_not_available">n.B.</string>
+
+    <!-- WorkerFragment | WorkerView -->
+    <string name="txt_score">Score:</string>
+    <string name="txt_last_share">Laatste bijdrage:</string>
+    <string name="txt_hashrate">Snelheid:</string>
+    <string name="txt_shares">Bijdrage:</string>
+    <string name="txt_inactive">Niet actief</string>
+
+    <!-- PrefsActivity -->
+    <string name="txt_settings">Instellingen</string>
+
+    <!-- ParticipantsActivity -->
+    <string name="txt_manuel_zangl">Manuel Zangl</string>
+    <string name="txt_development">Development</string>
+    <string name="txt_florian_grau">Florian Grau</string>
+    <string name="txt_design">Design / Appicon</string>
+    <string name="txt_bas_de_jong">Bas de Jong</string>
+    <string name="txt_translate_dutch">Dutch Translator</string>
+    <string name="txt_show_qr_code">Show QR-Code</string>
+    <string name="txt_donations">Donations</string>
+    <string name="txt_donations_address">14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1</string>
+    <string name="txt_copied_to_clipboard">Gekopieerd naar Klembord</string>
+
+    <!-- RoundsListAdapter -->
+    <string name="txt_confirmed">Geen</string>
+
+    <!-- PreferencesFragment -->
+    <string name="txt_pref_api_title">API</string>
+    <string name="txt_pref_api_token_title">API Token</string>
+    <string name="txt_pref_api_token_message">Stel de Slush\'s Pool Token in</string>
+    <string name="txt_pref_thresholds_title">Vernieuwings tijd</string>
+    <string name="txt_pref_thresholds_price_title">Prijs Update (Update)</string>
+    <string name="txt_pref_thresholds_price_message">Stel de update tijd in voor de prijzen</string>
+    <string name="txt_pref_thresholds_luck_title">Geluk Update (Minuten)</string>
+    <string name="txt_pref_thresholds_luck_message">Stel de update tijd in voor de GeluksPercentage</string>
+    <string name="txt_pref_price_title">Prijs</string>
+    <string name="txt_pref_price_show_price_title">Prijs weergeven</string>
+    <string name="txt_pref_price_show_price_message">Laat de prijs zien van 1 BTC</string>
+    <string name="txt_pref_price_price_source_title">Prijs Bron</string>
+    <string name="txt_pref_price_price_source_message">Bron van de Prijsinformatie</string>
+    <string name="txt_pref_style_title">Stijl</string>
+    <string name="txt_pref_style_btc_style_title">BTC Stijl</string>
+    <string name="txt_pref_style_btc_style_message">De stijl waarop Bitcoins worden weergeven</string>
+    <string name="txt_pref_widget_behavior_title">Widget Behavior</string>
+    <string name="txt_pref_widget_behavior_message">What should happen if widget gets clicked</string>
+    <string name="txt_pref_style_worker_username_title">Worker Name Stijl</string>
+    <string name="txt_pref_style_worker_username_message">Show username in front of workername</string>
+    <string name="txt_pref_style_transparent_widgets_message">Set the background of the widgets to a transparent black</string>
+    <string name="txt_pref_style_transparent_widgets_title">Transparent Widgets</string>
+    <string name="txt_pref_update_title">Updates</string>
+    <string name="txt_pref_update_checking_interval_title">Checking Interval (minutes)</string>
+    <string name="txt_pref_update_checking_interval_message">How often should the data be updated (Widgets, Notifications,&#8230;)</string>
+    <string name="txt_pref_notification_title">Meldingen</string>
+    <string name="txt_pref_notification_show_notification_title">Meldingen</string>
+    <string name="txt_pref_notification_show_notification_message">Melding als de Hashsnelheid onder een bepaalde waarde komt</string>
+    <string name="txt_pref_notification_show_round_finished_notification_title">New Round Notification</string>
+    <string name="txt_pref_notification_show_round_finished_notification_message">Notification if a block has been found</string>
+    <string name="txt_pref_notification_minimum_hashrate_title">Minimale Hashsnelheid (MH/s)</string>
+    <string name="txt_pref_notification_minimum_hashrate_message">Melding als Hashsnelheid onder deze waarde komt</string>
+    <string name="txt_pref_notification_checking_interval_title">Controle interval (Minuten)</string>
+    <string name="txt_pref_notification_checking_interval_message">Hoe vaak moet de Hashsnelheid worden gecontroleerd</string>
+    <string name="txt_pref_notification_sound_title">Geluid</string>
+    <string name="txt_pref_notification_sound_message">Melding geluid afspelen</string>
+    <string name="txt_pref_notification_vibrate_title">Trillen</string>
+    <string name="txt_pref_notification_vibrate_message">Trillen bij een Melding</string>
+    <string name="txt_pref_notification_led_title">LED</string>
+    <string name="txt_pref_notification_led_message">Laat LED-lampjes knipperen bij een Melding</string>
+
+    <!-- DashClock -->
+    <string name="txt_dashclock_description">laat de huidige totale hashrate zien van je werkers bij slush\'s pool</string>
+    <string name="txt_dashclock_expanded_body">huidige totale hashrate</string>
+
+    <!-- Widget -->
+    <string name="txt_loading">Laden</string>
+    <string name="txt_round_duration_widget">Ronde tijd</string>
+
+    <!-- Donate -->
+    <string name="txt_donate_dialog_title">Doneren</string>
+    <string name="txt_donate_copy_bitcoin_address">Kopieer Bitcoinaddres</string>
+    <string name="txt_donate_open_bitcoin_wallet">Open Bitcoinwallet</string>
+    <string name="toast_donate_no_bitcoin_wallet_found">Geen  Bitcoinwallet gevonden</string>
+
+    <string-array name="price_source">
+        <item>@string/BitStamp</item>
+        <item>@string/BTCeUsd</item>
+        <item>@string/BTCeEur</item>
+        <item>@string/CoinDeskUsd</item>
+        <item>@string/CoinDeskEur</item>
+        <item>@string/CoinDeskGbp</item>
+        <item>@string/CoinBaseUsd</item>
+    </string-array>
+    <string-array name="price_source_values">
+        <item>0</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+    <string-array name="btc_style">
+        <item>@string/btc</item>
+        <item>@string/mbtc</item>
+        <item>@string/ubtc</item>
+    </string-array>
+    <string-array name="btc_style_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="widget_behavior">
+        <item>Update Data</item>
+        <item>Open App</item>
+    </string-array>
+    <string-array name="widget_behavior_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="update_interval">
+        <item>Handmatig</item>
+        <item>30 Minuten</item>
+        <item>1 Uur</item>
+        <item>3 Uur</item>
+    </string-array>
+    <string-array name="update_interval_values">
+        <item>0</item>
+        <item>1800</item>
+        <item>3600</item>
+        <item>10800</item>
+    </string-array>
+
+    <string name="toast_error_loading_profile">Error bij laden van het Profiel</string>
+    <string name="toast_error_loading_stats">Error bij het laden van de statestieken</string>
+    <string name="toast_error_loading_price">Error bij het laden van de prijzen</string>
+
+</resources>
