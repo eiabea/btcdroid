@@ -31,15 +31,12 @@ import java.util.Locale;
 public class App extends Application {
 
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss", Locale.getDefault());
-    public static final SimpleDateFormat dateStatsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-    public static final SimpleDateFormat dateDurationFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 
     public static final String PREF_TOKEN = "token";
 
     public static boolean isPriceEnabled = true;
 
     private static String token = "";
-    private int luckThreshold = 15;
     private int priceThreshold = 15;
 
     private static ArrayList<Class> allWidgetClasses;
@@ -47,8 +44,6 @@ public class App extends Application {
     public HttpWorker httpWorker;
 
     public Gson gson;
-
-    private SharedPreferences pref;
 
     /**
      * Object of own Class
@@ -78,10 +73,9 @@ public class App extends Application {
     }
 
     private void initPrefs() {
-        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
         token = pref.getString(PREF_TOKEN, "");
-        luckThreshold = Integer.valueOf(pref.getString("luck_threshold", "15"));
         priceThreshold = Integer.valueOf(pref.getString("price_threshold", "15"));
         isPriceEnabled = pref.getBoolean("price_enabled", false);
 
@@ -100,14 +94,6 @@ public class App extends Application {
         setToken(App.token);
     }
 
-
-    public void resetLuckThreshold() {
-        this.luckThreshold = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("luck_threshold", "15"));
-    }
-
-    public int getLuckThreshold() {
-        return this.luckThreshold;
-    }
 
     public void resetPriceThreshold() {
         this.priceThreshold = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("price_threshold", "15"));

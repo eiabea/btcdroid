@@ -352,10 +352,6 @@ public class MainActivity extends ActionBarActivity implements OnPageChangeListe
                     App.getInstance().resetPriceThreshold();
                     // }
 
-                    // if(changed.contains("luck_threshold")){
-                    App.getInstance().resetLuckThreshold();
-                    // }
-
                     // if (enabled) {
                     // UpdateService.getInstance().startNotification();
                     // } else {
