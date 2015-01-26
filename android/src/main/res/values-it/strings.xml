@@ -126,11 +126,8 @@
     <string name="txt_pref_style_title">Stile </string>
     <string name="txt_pref_style_btc_style_title">Stile BTC </string>
     <string name="txt_pref_style_btc_style_message">eleziona lo stile dei valori</string>
-<<<<<<< HEAD
-=======
     <string name="txt_pref_widget_behavior_title">Widget Behavior</string>
     <string name="txt_pref_widget_behavior_message">What should happen if widget gets clicked</string>
->>>>>>> 5bebd0f80957db5a4cf443c44c13627b51b4782e
     <string name="txt_pref_style_worker_username_title">Stile del nome Worker</string>
     <string name="txt_pref_style_worker_username_message">Mostra il nome utente prima del nome del Worker</string>
     <string name="txt_pref_style_transparent_widgets_message">mpostare lo sfondo dei widget nero trasparente</string>
