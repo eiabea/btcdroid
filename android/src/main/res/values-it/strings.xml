@@ -19,7 +19,7 @@
     <string name="btc">BTC</string>
     <string name="mbtc">mBTC</string>
     <string name="ubtc">µBTC</string>
-    <string name="btc_short" />
+    <string name="btc_short"></string>
     <string name="mbtc_short">m</string>
     <string name="ubtc_short">µ</string>
     <string name="percent_sign">%</string>
