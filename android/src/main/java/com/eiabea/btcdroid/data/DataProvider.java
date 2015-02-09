@@ -206,6 +206,10 @@ public class DataProvider extends ContentProvider {
             @Override
             protected Void doInBackground(Void... params) {
 
+                if(workers == null){
+                    return null;
+                }
+
                 Set<Map.Entry<String, JsonElement>> set = workers.entrySet();
 
                 Gson gson = App.getInstance().gson;
