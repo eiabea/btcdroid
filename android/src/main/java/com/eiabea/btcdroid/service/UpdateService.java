@@ -363,7 +363,8 @@ public class UpdateService extends Service {
 
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
                     mBuilder.setContentTitle(getString(R.string.txt_hashrate_dropped_title));
-                    mBuilder.setSmallIcon(R.drawable.ic_launcher);
+                    mBuilder.setSmallIcon(R.drawable.ic_stat_alert_warning);
+                    mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
                     mBuilder.setContentText(String.format(getString(R.string.txt_hashrate_dropped_message), App.formatHashRate(totalHashrate)));
                     mBuilder.setAutoCancel(true);
                     mBuilder.setWhen(Calendar.getInstance().getTimeInMillis());
