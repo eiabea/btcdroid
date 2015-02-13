@@ -23,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String USER_TABLE_NAME = "user";
     public static final String PRICE_TABLE_NAME = "price";
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 7;
     private static final String DATABASE_NAME = "btcdroid_btcguild";
 
     private static final String CREATE_PRICE_TABLE =
@@ -52,6 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " " + Worker.STALE_SHARES_SINCE_RESET + " INTEGER, " +
                     " " + Worker.DUPE_SHARES_SINCE_RESET + " INTEGER, " +
                     " " + Worker.UNKNOWN_SHARES_SINCE_RESET + " INTEGER, " +
+                    " " + Worker.ALIVE + " INTEGER, " +
                     " " + Worker.LAST_SHARE + " INTEGER " +
                     ");";
 

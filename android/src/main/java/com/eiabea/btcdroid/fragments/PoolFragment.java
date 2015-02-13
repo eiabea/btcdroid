@@ -35,7 +35,8 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private static final int POOL_LOADER_ID = 222;
     private static final int USER_LOADER_ID = 223;
-    private static final int PRICE_LOADER_ID = 224;
+    private static final int WORKER_LOADER_ID = 224;
+    private static final int PRICE_LOADER_ID = 225;
 
     private ViewGroup rootView;
 
@@ -60,6 +61,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         getActivity().getSupportLoaderManager().initLoader(POOL_LOADER_ID, null, this);
         getActivity().getSupportLoaderManager().initLoader(USER_LOADER_ID, null, this);
+        getActivity().getSupportLoaderManager().initLoader(WORKER_LOADER_ID, null, this);
         getActivity().getSupportLoaderManager().initLoader(PRICE_LOADER_ID, null, this);
     }
 
@@ -166,6 +168,8 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 return new CursorLoader(getActivity(), Pool.CONTENT_URI, null, selection, selectionArgs, null);
             case USER_LOADER_ID:
                 return new CursorLoader(getActivity(), User.CONTENT_URI, null, selection, selectionArgs, null);
+            case WORKER_LOADER_ID:
+                return new CursorLoader(getActivity(), Worker.CONTENT_URI, null, null, null, null);
             case PRICE_LOADER_ID:
                 return new CursorLoader(getActivity(), GenericPrice.CONTENT_URI, null, selection, selectionArgs, null);
         }
@@ -186,7 +190,6 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 case POOL_LOADER_ID:
                     Pool pool = new Pool(c);
 
-                    txtHashrate.setText(App.formatHashRate(App.getTotalHashrate(getActivity())));
                     txtPoolSpeed.setText(App.formatHashRate(pool.getPool_speed() * 1000));
                     txtDifficulty.setText(String.valueOf(pool.getDifficulty()));
                     break;
@@ -197,6 +200,18 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     txtTotalReward.setText(App.formatReward(user.getTotal_rewards()));
                     txtPaidReward.setText(App.formatReward(user.getPaid_rewards()));
                     txtUnpaidReward.setText(App.formatReward(user.getUnpaid_rewards()));
+                    break;
+                case WORKER_LOADER_ID:
+
+                    long totalHashrate = 0;
+
+                    while (!c.isAfterLast()) {
+                        totalHashrate += c.getLong(c.getColumnIndex(Worker.HASHRATE));
+                        c.moveToNext();
+                    }
+
+                    txtHashrate.setText(App.formatHashRate(totalHashrate));
+
                     break;
                 case PRICE_LOADER_ID:
                     GenericPrice price = new GenericPrice(c);

@@ -57,7 +57,7 @@
     <string name="txt_viewpager_worker_fragment">Werkers</string>
     <string name="txt_viewpager_round_fragment">Ronden</string>
     <string name="mail_address">developer@eiabea.com</string>
-    <string name="mail_subject">BTCDroid</string>
+    <string name="mail_subject">BTCDroid BTCGuild</string>
     <string name="mail_intent_title">Verstuur Mail&#8230;</string>
 
     <!-- PayoutFragment -->

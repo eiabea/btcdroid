@@ -87,8 +87,8 @@
                             android:paddingTop="@dimen/small_card_content_padding_top">
 
                             <com.eiabea.btcdroid.fonts.RobotoBold
-                                android:id="@+id/txt_main_info_hashrate"
                                 style="@style/style_small_card_value"
+                                android:id="@+id/txt_main_info_hashrate"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/bd_dark_grey_text" />

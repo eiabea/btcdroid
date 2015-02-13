@@ -23,12 +23,14 @@ public class Worker {
     public static final String STALE_SHARES_SINCE_RESET = "stale_shares_since_reset";
     public static final String DUPE_SHARES_SINCE_RESET = "dupe_shares_since_reset";
     public static final String UNKNOWN_SHARES_SINCE_RESET = "unknown_shares_since_reset";
+    public static final String ALIVE = "alive";
     public static final String LAST_SHARE = "last_share";
 
     // Database
     private long id;
 
     // Attributes
+    boolean alive;
     String worker_name;
     long hash_rate;
     long valid_shares;
@@ -57,6 +59,7 @@ public class Worker {
         setStale_shares_since_reset(c.getLong(c.getColumnIndex(STALE_SHARES_SINCE_RESET)));
         setDupe_shares_since_reset(c.getLong(c.getColumnIndex(DUPE_SHARES_SINCE_RESET)));
         setUnknown_shares_since_reset(c.getLong(c.getColumnIndex(UNKNOWN_SHARES_SINCE_RESET)));
+        setAlive(c.getInt(c.getColumnIndex(ALIVE)) == 1);
         setLast_share(c.getLong(c.getColumnIndex(LAST_SHARE)));
     }
 
@@ -77,6 +80,7 @@ public class Worker {
         values.put(STALE_SHARES_SINCE_RESET, getStale_shares_since_reset());
         values.put(DUPE_SHARES_SINCE_RESET, getDupe_shares_since_reset());
         values.put(UNKNOWN_SHARES_SINCE_RESET, getUnknown_shares_since_reset());
+        values.put(ALIVE, isAlive());
         values.put(LAST_SHARE, getLast_share());
 
         return values;
@@ -180,5 +184,9 @@ public class Worker {
 
     public void setLast_share(long last_share) {
         this.last_share = last_share;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 }

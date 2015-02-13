@@ -224,6 +224,11 @@ public class DataProvider extends ContentProvider {
                     if (tmpWorker != null) {
                         where = Worker.WORKER_NAME + "=?";
                         whereArgs = new String[]{tmpWorker.getWorker_name()};
+
+                        if(tmpWorker.getHash_rate() > 0){
+                            tmpWorker.setAlive(true);
+                        }
+
                     }
 
                     int updated = context.getContentResolver().update(Worker.CONTENT_URI, tmpWorker.getContentValues(false),

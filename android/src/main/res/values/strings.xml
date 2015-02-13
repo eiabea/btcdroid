@@ -55,7 +55,7 @@
     <string name="txt_viewpager_worker_fragment">Worker</string>
     <string name="txt_viewpager_round_fragment">Rounds</string>
     <string name="mail_address">developer@eiabea.com</string>
-    <string name="mail_subject">BTCDroid GHash.IO</string>
+    <string name="mail_subject">BTCDroid BTCGuild</string>
     <string name="mail_intent_title">Send Email&#8230;</string>
 
     <!-- PayoutFragment -->
@@ -105,6 +105,8 @@
     <string name="txt_design">Design / Appicon</string>
     <string name="txt_bas_de_jong">Bas de Jong</string>
     <string name="txt_translate_dutch">Dutch Translator</string>
+    <string name="txt_borislav_borisov">Borislav Borisov</string>
+    <string name="txt_translate_bulgarian">Bulgarian Translator</string>
     <string name="txt_show_qr_code">Show QR-Code</string>
     <string name="txt_donations">Donations</string>
     <string name="txt_donations_address">14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1</string>

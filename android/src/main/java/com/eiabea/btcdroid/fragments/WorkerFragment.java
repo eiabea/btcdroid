@@ -57,19 +57,21 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
         exlvWOrkerHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_worker_holder);
     }
 
-//    private void expandActiveWorker() {
-//        for (int i = 0; i < adapter.getGroupCount(); i++) {
-//
-//            Cursor c = adapter.getGroup(i);
-//
-//            boolean isAlive = c.getInt(c.getColumnIndex(Worker.ALIVE)) == 1;
-//
-//            if (isAlive) {
-//                exlvWOrkerHolder.expandGroup(i);
-//            }
-//
-//        }
-//    }
+    private void expandActiveWorker() {
+        for (int i = 0; i < adapter.getGroupCount(); i++) {
+
+            Cursor c = adapter.getGroup(i);
+
+            boolean isAlive = c.getInt(c.getColumnIndex(Worker.ALIVE)) == 1;
+
+            if (isAlive) {
+                exlvWOrkerHolder.expandGroup(i);
+            }else{
+                exlvWOrkerHolder.collapseGroup(i);
+            }
+
+        }
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int which, Bundle arg1) {
@@ -87,7 +89,7 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
 
                     adapter.setGroupCursor(c);
 
-//                    expandActiveWorker();
+                    expandActiveWorker();
                     break;
             }
 

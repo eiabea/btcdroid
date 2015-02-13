@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name_subtitle">BTCGuild Монитор</string>
+    <string name="action_refresh">Опресни</string>
+    <string name="action_reset">Нулирай</string>
+    <string name="action_accept">Приеми</string>
+    <string name="action_add_pool">Добави басейн</string>
+    <string name="action_settings">Настройки</string>
+    <string name="action_customize">Персонализирай</string>
+    <string name="action_donate">Дарения</string>
+    <string name="action_buy">Купи програмата</string>
+    <string name="action_participants">Участници</string>
+    <string name="action_email">Прати ми мейл</string>
+    <string name="th_per_second">TH/s</string>
+    <string name="gh_per_second">GH/s</string>
+    <string name="mh_per_second">MH/s</string>
+    <string name="btc">BTC</string>
+    <string name="mbtc">mBTC</string>
+    <string name="ubtc">B5BTC</string>
+    <string name="btc_short"></string>
+    <string name="mbtc_short">m</string>
+    <string name="ubtc_short">B5</string>
+    <string name="percent_sign">%</string>
+    <string name="BitStamp_short">BitStamp</string>
+    <string name="MtGox_short">MtGox</string>
+    <string name="BTCe_short">BTC-e</string>
+    <string name="CoinDesk_short">CoinDesk</string>
+    <string name="Coinbase_short">CoinBase</string>
+    <string name="BitStamp">BitStamp (USD)</string>
+    <string name="MtGoxUsd">MtGox (USD)</string>
+    <string name="MtGoxEur">MtGox (EUR)</string>
+    <string name="BTCeUsd">BTC-e (USD)</string>
+    <string name="BTCeEur">BTC-e (EUR)</string>
+    <string name="CoinDeskUsd">CoinDesk (USD)</string>
+    <string name="CoinDeskEur">CoinDesk (EUR)</string>
+    <string name="CoinDeskGbp">CoinDesk (GBP)</string>
+    <string name="CoinBaseUsd">CoinBase (USD)</string>
+
+    <!-- Notification -->
+    <string name="txt_hashrate_dropped_title">Спадане на хешрейт!</string>
+    <string name="txt_hashrate_dropped_message">Настоящ хешрейт: %1$s</string>
+    <string name="txt_new_round_title">Успешно!</string>
+    <string name="txt_new_round_message">Нов цикъл започва</string>
+
+    <!-- MainActivity -->
+    <string name="txt_no_token">Невалиден API Ключ, моля задайте коректен</string>
+    <string name="txt_set_token">Задай API Ключ</string>
+    <string name="alert_set_token_title">BTC Guild API Ключ</string>
+    <string name="alert_set_token_message">.) Влез в btcguild.com\n.) Settings\n.) API Key\n\nПомощ: Отворете сайта от вашия телефон или таблет и копирай и постави API Ключа</string>
+    <string name="alert_set_token_ok">Задай Token</string>
+    <string name="alert_set_token_cancel">Откажи</string>
+    <string name="txt_viewpager_payout_fragment">Платени</string>
+    <string name="txt_viewpager_pool_fragment">Данни</string>
+    <string name="txt_viewpager_worker_fragment">Работник</string>
+    <string name="txt_viewpager_round_fragment">Рундове</string>
+    <string name="mail_address">developer@eiabea.com</string>
+    <string name="mail_subject">BTCDroid BTCGuild</string>
+    <string name="mail_intent_title">Прати емайл&#8230;</string>
+
+    <!-- PayoutFragment -->
+    <string name="txt_progress">Прогрес</string>
+    <string name="txt_send_threshold">прати праг</string>
+    <string name="txt_unpaid_reward">неплатени</string>
+    <string name="txt_paid_reward">платени</string>
+    <string name="txt_rewards">Награди</string>
+
+    <!-- PoolFragment | Headers -->
+    <string name="txt_hashrates">Хешрейт</string>
+    <string name="txt_round">Рунд</string>
+    <string name="txt_pool">Басейн</string>
+
+    <!-- PoolFragment | left -->
+    <string name="txt_one_btc_is">1 BTC е:</string>
+    <string name="txt_total_reward">тотално</string>
+    <string name="txt_current_total_hashrate">общ текущ</string>
+    <string name="txt_average_total_hashrate">общо средено</string>
+    <string name="txt_round_started">стартиран</string>
+    <string name="txt_round_duration">настоящ</string>
+    <string name="txt_round_estimated">най-лош случай</string>
+    <string name="txt_round_average">средно</string>
+    <string name="txt_pool_speed">скорост на басейна</string>
+    <string name="txt_difficulty">трудност</string>
+
+    <!-- RoundFragment | BlockView -->
+    <string name="txt_confirmations_left">Оставащи потвърждения:</string>
+    <string name="txt_block_found">Намерен блок:</string>
+    <string name="txt_block_started">Стартиран блок:</string>
+    <string name="txt_not_available">няма</string>
+
+    <!-- WorkerFragment | WorkerView -->
+    <string name="txt_score">Точки:</string>
+    <string name="txt_last_share">Последен шер:</string>
+    <string name="txt_hashrate">Hashrate:</string>
+    <string name="txt_shares">Shares:</string>
+    <string name="txt_inactive">неактивно</string>
+
+    <!-- PrefsActivity -->
+    <string name="txt_settings">Настройки</string>
+
+    <!-- ParticipantsActivity -->
+    <string name="txt_manuel_zangl">Manuel Zangl</string>
+    <string name="txt_development">Разработчик</string>
+    <string name="txt_florian_grau">Florian Grau</string>
+    <string name="txt_design">Design / Appicon</string>
+    <string name="txt_bas_de_jong">Bas de Jong</string>
+    <string name="txt_translate_dutch">Dutch преводач</string>
+    <string name="txt_borislav_borisov">Borislav Borisov</string>
+    <string name="txt_translate_bulgarian">Bulgarian преводач</string>
+    <string name="txt_show_qr_code">Покажи QR-Кода</string>
+    <string name="txt_donations">Дарения</string>
+    <string name="txt_donations_address">14PYNtWh1eKS5wL3so7yTeHdQVbvEuduK1</string>
+    <string name="txt_copied_to_clipboard">копирано на клипборда</string>
+
+    <!-- RoundsListAdapter -->
+    <string name="txt_confirmed">нищо</string>
+
+    <!-- PreferencesFragment -->
+    <string name="txt_pref_api_title">API</string>
+    <string name="txt_pref_api_token_title">API Ключ</string>
+    <string name="txt_pref_api_token_message">Задай BTC Guild API Ключ</string>
+    <string name="txt_pref_thresholds_title">Прагове</string>
+    <string name="txt_pref_thresholds_price_title">Праг на цената (минути)</string>
+    <string name="txt_pref_thresholds_price_message">Задай праг за презареждане на цената</string>
+    <string name="txt_pref_thresholds_luck_title">Праг на късмета (минути)</string>
+    <string name="txt_pref_thresholds_luck_message">Задай праз за презареждане на късмета</string>
+    <string name="txt_pref_price_title">Цена</string>
+    <string name="txt_pref_price_show_price_title">Покажи цената</string>
+    <string name="txt_pref_price_show_price_message">Покажи цената за 1 BTC</string>
+    <string name="txt_pref_price_price_source_title">Източници на цената</string>
+    <string name="txt_pref_price_price_source_message">Къде да получа информация за цената</string>
+    <string name="txt_pref_style_title">Стил</string>
+    <string name="txt_pref_style_btc_style_title">BTC Стил</string>
+    <string name="txt_pref_style_btc_style_message">Превключване на стила на стойностите</string>
+    <string name="txt_pref_widget_behavior_title">Джаджа</string>
+    <string name="txt_pref_widget_behavior_message">Какво да се случи, ако кликна върху джаджата</string>
+    <string name="txt_pref_style_worker_username_title">Стил на името на работника</string>
+    <string name="txt_pref_style_worker_username_message">Покажи потр. име в началото на името на работника</string>
+    <string name="txt_pref_style_transparent_widgets_message">Определете фона на джаджи прозрачен или черен</string>
+    <string name="txt_pref_style_transparent_widgets_title">Прозрачна джаджа</string>
+    <string name="txt_pref_update_title">Обновления</string>
+    <string name="txt_pref_update_checking_interval_title">Интервал на проверката (минути)</string>
+    <string name="txt_pref_update_checking_interval_message">Колко често данните да се актуализират (Джаджа, Известия,&#8230;)</string>
+    <string name="txt_pref_notification_title">Известия</string>
+    <string name="txt_pref_notification_show_notification_title">Известия</string>
+    <string name="txt_pref_notification_show_notification_message">Известие ако хешрейт-а спадне под стойност</string>
+    <string name="txt_pref_notification_show_round_finished_notification_title">Известия при нов рунд</string>
+    <string name="txt_pref_notification_show_round_finished_notification_message">Известия при намиране на блок</string>
+    <string name="txt_pref_notification_minimum_hashrate_title">Минимум Хешрейт (MH/s)</string>
+    <string name="txt_pref_notification_minimum_hashrate_message">Лимит за минимален хешрейт</string>
+    <string name="txt_pref_notification_checking_interval_title">Интервал на проверките (минути)</string>
+    <string name="txt_pref_notification_checking_interval_message">Колко често трябва да се проверява хешрейт-а</string>
+    <string name="txt_pref_notification_sound_title">Звук</string>
+    <string name="txt_pref_notification_sound_message">Пусни звук при известие</string>
+    <string name="txt_pref_notification_vibrate_title">Вибрация</string>
+    <string name="txt_pref_notification_vibrate_message">Вибрация и известие</string>
+    <string name="txt_pref_notification_led_title">LED</string>
+    <string name="txt_pref_notification_led_message">Мигане на LED при известие</string>
+
+    <!-- DashClock -->
+    <string name="txt_dashclock_description">Покажи настоящия тотален хешрейт на твоите работници в BTC Guild</string>
+    <string name="txt_dashclock_expanded_body">тотален настоящ хешрейт</string>
+
+    <!-- Widget -->
+    <string name="txt_loading">зарежда</string>
+    <string name="txt_round_duration_widget">продължителност на рунда</string>
+
+    <!-- Donate -->
+    <string name="txt_donate_dialog_title">Дарения</string>
+    <string name="txt_donate_copy_bitcoin_address">Копирай биткойн адрес</string>
+    <string name="txt_donate_open_bitcoin_wallet">Отвори биткойн портфейл</string>
+    <string name="toast_donate_no_bitcoin_wallet_found">Няма биткойн портфен намерен</string>
+
+    <string-array name="price_source">
+        <item>@string/BitStamp</item>
+        <item>@string/BTCeUsd</item>
+        <item>@string/BTCeEur</item>
+        <item>@string/CoinDeskUsd</item>
+        <item>@string/CoinDeskEur</item>
+        <item>@string/CoinDeskGbp</item>
+        <item>@string/CoinBaseUsd</item>
+    </string-array>
+    <string-array name="price_source_values">
+        <item>0</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+    <string-array name="btc_style">
+        <item>@string/btc</item>
+        <item>@string/mbtc</item>
+        <item>@string/ubtc</item>
+    </string-array>
+    <string-array name="btc_style_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="widget_behavior">
+        <item>Обнови данните</item>
+        <item>Отвори програмата</item>
+    </string-array>
+    <string-array name="widget_behavior_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="update_interval">
+        <item>Ръчно</item>
+        <item>30 Минути</item>
+        <item>1 Час</item>
+        <item>3 Часа</item>
+    </string-array>
+    <string-array name="update_interval_values">
+        <item>0</item>
+        <item>1800</item>
+        <item>3600</item>
+        <item>10800</item>
+    </string-array>
+
+    <string name="toast_error_loading_profile">Грешка при зареждането на профила</string>
+    <string name="toast_error_loading_stats">Грешка при зареждането на статистиката</string>
+    <string name="toast_error_loading_price">Грешка при зареждането на цената</string>
+
+    <item name="is_land" type="bool">изключено</item>
+    <item name="is_tablet" type="bool">изключено</item>
+
+</resources>

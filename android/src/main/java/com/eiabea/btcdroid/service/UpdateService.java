@@ -404,28 +404,6 @@ public class UpdateService extends Service {
         return notification;
     }
 
-    private Notification setFinishParameters(Notification notification) {
-        boolean sound = pref.getBoolean("notification_sound", true);
-        boolean vibrate = pref.getBoolean("notification_vibrate", false);
-        boolean led = pref.getBoolean("notification_led", false);
-
-        if (sound) {
-            notification.sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.tada);
-        }
-
-        if (vibrate) {
-            notification.defaults |= Notification.DEFAULT_VIBRATE;
-        }
-        if (led) {
-            notification.ledARGB = 0xffff8b00;
-            notification.ledOnMS = 300;
-            notification.ledOffMS = 1000;
-            notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-        }
-
-        return notification;
-    }
-
     public static void setUpdateInterface(UpdateInterface updateInterface) {
         UpdateService.updateInterface = updateInterface;
     }
