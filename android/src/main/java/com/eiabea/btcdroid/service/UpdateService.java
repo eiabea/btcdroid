@@ -119,7 +119,7 @@ public class UpdateService extends Service {
             @Override
             public void onResponse(ApiResponse apiResponse) {
                 Log.d(getClass().getSimpleName(), "onResponse getApiResponse");
-                handleDropNotification();
+                handleDropNotification(apiResponse);
                 onApiResponseSuccessful(apiResponse);
             }
 
@@ -338,14 +338,22 @@ public class UpdateService extends Service {
         }
     }
 
-    private void handleDropNotification() {
+    private void handleDropNotification(ApiResponse apiResponse) {
         boolean enabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("notification_enabled", false);
         try {
 
             if (enabled) {
 
-                long totalHashrate = App.getTotalHashrate(getApplicationContext());
-                long limit = Long.valueOf(pref.getString("notification_hashrate", "0"));
+                long totalHashrate =0;
+                long limit = Integer.valueOf(pref.getString("notification_hashrate", "0"));
+
+                if(apiResponse != null){
+                    for(Worker tmpWorker : apiResponse.getWorkersAsArraylist()){
+                        totalHashrate+=tmpWorker.getHash_rate();
+                    }
+                }else{
+                    totalHashrate = App.getTotalHashrate(getApplicationContext());
+                }
 
                 if (limit > 0 && totalHashrate < limit) {
 
