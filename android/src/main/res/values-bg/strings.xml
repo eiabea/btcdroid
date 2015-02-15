@@ -224,7 +224,7 @@
     <string name="toast_error_loading_stats">Грешка при зареждането на статистиката</string>
     <string name="toast_error_loading_price">Грешка при зареждането на цената</string>
 
-    <item name="is_land" type="bool">изключено</item>
-    <item name="is_tablet" type="bool">изключено</item>
+    <item name="is_land" type="bool">false</item>
+    <item name="is_tablet" type="bool">false</item>
 
 </resources>
