@@ -4,24 +4,85 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.ContentObserver;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.preference.PreferenceManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
+import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.service.UpdateService;
 import com.eiabea.btcdroid.util.App;
 
-public class TotalHashrateWidgetProvider extends AppWidgetProvider {
+public class TotalHashrateWidgetProvider extends AppWidgetProvider{
     private static final String ACTION_CLICK = "ACTION_CLICK";
     public static final String LOADING_FAILED = "ACTION_FAILED";
 
     private Intent intent;
+
+//    /**
+//     * Our data observer just notifies an update for all weather widgets when it detects a change.
+//     */
+//    class WeatherDataProviderObserver extends ContentObserver {
+//        private AppWidgetManager mAppWidgetManager;
+//        private ComponentName mComponentName;
+//
+//        WeatherDataProviderObserver(AppWidgetManager mgr, ComponentName cn, Handler h) {
+//            super(h);
+//            mAppWidgetManager = mgr;
+//            mComponentName = cn;
+//        }
+//
+//        @Override
+//        public void onChange(boolean selfChange) {
+//            // The data has changed, so notify the widget that the collection view needs to be updated.
+//            // In response, the factory's onDataSetChanged() will be called which will requery the
+//            // cursor for the new data.
+//            mAppWidgetManager.notifyAppWidgetViewDataChanged(
+//                    mAppWidgetManager.getAppWidgetIds(mComponentName), R.id.txt_widget_value);
+//        }
+//    }
+//
+//    private static HandlerThread sWorkerThread;
+//    private static Handler sWorkerQueue;
+//    private static WeatherDataProviderObserver sDataObserver;
+//
+//    public TotalHashrateWidgetProvider() {
+//        // Start the worker thread
+//        sWorkerThread = new HandlerThread("TotalHashrateWidgetProvider-worker");
+//        sWorkerThread.start();
+//        sWorkerQueue = new Handler(sWorkerThread.getLooper());
+//    }
+//
+//    @Override
+//    public void onEnabled(Context context) {
+//        // Register for external updates to the data to trigger an update of the widget.  When using
+//        // content providers, the data is often updated via a background service, or in response to
+//        // user interaction in the main app.  To ensure that the widget always reflects the current
+//        // state of the data, we must listen for changes and update ourselves accordingly.
+//        final ContentResolver r = context.getContentResolver();
+//        if (sDataObserver == null) {
+//            final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+//            final ComponentName cn = new ComponentName(context, TotalHashrateWidgetProvider.class);
+//            sDataObserver = new WeatherDataProviderObserver(mgr, cn, sWorkerQueue);
+//            r.registerContentObserver(Worker.CONTENT_URI, true, sDataObserver);
+//        }
+//    }
+
+
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -94,7 +155,9 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+
         this.intent = intent;
+
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
         // Get all ids
@@ -104,5 +167,4 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
         onUpdate(context, appWidgetManager, allWidgetIds);
 
     }
-
 }

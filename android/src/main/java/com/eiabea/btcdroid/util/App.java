@@ -160,15 +160,17 @@ public class App extends Application {
 
     public static long getTotalHashrate(Context context) {
 
-        long totalHashrate = 0;
         String[] projection = new String[]{Worker.HASHRATE};
 
         Cursor c = context.getContentResolver().query(Worker.CONTENT_URI, projection, null, null, null);
 
         c.moveToFirst();
 
-        while (c.moveToNext()) {
+        long totalHashrate = 0;
+
+        while (!c.isAfterLast()) {
             totalHashrate += c.getLong(c.getColumnIndex(Worker.HASHRATE));
+            c.moveToNext();
         }
 
         c.close();
@@ -188,6 +190,7 @@ public class App extends Application {
         Intent dashclockIntent = new Intent(DashClockWidget.UPDATE_DASHCLOCK);
         LocalBroadcastManager.getInstance(context).sendBroadcast(dashclockIntent);
         Log.d(context.getClass().getSimpleName(), "sent Broadcast to update DashClock");
+
     }
 
     public static void resetUpdateManager(Context context) {
