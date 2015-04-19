@@ -395,7 +395,8 @@ public class DataProvider extends ContentProvider {
             @Override
             protected Void doInBackground(Void... params) {
 
-                List<Block> listBlocks = new ArrayList<Block>();
+                List<Block> listBlocks = new ArrayList<>();
+                List<Long> blockNumbers = new ArrayList<>();
 
                 Set<Map.Entry<String, JsonElement>> set = blocks.entrySet();
 
@@ -407,10 +408,25 @@ public class DataProvider extends ContentProvider {
                     tmpBlock.setNumber(Long.parseLong(current.getKey()));
 
                     listBlocks.add(tmpBlock);
+                    blockNumbers.add(tmpBlock.getNumber());
+                }
+
+                // Delete Blocks which are in DB, but not in the api response
+                String[] projection = {Block.NUMBER};
+                Cursor blocksInDb = context.getContentResolver().query(Block.CONTENT_URI, projection, null, null, null);
+
+                while (blocksInDb.moveToNext()) {
+                    long tmpBlockNumber = blocksInDb.getLong(blocksInDb.getColumnIndex(Block.NUMBER));
+
+                    if(!blockNumbers.contains(tmpBlockNumber)){
+                        String where = Block.NUMBER + "=?";
+                        String[] whereArgs = {String.valueOf(tmpBlockNumber)};
+
+                        context.getContentResolver().delete(Block.CONTENT_URI, where, whereArgs);
+                    }
                 }
 
                 for (Block block : listBlocks) {
-
                     String where = null;
                     String[] whereArgs = null;
 
