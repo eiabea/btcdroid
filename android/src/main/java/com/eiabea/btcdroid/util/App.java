@@ -236,6 +236,11 @@ public class App extends Application {
         Log.d(context.getClass().getSimpleName(), "sent Broadcast to update DashClock");
     }
 
+    public static void updateData(Context context){
+        Intent i = new Intent(context, UpdateService.class);
+        context.startService(i);
+    }
+
     public static void resetUpdateManager(Context context) {
         int intervalWidget = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString("update_interval", "30"));
         int intervalMilli = intervalWidget * 60 * 1000;

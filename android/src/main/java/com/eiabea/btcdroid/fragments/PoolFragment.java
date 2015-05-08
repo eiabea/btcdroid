@@ -285,7 +285,8 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onRefresh() {
         if (App.getInstance().isTokenSet()) {
-            App.resetUpdateManager(getActivity());
+            //App.resetUpdateManager(getActivity());
+            App.updateData(getActivity());
         }
     }
 

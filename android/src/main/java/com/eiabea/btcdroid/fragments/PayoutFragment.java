@@ -308,7 +308,8 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onRefresh() {
         if (App.getInstance().isTokenSet()) {
-            App.resetUpdateManager(getActivity());
+//            App.resetUpdateManager(getActivity());
+            App.updateData(getActivity());
         }
     }
 

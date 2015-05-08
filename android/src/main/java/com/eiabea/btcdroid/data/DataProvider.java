@@ -418,13 +418,16 @@ public class DataProvider extends ContentProvider {
                 while (blocksInDb.moveToNext()) {
                     long tmpBlockNumber = blocksInDb.getLong(blocksInDb.getColumnIndex(Block.NUMBER));
 
+
                     if(!blockNumbers.contains(tmpBlockNumber)){
                         String where = Block.NUMBER + "=?";
                         String[] whereArgs = {String.valueOf(tmpBlockNumber)};
 
                         context.getContentResolver().delete(Block.CONTENT_URI, where, whereArgs);
                     }
+
                 }
+                blocksInDb.close();
 
                 for (Block block : listBlocks) {
                     String where = null;
