@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -207,7 +206,7 @@ public class App extends Application {
 
         Cursor c = context.getContentResolver().query(Worker.CONTENT_URI, projection, null, null, null);
 
-        if(c.getCount() > 0){
+        if (c.getCount() > 0) {
             while (c.moveToNext()) {
 
                 int index = c.getColumnIndex(Worker.HASHRATE);
@@ -236,7 +235,7 @@ public class App extends Application {
         Log.d(context.getClass().getSimpleName(), "sent Broadcast to update DashClock");
     }
 
-    public static void updateData(Context context){
+    public static void updateData(Context context) {
         Intent i = new Intent(context, UpdateService.class);
         context.startService(i);
     }
@@ -252,4 +251,5 @@ public class App extends Application {
         am.cancel(pi); // cancel any existing alarms
         am.setInexactRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), intervalMilli, pi);
     }
+
 }
