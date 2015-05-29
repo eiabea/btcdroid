@@ -34,7 +34,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private static final int POOL_PROFILE_LOADER_ID = 222;
     private static final int POOL_STATS_LOADER_ID = 223;
-    private static final int POOL_AVG_LUCK_LOADER_ID = 224;
+//    private static final int POOL_AVG_LUCK_LOADER_ID = 224;
 
     private ViewGroup rootView;
 
@@ -44,7 +44,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private TextView txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
             txtRoundDuration, txtEstimatedDuration, txtAverageDuration,
-            txtLuck24h, txtLuck7d, txtLuck30d, txtAvgLuck;
+            txtLuck24h, txtLuck7d, txtLuck30d; //, txtAvgLuck;
     private RatingBar ratRating;
 
     public static PoolFragment create() {
@@ -60,7 +60,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         getActivity().getSupportLoaderManager().initLoader(POOL_PROFILE_LOADER_ID, null, this);
         getActivity().getSupportLoaderManager().initLoader(POOL_STATS_LOADER_ID, null, this);
-        getActivity().getSupportLoaderManager().initLoader(POOL_AVG_LUCK_LOADER_ID, null, this);
+//        getActivity().getSupportLoaderManager().initLoader(POOL_AVG_LUCK_LOADER_ID, null, this);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         txtLuck24h = (TextView) rootView.findViewById(R.id.txt_main_info_luck_24h);
         txtLuck7d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_7d);
         txtLuck30d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_30d);
-        txtAvgLuck = (TextView) rootView.findViewById(R.id.txt_main_info_avg_luck);
+//        txtAvgLuck = (TextView) rootView.findViewById(R.id.txt_main_info_avg_luck);
     }
 
     private void setLuck(TextView txt, float current, boolean highPrecision) {
@@ -266,15 +266,15 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         handleLoading();
     }
 
-    private void setAvgLuck(AvgLuck avgLuck) {
-
-        if (avgLuck != null) {
-            setLuck(txtAvgLuck, avgLuck.getAvg_luck(), true);
-        }
-
-        handleLoading();
-
-    }
+//    private void setAvgLuck(AvgLuck avgLuck) {
+//
+//        if (avgLuck != null) {
+//            setLuck(txtAvgLuck, avgLuck.getAvg_luck(), true);
+//        }
+//
+//        handleLoading();
+//
+//    }
 
     private void handleLoading() {
         if (swipeLayout != null) {
@@ -302,9 +302,9 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             case POOL_STATS_LOADER_ID:
                 selection = Stats._ID + "=?";
                 return new CursorLoader(getActivity(), Stats.CONTENT_URI, null, selection, selectionArgs, null);
-            case POOL_AVG_LUCK_LOADER_ID:
-                selection = AvgLuck._ID + "=?";
-                return new CursorLoader(getActivity(), AvgLuck.CONTENT_URI, null, selection, selectionArgs, null);
+//            case POOL_AVG_LUCK_LOADER_ID:
+//                selection = AvgLuck._ID + "=?";
+//                return new CursorLoader(getActivity(), AvgLuck.CONTENT_URI, null, selection, selectionArgs, null);
         }
 
         return null;
@@ -334,14 +334,14 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         setStats(stats);
                     }
                     break;
-                case POOL_AVG_LUCK_LOADER_ID:
-                    AvgLuck avgLuck = new AvgLuck(c);
-                    avgLuck = App.getInstance().gson.fromJson(avgLuck.getJson(), AvgLuck.class);
-
-                    if (avgLuck != null) {
-                        setAvgLuck(avgLuck);
-                    }
-                    break;
+//                case POOL_AVG_LUCK_LOADER_ID:
+//                    AvgLuck avgLuck = new AvgLuck(c);
+//                    avgLuck = App.getInstance().gson.fromJson(avgLuck.getJson(), AvgLuck.class);
+//
+//                    if (avgLuck != null) {
+//                        setAvgLuck(avgLuck);
+//                    }
+//                    break;
             }
 
 

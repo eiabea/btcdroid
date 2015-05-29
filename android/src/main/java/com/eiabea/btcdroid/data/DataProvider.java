@@ -293,41 +293,41 @@ public class DataProvider extends ContentProvider {
         }.execute();
     }
 
-    public static void insertOrUpdateAvgLuck(final Context context, final AvgLuck avgLuck) {
-
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-
-                String where = null;
-                String[] whereArgs = null;
-
-
-                if (avgLuck != null) {
-                    avgLuck.setJson(App.getInstance().gson.toJson(avgLuck));
-
-                    where = Stats._ID + "=?";
-                    whereArgs = new String[]{"1"};
-                }
-
-                int updated = context.getContentResolver().update(AvgLuck.CONTENT_URI, avgLuck.getContentValues(false),
-                        where, whereArgs);
-
-                if (updated == 0) {
-                    context.getContentResolver().insert(AvgLuck.CONTENT_URI, avgLuck.getContentValues(true));
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                super.onPostExecute(result);
-            }
-
-        }.execute();
-    }
+//    public static void insertOrUpdateAvgLuck(final Context context, final AvgLuck avgLuck) {
+//
+//        new AsyncTask<Void, Void, Void>() {
+//
+//            @Override
+//            protected Void doInBackground(Void... params) {
+//
+//                String where = null;
+//                String[] whereArgs = null;
+//
+//
+//                if (avgLuck != null) {
+//                    avgLuck.setJson(App.getInstance().gson.toJson(avgLuck));
+//
+//                    where = Stats._ID + "=?";
+//                    whereArgs = new String[]{"1"};
+//                }
+//
+//                int updated = context.getContentResolver().update(AvgLuck.CONTENT_URI, avgLuck.getContentValues(false),
+//                        where, whereArgs);
+//
+//                if (updated == 0) {
+//                    context.getContentResolver().insert(AvgLuck.CONTENT_URI, avgLuck.getContentValues(true));
+//                }
+//
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Void result) {
+//                super.onPostExecute(result);
+//            }
+//
+//        }.execute();
+//    }
 
     public static void insertOrUpdateWorkers(final Context context, final JsonObject workers) {
 

@@ -107,7 +107,7 @@ public class UpdateService extends Service {
                     getProfileWidgets();
                     getPriceWidgets();
                     getStatsWidgets();
-                    getAvgLuckWidgets();
+//                    getAvgLuckWidgets();
                     break;
             }
 
@@ -176,31 +176,31 @@ public class UpdateService extends Service {
         }));
     }
 
-    private void getAvgLuckWidgets() {
-        Log.d(getClass().getSimpleName(), "get AvgLuck");
-
-        String url = HttpWorker.AVG_LUCK_URL;
-
-        System.out.println(HttpWorker.mQueue.toString());
-
-        HttpWorker.mQueue.add(new GsonRequest<AvgLuck>(url, AvgLuck.class, null, new Listener<AvgLuck>() {
-
-            @Override
-            public void onResponse(AvgLuck avgLuck) {
-                Log.d(getClass().getSimpleName(), "onResponse AvgLuck");
-                onAvgLuckLoaded(avgLuck);
-            }
-
-        }, new ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(getClass().getSimpleName(), "onErrorResponse AvgLuck");
-                Log.d(getClass().getSimpleName(), " " + error.getCause());
-                onAvgLuckError();
-            }
-        }));
-    }
+//    private void getAvgLuckWidgets() {
+//        Log.d(getClass().getSimpleName(), "get AvgLuck");
+//
+//        String url = HttpWorker.AVG_LUCK_URL;
+//
+//        System.out.println(HttpWorker.mQueue.toString());
+//
+//        HttpWorker.mQueue.add(new GsonRequest<AvgLuck>(url, AvgLuck.class, null, new Listener<AvgLuck>() {
+//
+//            @Override
+//            public void onResponse(AvgLuck avgLuck) {
+//                Log.d(getClass().getSimpleName(), "onResponse AvgLuck");
+//                onAvgLuckLoaded(avgLuck);
+//            }
+//
+//        }, new ErrorListener() {
+//
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.d(getClass().getSimpleName(), "onErrorResponse AvgLuck");
+//                Log.d(getClass().getSimpleName(), " " + error.getCause());
+//                onAvgLuckError();
+//            }
+//        }));
+//    }
 
     private void getPriceWidgets() {
         Log.d(getClass().getSimpleName(), "get Price Widgets");
@@ -610,11 +610,11 @@ public class UpdateService extends Service {
         }
     }
 
-    private void onAvgLuckLoaded(AvgLuck avgLuck) {
-
-        DataProvider.insertOrUpdateAvgLuck(getApplicationContext(), avgLuck);
-
-    }
+//    private void onAvgLuckLoaded(AvgLuck avgLuck) {
+//
+//        DataProvider.insertOrUpdateAvgLuck(getApplicationContext(), avgLuck);
+//
+//    }
 
     private void onAvgLuckError() {
         if (updateInterface != null) {
