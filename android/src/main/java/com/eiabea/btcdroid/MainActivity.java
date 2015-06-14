@@ -289,7 +289,11 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
                 emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{App.getResString(R.string.mail_address, MainActivity.this)});
                 emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, App.getResString(R.string.mail_subject, MainActivity.this));
 
-                startActivity(Intent.createChooser(emailIntent, App.getResString(R.string.mail_intent_title, MainActivity.this)));
+                try{
+                    startActivity(Intent.createChooser(emailIntent, App.getResString(R.string.mail_intent_title, MainActivity.this)));
+                }catch (ActivityNotFoundException e){
+                    Toast.makeText(MainActivity.this, "There are no email applications installed.", Toast.LENGTH_SHORT);
+                }
                 break;
 
             case R.id.action_donate:
