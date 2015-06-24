@@ -129,6 +129,28 @@ public class MainActivity extends ActionBarActivity implements OnPageChangeListe
         builder.create().show();
     }
 
+    private void showRecommendDialog() {
+        AlertDialog.Builder builder = new Builder(this);
+        builder.setTitle("BTCGuild is closing down!");
+        builder.setMessage("The mining server will be shut down on June 30th. I personally recommend switching to Slush's Pool\nThank you for using the App!");
+        builder.setPositiveButton("PlayStore", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                openPlayStoreSlush();
+            }
+
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        builder.create().show();
+    }
+
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -142,6 +164,8 @@ public class MainActivity extends ActionBarActivity implements OnPageChangeListe
 //        setListeners();
 
         handleBeerDialog();
+
+        showRecommendDialog();
 
         supportInvalidateOptionsMenu();
         super.onResume();
@@ -327,6 +351,14 @@ public class MainActivity extends ActionBarActivity implements OnPageChangeListe
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + PAID_APP_PACKAGE)));
         } catch (android.content.ActivityNotFoundException anfe) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + PAID_APP_PACKAGE)));
+        }
+    }
+
+    private void openPlayStoreSlush() {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.eiabea.btcdroid")));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.eiabea.btcdroid")));
         }
     }
 
