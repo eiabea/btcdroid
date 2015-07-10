@@ -41,6 +41,9 @@
     <string name="CoinfinityBase">Coinfinity Online (EUR)</string>
     <string name="CoinfinityAtm">Coinfinity ATM (EUR)</string>
     <string name="CoinfinityBitcoinbon">Bitcoinbon (EUR)</string>
+    <string name="CoinfinityBase_short">Coinfinity Online</string>
+    <string name="CoinfinityAtm_short">Coinfinity ATM</string>
+    <string name="CoinfinityBitcoinbon_short">Bitcoinbon</string>
 
     <!-- Notification -->
     <string name="txt_hashrate_dropped_title">Hashrate has dropped!</string>

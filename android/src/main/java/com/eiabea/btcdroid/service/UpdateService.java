@@ -418,15 +418,15 @@ public class UpdateService extends Service {
                             switch (source){
                                 case PRICE_SOURCE_COINFINITY_BASE:
                                     price.setValueFloat(prices.getBase());
-                                    price.setSource(getApplicationContext().getString(R.string.CoinfinityBase));
+                                    price.setSource(getApplicationContext().getString(R.string.CoinfinityBase_short));
                                     break;
                                 case PRICE_SOURCE_COINFINITY_ATM:
                                     price.setValueFloat(prices.getAtm());
-                                    price.setSource(getApplicationContext().getString(R.string.CoinfinityAtm));
+                                    price.setSource(getApplicationContext().getString(R.string.CoinfinityAtm_short));
                                     break;
                                 case PRICE_SOURCE_COINFINITY_BITCOINBON:
                                     price.setValueFloat(prices.getBitcoinbon());
-                                    price.setSource(getApplicationContext().getString(R.string.CoinfinityBitcoinbon));
+                                    price.setSource(getApplicationContext().getString(R.string.CoinfinityBitcoinbon_short));
                                     break;
                             }
 
