@@ -38,6 +38,9 @@
     <string name="CoinDeskEur">CoinDesk (EUR)</string>
     <string name="CoinDeskGbp">CoinDesk (GBP)</string>
     <string name="CoinBaseUsd">CoinBase (USD)</string>
+    <string name="CoinfinityBase">Coinfinity Online (EUR)</string>
+    <string name="CoinfinityAtm">Coinfinity ATM (EUR)</string>
+    <string name="CoinfinityBitcoinbon">Bitcoinbon (EUR)</string>
 
     <!-- Notification -->
     <string name="txt_hashrate_dropped_title">Hashrate has dropped!</string>
@@ -185,6 +188,9 @@
         <item>@string/CoinDeskEur</item>
         <item>@string/CoinDeskGbp</item>
         <item>@string/CoinBaseUsd</item>
+        <item>@string/CoinfinityBase</item>
+        <item>@string/CoinfinityAtm</item>
+        <item>@string/CoinfinityBitcoinbon</item>
     </string-array>
     <string-array name="price_source_values">
         <item>0</item>
@@ -194,6 +200,9 @@
         <item>6</item>
         <item>7</item>
         <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
     </string-array>
     <string-array name="btc_style">
         <item>@string/btc</item>

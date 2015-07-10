@@ -32,6 +32,7 @@ import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
 import com.eiabea.btcdroid.model.PricesCoinDesk;
 import com.eiabea.btcdroid.model.PricesCoinbase;
+import com.eiabea.btcdroid.model.PricesCoinfinity;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.model.Worker;
@@ -62,6 +63,9 @@ public class UpdateService extends Service {
     public static final int PRICE_SOURCE_COINDESK_EUR = 6;
     public static final int PRICE_SOURCE_COINDESK_GBP = 7;
     public static final int PRICE_SOURCE_COINBASE = 8;
+    public static final int PRICE_SOURCE_COINFINITY_BASE = 9;
+    public static final int PRICE_SOURCE_COINFINITY_ATM = 10;
+    public static final int PRICE_SOURCE_COINFINITY_BITCOINBON = 11;
 
     private static int dropNotificationCount = 0;
     private static int newRoundNotificationCount = 0;
@@ -207,7 +211,7 @@ public class UpdateService extends Service {
 
         Log.d(getClass().getSimpleName(), "Getting Prices");
 
-        int source = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("price_source_preference", "0"));
+        final int source = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("price_source_preference", "0"));
 
         switch (source) {
             case PRICE_SOURCE_BITSTAMP_USD:
@@ -384,6 +388,49 @@ public class UpdateService extends Service {
                             price.setValueFloat(prices.getBpi().getGBP().getRate_float());
                             price.setSource(getApplicationContext().getString(R.string.CoinDesk_short));
                             price.setSymbol("£");
+
+                            onPriceLoaded(price);
+                        } catch (NullPointerException e) {
+                            onPriceError();
+                        }
+                    }
+
+                }, new ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        onPriceError();
+                    }
+                });
+                break;
+            case PRICE_SOURCE_COINFINITY_BASE:
+            case PRICE_SOURCE_COINFINITY_ATM:
+            case PRICE_SOURCE_COINFINITY_BITCOINBON:
+
+                App.getInstance().httpWorker.getPricesCoinfinity(new Listener<PricesCoinfinity>() {
+
+                    @Override
+                    public void onResponse(PricesCoinfinity prices) {
+
+                        try {
+                            GenericPrice price = new GenericPrice();
+
+                            switch (source){
+                                case PRICE_SOURCE_COINFINITY_BASE:
+                                    price.setValueFloat(prices.getBase());
+                                    price.setSource(getApplicationContext().getString(R.string.CoinfinityBase));
+                                    break;
+                                case PRICE_SOURCE_COINFINITY_ATM:
+                                    price.setValueFloat(prices.getAtm());
+                                    price.setSource(getApplicationContext().getString(R.string.CoinfinityAtm));
+                                    break;
+                                case PRICE_SOURCE_COINFINITY_BITCOINBON:
+                                    price.setValueFloat(prices.getBitcoinbon());
+                                    price.setSource(getApplicationContext().getString(R.string.CoinfinityBitcoinbon));
+                                    break;
+                            }
+
+                            price.setSymbol("€");
 
                             onPriceLoaded(price);
                         } catch (NullPointerException e) {

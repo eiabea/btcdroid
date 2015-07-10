@@ -10,6 +10,7 @@ import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
 import com.eiabea.btcdroid.model.PricesCoinDesk;
 import com.eiabea.btcdroid.model.PricesCoinbase;
+import com.eiabea.btcdroid.model.PricesCoinfinity;
 
 import java.util.Locale;
 
@@ -21,6 +22,7 @@ public class HttpWorker {
     public static final String PRICES_URL_COINDESK_END = ".json";
     public static final String PRICES_URL_BITSTAMP = "https://www.bitstamp.net/api/ticker/";
     public static final String PRICES_URL_COINBASE = "https://coinbase.com/api/v1/prices/buy";
+    public static final String PRICES_URL_COINFINITY = "https://coinfinity.co/api/Ticker";
     public static final String AVG_LUCK_URL = "http://slush-eiabea.rhcloud.com/avg_luck";
 
     public static final String STATS_URL = BASEURL + "stats/json/";
@@ -67,6 +69,18 @@ public class HttpWorker {
         System.out.println(HttpWorker.mQueue.toString());
 
         HttpWorker.mQueue.add(new GsonRequest<PricesCoinDesk>(url, PricesCoinDesk.class, null, success, error));
+
+    }
+
+    public void getPricesCoinfinity(Response.Listener<PricesCoinfinity> success, Response.ErrorListener error) {
+        Log.d(getClass().getSimpleName(), "get Prices Coinfinity");
+
+        String url = HttpWorker.PRICES_URL_COINFINITY;
+
+        System.out.println(HttpWorker.mQueue.toString());
+
+        HttpWorker.mQueue.add(new GsonRequest<PricesCoinfinity>(url, PricesCoinfinity
+                .class, null, success, error));
 
     }
 
