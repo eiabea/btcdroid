@@ -118,11 +118,23 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         AlertDialog.Builder builder = new Builder(this);
         builder.setTitle("Buy me a beer!");
         builder.setMessage("If you like this app, i would very much appreciate if you buy me a beer by purchasing this app");
-        builder.setPositiveButton("PlayStore", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("PlayStore", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 openPlayStore();
+            }
+
+        });
+        builder.setPositiveButton("Bitcoin", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    startActivity(ParticipantsActivity.makeBitcoinIntent(getString(R.string.txt_donations_address)));
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(MainActivity.this, getString(R.string.toast_donate_no_bitcoin_wallet_found), Toast.LENGTH_SHORT).show();
+                }
             }
 
         });
@@ -259,7 +271,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
         if (BuildConfig.PAID) {
             getMenuInflater().inflate(R.menu.main_paid, menu);
-        }else{
+        } else {
             getMenuInflater().inflate(R.menu.main_free, menu);
         }
 
@@ -289,9 +301,9 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
                 emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{App.getResString(R.string.mail_address, MainActivity.this)});
                 emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, App.getResString(R.string.mail_subject, MainActivity.this));
 
-                try{
+                try {
                     startActivity(Intent.createChooser(emailIntent, App.getResString(R.string.mail_intent_title, MainActivity.this)));
-                }catch (ActivityNotFoundException e){
+                } catch (ActivityNotFoundException e) {
                     Toast.makeText(MainActivity.this, "There are no email applications installed.", Toast.LENGTH_SHORT);
                 }
                 break;

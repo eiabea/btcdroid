@@ -16,6 +16,7 @@ import com.eiabea.btcdroid.util.App;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class RoundsListAdapter extends CursorTreeAdapter {
 
@@ -62,7 +63,34 @@ public class RoundsListAdapter extends CursorTreeAdapter {
 
         Block block = new Block(cursor);
 
-        rh.txtDuration.setText(block.getMining_duration());
+        long milliseconds = block.getMining_duration() * 1000;
+
+        long days = TimeUnit.MILLISECONDS
+                .toDays(milliseconds);
+        milliseconds -= TimeUnit.DAYS.toMillis(days);
+
+        long hours = TimeUnit.MILLISECONDS
+                .toHours(milliseconds);
+        milliseconds -= TimeUnit.HOURS.toMillis(hours);
+
+        long minutes = TimeUnit.MILLISECONDS
+                .toMinutes(milliseconds);
+        milliseconds -= TimeUnit.MINUTES.toMillis(minutes);
+
+        long seconds = TimeUnit.MILLISECONDS
+                .toSeconds(milliseconds);
+
+        String durationString;
+
+        if (days > 1) {
+            durationString = String.format("%d days - %02d:%02d:%02d", days, hours, minutes, seconds);
+        } else if(days == 1) {
+            durationString = String.format("%d day - %02d:%02d:%02d", days, hours, minutes, seconds);
+        } else {
+            durationString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        }
+
+        rh.txtDuration.setText(durationString);
 
         setReward(rh.txtReward, block);
 

@@ -37,6 +37,7 @@ public class App extends Application {
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss", Locale.getDefault());
     public static final SimpleDateFormat dateStatsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     public static final SimpleDateFormat dateDurationFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+    public static final SimpleDateFormat dateDurationDayFormat = new SimpleDateFormat("dd HH:mm:ss", Locale.getDefault());
 
     public static final String PREF_TOKEN = "token";
 

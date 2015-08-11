@@ -18,13 +18,11 @@ import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
-import com.eiabea.btcdroid.model.AvgLuck;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
 import com.eiabea.btcdroid.util.App;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -168,27 +166,27 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         Cursor c = getActivity().getContentResolver().query(Block.CONTENT_URI, projection, null, null, null);
 
-        if(c.getCount() > 0){
+        if (c.getCount() > 0) {
 
             c.moveToFirst();
 
             while (c.moveToNext()) {
-                Date duration;
-                try {
-                    duration = App.dateDurationFormat.parse(c.getString(c.getColumnIndex(Block.MINING_DURATION)));
-                    total += duration.getTime();
-                } catch (ParseException e) {
-                    Log.e(TAG, "Can't get AverageRoundTime (NullPointer)");
-                }
+                long duration;
+//                try {
+                duration = c.getLong(c.getColumnIndex(Block.MINING_DURATION));
+                total += duration;
+//                } catch (ParseException e) {
+//                    Log.e(TAG, "Can't get AverageRoundTime (NullPointer)");
+//                }
             }
 
-            if(total > 0){
+            if (total > 0) {
                 average = total / c.getCount();
             }
         }
 
 
-        return new Date(average);
+        return new Date(average * 1000);
     }
 
     private double calculateRoundRating(Date average, Date duration) {

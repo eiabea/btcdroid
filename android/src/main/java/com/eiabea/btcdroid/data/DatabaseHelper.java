@@ -27,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String WORKER_TABLE_NAME = "worker";
     public static final String ROUNDS_TABLE_NAME = "rounds";
 
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
     private static final String DATABASE_NAME = "btcdroid";
 
     private static final String CREATE_PROFILE_TABLE =
@@ -69,7 +69,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             " CREATE TABLE " + ROUNDS_TABLE_NAME +
                     " (" + Block._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     " " + Block.NUMBER + " INTEGER, " +
-                    " " + Block.MINING_DURATION + " TEXT, " +
+                    " " + Block.MINING_DURATION + " INTEGER, " +
                     " " + Block.REWARD + " TEXT, " +
                     " " + Block.DATE_FOUND + " TEXT, " +
                     " " + Block.DATE_STARTED + " TEXT, " +

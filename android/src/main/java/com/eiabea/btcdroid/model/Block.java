@@ -25,7 +25,7 @@ public class Block {
 
     // Attributes
     private long number;
-    private String mining_duration;
+    private long mining_duration;
     private String reward;
     private String date_found;
     private String date_started;
@@ -39,7 +39,7 @@ public class Block {
     public Block(Cursor c) {
         setId(c.getLong(c.getColumnIndex(_ID)));
         setNumber(c.getLong(c.getColumnIndex(NUMBER)));
-        setMining_duration(c.getString(c.getColumnIndex(MINING_DURATION)));
+        setMining_duration(c.getLong(c.getColumnIndex(MINING_DURATION)));
         setReward(c.getString(c.getColumnIndex(REWARD)));
         setDate_found(c.getString(c.getColumnIndex(DATE_FOUND)));
         setDate_started(c.getString(c.getColumnIndex(DATE_STARTED)));
@@ -72,11 +72,11 @@ public class Block {
         this.id = id;
     }
 
-    public String getMining_duration() {
+    public long getMining_duration() {
         return mining_duration;
     }
 
-    public void setMining_duration(String mining_duration) {
+    public void setMining_duration(long mining_duration) {
         this.mining_duration = mining_duration;
     }
 
