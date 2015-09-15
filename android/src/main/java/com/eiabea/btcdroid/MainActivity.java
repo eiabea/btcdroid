@@ -15,7 +15,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerTitleStrip;
+import android.support.v4.view.PagerTitleStripV22;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
@@ -213,7 +213,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
                 ft.replace(R.id.fl_round_tile, adapter.getItem(FRAGMENT_ROUNDS), getFragmentTag(FRAGMENT_ROUNDS));
                 ft.commitAllowingStateLoss();
             } else {
-                PagerTitleStrip viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
+                PagerTitleStripV22 viewPagerTitle = (PagerTitleStripV22) findViewById(R.id.vp_title_main);
                 viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
 
                 viewPager = (ViewPager) findViewById(R.id.vp_main);

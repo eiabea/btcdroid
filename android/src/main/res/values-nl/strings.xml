@@ -175,7 +175,7 @@
     <string name="txt_donate_dialog_title">Doneren</string>
     <string name="txt_donate_copy_bitcoin_address">Kopieer Bitcoinaddres</string>
     <string name="txt_donate_open_bitcoin_wallet">Open Bitcoinwallet</string>
-    <string name="toast_donate_no_bitcoin_wallet_found">Geen  Bitcoinwallet gevonden</string>
+    <string name="toast_donate_no_bitcoin_wallet_found">Geen Bitcoinwallet gevonden</string>
 
     <string-array name="price_source">
         <item>@string/BitStamp</item>
@@ -185,6 +185,9 @@
         <item>@string/CoinDeskEur</item>
         <item>@string/CoinDeskGbp</item>
         <item>@string/CoinBaseUsd</item>
+        <item>@string/CoinfinityBase</item>
+        <item>@string/CoinfinityAtm</item>
+        <item>@string/CoinfinityBitcoinbon</item>
     </string-array>
     <string-array name="price_source_values">
         <item>0</item>
@@ -194,6 +197,9 @@
         <item>6</item>
         <item>7</item>
         <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
     </string-array>
     <string-array name="btc_style">
         <item>@string/btc</item>
