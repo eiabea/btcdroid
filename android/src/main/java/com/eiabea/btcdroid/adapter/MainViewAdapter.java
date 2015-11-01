@@ -75,14 +75,16 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
                 break;
         }
 
-//        frag = WorkerFragment.create();
-
         return frag;
 
     }
 
     private int positionToCustomPosition(int position) {
-        return fragmentOrder[position];
+        if(position < fragmentOrder.length){
+            return fragmentOrder[position];
+        }
+
+        return fragmentOrder[0];
     }
 
     @Override

@@ -77,6 +77,7 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
     private void setPricesSource() {
         boolean priceEnabled = getPreferenceManager().getSharedPreferences().getBoolean("price_enabled", false);
         getPreferenceScreen().findPreference("price_source_preference").setEnabled(priceEnabled);
+        getPreferenceScreen().findPreference("reward_as_fiat").setEnabled(priceEnabled);
     }
 
     private void setNotification() {
