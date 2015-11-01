@@ -39,9 +39,9 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
         for (int widgetId : appWidgetIds) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
-            if(trans){
+            if (trans) {
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_black_transparent);
-            }else{
+            } else {
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_white);
             }
 
@@ -52,7 +52,7 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
 
                     Intent i;
 
-                    switch (behavior){
+                    switch (behavior) {
                         case 0:
                             remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
                             i = new Intent(context, UpdateService.class);
@@ -67,9 +67,9 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
                     }
                 } else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
                     String selectionStats = Stats._ID + "=?";
-                    String[] selectionArgsStats = { "1" };
+                    String[] selectionArgsStats = {"1"};
 
-                    Cursor cStats = context.getContentResolver().query(Stats.CONTENT_URI, null,selectionStats,selectionArgsStats, null);
+                    Cursor cStats = context.getContentResolver().query(Stats.CONTENT_URI, null, selectionStats, selectionArgsStats, null);
 
                     if (cStats.getCount() > 0) {
                         cStats.moveToFirst();

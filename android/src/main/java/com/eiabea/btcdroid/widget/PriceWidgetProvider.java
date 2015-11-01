@@ -39,10 +39,10 @@ public class PriceWidgetProvider extends AppWidgetProvider {
         for (int widgetId : allWidgetIds) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
-            if(trans){
+            if (trans) {
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_black_transparent);
                 remoteViews.setTextColor(R.id.txt_widget_value, ContextCompat.getColor(context, R.color.bd_background));
-            }else{
+            } else {
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_white);
                 remoteViews.setTextColor(R.id.txt_widget_value, ContextCompat.getColor(context, R.color.bd_dark_grey_text));
             }
@@ -54,7 +54,7 @@ public class PriceWidgetProvider extends AppWidgetProvider {
 
                     Intent i;
 
-                    switch (behavior){
+                    switch (behavior) {
                         case 0:
                             remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
                             i = new Intent(context, UpdateService.class);
@@ -70,10 +70,10 @@ public class PriceWidgetProvider extends AppWidgetProvider {
                 } else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
 
                     String selection = GenericPrice._ID + "=?";
-                    String[] selectionArgs = { "1" };
+                    String[] selectionArgs = {"1"};
 
-                    Cursor c = context.getContentResolver().query(GenericPrice.CONTENT_URI, null,selection,selectionArgs, null);
-                    if(c.getCount() > 0){
+                    Cursor c = context.getContentResolver().query(GenericPrice.CONTENT_URI, null, selection, selectionArgs, null);
+                    if (c.getCount() > 0) {
                         c.moveToFirst();
 
                         GenericPrice price = new GenericPrice(c);

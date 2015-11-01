@@ -55,8 +55,6 @@ public class HttpWorker {
 
         String url = HttpWorker.PRICES_URL_BTCE_FRONT + currency.toLowerCase(Locale.ENGLISH) + HttpWorker.PRICES_URL_BTCE_END;
 
-        System.out.println(HttpWorker.mQueue.toString());
-
         HttpWorker.mQueue.add(new GsonRequest<>(url, PricesBTCe.class, null, success, error));
 
     }
@@ -66,8 +64,6 @@ public class HttpWorker {
 
         String url = HttpWorker.PRICES_URL_COINDESK_FRONT + currency.toLowerCase(Locale.ENGLISH) + HttpWorker.PRICES_URL_COINDESK_END;
 
-        System.out.println(HttpWorker.mQueue.toString());
-
         HttpWorker.mQueue.add(new GsonRequest<>(url, PricesCoinDesk.class, null, success, error));
 
     }
@@ -76,8 +72,6 @@ public class HttpWorker {
         Log.d(getClass().getSimpleName(), "get Prices Coinfinity");
 
         String url = HttpWorker.PRICES_URL_COINFINITY;
-
-        System.out.println(HttpWorker.mQueue.toString());
 
         HttpWorker.mQueue.add(new GsonRequest<>(url, PricesCoinfinity
                 .class, null, success, error));
@@ -89,8 +83,6 @@ public class HttpWorker {
 
         String url = HttpWorker.PRICES_URL_BITSTAMP;
 
-        System.out.println(HttpWorker.mQueue.toString());
-
         HttpWorker.mQueue.add(new GsonRequest<>(url, PricesBitStamp.class, null, success, error));
 
     }
@@ -99,8 +91,6 @@ public class HttpWorker {
         Log.d(getClass().getSimpleName(), "get Prices BitStamp");
 
         String url = HttpWorker.PRICES_URL_COINBASE;
-
-        System.out.println(HttpWorker.mQueue.toString());
 
         HttpWorker.mQueue.add(new GsonRequest<>(url, PricesCoinbase.class, null, success, error));
 

@@ -186,6 +186,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }
         }
 
+        c.close();
 
         return new Date(average * 1000);
     }

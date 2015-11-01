@@ -211,9 +211,9 @@ public class App extends Application {
                 totalHashrate += value;
             }
 
-            c.close();
         }
 
+        c.close();
 
         return totalHashrate;
     }

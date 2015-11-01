@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
@@ -14,7 +13,6 @@ import com.eiabea.btcdroid.fragments.PayoutFragment;
 import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
-import com.eiabea.btcdroid.model.Worker;
 
 public class MainViewAdapter extends FragmentStatePagerAdapter {
 
@@ -80,7 +78,7 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
     }
 
     private int positionToCustomPosition(int position) {
-        if(position < fragmentOrder.length){
+        if (position < fragmentOrder.length) {
             return fragmentOrder[position];
         }
 

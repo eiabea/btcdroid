@@ -39,9 +39,9 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
         for (int widgetId : allWidgetIds) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
-            if(trans){
+            if (trans) {
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_black_transparent);
-            }else{
+            } else {
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_white);
             }
 
@@ -52,7 +52,7 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
 
                     Intent i;
 
-                    switch (behavior){
+                    switch (behavior) {
                         case 0:
                             remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
                             i = new Intent(context, UpdateService.class);
@@ -67,9 +67,9 @@ public class TotalHashrateWidgetProvider extends AppWidgetProvider {
                     }
                 } else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
                     String selection = Profile._ID + "=?";
-                    String[] selectionArgs = { "1" };
+                    String[] selectionArgs = {"1"};
 
-                    Cursor c = context.getContentResolver().query(Profile.CONTENT_URI, null,selection,selectionArgs, null);
+                    Cursor c = context.getContentResolver().query(Profile.CONTENT_URI, null, selection, selectionArgs, null);
                     if (c.getCount() > 0) {
 
                         c.moveToFirst();

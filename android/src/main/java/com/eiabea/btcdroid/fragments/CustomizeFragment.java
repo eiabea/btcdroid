@@ -34,12 +34,9 @@ public class CustomizeFragment extends Fragment {
 
     private ArrayAdapter<CustomizeItem> adapter;
 
-    private ArrayList<CustomizeItem> list;
-    private ArrayList<String> userList;
     private Spinner spnMainFragment;
 
     private DragSortListView mDslv;
-    private DragSortController mController;
 
     private SharedPreferences pref;
 
@@ -75,7 +72,7 @@ public class CustomizeFragment extends Fragment {
     };
 
     private void updateOrderList() {
-        userList = new ArrayList<String>();
+        ArrayList<String> userList = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < adapter.getCount(); i++) {
@@ -91,7 +88,7 @@ public class CustomizeFragment extends Fragment {
         pref.edit().putString("userOrder", builder.toString()).apply();
 
         // Set Spinner
-        List<String> spinnerList = new ArrayList<String>();
+        List<String> spinnerList = new ArrayList<>();
         for (int i = 0; i < userList.size(); i++) {
             // +1 to use userfriendly indexes
             spinnerList.add(String.valueOf(i + 1));
@@ -124,7 +121,7 @@ public class CustomizeFragment extends Fragment {
         String userOrder = pref.getString("userOrder", "0:1:2:3");
         String[] split = userOrder.split(":");
 
-        list = new ArrayList<CustomizeItem>(split.length);
+        ArrayList<CustomizeItem> list = new ArrayList<>(split.length);
         for (String aSplit : split) {
             list.add(new CustomizeItem(Integer.valueOf(aSplit), MainViewAdapter.getNameOfFragment(Integer.valueOf(aSplit), getActivity())));
         }
@@ -182,7 +179,7 @@ public class CustomizeFragment extends Fragment {
         mDslv.setDropListener(onDrop);
         mDslv.setRemoveListener(onRemove);
 
-        mController = buildController(mDslv);
+        DragSortController mController = buildController(mDslv);
         mDslv.setFloatViewManager(mController);
         mDslv.setOnTouchListener(mController);
         mDslv.setDragEnabled(dragEnabled);

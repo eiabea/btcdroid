@@ -52,7 +52,7 @@ public class EstimatedRewardWidgetProvider extends AppWidgetProvider {
 
                     Intent i;
 
-                    switch (behavior){
+                    switch (behavior) {
                         case 0:
                             remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
                             i = new Intent(context, UpdateService.class);

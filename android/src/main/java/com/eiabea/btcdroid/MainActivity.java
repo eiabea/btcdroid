@@ -18,7 +18,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -217,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements UpdateInterface,
                 viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
 
                 viewPager = (ViewPager) findViewById(R.id.vp_main);
-                viewPager.setOnPageChangeListener(this);
+                viewPager.addOnPageChangeListener(this);
                 viewPager.setOffscreenPageLimit(2);
                 viewPager.setAdapter(adapter);
                 viewPager.setCurrentItem(currentPage);

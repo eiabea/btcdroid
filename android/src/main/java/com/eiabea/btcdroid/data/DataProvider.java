@@ -419,7 +419,7 @@ public class DataProvider extends ContentProvider {
                     long tmpBlockNumber = blocksInDb.getLong(blocksInDb.getColumnIndex(Block.NUMBER));
 
 
-                    if(!blockNumbers.contains(tmpBlockNumber)){
+                    if (!blockNumbers.contains(tmpBlockNumber)) {
                         String where = Block.NUMBER + "=?";
                         String[] whereArgs = {String.valueOf(tmpBlockNumber)};
 
@@ -466,7 +466,7 @@ public class DataProvider extends ContentProvider {
         context.getContentResolver().delete(Block.CONTENT_URI, null, null);
     }
 
-    public static void clearWorkers(Context context){
+    public static void clearWorkers(Context context) {
         Log.d(TAG, "clearWorkers");
         context.getContentResolver().delete(Worker.CONTENT_URI, null, null);
     }
