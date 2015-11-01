@@ -37,7 +37,7 @@ public class App extends Application {
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss", Locale.getDefault());
     public static final SimpleDateFormat dateStatsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     public static final SimpleDateFormat dateDurationFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-    public static final SimpleDateFormat dateDurationDayFormat = new SimpleDateFormat("dd HH:mm:ss", Locale.getDefault());
+//    public static final SimpleDateFormat dateDurationDayFormat = new SimpleDateFormat("dd HH:mm:ss", Locale.getDefault());
 
     public static final String PREF_TOKEN = "token";
 
@@ -139,10 +139,7 @@ public class App extends Application {
     }
 
     public boolean isTokenSet() {
-        if (token != null && token.length() > 0) {
-            return true;
-        }
-        return false;
+        return token != null && token.length() > 0;
     }
 
     public static String formatHashRate(String hash) {
@@ -180,14 +177,13 @@ public class App extends Application {
 
         switch (style) {
             case 0:
-                return String.format("%.6f", reward) + getResString(R.string.btc_short, getInstance());
+                return String.format("%.6f", reward);
             case 1:
                 return String.format("%.2f", reward * 1000) + getResString(R.string.mbtc_short, getInstance());
             case 2:
                 return String.format("%.2f", reward * 1000 * 1000) + getResString(R.string.ubtc_short, getInstance());
-
             default:
-                return String.format("%.6f", reward) + getResString(R.string.btc_short, getInstance());
+                return "";
         }
 
     }

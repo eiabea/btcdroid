@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,7 +30,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 
-public class ParticipantsActivity extends ActionBarActivity {
+public class ParticipantsActivity extends AppCompatActivity {
 
     private static ImageView imgQr;
 
@@ -110,7 +111,7 @@ public class ParticipantsActivity extends ActionBarActivity {
                                 showQr(true);
 
                                 LoadQrCode task = new LoadQrCode();
-                                task.execute(new String[]{address});
+                                task.execute(address);
                                 break;
                             case 2:
                                 try {

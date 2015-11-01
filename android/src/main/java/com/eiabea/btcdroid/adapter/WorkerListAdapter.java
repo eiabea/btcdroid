@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,12 +80,12 @@ public class WorkerListAdapter extends CursorTreeAdapter {
             wh.imgCircle.setImageResource(R.drawable.shape_circle_green);
             wh.txtStatus.setText(App.formatHashRate(worker.getHashrate()));
             wh.txtStatus.setTypeface(tfRegular);
-            wh.txtStatus.setTextColor(context.getResources().getColor(R.color.bd_circle_green_solid));
+            wh.txtStatus.setTextColor(ContextCompat.getColor(context, R.color.bd_circle_green_solid));
         } else {
             wh.imgCircle.setImageResource(R.drawable.shape_circle_red);
             wh.txtStatus.setText(context.getString(R.string.txt_inactive));
             wh.txtStatus.setTypeface(tfItalic);
-            wh.txtStatus.setTextColor(context.getResources().getColor(R.color.bd_circle_red_solid));
+            wh.txtStatus.setTextColor(ContextCompat.getColor(context, R.color.bd_circle_red_solid));
         }
 
         if (isExpanded) {

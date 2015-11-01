@@ -42,11 +42,6 @@
             android:summary="@string/txt_pref_price_price_source_message"
             android:title="@string/txt_pref_price_price_source_title" />
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="reward_as_fiat"
-            android:summary="Show all rewards as fiat"
-            android:title="Fiat reward" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/txt_pref_style_title">
         <ListPreference

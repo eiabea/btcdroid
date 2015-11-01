@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -40,10 +41,10 @@ public class AverageHashrateWidgetProvider extends AppWidgetProvider {
 
             if(trans){
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_black_transparent);
-                remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_background));
+                remoteViews.setTextColor(R.id.txt_widget_value, ContextCompat.getColor(context, R.color.bd_background));
             }else{
                 remoteViews.setInt(R.id.ll_pool_hash_holder_left, "setBackgroundResource", R.color.bd_white);
-                remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_dark_grey_text));
+                remoteViews.setTextColor(R.id.txt_widget_value, ContextCompat.getColor(context, R.color.bd_dark_grey_text));
             }
 
             try {

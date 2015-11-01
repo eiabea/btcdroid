@@ -2,6 +2,8 @@ package com.eiabea.btcdroid.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.Block;
+import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.util.App;
 
 import java.text.ParseException;
@@ -23,6 +26,7 @@ public class RoundsListAdapter extends CursorTreeAdapter {
     public static final String TAG = RoundsListAdapter.class.getSimpleName();
 
     private Context context;
+    private GenericPrice currentPrice;
 
     public RoundsListAdapter(Cursor cursor, Context context) {
         super(cursor, context, true);
@@ -84,7 +88,7 @@ public class RoundsListAdapter extends CursorTreeAdapter {
 
         if (days > 1) {
             durationString = String.format("%d days - %02d:%02d:%02d", days, hours, minutes, seconds);
-        } else if(days == 1) {
+        } else if (days == 1) {
             durationString = String.format("%d day - %02d:%02d:%02d", days, hours, minutes, seconds);
         } else {
             durationString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
@@ -107,20 +111,27 @@ public class RoundsListAdapter extends CursorTreeAdapter {
 
     private void setReward(TextView txt, Block currentBlock) {
 
+        int style = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString("btc_style_preference", "0"));
+
         if (currentBlock.getReward() != null) {
             float reward = Float.valueOf(currentBlock.getReward());
             int confirmationsLeft = 100 - currentBlock.getConfirmations();
 
-            txt.setText(App.formatReward(reward));
+            if (style == 3 && this.currentPrice != null) {
+                txt.setText(App.formatPrice(this.currentPrice.getSymbol(), reward * this.currentPrice.getValueFloat()));
+            } else {
+                txt.setText(App.formatReward(reward));
+            }
+
 
             if (confirmationsLeft <= 0) {
-                txt.setTextColor(context.getResources().getColor(R.color.bd_circle_green_solid));
+                txt.setTextColor(ContextCompat.getColor(context, R.color.bd_circle_green_solid));
             } else {
-                txt.setTextColor(context.getResources().getColor(R.color.bd_orange));
+                txt.setTextColor(ContextCompat.getColor(context, R.color.bd_orange));
             }
         } else {
             txt.setText(context.getString(R.string.txt_not_available));
-            txt.setTextColor(context.getResources().getColor(R.color.bd_circle_red_solid));
+            txt.setTextColor(ContextCompat.getColor(context, R.color.bd_circle_red_solid));
         }
 
     }
@@ -181,6 +192,11 @@ public class RoundsListAdapter extends CursorTreeAdapter {
             txt.setTextColor(context.getResources().getColor(R.color.bd_orange));
         }
 
+    }
+
+    public void setCurrentPrice(GenericPrice currentPrice) {
+        this.currentPrice = currentPrice;
+        notifyDataSetInvalidated();
     }
 
     public static class RoundHeader {

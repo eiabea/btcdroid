@@ -15,10 +15,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerTitleStripV22;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.util.Log;
@@ -41,7 +42,7 @@ import com.eiabea.btcdroid.service.UpdateService.UpdateInterface;
 import com.eiabea.btcdroid.util.App;
 
 @SuppressLint("InlinedApi")
-public class MainActivity extends ActionBarActivity implements UpdateInterface,
+public class MainActivity extends AppCompatActivity implements UpdateInterface,
         OnPageChangeListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -67,7 +68,6 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
     // ViewPager Layout
     private ViewPager viewPager;
-    private MainViewAdapter adapter;
     private int currentPage = FRAGMENT_POOL;
 
     private LinearLayout llNoPools;
@@ -199,7 +199,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
         toolbar.setSubtitle(R.string.app_name_subtitle);
         setSupportActionBar(toolbar);
 
-        adapter = new MainViewAdapter(this, getSupportFragmentManager());
+        MainViewAdapter adapter = new MainViewAdapter(this, getSupportFragmentManager());
         try {
             if (isTablet && isLand) {
 
@@ -213,7 +213,7 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
                 ft.replace(R.id.fl_round_tile, adapter.getItem(FRAGMENT_ROUNDS), getFragmentTag(FRAGMENT_ROUNDS));
                 ft.commitAllowingStateLoss();
             } else {
-                PagerTitleStripV22 viewPagerTitle = (PagerTitleStripV22) findViewById(R.id.vp_title_main);
+                PagerTitleStrip viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
                 viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
 
                 viewPager = (ViewPager) findViewById(R.id.vp_main);
@@ -511,9 +511,9 @@ public class MainActivity extends ActionBarActivity implements UpdateInterface,
 
     }
 
-    @Override
-    public void onAvgLuckError() {
-
-    }
+//    @Override
+//    public void onAvgLuckError() {
+//
+//    }
 
 }

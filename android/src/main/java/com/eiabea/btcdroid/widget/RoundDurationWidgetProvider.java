@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -76,17 +77,17 @@ public class RoundDurationWidgetProvider extends AppWidgetProvider {
                         Stats stats = new Stats(cStats);
                         stats = App.getInstance().gson.fromJson(stats.getJson(), Stats.class);
 
-                        Date duration = null;
+                        Date duration;
 
                         try {
                             duration = App.dateDurationFormat.parse(stats.getRound_duration());
                             remoteViews.setTextViewText(R.id.txt_widget_value, App.dateDurationFormat.format(duration));
-                            remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_green));
+                            remoteViews.setTextColor(R.id.txt_widget_value, ContextCompat.getColor(context, R.color.bd_green));
                             remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_round_duration_widget));
                         } catch (ParseException e) {
                             Log.e(getClass().getSimpleName(), "Can't parse RoundDuration (ParseExeception)");
                             remoteViews.setTextViewText(R.id.txt_widget_value, context.getString(R.string.txt_greater_one_day));
-                            remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_green));
+                            remoteViews.setTextColor(R.id.txt_widget_value, ContextCompat.getColor(context, R.color.bd_green));
                             remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_round_duration_widget));
                         }
 

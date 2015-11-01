@@ -4,11 +4,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.eiabea.btcdroid.fragments.CustomizeFragment;
 
-public class CustomizeActivity extends ActionBarActivity {
+public class CustomizeActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle icicle) {

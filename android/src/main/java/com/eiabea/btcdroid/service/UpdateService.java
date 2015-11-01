@@ -7,17 +7,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.android.volley.Response.ErrorListener;
@@ -26,7 +21,6 @@ import com.android.volley.VolleyError;
 import com.eiabea.btcdroid.MainActivity;
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.data.DataProvider;
-import com.eiabea.btcdroid.model.AvgLuck;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.PricesBTCe;
 import com.eiabea.btcdroid.model.PricesBitStamp;
@@ -132,7 +126,7 @@ public class UpdateService extends Service {
 
         System.out.println(HttpWorker.mQueue.toString());
 
-        HttpWorker.mQueue.add(new GsonRequest<Profile>(url, Profile.class, null, new Listener<Profile>() {
+        HttpWorker.mQueue.add(new GsonRequest<>(url, Profile.class, null, new Listener<Profile>() {
 
             @Override
             public void onResponse(Profile profile) {
@@ -160,7 +154,7 @@ public class UpdateService extends Service {
 
         System.out.println(HttpWorker.mQueue.toString());
 
-        HttpWorker.mQueue.add(new GsonRequest<Stats>(url, Stats.class, null, new Listener<Stats>() {
+        HttpWorker.mQueue.add(new GsonRequest<>(url, Stats.class, null, new Listener<Stats>() {
 
             @Override
             public void onResponse(Stats stats) {
@@ -415,7 +409,7 @@ public class UpdateService extends Service {
                         try {
                             GenericPrice price = new GenericPrice();
 
-                            switch (source){
+                            switch (source) {
                                 case PRICE_SOURCE_COINFINITY_BASE:
                                     price.setValueFloat(prices.getBase());
                                     price.setSource(getApplicationContext().getString(R.string.CoinfinityBase_short));
@@ -507,14 +501,14 @@ public class UpdateService extends Service {
 
             if (enabled) {
 
-                long totalHashrate =0;
+                long totalHashrate = 0;
                 long limit = Integer.valueOf(pref.getString("notification_hashrate", "0"));
 
-                if(profile != null){
-                    for(Worker tmpWorker : profile.getWorkersList()){
-                        totalHashrate+=tmpWorker.getHashrate();
+                if (profile != null) {
+                    for (Worker tmpWorker : profile.getWorkersList()) {
+                        totalHashrate += tmpWorker.getHashrate();
                     }
-                }else{
+                } else {
                     totalHashrate = App.getTotalHashrate(getApplicationContext());
                 }
 
@@ -662,21 +656,21 @@ public class UpdateService extends Service {
 //        DataProvider.insertOrUpdateAvgLuck(getApplicationContext(), avgLuck);
 //
 //    }
-
-    private void onAvgLuckError() {
-        if (updateInterface != null) {
-            updateInterface.onAvgLuckError();
-        }
-    }
+//
+//    private void onAvgLuckError() {
+//        if (updateInterface != null) {
+//            updateInterface.onAvgLuckError();
+//        }
+//    }
 
     public interface UpdateInterface {
-        public void onProfileError();
+        void onProfileError();
 
-        public void onStatsError();
+        void onStatsError();
 
-        public void onAvgLuckError();
+//        public void onAvgLuckError();
 
-        public void onPricesError();
+        void onPricesError();
     }
 
 }

@@ -12,8 +12,8 @@ android {
     buildToolsVersion '23.0.2'
     defaultConfig {
         versionCode 97
-        versionName "2.0.9"
-        minSdkVersion 10
+        versionName "2.1.0"
+        minSdkVersion 15
         targetSdkVersion 23
 
         buildConfigField "String", "APP_STARTS", "\"appStarts\""
@@ -76,10 +76,10 @@ dependencies {
     compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.mobeta.android.dslv:drag-sort-listview:0.6.1'
     compile 'com.google.code.gson:gson:2.3'
-    compile 'com.google.android.gms:play-services:7.8.0'
+    compile 'com.google.android.gms:play-services:8.1.0'
     compile 'com.mcxiaoke.volley:library:1.0.6'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     compile 'com.google.zxing:core:3.1.0'
-    compile 'com.android.support:support-v4:23.0.1'
-    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:support-v4:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.1.0'
 }

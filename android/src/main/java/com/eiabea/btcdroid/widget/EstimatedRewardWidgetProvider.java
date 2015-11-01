@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -78,7 +79,7 @@ public class EstimatedRewardWidgetProvider extends AppWidgetProvider {
 
                         float estimated = Float.valueOf(profile.getEstimated_reward());
                         remoteViews.setTextViewText(R.id.txt_widget_value, App.formatReward(estimated));
-                        remoteViews.setTextColor(R.id.txt_widget_value, context.getResources().getColor(R.color.bd_orange));
+                        remoteViews.setTextColor(R.id.txt_widget_value, ContextCompat.getColor(context, R.color.bd_orange));
                         remoteViews.setTextViewText(R.id.txt_widget_desc, context.getString(R.string.txt_estimated_reward));
 
                         remoteViews.setViewVisibility(R.id.fl_widget_loading, View.GONE);

@@ -18,12 +18,12 @@ public class HttpWorker {
     public static final String BASEURL = "https://mining.bitcoin.cz/";
     public static final String PRICES_URL_BTCE_FRONT = "https://btc-e.com/api/2/btc_";
     public static final String PRICES_URL_BTCE_END = "/ticker";
-    public static final String PRICES_URL_COINDESK_FRONT = "https://api.coindesk.com/v1/bpi/currentprice/";
+    public static final String PRICES_URL_COINDESK_FRONT = "http://api.coindesk.com/v1/bpi/currentprice/";
     public static final String PRICES_URL_COINDESK_END = ".json";
     public static final String PRICES_URL_BITSTAMP = "https://www.bitstamp.net/api/ticker/";
     public static final String PRICES_URL_COINBASE = "https://coinbase.com/api/v1/prices/buy";
     public static final String PRICES_URL_COINFINITY = "https://coinfinity.co/api/Ticker";
-    public static final String AVG_LUCK_URL = "http://slush-eiabea.rhcloud.com/avg_luck";
+//    public static final String AVG_LUCK_URL = "http://slush-eiabea.rhcloud.com/avg_luck";
 
     public static final String STATS_URL = BASEURL + "stats/json/";
     public static final String PROFILE_URL = BASEURL + "accounts/profile/json/";
@@ -57,7 +57,7 @@ public class HttpWorker {
 
         System.out.println(HttpWorker.mQueue.toString());
 
-        HttpWorker.mQueue.add(new GsonRequest<PricesBTCe>(url, PricesBTCe.class, null, success, error));
+        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesBTCe.class, null, success, error));
 
     }
 
@@ -68,7 +68,7 @@ public class HttpWorker {
 
         System.out.println(HttpWorker.mQueue.toString());
 
-        HttpWorker.mQueue.add(new GsonRequest<PricesCoinDesk>(url, PricesCoinDesk.class, null, success, error));
+        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesCoinDesk.class, null, success, error));
 
     }
 
@@ -79,7 +79,7 @@ public class HttpWorker {
 
         System.out.println(HttpWorker.mQueue.toString());
 
-        HttpWorker.mQueue.add(new GsonRequest<PricesCoinfinity>(url, PricesCoinfinity
+        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesCoinfinity
                 .class, null, success, error));
 
     }
@@ -91,7 +91,7 @@ public class HttpWorker {
 
         System.out.println(HttpWorker.mQueue.toString());
 
-        HttpWorker.mQueue.add(new GsonRequest<PricesBitStamp>(url, PricesBitStamp.class, null, success, error));
+        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesBitStamp.class, null, success, error));
 
     }
 
@@ -102,7 +102,7 @@ public class HttpWorker {
 
         System.out.println(HttpWorker.mQueue.toString());
 
-        HttpWorker.mQueue.add(new GsonRequest<PricesCoinbase>(url, PricesCoinbase.class, null, success, error));
+        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesCoinbase.class, null, success, error));
 
     }
 

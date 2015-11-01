@@ -36,7 +36,7 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        changed = new ArrayList<String>();
+        changed = new ArrayList<>();
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
@@ -77,7 +77,6 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
     private void setPricesSource() {
         boolean priceEnabled = getPreferenceManager().getSharedPreferences().getBoolean("price_enabled", false);
         getPreferenceScreen().findPreference("price_source_preference").setEnabled(priceEnabled);
-        getPreferenceScreen().findPreference("reward_as_fiat").setEnabled(priceEnabled);
     }
 
     private void setNotification() {

@@ -2,11 +2,11 @@ package com.eiabea.btcdroid.fragments;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,8 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -45,6 +43,9 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private SharedPreferences pref;
     private LinearLayout llPriceHolder;
+
+    private GenericPrice currentPrice;
+    private Profile currentProfile;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,52 +104,65 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void setProfile(final Profile profile) {
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-            Log.d(getClass().getSimpleName(), "Under Honeycomb");
-            Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
-            rotate.setAnimationListener(new AnimationListener() {
 
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    prgGauge.setVisibility(View.INVISIBLE);
+        this.currentProfile = profile;
 
-                }
+        setGauge(profile);
 
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    Log.d(getClass().getSimpleName(), "End rotate animation");
-                    prgGauge.setVisibility(View.VISIBLE);
-                    setGauge(profile, true);
-                }
-            });
-            prgGauge.setAnimation(rotate);
-        } else {
-            setGauge(profile, false);
-        }
+        fillUpTextviews();
 
         handleLoading();
 
-
     }
 
-    public void setPrices(GenericPrice price) {
-        setPrice(txtCurrentValue, price);
+    private void fillUpTextviews() {
 
-        if (llPriceHolder != null) {
-            if (App.isPriceEnabled) {
-                llPriceHolder.setVisibility(View.VISIBLE);
+        int style = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("btc_style_preference", "0"));
 
+        if (this.currentProfile != null) {
+
+            float sendThreshold = Float.valueOf(this.currentProfile.getSend_threshold());
+            float estimated = Float.valueOf(this.currentProfile.getEstimated_reward());
+            float confirmed = Float.valueOf(this.currentProfile.getConfirmed_reward());
+            float unconfirmed = Float.valueOf(this.currentProfile.getUnconfirmed_reward());
+            if (style == 3 && this.currentPrice != null) {
+
+                sendThreshold = sendThreshold * this.currentPrice.getValueFloat();
+                estimated = estimated * this.currentPrice.getValueFloat();
+                confirmed = confirmed * this.currentPrice.getValueFloat();
+                unconfirmed = unconfirmed * this.currentPrice.getValueFloat();
+
+                txtEstimatedReward.setText(App.formatPrice(this.currentPrice.getSymbol(), estimated));
+                txtConfirmedReward.setText(App.formatPrice(this.currentPrice.getSymbol(), confirmed));
+                txtTotalReward.setText(App.formatPrice(this.currentPrice.getSymbol(), confirmed + unconfirmed));
+
+                txtSendThreshold.setText(App.formatPrice(this.currentPrice.getSymbol(), sendThreshold));
             } else {
-                llPriceHolder.setVisibility(View.GONE);
 
+                txtEstimatedReward.setText(App.formatReward(estimated));
+                txtConfirmedReward.setText(App.formatReward(confirmed));
+                txtTotalReward.setText(App.formatReward(confirmed + unconfirmed));
+
+                txtSendThreshold.setText(App.formatReward(sendThreshold));
             }
         }
 
+
     }
+
+    private void setPrices(GenericPrice price) {
+        this.currentPrice = price;
+
+        setPrice(txtCurrentValue, price);
+
+        fillUpTextviews();
+
+        if (llPriceHolder != null) {
+            llPriceHolder.setVisibility(App.isPriceEnabled ? View.VISIBLE : View.GONE);
+        }
+
+    }
+
 
     private void setPrice(TextView txt, GenericPrice current) {
         if (current != null && txt != null) {
@@ -172,9 +186,9 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
                 Log.d(getClass().getSimpleName(), "threshold expired --> set colors for " + "txt_" + txt.getId());
                 if (lastPriceFloat > currentPriceFloat) {
-                    txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_red));
+                    txtCurrentValue.setTextColor(ContextCompat.getColor(getActivity(), R.color.bd_red));
                 } else {
-                    txtCurrentValue.setTextColor(getResources().getColor(R.color.bd_green));
+                    txtCurrentValue.setTextColor(ContextCompat.getColor(getActivity(), R.color.bd_green));
                 }
 
                 pref.edit().putFloat("txt_" + txt.getId() + "_value", currentPriceFloat).apply();
@@ -189,20 +203,14 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
     }
 
-    private void setGauge(Profile profile, boolean preHoneyComb) {
+    private void setGauge(Profile profile) {
         try {
             int offset = 48;
             int max = 1000;
 
             float sendThreshold = Float.valueOf(profile.getSend_threshold());
-            float estimated = Float.valueOf(profile.getEstimated_reward());
             float confirmed = Float.valueOf(profile.getConfirmed_reward());
             float unconfirmed = Float.valueOf(profile.getUnconfirmed_reward());
-
-            txtEstimatedReward.setText(App.formatReward(estimated));
-            txtConfirmedReward.setText(App.formatReward(confirmed));
-            txtTotalReward.setText(App.formatReward(confirmed + unconfirmed));
-            txtSendThreshold.setText(App.formatReward(sendThreshold));
 
             // Gauge only
             int confirmedProgress = (int) ((confirmed / sendThreshold) * (max - (2 * offset)));
@@ -215,15 +223,9 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
             prgGauge.setProgress(0);
             prgGauge.setSecondaryProgress(0);
 
-
-            if (preHoneyComb) {
-                new TotalAnimator().execute(total);
-                new ConfirmedAnimator().execute(confirmedProgress);
-            } else {
-                ProgressBarAnimation anim = new ProgressBarAnimation(prgGauge, offset, total, -50, confirmedProgress);
-                anim.setDuration(1000);
-                prgGauge.startAnimation(anim);
-            }
+            ProgressBarAnimation anim = new ProgressBarAnimation(prgGauge, offset, total, -50, confirmedProgress);
+            anim.setDuration(1000);
+            prgGauge.startAnimation(anim);
 
         } catch (NullPointerException e) {
             Log.e(getClass().getSimpleName(), "Can't set Gauge (NullPointer)");
@@ -261,48 +263,6 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
             progressBar.setSecondaryProgress((int) secondValue);
         }
 
-    }
-
-    public class TotalAnimator extends AsyncTask<Integer, Void, Void> {
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            prgGauge.incrementProgressBy(10);
-        }
-
-        @Override
-        protected Void doInBackground(Integer... params) {
-            while (prgGauge.getProgress() < params[0]) {
-                publishProgress();
-                try {
-                    Thread.sleep(7);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-    }
-
-    public class ConfirmedAnimator extends AsyncTask<Integer, Void, Void> {
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            prgGauge.incrementSecondaryProgressBy(10);
-        }
-
-        @Override
-        protected Void doInBackground(Integer... params) {
-            while (prgGauge.getSecondaryProgress() < params[0]) {
-                publishProgress();
-                try {
-                    Thread.sleep(7);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
     }
 
     @Override

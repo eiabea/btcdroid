@@ -38,7 +38,6 @@ public class CustomizeFragment extends Fragment {
     private ArrayList<String> userList;
     private Spinner spnMainFragment;
 
-    private ViewGroup rootView;
     private DragSortListView mDslv;
     private DragSortController mController;
 
@@ -89,7 +88,7 @@ public class CustomizeFragment extends Fragment {
         }
         Log.d(getClass().getSimpleName(), "userOrder: " + builder.toString());
 
-        pref.edit().putString("userOrder", builder.toString()).commit();
+        pref.edit().putString("userOrder", builder.toString()).apply();
 
         // Set Spinner
         List<String> spinnerList = new ArrayList<String>();
@@ -116,19 +115,6 @@ public class CustomizeFragment extends Fragment {
         return R.layout.fragment_customize;
     }
 
-    public static CustomizeFragment newInstance(int headers, int footers) {
-        CustomizeFragment f = new CustomizeFragment();
-
-        Bundle args = new Bundle();
-        f.setArguments(args);
-
-        return f;
-    }
-
-    public DragSortController getController() {
-        return mController;
-    }
-
     /**
      * Called from DSLVFragment.onActivityCreated(). Override to set a different
      * adapter.
@@ -139,8 +125,8 @@ public class CustomizeFragment extends Fragment {
         String[] split = userOrder.split(":");
 
         list = new ArrayList<CustomizeItem>(split.length);
-        for (int i = 0; i < split.length; i++) {
-            list.add(new CustomizeItem(Integer.valueOf(split[i]), MainViewAdapter.getNameOfFragment(Integer.valueOf(split[i]), getActivity())));
+        for (String aSplit : split) {
+            list.add(new CustomizeItem(Integer.valueOf(aSplit), MainViewAdapter.getNameOfFragment(Integer.valueOf(aSplit), getActivity())));
         }
 
         adapter = new CustomizeAdapter(getActivity(), R.layout.list_item_handle_left, list);
@@ -175,7 +161,7 @@ public class CustomizeFragment extends Fragment {
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 
-        rootView = (ViewGroup) inflater.inflate(getLayout(), container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(getLayout(), container, false);
 
         spnMainFragment = (Spinner) rootView.findViewById(R.id.spn_customize_main_fragment);
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -107,11 +108,11 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             if ((lastUpdated + threshold) < now) {
 
                 if (last > current) {
-                    txt.setTextColor(getResources().getColor(R.color.bd_red));
+                    txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.bd_red));
                 } else if (last < current) {
-                    txt.setTextColor(getResources().getColor(R.color.bd_green));
+                    txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.bd_green));
                 } else {
-                    txt.setTextColor(getResources().getColor(R.color.bd_dark_grey_text));
+                    txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.bd_dark_grey_text));
                 }
                 pref.edit().putFloat("txt_" + txt.getId() + "_value", current).apply();
                 pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).apply();

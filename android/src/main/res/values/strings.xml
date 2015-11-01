@@ -21,7 +21,6 @@
     <string name="mbtc">mBTC</string>
     <string name="ubtc">µBTC</string>
     <string name="fiat">Fiat</string>
-    <string name="btc_short"></string>
     <string name="mbtc_short">m</string>
     <string name="ubtc_short">µ</string>
     <string name="percent_sign">%</string>
@@ -244,6 +243,8 @@
     <string name="toast_error_loading_profile">Error loading Profile</string>
     <string name="toast_error_loading_stats">Error loading Stats</string>
     <string name="toast_error_loading_price">Error loading Price</string>
+    <string name="txt_pref_price_fiat_reward_title">Fiat reward</string>
+    <string name="txt_pref_price_fiat_reward_message">Show all rewards as fiat</string>
 
     <item name="is_land" type="bool">false</item>
     <item name="is_tablet" type="bool">false</item>
