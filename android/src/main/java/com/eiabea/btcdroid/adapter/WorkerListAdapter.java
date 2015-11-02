@@ -22,13 +22,13 @@ public class WorkerListAdapter extends CursorTreeAdapter {
 
     public static final String TAG = WorkerListAdapter.class.getSimpleName();
 
-    private Context context;
+    private final Context context;
 
-    private Typeface tfRegular;
-    private Typeface tfItalic;
+    private final Typeface tfRegular;
+    private final Typeface tfItalic;
 
-    public WorkerListAdapter(Cursor cursor, Context context) {
-        super(cursor, context, true);
+    public WorkerListAdapter(Context context) {
+        super(null, context, true);
         this.context = context;
 
         this.tfRegular = Typeface.createFromAsset(context.getAssets(), "RobotoCondensed-Regular.ttf");

@@ -167,7 +167,7 @@ public class ParticipantsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class LoadQrCode extends AsyncTask<String, Void, Bitmap> {
+    private  static class LoadQrCode extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... wallet) {
 
@@ -205,8 +205,6 @@ public class ParticipantsActivity extends AppCompatActivity {
 
         uri.append(address);
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
-
-        return intent;
+        return new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
     }
 }

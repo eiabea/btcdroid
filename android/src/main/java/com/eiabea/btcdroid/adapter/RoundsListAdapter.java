@@ -25,11 +25,11 @@ public class RoundsListAdapter extends CursorTreeAdapter {
 
     public static final String TAG = RoundsListAdapter.class.getSimpleName();
 
-    private Context context;
+    private final Context context;
     private GenericPrice currentPrice;
 
-    public RoundsListAdapter(Cursor cursor, Context context) {
-        super(cursor, context, true);
+    public RoundsListAdapter(Context context) {
+        super(null, context, true);
         this.context = context;
     }
 
@@ -186,10 +186,10 @@ public class RoundsListAdapter extends CursorTreeAdapter {
 
         if (confirmationsLeft <= 0) {
             txt.setText(R.string.txt_confirmed);
-            txt.setTextColor(context.getResources().getColor(R.color.bd_circle_green_solid));
+            txt.setTextColor(ContextCompat.getColor(context, R.color.bd_circle_green_solid));
         } else {
             txt.setText(String.valueOf(confirmationsLeft));
-            txt.setTextColor(context.getResources().getColor(R.color.bd_orange));
+            txt.setTextColor(ContextCompat.getColor(context, R.color.bd_orange));
         }
 
     }

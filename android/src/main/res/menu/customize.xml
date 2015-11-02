@@ -6,13 +6,13 @@
         android:icon="@drawable/ic_action_navigation_accept"
         android:title="@string/action_accept"
         android:visible="true"
-        btcdroid:showAsAction="always" />
+        btcdroid:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_reset"
         android:icon="@drawable/ic_action_content_undo"
         android:title="@string/action_reset"
         android:visible="true"
-        btcdroid:showAsAction="always" />
+        btcdroid:showAsAction="ifRoom" />
 
 </menu>

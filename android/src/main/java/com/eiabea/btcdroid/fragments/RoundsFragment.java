@@ -22,8 +22,6 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
     private static final int ROUNDS_ROUNDS_LOADER_ID = 411;
     private static final int ROUNDS_PRICE_LOADER_ID = 412;
 
-    private ViewGroup rootView;
-
     private RoundsListAdapter adapter;
 
     private ExpandableListView exlvRoundsHolder;
@@ -46,18 +44,18 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout containing a title and body text.
-        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_rounds, null);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_rounds, container, false);
 
-        initUi();
+        initUi(rootView);
 
-        adapter = new RoundsListAdapter(null, getActivity());
+        adapter = new RoundsListAdapter(getActivity());
 
         exlvRoundsHolder.setAdapter(adapter);
 
         return rootView;
     }
 
-    private void initUi() {
+    private void initUi(ViewGroup rootView) {
         exlvRoundsHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_rounds_holder);
     }
 

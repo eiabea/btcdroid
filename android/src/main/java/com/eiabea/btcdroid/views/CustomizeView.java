@@ -42,7 +42,7 @@ public class CustomizeView extends LinearLayout {
         return item;
     }
 
-    public void setItem(CustomizeItem item) {
+    private void setItem(CustomizeItem item) {
         this.item = item;
     }
 

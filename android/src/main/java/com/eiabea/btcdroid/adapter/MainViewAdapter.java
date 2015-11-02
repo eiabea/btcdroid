@@ -20,7 +20,7 @@ public class MainViewAdapter extends FragmentStatePagerAdapter {
 
     private static int PAGES = 0;
 
-    private Context context;
+    private final Context context;
 
     private static int[] fragmentOrder;
 

@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.eiabea.btcdroid.model.AvgLuck;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
@@ -27,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String WORKER_TABLE_NAME = "worker";
     public static final String ROUNDS_TABLE_NAME = "rounds";
 
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
     private static final String DATABASE_NAME = "btcdroid";
 
     private static final String CREATE_PROFILE_TABLE =
@@ -46,12 +45,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             " CREATE TABLE " + PRICE_TABLE_NAME +
                     " (" + GenericPrice._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     " " + GenericPrice.JSON + " TEXT " +
-                    ");";
-
-    private static final String CREATE_AVG_LUCK_TABLE =
-            " CREATE TABLE " + AVG_LUCK_TABLE_NAME +
-                    " (" + AvgLuck._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    " " + AvgLuck.JSON + " TEXT " +
                     ");";
 
     private static final String CREATE_WORKER_TABLE =
@@ -85,7 +78,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_PROFILE_TABLE);
         db.execSQL(CREATE_STATS_TABLE);
         db.execSQL(CREATE_PRICE_TABLE);
-        db.execSQL(CREATE_AVG_LUCK_TABLE);
         db.execSQL(CREATE_WORKER_TABLE);
         db.execSQL(CREATE_ROUNDS_TABLE);
     }

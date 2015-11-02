@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
-    <string name="action_refresh">Aggiorna</string>
     <string name="action_reset">Reset</string>
     <string name="action_accept">Accetta</string>
-    <string name="action_add_pool">Aggiungi Pool</string>
     <string name="action_settings">Impostazioni</string>
     <string name="action_customize">Personalizza</string>
     <string name="action_donate">Sostieni l\'app</string>
     <string name="action_buy">Compra l\'app</string>
     <string name="action_participants">Partecipanti</string>
     <string name="action_email">Contattami</string>
-    <string name="eh_per_second">EH/s</string>
     <string name="ph_per_second">PH/s</string>
     <string name="th_per_second">TH/s</string>
     <string name="gh_per_second">GH/s</string>
@@ -23,13 +20,10 @@
     <string name="ubtc_short">µ</string>
     <string name="percent_sign">%</string>
     <string name="BitStamp_short">BitStamp</string>
-    <string name="MtGox_short">MtGox</string>
     <string name="BTCe_short">BTC-e</string>
     <string name="CoinDesk_short">CoinDesk</string>
     <string name="Coinbase_short">CoinBase</string>
     <string name="BitStamp">BitStamp (USD)</string>
-    <string name="MtGoxUsd">MtGox (USD)</string>
-    <string name="MtGoxEur">MtGox (EUR)</string>
     <string name="BTCeUsd">BTC-e (USD)</string>
     <string name="BTCeEur">BTC-e (EUR)</string>
     <string name="CoinDeskUsd">CoinDesk (USD)</string>
@@ -74,7 +68,6 @@
     <string name="txt_round_duration">Corrente</string>
     <string name="txt_round_estimated">Caso peggiore</string>
     <string name="txt_round_average">Media</string>
-    <string name="txt_avg_luck">Ø</string>
     <string name="txt_luck_24h">24h</string>
     <string name="txt_luck_7d">7g</string>
     <string name="txt_luck_30d">30g</string>
@@ -127,8 +120,6 @@
     <string name="txt_pref_style_btc_style_message">eleziona lo stile dei valori</string>
     <string name="txt_pref_widget_behavior_title">Widget Behavior</string>
     <string name="txt_pref_widget_behavior_message">Cosa succede se si clicca il Widget</string>
-    <string name="txt_pref_style_worker_username_title">Stile del nome Worker</string>
-    <string name="txt_pref_style_worker_username_message">Mostra il nome utente prima del nome del Worker</string>
     <string name="txt_pref_style_transparent_widgets_message">mpostare lo sfondo dei widget nero trasparente</string>
     <string name="txt_pref_style_transparent_widgets_title">Widget trasparente </string>
     <string name="txt_pref_update_title">Aggiornamenti </string>
@@ -141,8 +132,6 @@
     <string name="txt_pref_notification_show_round_finished_notification_message">Notifica se si trova un nuovo blocco</string>
     <string name="txt_pref_notification_minimum_hashrate_title">Hashrate minimo (MH/s)</string>
     <string name="txt_pref_notification_minimum_hashrate_message">Limite per hashrate basso </string>
-    <string name="txt_pref_notification_checking_interval_title">Intervallo di controllo (minuti) </string>
-    <string name="txt_pref_notification_checking_interval_message">Quante volte  deve essere  controllato  l\'Hashrate </string>
     <string name="txt_pref_notification_sound_title">Suoni </string>
     <string name="txt_pref_notification_sound_message">Suoni di notifica</string>
     <string name="txt_pref_notification_vibrate_title">Vibrazione </string>
@@ -204,23 +193,13 @@
         <item>0</item>
         <item>1</item>
     </string-array>
-    <string-array name="update_interval">
-        <item>Manuale </item>
-        <item>30 Minutes</item>
-        <item>1 Hours</item>
-        <item>3 Hours</item>
-    </string-array>
-    <string-array name="update_interval_values">
-        <item>0</item>
-        <item>1800</item>
-        <item>3600</item>
-        <item>10800</item>
-    </string-array>
-    <string name="toast_error_loading_profile">Errore  caricamento  profilo </string>
-    <string name="toast_error_loading_stats">Errore  caricamento  statistiche </string>
-    <string name="toast_error_loading_price">Errore caricamento  prezzo </string>
-    <string name="txt_pref_price_fiat_reward_title">Fiat reward</string>
-    <string name="txt_pref_price_fiat_reward_message">Show all rewards as fiat</string>
     <item name="is_land" type="bool">false</item>
     <item name="is_tablet" type="bool">false</item>
+    <string name="CoinfinityAtm">Coinfinity ATM (EUR)</string>
+    <string name="CoinfinityAtm_short">Coinfinity ATM</string>
+    <string name="CoinfinityBase">Coinfinity Online (EUR)</string>
+    <string name="CoinfinityBase_short">Coinfinity Online</string>
+    <string name="CoinfinityBitcoinbon">Bitcoinbon (EUR)</string>
+    <string name="CoinfinityBitcoinbon_short">Bitcoinbon</string>
+    <string name="fiat">Fiat</string>
 </resources>

@@ -53,8 +53,6 @@ public class App extends Application {
 
     public Gson gson;
 
-    private SharedPreferences pref;
-
     /**
      * Object of own Class
      */
@@ -86,7 +84,7 @@ public class App extends Application {
     }
 
     private void initPrefs() {
-        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
         token = pref.getString(PREF_TOKEN, "");
         luckThreshold = Integer.valueOf(pref.getString("luck_threshold", "15"));
@@ -131,7 +129,7 @@ public class App extends Application {
         return this.priceThreshold;
     }
 
-    public void setToken(String token) {
+    private void setToken(String token) {
         App.token = token;
 
         httpWorker = new HttpWorker(this.getApplicationContext());

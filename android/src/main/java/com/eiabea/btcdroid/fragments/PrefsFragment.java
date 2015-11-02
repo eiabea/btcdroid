@@ -70,7 +70,7 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 
         Intent resultIntent = new Intent();
         resultIntent.putStringArrayListExtra("changed", (ArrayList<String>) changed);
-        ((PrefsActivity) getActivity()).setResultIntent(Activity.RESULT_OK, resultIntent);
+        getActivity().setResult(Activity.RESULT_OK, resultIntent);
 
     }
 

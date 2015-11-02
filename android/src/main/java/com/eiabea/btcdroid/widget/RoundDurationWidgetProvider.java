@@ -25,7 +25,7 @@ import java.util.Date;
 
 public class RoundDurationWidgetProvider extends AppWidgetProvider {
     private static final String ACTION_CLICK = "ACTION_CLICK";
-    public static final String LOADING_FAILED = "ACTION_FAILED";
+    private  static final String LOADING_FAILED = "ACTION_FAILED";
 
     private Intent intent;
 

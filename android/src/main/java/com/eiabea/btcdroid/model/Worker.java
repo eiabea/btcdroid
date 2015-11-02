@@ -66,7 +66,7 @@ public class Worker {
         return id;
     }
 
-    public void setId(long id) {
+    private void setId(long id) {
         this.id = id;
     }
 
@@ -98,23 +98,23 @@ public class Worker {
         this.name = name;
     }
 
-    public void setLast_share(long last_share) {
+    private void setLast_share(long last_share) {
         this.last_share = last_share;
     }
 
-    public void setScore(String score) {
+    private void setScore(String score) {
         this.score = score;
     }
 
-    public void setAlive(boolean alive) {
+    private void setAlive(boolean alive) {
         this.alive = alive;
     }
 
-    public void setShares(int shares) {
+    private void setShares(int shares) {
         this.shares = shares;
     }
 
-    public void setHashrate(long hashrate) {
+    private void setHashrate(long hashrate) {
         this.hashrate = hashrate;
     }
 }

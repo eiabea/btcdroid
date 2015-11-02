@@ -33,9 +33,6 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private static final int POOL_PROFILE_LOADER_ID = 222;
     private static final int POOL_STATS_LOADER_ID = 223;
-//    private static final int POOL_AVG_LUCK_LOADER_ID = 224;
-
-    private ViewGroup rootView;
 
     private SharedPreferences pref;
 
@@ -43,7 +40,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private TextView txtTotalHashrate, txtAverageHashrate, txtRoundStarted,
             txtRoundDuration, txtEstimatedDuration, txtAverageDuration,
-            txtLuck24h, txtLuck7d, txtLuck30d; //, txtAvgLuck;
+            txtLuck24h, txtLuck7d, txtLuck30d;
     private RatingBar ratRating;
 
     public static PoolFragment create() {
@@ -59,7 +56,6 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         getActivity().getSupportLoaderManager().initLoader(POOL_PROFILE_LOADER_ID, null, this);
         getActivity().getSupportLoaderManager().initLoader(POOL_STATS_LOADER_ID, null, this);
-//        getActivity().getSupportLoaderManager().initLoader(POOL_AVG_LUCK_LOADER_ID, null, this);
     }
 
     @Override
@@ -67,20 +63,18 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         Log.i(TAG, "onCreateView()");
 
         // Inflate the layout containing a title and body text.
-        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_pool, null);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_pool, container, false);
 
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        initUi();
+        initUi(rootView);
 
-        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
-        swipeLayout.setOnRefreshListener(this);
-        swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
+        setListeners();
 
         return rootView;
     }
 
-    private void initUi() {
+    private void initUi(ViewGroup rootView) {
         txtTotalHashrate = (TextView) rootView.findViewById(R.id.txt_main_info_total_hashrate);
         txtAverageHashrate = (TextView) rootView.findViewById(R.id.txt_main_info_average_hashrate);
         txtRoundStarted = (TextView) rootView.findViewById(R.id.txt_main_info_round_started);
@@ -91,10 +85,16 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         txtLuck24h = (TextView) rootView.findViewById(R.id.txt_main_info_luck_24h);
         txtLuck7d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_7d);
         txtLuck30d = (TextView) rootView.findViewById(R.id.txt_main_info_luck_30d);
-//        txtAvgLuck = (TextView) rootView.findViewById(R.id.txt_main_info_avg_luck);
+
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
     }
 
-    private void setLuck(TextView txt, float current, boolean highPrecision) {
+    private void setListeners() {
+        swipeLayout.setOnRefreshListener(this);
+    }
+
+    private void setLuck(TextView txt, float current) {
         if (current > 0) {
             float last = pref.getFloat("txt_" + txt.getId() + "_value", 0f);
 
@@ -118,14 +118,10 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 pref.edit().putLong("txt_" + txt.getId(), Calendar.getInstance().getTimeInMillis()).apply();
             }
 
-            if (highPrecision) {
-                txt.setText(App.formatProcentHighPrecision(current));
-            } else {
-                txt.setText(App.formatProcent(current));
-            }
-        } else {
             txt.setText(App.formatProcent(current));
         }
+
+        txt.setText(App.formatProcent(current));
     }
 
     private void setRatingBar(double rating) {
@@ -196,11 +192,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         double avg = average.getTime();
         double dur = duration.getTime();
 
-        double rating = dur / avg;
-
-//        Log.d(TAG, "Raw Rating: " + rating);
-
-        return rating;
+        return dur / avg;
     }
 
     private void setProfile(Profile profile) {
@@ -257,24 +249,14 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             float currentLuck7d = Float.parseFloat(stats.getLuck_7());
             float currentLuck30d = Float.parseFloat(stats.getLuck_30());
 
-            setLuck(txtLuck24h, currentLuck24, false);
-            setLuck(txtLuck7d, currentLuck7d, false);
-            setLuck(txtLuck30d, currentLuck30d, false);
+            setLuck(txtLuck24h, currentLuck24);
+            setLuck(txtLuck7d, currentLuck7d);
+            setLuck(txtLuck30d, currentLuck30d);
         } catch (NullPointerException ignore) {
         }
 
         handleLoading();
     }
-
-//    private void setAvgLuck(AvgLuck avgLuck) {
-//
-//        if (avgLuck != null) {
-//            setLuck(txtAvgLuck, avgLuck.getAvg_luck(), true);
-//        }
-//
-//        handleLoading();
-//
-//    }
 
     private void handleLoading() {
         if (swipeLayout != null) {
@@ -302,9 +284,6 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             case POOL_STATS_LOADER_ID:
                 selection = Stats._ID + "=?";
                 return new CursorLoader(getActivity(), Stats.CONTENT_URI, null, selection, selectionArgs, null);
-//            case POOL_AVG_LUCK_LOADER_ID:
-//                selection = AvgLuck._ID + "=?";
-//                return new CursorLoader(getActivity(), AvgLuck.CONTENT_URI, null, selection, selectionArgs, null);
         }
 
         return null;
@@ -334,14 +313,6 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         setStats(stats);
                     }
                     break;
-//                case POOL_AVG_LUCK_LOADER_ID:
-//                    AvgLuck avgLuck = new AvgLuck(c);
-//                    avgLuck = App.getInstance().gson.fromJson(avgLuck.getJson(), AvgLuck.class);
-//
-//                    if (avgLuck != null) {
-//                        setAvgLuck(avgLuck);
-//                    }
-//                    break;
             }
 
 

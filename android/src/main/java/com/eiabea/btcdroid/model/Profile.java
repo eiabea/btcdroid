@@ -63,7 +63,7 @@ public class Profile {
         return id;
     }
 
-    public void setId(long id) {
+    private void setId(long id) {
         this.id = id;
     }
 
@@ -102,7 +102,7 @@ public class Profile {
 
     public ArrayList<Worker> getWorkersList() {
 
-        listWorkers = new ArrayList<Worker>();
+        ArrayList<Worker> listWorkers = new ArrayList<>();
 
         Set<Entry<String, JsonElement>> set = workers.entrySet();
 

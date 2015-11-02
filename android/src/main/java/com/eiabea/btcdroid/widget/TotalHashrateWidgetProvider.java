@@ -22,7 +22,7 @@ import com.eiabea.btcdroid.util.App;
 
 public class TotalHashrateWidgetProvider extends AppWidgetProvider {
     private static final String ACTION_CLICK = "ACTION_CLICK";
-    public static final String LOADING_FAILED = "ACTION_FAILED";
+    private static final String LOADING_FAILED = "ACTION_FAILED";
 
     private Intent intent;
 

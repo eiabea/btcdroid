@@ -34,7 +34,6 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private static final int PAYOUT_PROFILE_LOADER_ID = 111;
     private static final int PAYOUT_PRICE_LOADER_ID = 112;
 
-    private View rootView;
     private TextView txtCurrentSource, txtCurrentValue, txtEstimatedReward, txtConfirmedReward,
             txtTotalReward, txtSendThreshold;
     private ProgressBar prgGauge;
@@ -64,23 +63,19 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup root, Bundle savedInstanceState) {
-        this.rootView = inflater.inflate(R.layout.fragment_payout, root, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_payout, root, false);
 
         Log.i(TAG, "onCreateView()");
 
-        initUi();
+        initUi(rootView);
 
         setListeners();
-
-        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
-        swipeLayout.setOnRefreshListener(this);
-        swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
 
         return rootView;
 
     }
 
-    private void initUi() {
+    private void initUi(ViewGroup rootView) {
         llPriceHolder = (LinearLayout) rootView.findViewById(R.id.ll_main_info_price_holder);
         txtCurrentSource = (TextView) rootView.findViewById(R.id.txt_main_info_current_source);
         txtCurrentValue = (TextView) rootView.findViewById(R.id.txt_main_info_current_value);
@@ -91,9 +86,14 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         prgGauge = (ProgressBar) rootView.findViewById(R.id.prg_data_gauge);
         txtSendThreshold = (TextView) rootView.findViewById(R.id.txt_main_info_send_threshold);
+
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
+
     }
 
-    private void setListeners() {
+    private void setListeners(){
+        swipeLayout.setOnRefreshListener(this);
     }
 
     public static PayoutFragment create() {
@@ -239,11 +239,11 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     public class ProgressBarAnimation extends Animation {
-        private ProgressBar progressBar;
-        private float from;
-        private float to;
-        private float secondFrom;
-        private float secondTo;
+        private final ProgressBar progressBar;
+        private final float from;
+        private final float to;
+        private final float secondFrom;
+        private final float secondTo;
 
         public ProgressBarAnimation(ProgressBar progressBar, float from, float to, float secondFrom, float secondTo) {
             super();

@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.model.CustomizeItem;
 import com.eiabea.btcdroid.views.CustomizeView;
 
@@ -13,11 +14,11 @@ import java.util.List;
 
 public class CustomizeAdapter extends ArrayAdapter<CustomizeItem> {
 
-    private Context context;
-    private ArrayList<CustomizeItem> data;
+    private final Context context;
+    private final ArrayList<CustomizeItem> data;
 
-    public CustomizeAdapter(Context context, int resource, List<CustomizeItem> objects) {
-        super(context, resource, objects);
+    public CustomizeAdapter(Context context, List<CustomizeItem> objects) {
+        super(context, R.layout.list_item_handle_left, objects);
         this.context = context;
         this.data = (ArrayList<CustomizeItem>) objects;
 

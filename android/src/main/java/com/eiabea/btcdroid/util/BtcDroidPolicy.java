@@ -3,7 +3,7 @@ package com.eiabea.btcdroid.util;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 
-public class BtcDroidPolicy implements RetryPolicy {
+class BtcDroidPolicy implements RetryPolicy {
 
     /**
      * The current timeout in milliseconds.
@@ -44,20 +44,9 @@ public class BtcDroidPolicy implements RetryPolicy {
      * Constructs a new retry policy using the default timeouts.
      */
     public BtcDroidPolicy() {
-        this(DEFAULT_TIMEOUT_MS, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT);
-    }
-
-    /**
-     * Constructs a new retry policy.
-     *
-     * @param initialTimeoutMs  The initial timeout for the policy.
-     * @param maxNumRetries     The maximum number of retries.
-     * @param backoffMultiplier Backoff multiplier for the policy.
-     */
-    public BtcDroidPolicy(int initialTimeoutMs, int maxNumRetries, float backoffMultiplier) {
-        mCurrentTimeoutMs = initialTimeoutMs;
-        mMaxNumRetries = maxNumRetries;
-        mBackoffMultiplier = backoffMultiplier;
+        mCurrentTimeoutMs = DEFAULT_TIMEOUT_MS;
+        mMaxNumRetries = DEFAULT_MAX_RETRIES;
+        mBackoffMultiplier = DEFAULT_BACKOFF_MULT;
     }
 
     /**

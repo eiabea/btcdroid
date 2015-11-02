@@ -51,18 +51,18 @@
                 android:id="@+id/fl_pool_tile"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"></FrameLayout>
+                android:layout_weight="1"/>
 
             <FrameLayout
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/bd_grey_text"></FrameLayout>
+                android:background="@color/bd_grey_text"/>
 
             <FrameLayout
                 android:id="@+id/fl_payout_tile"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"></FrameLayout>
+                android:layout_weight="1"/>
 
 
             <FrameLayout

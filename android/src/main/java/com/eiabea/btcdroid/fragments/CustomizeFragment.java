@@ -40,13 +40,7 @@ public class CustomizeFragment extends Fragment {
 
     private SharedPreferences pref;
 
-    public int dragStartMode = DragSortController.ON_DOWN;
-    public boolean removeEnabled = true;
-    public int removeMode = DragSortController.FLING_REMOVE;
-    public boolean sortEnabled = true;
-    public boolean dragEnabled = true;
-
-    private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
+    private final DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
         @Override
         public void drop(int from, int to) {
             if (from != to) {
@@ -58,7 +52,7 @@ public class CustomizeFragment extends Fragment {
         }
     };
 
-    private DragSortListView.RemoveListener onRemove = new DragSortListView.RemoveListener() {
+    private final DragSortListView.RemoveListener onRemove = new DragSortListView.RemoveListener() {
         @Override
         public void remove(int which) {
             if (adapter.getCount() > 1) {
@@ -105,18 +99,11 @@ public class CustomizeFragment extends Fragment {
         }
     }
 
-    protected int getLayout() {
-        // this DSLV xml declaration does not call for the use
-        // of the default DragSortController; therefore,
-        // DSLVFragment has a buildController() method.
-        return R.layout.fragment_customize;
-    }
-
     /**
      * Called from DSLVFragment.onActivityCreated(). Override to set a different
      * adapter.
      */
-    public void setListAdapter() {
+    private void setListAdapter() {
 
         String userOrder = pref.getString("userOrder", "0:1:2:3");
         String[] split = userOrder.split(":");
@@ -126,7 +113,7 @@ public class CustomizeFragment extends Fragment {
             list.add(new CustomizeItem(Integer.valueOf(aSplit), MainViewAdapter.getNameOfFragment(Integer.valueOf(aSplit), getActivity())));
         }
 
-        adapter = new CustomizeAdapter(getActivity(), R.layout.list_item_handle_left, list);
+        adapter = new CustomizeAdapter(getActivity(), list);
         mDslv.setAdapter(adapter);
         updateOrderList();
     }
@@ -135,16 +122,16 @@ public class CustomizeFragment extends Fragment {
      * Called in onCreateView. Override this to provide a custom
      * DragSortController.
      */
-    public DragSortController buildController(DragSortListView dslv) {
+    private DragSortController buildController(DragSortListView dslv) {
         // defaults are
         // dragStartMode = onDown
         // removeMode = flingRight
         DragSortController controller = new DragSortController(dslv);
         controller.setDragHandleId(R.id.drag_handle);
-        controller.setRemoveEnabled(removeEnabled);
-        controller.setSortEnabled(sortEnabled);
-        controller.setDragInitMode(dragStartMode);
-        controller.setRemoveMode(removeMode);
+        controller.setRemoveEnabled(true);
+        controller.setSortEnabled(true);
+        controller.setDragInitMode(DragSortController.ON_DOWN);
+        controller.setRemoveMode(DragSortController.FLING_REMOVE);
         return controller;
     }
 
@@ -157,8 +144,7 @@ public class CustomizeFragment extends Fragment {
 
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-
-        ViewGroup rootView = (ViewGroup) inflater.inflate(getLayout(), container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_customize, container, false);
 
         spnMainFragment = (Spinner) rootView.findViewById(R.id.spn_customize_main_fragment);
 
@@ -182,7 +168,7 @@ public class CustomizeFragment extends Fragment {
         DragSortController mController = buildController(mDslv);
         mDslv.setFloatViewManager(mController);
         mDslv.setOnTouchListener(mController);
-        mDslv.setDragEnabled(dragEnabled);
+        mDslv.setDragEnabled(true);
 
         setListAdapter();
 

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -37,15 +38,13 @@ import com.eiabea.btcdroid.fragments.PoolFragment;
 import com.eiabea.btcdroid.fragments.RoundsFragment;
 import com.eiabea.btcdroid.fragments.WorkerFragment;
 import com.eiabea.btcdroid.service.UpdateService;
-import com.eiabea.btcdroid.service.UpdateService.UpdateInterface;
 import com.eiabea.btcdroid.util.App;
 
 @SuppressLint("InlinedApi")
-public class MainActivity extends AppCompatActivity implements UpdateInterface,
-        OnPageChangeListener {
+public class MainActivity extends AppCompatActivity implements OnPageChangeListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    public static final String PAID_APP_PACKAGE = "com.eiabea.paid.btcdroid";
+    private static final String PAID_APP_PACKAGE = "com.eiabea.paid.btcdroid";
     private static final int BEER_POPUP_THRESHOLD = 10;
 
     public static final String ACTION_NEW_ROUND_NOTIFICATION = "action_new_round_notification";
@@ -74,10 +73,7 @@ public class MainActivity extends AppCompatActivity implements UpdateInterface,
 
     private SharedPreferences pref;
     private ClipboardManager clipboard;
-    @SuppressWarnings("deprecation")
-    private android.text.ClipboardManager clipboardold;
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,11 +84,7 @@ public class MainActivity extends AppCompatActivity implements UpdateInterface,
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-            clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        } else {
-            clipboardold = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        }
+        clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
         currentPage = pref.getInt("userMainFragment", FRAGMENT_POOL);
 
@@ -161,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements UpdateInterface,
 
         handleBeerDialog();
 
-        UpdateService.setUpdateInterface(this);
         supportInvalidateOptionsMenu();
         super.onResume();
     }
@@ -213,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements UpdateInterface,
                 ft.commitAllowingStateLoss();
             } else {
                 PagerTitleStrip viewPagerTitle = (PagerTitleStrip) findViewById(R.id.vp_title_main);
-                viewPagerTitle.setTextColor(getResources().getColor(R.color.bd_white));
+                viewPagerTitle.setTextColor(ContextCompat.getColor(this, R.color.bd_white));
 
                 viewPager = (ViewPager) findViewById(R.id.vp_main);
                 viewPager.addOnPageChangeListener(this);
@@ -318,12 +309,9 @@ public class MainActivity extends AppCompatActivity implements UpdateInterface,
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-                                    ClipData clipData = ClipData.newPlainText(getString(R.string.txt_donations), address);
-                                    clipboard.setPrimaryClip(clipData);
-                                } else {
-                                    clipboardold.setText(address);
-                                }
+                                ClipData clipData = ClipData.newPlainText(getString(R.string.txt_donations), address);
+                                clipboard.setPrimaryClip(clipData);
+
                                 Toast.makeText(MainActivity.this, address + " " + getString(R.string.txt_copied_to_clipboard), Toast.LENGTH_SHORT).show();
                                 break;
                             case 1:
@@ -494,25 +482,5 @@ public class MainActivity extends AppCompatActivity implements UpdateInterface,
         setListeners();
 
     }
-
-    @Override
-    public void onProfileError() {
-
-    }
-
-    @Override
-    public void onStatsError() {
-
-    }
-
-    @Override
-    public void onPricesError() {
-
-    }
-
-//    @Override
-//    public void onAvgLuckError() {
-//
-//    }
 
 }

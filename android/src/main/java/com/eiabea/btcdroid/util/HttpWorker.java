@@ -15,22 +15,21 @@ import com.eiabea.btcdroid.model.PricesCoinfinity;
 import java.util.Locale;
 
 public class HttpWorker {
-    public static final String BASEURL = "https://mining.bitcoin.cz/";
-    public static final String PRICES_URL_BTCE_FRONT = "https://btc-e.com/api/2/btc_";
-    public static final String PRICES_URL_BTCE_END = "/ticker";
-    public static final String PRICES_URL_COINDESK_FRONT = "http://api.coindesk.com/v1/bpi/currentprice/";
-    public static final String PRICES_URL_COINDESK_END = ".json";
-    public static final String PRICES_URL_BITSTAMP = "https://www.bitstamp.net/api/ticker/";
-    public static final String PRICES_URL_COINBASE = "https://coinbase.com/api/v1/prices/buy";
-    public static final String PRICES_URL_COINFINITY = "https://coinfinity.co/api/Ticker";
-//    public static final String AVG_LUCK_URL = "http://slush-eiabea.rhcloud.com/avg_luck";
+    private static final String BASEURL = "https://mining.bitcoin.cz/";
+    private static final String PRICES_URL_BTCE_FRONT = "https://btc-e.com/api/2/btc_";
+    private static final String PRICES_URL_BTCE_END = "/ticker";
+    private static final String PRICES_URL_COINDESK_FRONT = "http://api.coindesk.com/v1/bpi/currentprice/";
+    private static final String PRICES_URL_COINDESK_END = ".json";
+    private static final String PRICES_URL_BITSTAMP = "https://www.bitstamp.net/api/ticker/";
+    private static final String PRICES_URL_COINBASE = "https://coinbase.com/api/v1/prices/buy";
+    private static final String PRICES_URL_COINFINITY = "https://coinfinity.co/api/Ticker";
 
     public static final String STATS_URL = BASEURL + "stats/json/";
     public static final String PROFILE_URL = BASEURL + "accounts/profile/json/";
 
     private static HttpWorker me;
 
-    private Context context;
+    private final Context context;
 
     public static RequestQueue mQueue;
 
@@ -55,7 +54,7 @@ public class HttpWorker {
 
         String url = HttpWorker.PRICES_URL_BTCE_FRONT + currency.toLowerCase(Locale.ENGLISH) + HttpWorker.PRICES_URL_BTCE_END;
 
-        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesBTCe.class, null, success, error));
+        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesBTCe.class, success, error));
 
     }
 
@@ -64,7 +63,7 @@ public class HttpWorker {
 
         String url = HttpWorker.PRICES_URL_COINDESK_FRONT + currency.toLowerCase(Locale.ENGLISH) + HttpWorker.PRICES_URL_COINDESK_END;
 
-        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesCoinDesk.class, null, success, error));
+        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesCoinDesk.class, success, error));
 
     }
 
@@ -74,7 +73,7 @@ public class HttpWorker {
         String url = HttpWorker.PRICES_URL_COINFINITY;
 
         HttpWorker.mQueue.add(new GsonRequest<>(url, PricesCoinfinity
-                .class, null, success, error));
+                .class, success, error));
 
     }
 
@@ -83,7 +82,7 @@ public class HttpWorker {
 
         String url = HttpWorker.PRICES_URL_BITSTAMP;
 
-        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesBitStamp.class, null, success, error));
+        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesBitStamp.class, success, error));
 
     }
 
@@ -92,7 +91,7 @@ public class HttpWorker {
 
         String url = HttpWorker.PRICES_URL_COINBASE;
 
-        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesCoinbase.class, null, success, error));
+        HttpWorker.mQueue.add(new GsonRequest<>(url, PricesCoinbase.class, success, error));
 
     }
 

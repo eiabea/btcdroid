@@ -2,17 +2,14 @@
 <resources>
 
     <string name="app_name_subtitle">Slush\'s Pool Monitor</string>
-    <string name="action_refresh">Vernieuwen</string>
     <string name="action_reset">Reset</string>
     <string name="action_accept">Accepteren</string>
-    <string name="action_add_pool">Pool toevoegen</string>
     <string name="action_settings">Instellingen</string>
     <string name="action_customize">Aanpassen</string>
     <string name="action_donate">Doneren</string>
     <string name="action_buy">Buy App</string>
     <string name="action_participants">Deelnemers</string>
     <string name="action_email">E-mail Ontwikkelaar</string>
-    <string name="eh_per_second">EH/s</string>
     <string name="ph_per_second">PH/s</string>
     <string name="th_per_second">TH/s</string>
     <string name="gh_per_second">GH/s</string>
@@ -24,13 +21,10 @@
     <string name="ubtc_short">µ</string>
     <string name="percent_sign">%</string>
     <string name="BitStamp_short">BitStamp</string>
-    <string name="MtGox_short">MtGox</string>
     <string name="BTCe_short">BTC-e</string>
     <string name="CoinDesk_short">CoinDesk</string>
     <string name="Coinbase_short">CoinBase</string>
     <string name="BitStamp">BitStamp (USD)</string>
-    <string name="MtGoxUsd">MtGox (USD)</string>
-    <string name="MtGoxEur">MtGox (EUR)</string>
     <string name="BTCeUsd">BTC-e (USD)</string>
     <string name="BTCeEur">BTC-e (EUR)</string>
     <string name="CoinDeskUsd">CoinDesk (USD)</string>
@@ -80,7 +74,6 @@
     <string name="txt_round_duration">Huidig</string>
     <string name="txt_round_estimated">Tijd verwacht</string>
     <string name="txt_round_average">Gemiddeld</string>
-    <string name="txt_avg_luck">Ø</string>
     <string name="txt_luck_24h">24 Uur</string>
     <string name="txt_luck_7d">7 Dagen</string>
     <string name="txt_luck_30d">30 Dagen</string>
@@ -139,8 +132,6 @@
     <string name="txt_pref_style_btc_style_message">De stijl waarop Bitcoins worden weergeven</string>
     <string name="txt_pref_widget_behavior_title">Widget Behavior</string>
     <string name="txt_pref_widget_behavior_message">What should happen if widget gets clicked</string>
-    <string name="txt_pref_style_worker_username_title">Worker Name Stijl</string>
-    <string name="txt_pref_style_worker_username_message">Show username in front of workername</string>
     <string name="txt_pref_style_transparent_widgets_message">Set the background of the widgets to a transparent black</string>
     <string name="txt_pref_style_transparent_widgets_title">Transparent Widgets</string>
     <string name="txt_pref_update_title">Updates</string>
@@ -153,8 +144,6 @@
     <string name="txt_pref_notification_show_round_finished_notification_message">Notification if a block has been found</string>
     <string name="txt_pref_notification_minimum_hashrate_title">Minimale Hashsnelheid (MH/s)</string>
     <string name="txt_pref_notification_minimum_hashrate_message">Melding als Hashsnelheid onder deze waarde komt</string>
-    <string name="txt_pref_notification_checking_interval_title">Controle interval (Minuten)</string>
-    <string name="txt_pref_notification_checking_interval_message">Hoe vaak moet de Hashsnelheid worden gecontroleerd</string>
     <string name="txt_pref_notification_sound_title">Geluid</string>
     <string name="txt_pref_notification_sound_message">Melding geluid afspelen</string>
     <string name="txt_pref_notification_vibrate_title">Trillen</string>
@@ -220,23 +209,12 @@
         <item>0</item>
         <item>1</item>
     </string-array>
-    <string-array name="update_interval">
-        <item>Handmatig</item>
-        <item>30 Minuten</item>
-        <item>1 Uur</item>
-        <item>3 Uur</item>
-    </string-array>
-    <string-array name="update_interval_values">
-        <item>0</item>
-        <item>1800</item>
-        <item>3600</item>
-        <item>10800</item>
-    </string-array>
-
-    <string name="toast_error_loading_profile">Error bij laden van het Profiel</string>
-    <string name="toast_error_loading_stats">Error bij het laden van de statestieken</string>
-    <string name="toast_error_loading_price">Error bij het laden van de prijzen</string>
-    <string name="txt_pref_price_fiat_reward_title">Fiat reward</string>
-    <string name="txt_pref_price_fiat_reward_message">Show all rewards as fiat</string>
+    <string name="CoinfinityAtm">Coinfinity ATM (EUR)</string>
+    <string name="CoinfinityAtm_short">Coinfinity ATM</string>
+    <string name="CoinfinityBase">Coinfinity Online (EUR)</string>
+    <string name="CoinfinityBase_short">Coinfinity Online</string>
+    <string name="CoinfinityBitcoinbon">Bitcoinbon (EUR)</string>
+    <string name="CoinfinityBitcoinbon_short">Bitcoinbon</string>
+    <string name="fiat">Fiat</string>
 
 </resources>

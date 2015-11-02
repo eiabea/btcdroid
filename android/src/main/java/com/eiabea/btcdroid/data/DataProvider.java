@@ -15,7 +15,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.eiabea.btcdroid.BuildConfig;
-import com.eiabea.btcdroid.model.AvgLuck;
 import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
@@ -38,20 +37,18 @@ public class DataProvider extends ContentProvider {
 
     private SQLiteDatabase db;
 
-    static final int PROFILES = 1;
-    static final int PROFILE_ID = 2;
-    static final int STATS = 3;
-    static final int STAT_ID = 4;
-    static final int PRICES = 5;
-    static final int PRICE_ID = 6;
-    static final int AVG_LUCKS = 7;
-    static final int AVG_LUCK_ID = 8;
-    static final int WORKERS = 9;
-    static final int WORKER_ID = 10;
-    static final int ROUNDS = 11;
-    static final int ROUND_ID = 12;
+    private static final int PROFILES = 1;
+    private static final int PROFILE_ID = 2;
+    private static final int STATS = 3;
+    private static final int STAT_ID = 4;
+    private static final int PRICES = 5;
+    private static final int PRICE_ID = 6;
+    private static final int WORKERS = 9;
+    private static final int WORKER_ID = 10;
+    private static final int ROUNDS = 11;
+    private static final int ROUND_ID = 12;
 
-    static final UriMatcher uriMatcher;
+    private static final UriMatcher uriMatcher;
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -61,8 +58,6 @@ public class DataProvider extends ContentProvider {
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.STATS_TABLE_NAME + "/#", STAT_ID);
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.PRICE_TABLE_NAME, PRICES);
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.PRICE_TABLE_NAME + "/#", PRICE_ID);
-        uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.AVG_LUCK_TABLE_NAME, AVG_LUCKS);
-        uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.AVG_LUCK_TABLE_NAME + "/#", AVG_LUCK_ID);
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.WORKER_TABLE_NAME, WORKERS);
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.WORKER_TABLE_NAME + "/#", WORKER_ID);
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.ROUNDS_TABLE_NAME, ROUNDS);
@@ -84,10 +79,6 @@ public class DataProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + PROVIDER_NAME + "." + DatabaseHelper.PRICE_TABLE_NAME;
             case PRICE_ID:
                 return "vnd.android.cursor.item/" + PROVIDER_NAME + "." + DatabaseHelper.PRICE_TABLE_NAME;
-            case AVG_LUCKS:
-                return "vnd.android.cursor.dir/" + PROVIDER_NAME + "." + DatabaseHelper.AVG_LUCK_TABLE_NAME;
-            case AVG_LUCK_ID:
-                return "vnd.android.cursor.item/" + PROVIDER_NAME + "." + DatabaseHelper.AVG_LUCK_TABLE_NAME;
             case WORKERS:
                 return "vnd.android.cursor.dir/" + PROVIDER_NAME + "." + DatabaseHelper.WORKER_TABLE_NAME;
             case WORKER_ID:
@@ -461,7 +452,6 @@ public class DataProvider extends ContentProvider {
         context.getContentResolver().delete(Profile.CONTENT_URI, null, null);
         context.getContentResolver().delete(Stats.CONTENT_URI, null, null);
         context.getContentResolver().delete(GenericPrice.CONTENT_URI, null, null);
-        context.getContentResolver().delete(AvgLuck.CONTENT_URI, null, null);
         context.getContentResolver().delete(Worker.CONTENT_URI, null, null);
         context.getContentResolver().delete(Block.CONTENT_URI, null, null);
     }
@@ -508,16 +498,6 @@ public class DataProvider extends ContentProvider {
                 contentUri = GenericPrice.CONTENT_URI;
                 break;
 
-            case AVG_LUCKS:
-                tableName = DatabaseHelper.AVG_LUCK_TABLE_NAME;
-                contentUri = AvgLuck.CONTENT_URI;
-                break;
-            case AVG_LUCK_ID:
-                id = AVG_LUCK_ID;
-                tableName = DatabaseHelper.AVG_LUCK_TABLE_NAME;
-                contentUri = AvgLuck.CONTENT_URI;
-                break;
-
             case WORKERS:
                 tableName = DatabaseHelper.WORKER_TABLE_NAME;
                 contentUri = Worker.CONTENT_URI;
@@ -546,9 +526,9 @@ public class DataProvider extends ContentProvider {
     }
 
     private class SwitchHolder {
-        private int id;
-        private String table;
-        private Uri contentUri;
+        private final int id;
+        private final String table;
+        private final Uri contentUri;
 
         public SwitchHolder(int id, String tableName, Uri contentUri) {
             this.id = id;

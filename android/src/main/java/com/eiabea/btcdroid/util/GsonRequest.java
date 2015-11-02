@@ -21,7 +21,6 @@ import java.util.Map;
 public class GsonRequest<T> extends Request<T> {
     private final Gson gson = new Gson();
     private final Class<T> clazz;
-    private final Map<String, String> headers;
     private final Listener<T> listener;
 
     /**
@@ -29,19 +28,17 @@ public class GsonRequest<T> extends Request<T> {
      *
      * @param url     URL of the request to make
      * @param clazz   Relevant class object, for Gson's reflection
-     * @param headers Map of request headers
      */
-    public GsonRequest(String url, Class<T> clazz, Map<String, String> headers, Listener<T> listener, ErrorListener errorListener) {
+    public GsonRequest(String url, Class<T> clazz, Listener<T> listener, ErrorListener errorListener) {
         super(Method.GET, url, errorListener);
         this.setRetryPolicy(new BtcDroidPolicy());
         this.clazz = clazz;
-        this.headers = headers;
         this.listener = listener;
     }
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
-        return headers != null ? headers : super.getHeaders();
+        return super.getHeaders();
     }
 
     @Override

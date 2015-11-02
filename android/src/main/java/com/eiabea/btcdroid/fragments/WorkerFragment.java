@@ -19,8 +19,6 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
 
     private static final int WORKER_LOADER_ID = 333;
 
-    private ViewGroup rootView;
-
     private ExpandableListView exlvWOrkerHolder;
 
     private WorkerListAdapter adapter;
@@ -42,18 +40,18 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout containing a title and body text.
-        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_worker, null);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_worker, container, false);
 
-        initUi();
+        initUi(rootView);
 
-        adapter = new WorkerListAdapter(null, getActivity());
+        adapter = new WorkerListAdapter(getActivity());
 
         exlvWOrkerHolder.setAdapter(adapter);
 
         return rootView;
     }
 
-    private void initUi() {
+    private void initUi(ViewGroup rootView) {
         exlvWOrkerHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_worker_holder);
     }
 

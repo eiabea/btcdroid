@@ -43,29 +43,28 @@ public class UpdateService extends Service {
 
     public static final String PARAM_GET = "param_get";
 
-    public static final int DROP_NOTIFICATION_ID = 1566789;
-    public static final int NEW_ROUND_NOTIFICATION_ID = 3219876;
+    private static final int DROP_NOTIFICATION_ID = 1566789;
+    private static final int NEW_ROUND_NOTIFICATION_ID = 3219876;
 
     public static final int GET_PRICE = 0;
     public static final int GET_STATS = 1;
     public static final int GET_PROFILE = 2;
 
-    public static final int PRICE_SOURCE_BITSTAMP_USD = 0;
-    public static final int PRICE_SOURCE_BTCE_USD = 3;
-    public static final int PRICE_SOURCE_BTCE_EUR = 4;
-    public static final int PRICE_SOURCE_COINDESK_USD = 5;
-    public static final int PRICE_SOURCE_COINDESK_EUR = 6;
-    public static final int PRICE_SOURCE_COINDESK_GBP = 7;
-    public static final int PRICE_SOURCE_COINBASE = 8;
-    public static final int PRICE_SOURCE_COINFINITY_BASE = 9;
-    public static final int PRICE_SOURCE_COINFINITY_ATM = 10;
-    public static final int PRICE_SOURCE_COINFINITY_BITCOINBON = 11;
+    private static final int PRICE_SOURCE_BITSTAMP_USD = 0;
+    private static final int PRICE_SOURCE_BTCE_USD = 3;
+    private static final int PRICE_SOURCE_BTCE_EUR = 4;
+    private static final int PRICE_SOURCE_COINDESK_USD = 5;
+    private static final int PRICE_SOURCE_COINDESK_EUR = 6;
+    private static final int PRICE_SOURCE_COINDESK_GBP = 7;
+    private static final int PRICE_SOURCE_COINBASE = 8;
+    private static final int PRICE_SOURCE_COINFINITY_BASE = 9;
+    private static final int PRICE_SOURCE_COINFINITY_ATM = 10;
+    private static final int PRICE_SOURCE_COINFINITY_BITCOINBON = 11;
 
     private static int dropNotificationCount = 0;
     private static int newRoundNotificationCount = 0;
 
     private static UpdateService me;
-    private static UpdateInterface updateInterface;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -124,9 +123,7 @@ public class UpdateService extends Service {
 
         String url = HttpWorker.PROFILE_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
 
-        System.out.println(HttpWorker.mQueue.toString());
-
-        HttpWorker.mQueue.add(new GsonRequest<>(url, Profile.class, null, new Listener<Profile>() {
+        HttpWorker.mQueue.add(new GsonRequest<>(url, Profile.class, new Listener<Profile>() {
 
             @Override
             public void onResponse(Profile profile) {
@@ -152,9 +149,7 @@ public class UpdateService extends Service {
 
         String url = HttpWorker.STATS_URL + PreferenceManager.getDefaultSharedPreferences(this).getString(App.PREF_TOKEN, "");
 
-        System.out.println(HttpWorker.mQueue.toString());
-
-        HttpWorker.mQueue.add(new GsonRequest<>(url, Stats.class, null, new Listener<Stats>() {
+        HttpWorker.mQueue.add(new GsonRequest<>(url, Stats.class, new Listener<Stats>() {
 
             @Override
             public void onResponse(Stats stats) {
@@ -173,32 +168,6 @@ public class UpdateService extends Service {
             }
         }));
     }
-
-//    private void getAvgLuckWidgets() {
-//        Log.d(getClass().getSimpleName(), "get AvgLuck");
-//
-//        String url = HttpWorker.AVG_LUCK_URL;
-//
-//        System.out.println(HttpWorker.mQueue.toString());
-//
-//        HttpWorker.mQueue.add(new GsonRequest<AvgLuck>(url, AvgLuck.class, null, new Listener<AvgLuck>() {
-//
-//            @Override
-//            public void onResponse(AvgLuck avgLuck) {
-//                Log.d(getClass().getSimpleName(), "onResponse AvgLuck");
-//                onAvgLuckLoaded(avgLuck);
-//            }
-//
-//        }, new ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.d(getClass().getSimpleName(), "onErrorResponse AvgLuck");
-//                Log.d(getClass().getSimpleName(), " " + error.getCause());
-//                onAvgLuckError();
-//            }
-//        }));
-//    }
 
     private void getPriceWidgets() {
         Log.d(getClass().getSimpleName(), "get Price Widgets");
@@ -592,10 +561,6 @@ public class UpdateService extends Service {
         return notification;
     }
 
-    public static void setUpdateInterface(UpdateInterface updateInterface) {
-        UpdateService.updateInterface = updateInterface;
-    }
-
     public static void resetDropNotificationCount() {
         dropNotificationCount = 0;
     }
@@ -614,9 +579,6 @@ public class UpdateService extends Service {
 
     private void onPriceError() {
         App.updateWidgets(getApplicationContext());
-        if (updateInterface != null) {
-            updateInterface.onPricesError();
-        }
     }
 
     private void onProfileLoaded(Profile profile) {
@@ -630,9 +592,6 @@ public class UpdateService extends Service {
 
     private void onProfileError() {
         App.updateWidgets(getApplicationContext());
-        if (updateInterface != null) {
-            updateInterface.onProfileError();
-        }
     }
 
     private void onStatsLoaded(Stats stats) {
@@ -646,31 +605,6 @@ public class UpdateService extends Service {
 
     private void onStatsError() {
         App.updateWidgets(getApplicationContext());
-        if (updateInterface != null) {
-            updateInterface.onStatsError();
-        }
-    }
-
-//    private void onAvgLuckLoaded(AvgLuck avgLuck) {
-//
-//        DataProvider.insertOrUpdateAvgLuck(getApplicationContext(), avgLuck);
-//
-//    }
-//
-//    private void onAvgLuckError() {
-//        if (updateInterface != null) {
-//            updateInterface.onAvgLuckError();
-//        }
-//    }
-
-    public interface UpdateInterface {
-        void onProfileError();
-
-        void onStatsError();
-
-//        public void onAvgLuckError();
-
-        void onPricesError();
     }
 
 }

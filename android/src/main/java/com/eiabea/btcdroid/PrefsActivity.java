@@ -43,8 +43,4 @@ public class PrefsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setResultIntent(int result, Intent intent) {
-        setResult(result, intent);
-    }
-
 }

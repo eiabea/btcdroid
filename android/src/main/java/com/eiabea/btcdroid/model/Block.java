@@ -31,11 +31,6 @@ public class Block {
     private String date_started;
     private int confirmations;
 
-
-    // Standardconstructor
-    public Block() {
-    }
-
     public Block(Cursor c) {
         setId(c.getLong(c.getColumnIndex(_ID)));
         setNumber(c.getLong(c.getColumnIndex(NUMBER)));
@@ -68,7 +63,7 @@ public class Block {
         return id;
     }
 
-    public void setId(long id) {
+    private void setId(long id) {
         this.id = id;
     }
 
@@ -76,7 +71,7 @@ public class Block {
         return mining_duration;
     }
 
-    public void setMining_duration(long mining_duration) {
+    private void setMining_duration(long mining_duration) {
         this.mining_duration = mining_duration;
     }
 
@@ -84,7 +79,7 @@ public class Block {
         return reward;
     }
 
-    public void setReward(String reward) {
+    private void setReward(String reward) {
         this.reward = reward;
     }
 
@@ -92,7 +87,7 @@ public class Block {
         return date_found;
     }
 
-    public void setDate_found(String date_found) {
+    private void setDate_found(String date_found) {
         this.date_found = date_found;
     }
 
@@ -100,7 +95,7 @@ public class Block {
         return date_started;
     }
 
-    public void setDate_started(String date_started) {
+    private void setDate_started(String date_started) {
         this.date_started = date_started;
     }
 
@@ -108,7 +103,7 @@ public class Block {
         return confirmations;
     }
 
-    public void setConfirmations(int confirmations) {
+    private void setConfirmations(int confirmations) {
         this.confirmations = confirmations;
     }
 
