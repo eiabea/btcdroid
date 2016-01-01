@@ -155,38 +155,6 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     }
 
-    private Date getAverageRoundTime() {
-
-        long total = 0;
-        long average = 0;
-        String[] projection = new String[]{Block.MINING_DURATION};
-
-        Cursor c = getActivity().getContentResolver().query(Block.CONTENT_URI, projection, null, null, null);
-
-        if (c.getCount() > 0) {
-
-            c.moveToFirst();
-
-            while (c.moveToNext()) {
-                long duration;
-//                try {
-                duration = c.getLong(c.getColumnIndex(Block.MINING_DURATION));
-                total += duration;
-//                } catch (ParseException e) {
-//                    Log.e(TAG, "Can't get AverageRoundTime (NullPointer)");
-//                }
-            }
-
-            if (total > 0) {
-                average = total / c.getCount();
-            }
-        }
-
-        c.close();
-
-        return new Date(average * 1000);
-    }
-
     private double calculateRoundRating(Date average, Date duration) {
 
         double avg = average.getTime();
@@ -211,7 +179,7 @@ public class PoolFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         Date duration = null;
 
         try {
-            average = getAverageRoundTime();
+            average = stats.getAverageRoundTime(getActivity());
             txtAverageDuration.setText(App.dateDurationFormat.format(average));
             try {
                 started = App.dateStatsFormat.parse(stats.getRound_started());

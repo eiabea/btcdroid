@@ -29,6 +29,7 @@ import com.eiabea.btcdroid.model.PricesCoinbase;
 import com.eiabea.btcdroid.model.PricesCoinfinity;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
+import com.eiabea.btcdroid.model.TimeTillPayout;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 import com.eiabea.btcdroid.util.GsonRequest;
@@ -582,6 +583,8 @@ public class UpdateService extends Service {
     }
 
     private void onProfileLoaded(Profile profile) {
+
+        DataProvider.insertOrUpdateTimeTillPayout(getApplicationContext(), new TimeTillPayout(profile));
 
         DataProvider.insertOrUpdateProfile(getApplicationContext(), profile);
 

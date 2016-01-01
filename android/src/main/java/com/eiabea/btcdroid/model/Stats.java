@@ -1,12 +1,15 @@
 package com.eiabea.btcdroid.model;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
 import com.eiabea.btcdroid.data.DataProvider;
 import com.eiabea.btcdroid.data.DatabaseHelper;
 import com.google.gson.JsonObject;
+
+import java.util.Date;
 
 public class Stats {
 
@@ -28,6 +31,7 @@ public class Stats {
     private String luck_30;
     private String shares_cdf;
     private JsonObject blocks;
+    private Date averageRoundTime;
 
     // Standardconstructor
     public Stats() {
@@ -55,7 +59,7 @@ public class Stats {
         return id;
     }
 
-    private  void setId(long id) {
+    private void setId(long id) {
         this.id = id;
     }
 
@@ -96,4 +100,35 @@ public class Stats {
     }
 
 
+    public static Date getAverageRoundTime(Context context) {
+
+        long total = 0;
+        long average = 0;
+        String[] projection = new String[]{Block.MINING_DURATION};
+
+        Cursor c = context.getContentResolver().query(Block.CONTENT_URI, projection, null, null, null);
+
+        if (c.getCount() > 0) {
+
+            c.moveToFirst();
+
+            while (c.moveToNext()) {
+                long duration;
+//                try {
+                duration = c.getLong(c.getColumnIndex(Block.MINING_DURATION));
+                total += duration;
+//                } catch (ParseException e) {
+//                    Log.e(TAG, "Can't get AverageRoundTime (NullPointer)");
+//                }
+            }
+
+            if (total > 0) {
+                average = total / c.getCount();
+            }
+        }
+
+        c.close();
+
+        return new Date(average * 1000);
+    }
 }

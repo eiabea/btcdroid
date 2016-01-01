@@ -19,6 +19,7 @@ import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
+import com.eiabea.btcdroid.model.TimeTillPayout;
 import com.eiabea.btcdroid.model.Worker;
 import com.eiabea.btcdroid.util.App;
 import com.google.gson.Gson;
@@ -47,6 +48,8 @@ public class DataProvider extends ContentProvider {
     private static final int WORKER_ID = 10;
     private static final int ROUNDS = 11;
     private static final int ROUND_ID = 12;
+    private static final int TIME_TILL_PAYOUT = 13;
+    private static final int TIME_TILL_PAYOUT_ID = 14;
 
     private static final UriMatcher uriMatcher;
 
@@ -62,6 +65,8 @@ public class DataProvider extends ContentProvider {
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.WORKER_TABLE_NAME + "/#", WORKER_ID);
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.ROUNDS_TABLE_NAME, ROUNDS);
         uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.ROUNDS_TABLE_NAME + "/#", ROUND_ID);
+        uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.TIME_TILL_PAYOUT_TABLE_NAME, TIME_TILL_PAYOUT);
+        uriMatcher.addURI(PROVIDER_NAME, DatabaseHelper.TIME_TILL_PAYOUT_TABLE_NAME + "/#", TIME_TILL_PAYOUT_ID);
     }
 
     @Override
@@ -87,6 +92,10 @@ public class DataProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + PROVIDER_NAME + "." + DatabaseHelper.ROUNDS_TABLE_NAME;
             case ROUND_ID:
                 return "vnd.android.cursor.item/" + PROVIDER_NAME + "." + DatabaseHelper.ROUNDS_TABLE_NAME;
+            case TIME_TILL_PAYOUT:
+                return "vnd.android.cursor.dir/" + PROVIDER_NAME + "." + DatabaseHelper.TIME_TILL_PAYOUT_TABLE_NAME;
+            case TIME_TILL_PAYOUT_ID:
+                return "vnd.android.cursor.item/" + PROVIDER_NAME + "." + DatabaseHelper.TIME_TILL_PAYOUT_TABLE_NAME;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -262,7 +271,7 @@ public class DataProvider extends ContentProvider {
                 if (price != null) {
                     price.setJson(App.getInstance().gson.toJson(price));
 
-                    where = Stats._ID + "=?";
+                    where = GenericPrice._ID + "=?";
                     whereArgs = new String[]{"1"};
                 }
 
@@ -271,6 +280,38 @@ public class DataProvider extends ContentProvider {
 
                 if (updated == 0) {
                     context.getContentResolver().insert(GenericPrice.CONTENT_URI, price.getContentValues(true));
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+            }
+
+        }.execute();
+    }
+
+    public static void insertOrUpdateTimeTillPayout(final Context context, final TimeTillPayout timeTillPayout) {
+
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                if (timeTillPayout == null) {
+                    return null;
+                }
+
+                String where = TimeTillPayout._ID + "=?";
+                String[] whereArgs = new String[]{"1"};
+
+                int updated = context.getContentResolver().update(TimeTillPayout.CONTENT_URI, timeTillPayout.getContentValues(false),
+                        where, whereArgs);
+
+                if (updated == 0) {
+                    context.getContentResolver().insert(TimeTillPayout.CONTENT_URI, timeTillPayout.getContentValues(true));
                 }
 
                 return null;
@@ -516,6 +557,16 @@ public class DataProvider extends ContentProvider {
                 id = ROUND_ID;
                 tableName = DatabaseHelper.ROUNDS_TABLE_NAME;
                 contentUri = Block.CONTENT_URI;
+                break;
+
+            case TIME_TILL_PAYOUT:
+                tableName = DatabaseHelper.TIME_TILL_PAYOUT_TABLE_NAME;
+                contentUri = TimeTillPayout.CONTENT_URI;
+                break;
+            case TIME_TILL_PAYOUT_ID:
+                id = TIME_TILL_PAYOUT_ID;
+                tableName = DatabaseHelper.TIME_TILL_PAYOUT_TABLE_NAME;
+                contentUri = TimeTillPayout.CONTENT_URI;
                 break;
 
             default:

@@ -1,11 +1,14 @@
 package com.eiabea.btcdroid.model;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
 import com.eiabea.btcdroid.data.DataProvider;
 import com.eiabea.btcdroid.data.DatabaseHelper;
+
+import java.util.Date;
 
 public class Block {
 
@@ -113,5 +116,37 @@ public class Block {
 
     public void setNumber(long number) {
         this.number = number;
+    }
+
+    public static double getAverageReward(Context context) {
+
+        double total = 0;
+        double average = 0;
+        String[] projection = new String[]{Block.REWARD};
+
+        Cursor c = context.getContentResolver().query(Block.CONTENT_URI, projection, null, null, null);
+
+        if (c.getCount() > 0) {
+
+            c.moveToFirst();
+
+            while (c.moveToNext()) {
+                double duration;
+//                try {
+                duration = c.getDouble(c.getColumnIndex(Block.REWARD));
+                total += duration;
+//                } catch (ParseException e) {
+//                    Log.e(TAG, "Can't get AverageRoundTime (NullPointer)");
+//                }
+            }
+
+            if (total > 0) {
+                average = total / c.getCount();
+            }
+        }
+
+        c.close();
+
+        return average * 1000;
     }
 }

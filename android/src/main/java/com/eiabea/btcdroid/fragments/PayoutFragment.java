@@ -21,11 +21,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
+import com.eiabea.btcdroid.data.DataProvider;
+import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
+import com.eiabea.btcdroid.model.Stats;
+import com.eiabea.btcdroid.model.TimeTillPayout;
 import com.eiabea.btcdroid.util.App;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -33,6 +38,8 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private static final int PAYOUT_PROFILE_LOADER_ID = 111;
     private static final int PAYOUT_PRICE_LOADER_ID = 112;
+    private static final int PAYOUT_TIME_TILL_PAYOUT_LOADER_ID = 113;
+    private static final int PAYOUT_STATS_LOADER_ID = 114;
 
     private TextView txtCurrentSource, txtCurrentValue, txtEstimatedReward, txtConfirmedReward,
             txtTotalReward, txtSendThreshold;
@@ -60,6 +67,8 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         getActivity().getSupportLoaderManager().initLoader(PAYOUT_PROFILE_LOADER_ID, null, this);
         getActivity().getSupportLoaderManager().initLoader(PAYOUT_PRICE_LOADER_ID, null, this);
+        getActivity().getSupportLoaderManager().initLoader(PAYOUT_TIME_TILL_PAYOUT_LOADER_ID, null, this);
+        getActivity().getSupportLoaderManager().initLoader(PAYOUT_STATS_LOADER_ID, null, this);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup root, Bundle savedInstanceState) {
@@ -286,6 +295,12 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
             case PAYOUT_PRICE_LOADER_ID:
                 selection = GenericPrice._ID + "=?";
                 return new CursorLoader(getActivity(), GenericPrice.CONTENT_URI, null, selection, selectionArgs, null);
+            case PAYOUT_TIME_TILL_PAYOUT_LOADER_ID:
+                selection = TimeTillPayout._ID + "=?";
+                return new CursorLoader(getActivity(), TimeTillPayout.CONTENT_URI, null, selection, selectionArgs, null);
+            case PAYOUT_STATS_LOADER_ID:
+                selection = Stats._ID + "=?";
+                return new CursorLoader(getActivity(), Stats.CONTENT_URI, null, selection, selectionArgs, null);
         }
 
         return null;
@@ -296,6 +311,7 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         if (c.getCount() > 0 && isAdded()) {
             c.moveToFirst();
+            TimeTillPayout ttp;
             switch (loader.getId()) {
                 case PAYOUT_PROFILE_LOADER_ID:
                     Profile profile = new Profile(c);
@@ -313,12 +329,62 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
                         setPrices(price);
                     }
                     break;
+                case PAYOUT_TIME_TILL_PAYOUT_LOADER_ID:
+                    ttp = new TimeTillPayout(c);
+                    Log.i(TAG, "Send Threshold: " + ttp.getSendThreshold());
+                    Log.i(TAG, "Time: " + ttp.getAverageTime());
+                    Log.i(TAG, "Avg per Block: " + ttp.getAvgBtcPerBlock());
+
+                    break;
+                case PAYOUT_STATS_LOADER_ID:
+
+                    Stats stats = new Stats(c);
+                    stats = App.getInstance().gson.fromJson(stats.getJson(), Stats.class);
+
+                    if (stats != null) {
+                        ttp = new TimeTillPayout(stats, getContext());
+                        DataProvider.insertOrUpdateTimeTillPayout(getContext(), ttp);
+                    }
+
+                    break;
             }
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> arg0) {
+    }
+
+    private Date getAverageRoundTime() {
+
+        long total = 0;
+        long average = 0;
+        String[] projection = new String[]{Block.MINING_DURATION};
+
+        Cursor c = getActivity().getContentResolver().query(Block.CONTENT_URI, projection, null, null, null);
+
+        if (c.getCount() > 0) {
+
+            c.moveToFirst();
+
+            while (c.moveToNext()) {
+                long duration;
+//                try {
+                duration = c.getLong(c.getColumnIndex(Block.MINING_DURATION));
+                total += duration;
+//                } catch (ParseException e) {
+//                    Log.e(TAG, "Can't get AverageRoundTime (NullPointer)");
+//                }
+            }
+
+            if (total > 0) {
+                average = total / c.getCount();
+            }
+        }
+
+        c.close();
+
+        return new Date(average * 1000);
     }
 
 }
