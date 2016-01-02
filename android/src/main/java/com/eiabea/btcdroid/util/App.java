@@ -28,6 +28,8 @@ import com.eiabea.btcdroid.widget.TotalHashrateWidgetProvider;
 import com.eiabea.btcdroid.widget.TotalRewardWidgetProvider;
 import com.google.gson.Gson;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -64,6 +66,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        JodaTimeAndroid.init(this);
+
         gson = new Gson();
 
         allWidgetClasses = new ArrayList<>();

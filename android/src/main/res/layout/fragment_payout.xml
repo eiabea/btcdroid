@@ -175,7 +175,7 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/small_card_bottom_line_height"
-                            android:background="@color/bd_card_bottom_line"></FrameLayout>
+                            android:background="@color/bd_card_bottom_line"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -261,8 +261,45 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/small_card_bottom_line_height"
-                    android:background="@color/bd_card_bottom_line"></FrameLayout>
+                    android:background="@color/bd_card_bottom_line"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@color/bd_white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/small_card_content_padding_bottom"
+                    android:paddingTop="@dimen/small_card_content_padding_top">
+
+                    <com.eiabea.btcdroid.fonts.RobotoBold
+                        android:id="@+id/txt_main_info_time_till_payout"
+                        style="@style/style_small_card_value"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/bd_dark_grey_text" />
+
+                    <TextView
+                        style="@style/style_small_card_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/txt_time_till_payout" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/small_card_bottom_line_height"
+                    android:background="@color/bd_card_bottom_line"/>
+            </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>

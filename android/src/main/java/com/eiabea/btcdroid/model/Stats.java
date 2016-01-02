@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.eiabea.btcdroid.data.DataProvider;
 import com.eiabea.btcdroid.data.DatabaseHelper;
@@ -13,6 +14,7 @@ import java.util.Date;
 
 public class Stats {
 
+    public static final String TAG = Stats.class.getSimpleName();
     private static final String URL = "content://" + DataProvider.PROVIDER_NAME + "/" + DatabaseHelper.STATS_TABLE_NAME;
     public static final Uri CONTENT_URI = Uri.parse(URL);
 
@@ -126,6 +128,8 @@ public class Stats {
                 average = total / c.getCount();
             }
         }
+
+        Log.i(TAG, "AVG: " + average);
 
         c.close();
 

@@ -4,14 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.eiabea.btcdroid.data.DataProvider;
 import com.eiabea.btcdroid.data.DatabaseHelper;
 
-import java.util.Date;
-
 public class Block {
 
+    public static final String TAG = Block.class.getSimpleName();
     private static final String URL = "content://" + DataProvider.PROVIDER_NAME + "/" + DatabaseHelper.ROUNDS_TABLE_NAME;
     public static final Uri CONTENT_URI = Uri.parse(URL);
 
@@ -131,22 +131,22 @@ public class Block {
             c.moveToFirst();
 
             while (c.moveToNext()) {
-                double duration;
+                double reward;
 //                try {
-                duration = c.getDouble(c.getColumnIndex(Block.REWARD));
-                total += duration;
+                reward = c.getDouble(c.getColumnIndex(Block.REWARD));
+                total += reward;
 //                } catch (ParseException e) {
 //                    Log.e(TAG, "Can't get AverageRoundTime (NullPointer)");
 //                }
             }
 
             if (total > 0) {
-                average = total / c.getCount();
+                average = total / (double) c.getCount();
             }
         }
 
         c.close();
 
-        return average * 1000;
+        return average;
     }
 }

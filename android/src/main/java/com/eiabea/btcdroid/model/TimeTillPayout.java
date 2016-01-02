@@ -8,6 +8,8 @@ import android.net.Uri;
 import com.eiabea.btcdroid.data.DataProvider;
 import com.eiabea.btcdroid.data.DatabaseHelper;
 
+import java.util.Date;
+
 public class TimeTillPayout {
 
     private static final String URL = "content://" + DataProvider.PROVIDER_NAME + "/" + DatabaseHelper.TIME_TILL_PAYOUT_TABLE_NAME;
@@ -15,7 +17,7 @@ public class TimeTillPayout {
 
     public static final String _ID = "_id";
     public static final String AVERAGE_TIME = "average_time";
-    public static final String SEND_THRESHOLD = "send_threshold";
+    public static final String REMAINING_REWARD = "remaining_reward";
     public static final String AVG_BTC_PER_BLOCK = "avg_btc_per_block";
 
     // Database
@@ -23,14 +25,28 @@ public class TimeTillPayout {
 
     // Attributes
     private long averageTime;
-    private double sendThreshold;
+    private double remainingReward;
     private double avgBtcPerBlock;
 
     public TimeTillPayout(Cursor c) {
         setId(c.getLong(c.getColumnIndex(_ID)));
         setAverageTime(c.getLong(c.getColumnIndex(AVERAGE_TIME)));
-        setSendThreshold(c.getDouble(c.getColumnIndex(SEND_THRESHOLD)));
+        setRemainingReward(c.getDouble(c.getColumnIndex(REMAINING_REWARD)));
         setAvgBtcPerBlock(c.getDouble(c.getColumnIndex(AVG_BTC_PER_BLOCK)));
+    }
+
+    /**
+     * @return returns the time until the next payout in nanoseconds
+     */
+    public long getTimeTillPayout(){
+
+        if(getAverageTime() == 0 || getRemainingReward() == 0 || getAvgBtcPerBlock() == 0){
+            return 0;
+        }
+
+        // ((threshold - unconfirmed) / avg_block) * avg_time
+
+        return (long) ((getRemainingReward() / getAvgBtcPerBlock()) * getAverageTime());
     }
 
     public TimeTillPayout(Profile profile) {
@@ -40,7 +56,7 @@ public class TimeTillPayout {
         }
 
         setId(1);
-        setSendThreshold(Float.valueOf(profile.getSend_threshold()));
+        setRemainingReward(Float.valueOf(profile.getSend_threshold()) - Float.valueOf(profile.getConfirmed_reward()));
     }
 
     public TimeTillPayout(Stats stats, Context context) {
@@ -64,8 +80,8 @@ public class TimeTillPayout {
         if (getAverageTime() != 0) {
             values.put(AVERAGE_TIME, getAverageTime());
         }
-        if (getSendThreshold() != 0) {
-            values.put(SEND_THRESHOLD, getSendThreshold());
+        if (getRemainingReward() != 0) {
+            values.put(REMAINING_REWARD, getRemainingReward());
         }
         if (getAvgBtcPerBlock() != 0) {
             values.put(AVG_BTC_PER_BLOCK, getAvgBtcPerBlock());
@@ -90,12 +106,12 @@ public class TimeTillPayout {
         this.averageTime = averageTime;
     }
 
-    public double getSendThreshold() {
-        return sendThreshold;
+    public double getRemainingReward() {
+        return remainingReward;
     }
 
-    public void setSendThreshold(double sendThreshold) {
-        this.sendThreshold = sendThreshold;
+    public void setRemainingReward(double remainingReward) {
+        this.remainingReward = remainingReward;
     }
 
     public double getAvgBtcPerBlock() {

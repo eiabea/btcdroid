@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String ROUNDS_TABLE_NAME = "rounds";
     public static final String TIME_TILL_PAYOUT_TABLE_NAME = "time_till_payout";
 
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 17;
     private static final String DATABASE_NAME = "btcdroid";
 
     private static final String CREATE_PROFILE_TABLE =
@@ -75,7 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             " CREATE TABLE " + TIME_TILL_PAYOUT_TABLE_NAME +
                     " (" + TimeTillPayout._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     " " + TimeTillPayout.AVERAGE_TIME + " INTEGER, " +
-                    " " + TimeTillPayout.SEND_THRESHOLD + " REAL, " +
+                    " " + TimeTillPayout.REMAINING_REWARD + " REAL, " +
                     " " + TimeTillPayout.AVG_BTC_PER_BLOCK + " REAL " +
                     ");";
 

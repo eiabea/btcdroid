@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.data.DataProvider;
-import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.model.Profile;
 import com.eiabea.btcdroid.model.Stats;
@@ -42,7 +41,7 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private static final int PAYOUT_STATS_LOADER_ID = 114;
 
     private TextView txtCurrentSource, txtCurrentValue, txtEstimatedReward, txtConfirmedReward,
-            txtTotalReward, txtSendThreshold;
+            txtTotalReward, txtSendThreshold, txtTimeTillPayout;
     private ProgressBar prgGauge;
 
     private SwipeRefreshLayout swipeLayout;
@@ -96,12 +95,14 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
         prgGauge = (ProgressBar) rootView.findViewById(R.id.prg_data_gauge);
         txtSendThreshold = (TextView) rootView.findViewById(R.id.txt_main_info_send_threshold);
 
+        txtTimeTillPayout = (TextView) rootView.findViewById(R.id.txt_main_info_time_till_payout);
+
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
 
     }
 
-    private void setListeners(){
+    private void setListeners() {
         swipeLayout.setOnRefreshListener(this);
     }
 
@@ -331,9 +332,31 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     break;
                 case PAYOUT_TIME_TILL_PAYOUT_LOADER_ID:
                     ttp = new TimeTillPayout(c);
-                    Log.i(TAG, "Send Threshold: " + ttp.getSendThreshold());
+                    Log.i(TAG, "Remaining Reward: " + ttp.getRemainingReward());
                     Log.i(TAG, "Time: " + ttp.getAverageTime());
                     Log.i(TAG, "Avg per Block: " + ttp.getAvgBtcPerBlock());
+                    Log.i(TAG, "TTP: " + ttp.getTimeTillPayout());
+
+                    long ttpMs = ttp.getTimeTillPayout() / 1000;
+
+                    if (ttpMs > 365 * 24 * 60 * 60) {
+                        Log.i(TAG, "Over a year");
+                        long years = ttpMs / (365 * 24 * 60 * 60);
+                        Log.i(TAG, "Years: " + years);
+                        txtTimeTillPayout.setText(years + " years");
+                        break;
+                    }
+
+                    if (ttpMs > 24 * 60 * 60) {
+                        Log.i(TAG, "Over a day");
+                        long days = ttpMs / (24 * 60 * 60);
+                        Log.i(TAG, "Days: " + days);
+                        txtTimeTillPayout.setText(days + " days");
+                        break;
+                    }
+
+                    Log.i(TAG, "Normal: " + App.dateDurationFormat.format(new Date(ttpMs * 1000)));
+                    txtTimeTillPayout.setText(App.dateDurationFormat.format(new Date(ttpMs * 1000)));
 
                     break;
                 case PAYOUT_STATS_LOADER_ID:
@@ -353,38 +376,6 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onLoaderReset(Loader<Cursor> arg0) {
-    }
-
-    private Date getAverageRoundTime() {
-
-        long total = 0;
-        long average = 0;
-        String[] projection = new String[]{Block.MINING_DURATION};
-
-        Cursor c = getActivity().getContentResolver().query(Block.CONTENT_URI, projection, null, null, null);
-
-        if (c.getCount() > 0) {
-
-            c.moveToFirst();
-
-            while (c.moveToNext()) {
-                long duration;
-//                try {
-                duration = c.getLong(c.getColumnIndex(Block.MINING_DURATION));
-                total += duration;
-//                } catch (ParseException e) {
-//                    Log.e(TAG, "Can't get AverageRoundTime (NullPointer)");
-//                }
-            }
-
-            if (total > 0) {
-                average = total / c.getCount();
-            }
-        }
-
-        c.close();
-
-        return new Date(average * 1000);
     }
 
 }
