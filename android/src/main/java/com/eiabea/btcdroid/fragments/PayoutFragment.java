@@ -312,7 +312,6 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         if (c.getCount() > 0 && isAdded()) {
             c.moveToFirst();
-            TimeTillPayout ttp;
             switch (loader.getId()) {
                 case PAYOUT_PROFILE_LOADER_ID:
                     Profile profile = new Profile(c);
@@ -331,31 +330,36 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     }
                     break;
                 case PAYOUT_TIME_TILL_PAYOUT_LOADER_ID:
-                    ttp = new TimeTillPayout(c);
-                    Log.i(TAG, "Remaining Reward: " + ttp.getRemainingReward());
-                    Log.i(TAG, "Time: " + ttp.getAverageTime());
-                    Log.i(TAG, "Avg per Block: " + ttp.getAvgBtcPerBlock());
-                    Log.i(TAG, "TTP: " + ttp.getTimeTillPayout());
+//                    Log.i(TAG, "Remaining Reward: " + ttp.getRemainingReward());
+//                    Log.i(TAG, "Time: " + ttp.getAverageTime());
+//                    Log.i(TAG, "Avg per Block: " + ttp.getAvgBtcPerBlock());
+//                    Log.i(TAG, "TTP: " + ttp.getTimeTillPayout());
 
-                    long ttpMs = ttp.getTimeTillPayout() / 1000;
+                    long ttpMs = new TimeTillPayout(c).getTimeTillPayout() / 1000;
 
                     if (ttpMs > 365 * 24 * 60 * 60) {
-                        Log.i(TAG, "Over a year");
+//                        Log.i(TAG, "Over a year");
                         long years = ttpMs / (365 * 24 * 60 * 60);
-                        Log.i(TAG, "Years: " + years);
+//                        Log.i(TAG, "Years: " + years);
                         txtTimeTillPayout.setText(years + " years");
                         break;
                     }
 
                     if (ttpMs > 24 * 60 * 60) {
-                        Log.i(TAG, "Over a day");
+//                        Log.i(TAG, "Over a day");
                         long days = ttpMs / (24 * 60 * 60);
-                        Log.i(TAG, "Days: " + days);
-                        txtTimeTillPayout.setText(days + " days");
+//                        Log.i(TAG, "Days: " + days);
+
+                        if(days == 1){
+                            txtTimeTillPayout.setText(days + " day");
+                        }else{
+                            txtTimeTillPayout.setText(days + " days");
+                        }
+
                         break;
                     }
 
-                    Log.i(TAG, "Normal: " + App.dateDurationFormat.format(new Date(ttpMs * 1000)));
+//                    Log.i(TAG, "Normal: " + App.dateDurationFormat.format(new Date(ttpMs * 1000)));
                     txtTimeTillPayout.setText(App.dateDurationFormat.format(new Date(ttpMs * 1000)));
 
                     break;
@@ -365,8 +369,7 @@ public class PayoutFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     stats = App.getInstance().gson.fromJson(stats.getJson(), Stats.class);
 
                     if (stats != null) {
-                        ttp = new TimeTillPayout(stats, getContext());
-                        DataProvider.insertOrUpdateTimeTillPayout(getContext(), ttp);
+                        DataProvider.insertOrUpdateTimeTillPayout(getContext(), new TimeTillPayout(stats, getContext()));
                     }
 
                     break;

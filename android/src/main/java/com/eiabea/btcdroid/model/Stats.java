@@ -129,8 +129,6 @@ public class Stats {
             }
         }
 
-        Log.i(TAG, "AVG: " + average);
-
         c.close();
 
         return new Date(average * 1000);

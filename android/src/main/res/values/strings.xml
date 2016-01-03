@@ -65,6 +65,7 @@
     <string name="txt_estimated_reward">estimated</string>
     <string name="txt_confirmed_reward">confirmed</string>
     <string name="txt_rewards">Rewards</string>
+    <string name="txt_time_till_payout">time till payout</string>
 
     <!-- PoolFragment | Headers -->
     <string name="txt_hashrates">Hashrates</string>
@@ -172,7 +173,6 @@
     <string name="txt_donate_copy_bitcoin_address">Copy Bitcoinaddress</string>
     <string name="txt_donate_open_bitcoin_wallet">Open Bitcoinwallet</string>
     <string name="toast_donate_no_bitcoin_wallet_found">No Bitcoinwallet found</string>
-    <string name="txt_time_till_payout">time till payout</string>
 
     <string-array name="price_source">
         <item>@string/BitStamp</item>
