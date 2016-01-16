@@ -218,5 +218,6 @@
     <string name="CoinfinityBitcoinbon">Bitcoinbon (EUR)</string>
     <string name="CoinfinityBitcoinbon_short">Bitcoinbon</string>
     <string name="fiat">Fiat</string>
+    <string name="txt_time_till_payout">time till payout</string>
 
 </resources>
