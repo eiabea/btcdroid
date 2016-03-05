@@ -6,22 +6,27 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 
 import com.eiabea.btcdroid.R;
 import com.eiabea.btcdroid.adapter.WorkerListAdapter;
 import com.eiabea.btcdroid.model.Worker;
+import com.eiabea.btcdroid.util.App;
 
-public class WorkerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class WorkerFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor>, AbsListView.OnScrollListener {
 
     private static final int WORKER_LOADER_ID = 333;
 
     private ExpandableListView exlvWOrkerHolder;
 
     private WorkerListAdapter adapter;
+
+    private SwipeRefreshLayout swipeLayout;
 
     public static WorkerFragment create() {
         WorkerFragment fragment = new WorkerFragment();
@@ -44,6 +49,8 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
 
         initUi(rootView);
 
+        setListeners();
+
         adapter = new WorkerListAdapter(getActivity());
 
         exlvWOrkerHolder.setAdapter(adapter);
@@ -53,6 +60,14 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
 
     private void initUi(ViewGroup rootView) {
         exlvWOrkerHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_worker_holder);
+
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
+    }
+
+    private void setListeners() {
+        swipeLayout.setOnRefreshListener(this);
+        exlvWOrkerHolder.setOnScrollListener(this);
     }
 
     private void expandActiveWorker() {
@@ -66,6 +81,12 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
                 exlvWOrkerHolder.expandGroup(i);
             }
 
+        }
+    }
+
+    private void handleLoading() {
+        if (swipeLayout != null) {
+            swipeLayout.setRefreshing(false);
         }
     }
 
@@ -87,6 +108,8 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
                     adapter.setGroupCursor(c);
 
                     expandActiveWorker();
+
+                    handleLoading();
                     break;
             }
 
@@ -99,4 +122,23 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
     public void onLoaderReset(Loader<Cursor> arg0) {
     }
 
+    @Override
+    public void onRefresh() {
+        if (App.getInstance().isTokenSet()) {
+            App.updateData(getActivity());
+        }
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView absListView, int i) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        int topRowVerticalPosition =
+                (exlvWOrkerHolder == null || exlvWOrkerHolder.getChildCount() == 0) ?
+                        0 : exlvWOrkerHolder.getChildAt(0).getTop();
+        swipeLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+    }
 }

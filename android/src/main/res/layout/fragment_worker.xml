@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipe_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bd_background"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <ExpandableListView
-        android:id="@+id/exlv_main_worker_holder"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@color/bd_white"
-        android:childDivider="@null"
-        android:groupIndicator="@null"
-        android:divider="@null"/>
+        android:layout_height="match_parent"
+        android:background="@color/bd_background"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <ExpandableListView
+            android:id="@+id/exlv_main_worker_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/bd_white"
+            android:childDivider="@null"
+            android:divider="@null"
+            android:groupIndicator="@null"/>
+
+    </FrameLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

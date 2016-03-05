@@ -6,9 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 
 import com.eiabea.btcdroid.R;
@@ -17,12 +19,14 @@ import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.util.App;
 
-public class RoundsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class RoundsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor>, AbsListView.OnScrollListener {
 
     private static final int ROUNDS_ROUNDS_LOADER_ID = 411;
     private static final int ROUNDS_PRICE_LOADER_ID = 412;
 
     private RoundsListAdapter adapter;
+
+    private SwipeRefreshLayout swipeLayout;
 
     private ExpandableListView exlvRoundsHolder;
 
@@ -48,6 +52,8 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
 
         initUi(rootView);
 
+        setListeners();
+
         adapter = new RoundsListAdapter(getActivity());
 
         exlvRoundsHolder.setAdapter(adapter);
@@ -57,6 +63,27 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
 
     private void initUi(ViewGroup rootView) {
         exlvRoundsHolder = (ExpandableListView) rootView.findViewById(R.id.exlv_main_rounds_holder);
+
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        swipeLayout.setColorSchemeResources(R.color.bd_actionbar_background, R.color.bd_black);
+    }
+
+    private void setListeners() {
+        swipeLayout.setOnRefreshListener(this);
+        exlvRoundsHolder.setOnScrollListener(this);
+    }
+
+    private void handleLoading() {
+        if (swipeLayout != null) {
+            swipeLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        if (App.getInstance().isTokenSet()) {
+            App.updateData(getActivity());
+        }
     }
 
     @Override
@@ -99,6 +126,8 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
                     break;
             }
 
+            handleLoading();
+
 
         }
 
@@ -106,5 +135,18 @@ public class RoundsFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoaderReset(Loader<Cursor> arg0) {
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView absListView, int i) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        int topRowVerticalPosition =
+                (exlvRoundsHolder == null || exlvRoundsHolder.getChildCount() == 0) ?
+                        0 : exlvRoundsHolder.getChildAt(0).getTop();
+        swipeLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 }
