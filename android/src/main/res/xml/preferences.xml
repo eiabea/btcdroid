@@ -52,6 +52,12 @@
             android:summary="@string/txt_pref_style_btc_style_message"
             android:title="@string/txt_pref_style_btc_style_title" />
 
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="expand_active_workers"
+            android:summary="@string/txt_pref_style_expand_active_workers_message"
+            android:title="@string/txt_pref_style_expand_active_workers_title" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Widgets">

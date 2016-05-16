@@ -9,7 +9,7 @@ repositories {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '23.0.3'
     defaultConfig {
         versionCode 101
         versionName "2.2.1"
@@ -80,7 +80,7 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.6'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     compile 'com.google.zxing:core:3.1.0'
-    compile 'com.android.support:support-v4:23.2.0'
-    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'net.danlew:android.joda:2.9.1'
 }

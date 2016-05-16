@@ -19,7 +19,10 @@ import com.eiabea.btcdroid.model.Block;
 import com.eiabea.btcdroid.model.GenericPrice;
 import com.eiabea.btcdroid.util.App;
 
-public class RoundsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor>, AbsListView.OnScrollListener {
+public class RoundsFragment extends Fragment implements
+        SwipeRefreshLayout.OnRefreshListener,
+        LoaderManager.LoaderCallbacks<Cursor>,
+        AbsListView.OnScrollListener {
 
     private static final int ROUNDS_ROUNDS_LOADER_ID = 411;
     private static final int ROUNDS_PRICE_LOADER_ID = 412;
@@ -94,7 +97,6 @@ public class RoundsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         switch (which) {
             case ROUNDS_ROUNDS_LOADER_ID:
                 String sort = Block.NUMBER + " DESC";
-
                 return new CursorLoader(getActivity(), Block.CONTENT_URI, null, null, null, sort);
             case ROUNDS_PRICE_LOADER_ID:
                 selection = GenericPrice._ID + "=?";

@@ -19,6 +19,7 @@ import com.eiabea.btcdroid.util.App;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class RoundsListAdapter extends CursorTreeAdapter {
@@ -87,11 +88,11 @@ public class RoundsListAdapter extends CursorTreeAdapter {
         String durationString;
 
         if (days > 1) {
-            durationString = String.format("%d days - %02d:%02d:%02d", days, hours, minutes, seconds);
+            durationString = String.format(Locale.getDefault(), "%d days - %02d:%02d:%02d", days, hours, minutes, seconds);
         } else if (days == 1) {
-            durationString = String.format("%d day - %02d:%02d:%02d", days, hours, minutes, seconds);
+            durationString = String.format(Locale.getDefault(), "%d day - %02d:%02d:%02d", days, hours, minutes, seconds);
         } else {
-            durationString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+            durationString = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
         }
 
         rh.txtDuration.setText(durationString);
