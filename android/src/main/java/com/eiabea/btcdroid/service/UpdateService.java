@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -421,7 +422,7 @@ public class UpdateService extends Service {
         boolean enabled = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("round_finished_notification_enabled", false);
 
         // Debug
-//		createRoundFinishedNotification();
+//        createRoundFinishedNotification();
 
         if (enabled && globalEnabled) {
             try {
@@ -440,6 +441,10 @@ public class UpdateService extends Service {
     }
 
     private void createRoundFinishedNotification() {
+        boolean sound = pref.getBoolean("notification_sound", true);
+        boolean vibrate = pref.getBoolean("notification_vibrate", false);
+        boolean led = pref.getBoolean("notification_led", false);
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.setAction(MainActivity.ACTION_NEW_ROUND_NOTIFICATION);
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -456,8 +461,18 @@ public class UpdateService extends Service {
         mBuilder.setNumber(++newRoundNotificationCount);
         mBuilder.setContentIntent(pi);
 
+        if (sound) {
+            mBuilder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.tada));
+        }
+        if (vibrate) {
+            mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+        }
+        if (led) {
+            mBuilder.setLights(0xffff8b00, 300, 1000);
+        }
+
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notif = setFinishParameters(mBuilder.build());
+        Notification notif = mBuilder.build();
 
         mNotificationManager.notify(NEW_ROUND_NOTIFICATION_ID, notif);
 
@@ -484,6 +499,10 @@ public class UpdateService extends Service {
 
                 if (limit > 0 && totalHashrate < limit) {
 
+                    boolean sound = pref.getBoolean("notification_sound", true);
+                    boolean vibrate = pref.getBoolean("notification_vibrate", false);
+                    boolean led = pref.getBoolean("notification_led", false);
+
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.setAction(MainActivity.ACTION_DROP_NOTIFICATION);
                     PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -498,8 +517,19 @@ public class UpdateService extends Service {
                     mBuilder.setNumber(++dropNotificationCount);
                     mBuilder.setContentIntent(pi);
                     mBuilder.setDeleteIntent(getDeleteIntent(OnDeleteReceiver.ACTION_DELETE_DROP));
+
+                    if (sound) {
+                        mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+                    }
+                    if (vibrate) {
+                        mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+                    }
+                    if (led) {
+                        mBuilder.setLights(0xffff8b00, 300, 1000);
+                    }
+
                     NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    Notification notif = setDefaults(mBuilder.build());
+                    Notification notif = mBuilder.build();
 
                     mNotificationManager.notify(DROP_NOTIFICATION_ID, notif);
 
@@ -517,50 +547,50 @@ public class UpdateService extends Service {
         return PendingIntent.getBroadcast(this.getApplicationContext(), 0, deleteIntent, 0);
     }
 
-    private Notification setDefaults(Notification notification) {
-        boolean sound = pref.getBoolean("notification_sound", true);
-        boolean vibrate = pref.getBoolean("notification_vibrate", false);
-        boolean led = pref.getBoolean("notification_led", false);
-
-        if (sound) {
-            notification.defaults |= Notification.DEFAULT_SOUND;
-        }
-
-        if (vibrate) {
-            notification.defaults |= Notification.DEFAULT_VIBRATE;
-        }
-
-        if (led) {
-            notification.ledARGB = 0xffff8b00;
-            notification.ledOnMS = 300;
-            notification.ledOffMS = 1000;
-            notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-        }
-
-        return notification;
-    }
-
-    private Notification setFinishParameters(Notification notification) {
-        boolean sound = pref.getBoolean("notification_sound", true);
-        boolean vibrate = pref.getBoolean("notification_vibrate", false);
-        boolean led = pref.getBoolean("notification_led", false);
-
-        if (sound) {
-            notification.sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.tada);
-        }
-
-        if (vibrate) {
-            notification.defaults |= Notification.DEFAULT_VIBRATE;
-        }
-        if (led) {
-            notification.ledARGB = 0xffff8b00;
-            notification.ledOnMS = 300;
-            notification.ledOffMS = 1000;
-            notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-        }
-
-        return notification;
-    }
+//    private Notification setDefaults(Notification notification) {
+//        boolean sound = pref.getBoolean("notification_sound", true);
+//        boolean vibrate = pref.getBoolean("notification_vibrate", false);
+//        boolean led = pref.getBoolean("notification_led", false);
+//
+//        if (sound) {
+//            notification.defaults |= Notification.DEFAULT_SOUND;
+//        }
+//
+//        if (vibrate) {
+//            notification.defaults |= Notification.DEFAULT_VIBRATE;
+//        }
+//
+//        if (led) {
+//            notification.ledARGB = 0xffff8b00;
+//            notification.ledOnMS = 300;
+//            notification.ledOffMS = 1000;
+//            notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+//        }
+//
+//        return notification;
+//    }
+//
+//    private Notification setFinishParameters(Notification notification) {
+//        boolean sound = pref.getBoolean("notification_sound", true);
+//        boolean vibrate = pref.getBoolean("notification_vibrate", false);
+//        boolean led = pref.getBoolean("notification_led", false);
+//
+//        if (sound) {
+//            notification.sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.tada);
+//        }
+//
+//        if (vibrate) {
+//            notification.defaults |= Notification.DEFAULT_VIBRATE;
+//        }
+//        if (led) {
+//            notification.ledARGB = 0xffff8b00;
+//            notification.ledOnMS = 300;
+//            notification.ledOffMS = 1000;
+//            notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+//        }
+//
+//        return notification;
+//    }
 
     public static void resetDropNotificationCount() {
         dropNotificationCount = 0;
