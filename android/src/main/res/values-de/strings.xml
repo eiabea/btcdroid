@@ -41,7 +41,7 @@
     <string name="txt_no_token">Es wurde kein gültiger API-Token gefunden, bitte füge einen hinzu</string>
     <string name="txt_set_token">Token setzen</string>
     <string name="alert_set_token_title">Slush\'s Pool Token</string>
-    <string name="alert_set_token_message">.) Logge dich bei mining.bitcoin.cz ein\n.) API Tokens verwalten\n.) Dein derzeitiges Token\n\nHinweis: Öffne die Webseite mit deinem Handy um den Token kopieren zu können</string>
+    <string name="alert_set_token_message">.) Logge dich bei https://slushpool.com/ ein\n.) API Tokens verwalten\n.) Dein derzeitiges Token\n\nHinweis: Öffne die Webseite mit deinem Handy um den Token kopieren zu können</string>
     <string name="alert_set_token_ok">Token setzen</string>
     <string name="alert_set_token_cancel">Abbrechen</string>
     <string name="txt_viewpager_payout_fragment">Auszahlung</string>
