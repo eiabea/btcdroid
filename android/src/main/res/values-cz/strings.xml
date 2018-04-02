@@ -41,7 +41,7 @@
     <string name="txt_no_token">Nenalezen žádný platný API-Token, prosím nastav si nějaký</string>
     <string name="txt_set_token">Nastavit Token</string>
     <string name="alert_set_token_title">Slush\'s Pool Token</string>
-    <string name="alert_set_token_message">.) Přihlaš se na mining.bitcoin.cz\n.) V nastavení vyber spravovat API Tokeny\n.) Váš aktuální Token\n\nNápověda: Pro lepší možnost zkopírování otevři stránky v tvém mobilu</string>
+    <string name="alert_set_token_message">.) Přihlaš se na https://slushpool.com/\n.) V nastavení vyber spravovat API Tokeny\n.) Váš aktuální Token\n\nNápověda: Pro lepší možnost zkopírování otevři stránky v tvém mobilu</string>
     <string name="alert_set_token_ok">Nastavit Token</string>
     <string name="alert_set_token_cancel">Zrušit</string>
     <string name="txt_viewpager_payout_fragment">Výplata</string>

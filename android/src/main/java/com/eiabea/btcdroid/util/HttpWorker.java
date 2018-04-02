@@ -15,7 +15,7 @@ import com.eiabea.btcdroid.model.PricesCoinfinity;
 import java.util.Locale;
 
 public class HttpWorker {
-    private static final String BASEURL = "https://mining.bitcoin.cz/";
+    private static final String BASEURL = "https://slushpool.com/";
     private static final String PRICES_URL_BTCE_FRONT = "https://btc-e.com/api/2/btc_";
     private static final String PRICES_URL_BTCE_END = "/ticker";
     private static final String PRICES_URL_COINDESK_FRONT = "http://api.coindesk.com/v1/bpi/currentprice/";
