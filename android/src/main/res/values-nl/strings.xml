@@ -42,7 +42,7 @@
     <string name="txt_no_token">Geen correcte Token gevonden, stel er in</string>
     <string name="txt_set_token">Stel Token in</string>
     <string name="alert_set_token_title">Slush\'s Pool Token</string>
-    <string name="alert_set_token_message">.) Login bij mining.bitcoin.cz\n.) Beheer API tokens\n.) Uw huidige token\n\nHint: Open de Website op uw telefoon om de token te kopieren en &amp; Plak de Token hier onder:</string>
+    <string name="alert_set_token_message">.) Login bij https://slushpool.com/\n.) Beheer API tokens\n.) Uw huidige token\n\nHint: Open de Website op uw telefoon om de token te kopieren en &amp; Plak de Token hier onder:</string>
     <string name="alert_set_token_ok">Token instellen</string>
     <string name="alert_set_token_cancel">Annuleren</string>
     <string name="txt_viewpager_payout_fragment">Uitbetaling</string>
