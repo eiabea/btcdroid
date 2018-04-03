@@ -12,8 +12,8 @@ android {
     buildToolsVersion '27.0.3'
     flavorDimensions "default"
     defaultConfig {
-        versionCode 104
-        versionName "2.2.4"
+        versionCode 105
+        versionName "2.2.5"
         minSdkVersion 15
         targetSdkVersion 27
 
