@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -30,7 +31,8 @@ public class DashClockWidget extends DashClockExtension {
     protected void onUpdateData(int reason) {
         Intent i = new Intent(getApplicationContext(), UpdateService.class);
         i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PROFILE);
-        getApplicationContext().startService(i);
+//        getApplicationContext().startService(i);
+        ContextCompat.startForegroundService(getApplicationContext(), i);
     }
 
 

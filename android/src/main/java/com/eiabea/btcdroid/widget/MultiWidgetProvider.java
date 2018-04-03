@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -61,7 +62,8 @@ public class MultiWidgetProvider extends AppWidgetProvider {
                         case 0:
                             remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
                             i = new Intent(context, UpdateService.class);
-                            context.startService(i);
+//                            context.startService(i);
+                            ContextCompat.startForegroundService(context, i);
                             break;
                         case 1:
                             i = new Intent(context, MainActivity.class);

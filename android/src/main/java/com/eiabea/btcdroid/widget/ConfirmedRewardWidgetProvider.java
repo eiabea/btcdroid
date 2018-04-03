@@ -57,7 +57,8 @@ public class ConfirmedRewardWidgetProvider extends AppWidgetProvider {
                             remoteViews.setViewVisibility(R.id.fl_widget_loading, View.VISIBLE);
                             i = new Intent(context, UpdateService.class);
                             i.putExtra(UpdateService.PARAM_GET, UpdateService.GET_PROFILE);
-                            context.startService(i);
+//                            context.startService(i);
+                            ContextCompat.startForegroundService(context, i);
                             break;
                         case 1:
                             i = new Intent(context, MainActivity.class);
